@@ -84,11 +84,12 @@ class AIG_Options {
       return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
     }
     $gallery_id = (int) $parameters['gallery_id'];
+    $data = $request->get_body();
 
-    $data = $request->get_body_params();
     if ( empty($data) ) {
       return new WP_Error( '404', __( 'Nothing to save.', 'aig' ) );
     }
+    $data = (array) json_decode($data);
     array_walk($data, function (&$value) {
       $value = sanitize_text_field(stripslashes($value));
     });

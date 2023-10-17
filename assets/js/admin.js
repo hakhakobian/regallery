@@ -171,6 +171,8 @@ function aig_save_images() {
     },
     complete: function (data) {
       aig_loading();
+      // Trigger hidden button click to reload the preview.
+      jQuery("#reloadData").trigger("click");
     }
   });
 }
