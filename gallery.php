@@ -135,7 +135,7 @@ final class AIG {
     $required_scripts = [];
     $required_styles = [];
 
-    $used_fonts = AIGLibrary::get_used_fonts();
+    $used_fonts = is_admin() ? AIGLibrary::get_fonts(FALSE) : AIGLibrary::get_used_fonts();
     if ( !empty($used_fonts) ) {
       $query = implode("|", str_replace(' ', '+', $used_fonts));
 
