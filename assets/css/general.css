@@ -4,3 +4,10 @@
   margin: 0;
   padding: 0;
 }
+
+.aig-gallery .options input {
+  border: none;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
