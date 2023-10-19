@@ -145,14 +145,32 @@ class AIG_Gallery {
         $post = get_post($images_id);
         $meta = wp_get_attachment_metadata($images_id);
         $url = wp_get_attachment_url($images_id);
+
+        $thumbnail_url = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($meta['file'], $meta['sizes']['thumbnail']['file'], $url) : '';
+        $medium_large_url = !empty($meta['sizes']['medium_large']['file']) ? str_replace($meta['file'], $meta['sizes']['medium_large']['file'], $url) : '';
+        $large_url = !empty($meta['sizes']['large']['file']) ? str_replace($meta['file'], $meta['sizes']['large']['file'], $url) : '';
+
+        if ( !$thumbnail_url ) {
+          if ( !$medium_large_url ) {
+            if ( !$large_url ) {
+              $medium_large_url = $url;
+            }
+            else {
+              $medium_large_url = $large_url;
+            }
+          }
+          $thumbnail_url = $medium_large_url;
+        }
+
         $data[$images_id] = [
           'title' => get_the_title($images_id),
           'caption' => wp_get_attachment_caption($images_id),
           'description' => $post->post_content,
-          'url' => $url,
           'width' => $meta['width'],
           'height' => $meta['height'],
-          'thumbnail_url' => str_replace($meta['file'], $meta['sizes']['thumbnail']['file'], $url),
+          'url' => $url,
+          'thumbnail_url' => $thumbnail_url,
+          'medium_large_url' => $medium_large_url,
         ];
       }
 
