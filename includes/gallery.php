@@ -145,13 +145,13 @@ class AIG_Gallery {
         $post = get_post($images_id);
         $meta = wp_get_attachment_metadata($images_id);
         $url = wp_get_attachment_url($images_id);
+        $base_name = basename($meta['file']);
 
-        $thumbnail_url = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($meta['file'], $meta['sizes']['thumbnail']['file'], $url) : '';
-        $medium_large_url = !empty($meta['sizes']['medium_large']['file']) ? str_replace($meta['file'], $meta['sizes']['medium_large']['file'], $url) : '';
-        $large_url = !empty($meta['sizes']['large']['file']) ? str_replace($meta['file'], $meta['sizes']['large']['file'], $url) : '';
+        $thumbnail_url = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, $meta['sizes']['thumbnail']['file'], $url) : '';
+        $medium_large_url = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, $meta['sizes']['medium_large']['file'], $url) : '';
+        $large_url = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, $meta['sizes']['large']['file'], $url) : '';
 
-        if ( !$thumbnail_url ) {
-          if ( !$medium_large_url ) {
+        if ( !$medium_large_url ) {
             if ( !$large_url ) {
               $medium_large_url = $url;
             }
@@ -159,6 +159,7 @@ class AIG_Gallery {
               $medium_large_url = $large_url;
             }
           }
+        if ( !$thumbnail_url ) {
           $thumbnail_url = $medium_large_url;
         }
 
