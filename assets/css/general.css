@@ -10,4 +10,6 @@
   line-height: 1;
   margin: 0;
   padding: 0;
+  box-shadow: none;
+  outline: none;
 }

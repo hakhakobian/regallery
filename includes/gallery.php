@@ -147,31 +147,46 @@ class AIG_Gallery {
         $url = wp_get_attachment_url($images_id);
         $base_name = basename($meta['file']);
 
-        $thumbnail_url = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, $meta['sizes']['thumbnail']['file'], $url) : '';
-        $medium_large_url = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, $meta['sizes']['medium_large']['file'], $url) : '';
-        $large_url = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, $meta['sizes']['large']['file'], $url) : '';
+        $original = [];
+        $original['url'] = $url;
+        $original['width'] = !empty($meta['width']) ? $meta['width'] : 0;
+        $original['height'] = !empty($meta['height']) ? $meta['height'] : 0;
 
-        if ( !$medium_large_url ) {
-            if ( !$large_url ) {
-              $medium_large_url = $url;
+        $thumbnail = [];
+        $thumbnail['url'] = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, $meta['sizes']['thumbnail']['file'], $url) : '';
+        $thumbnail['width'] = !empty($meta['sizes']['thumbnail']['width']) ? $meta['sizes']['thumbnail']['width'] : 0;
+        $thumbnail['height'] = !empty($meta['sizes']['thumbnail']['height']) ? $meta['sizes']['thumbnail']['height'] : 0;
+
+        $medium_large = [];
+        $medium_large['url'] = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, $meta['sizes']['medium_large']['file'], $url) : '';
+        $medium_large['width'] = !empty($meta['sizes']['medium_large']['width']) ? $meta['sizes']['medium_large']['width'] : 0;
+        $medium_large['height'] = !empty($meta['sizes']['medium_large']['height']) ? $meta['sizes']['medium_large']['height'] : 0;
+
+        $large = [];
+        $large['url'] = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, $meta['sizes']['large']['file'], $url) : '';
+        $large['width'] = !empty($meta['sizes']['large']['width']) ? $meta['sizes']['large']['width'] : 0;
+        $large['height'] = !empty($meta['sizes']['large']['height']) ? $meta['sizes']['large']['height'] : 0;
+
+        if ( !$medium_large['url'] ) {
+            if ( !$large['url'] ) {
+              $medium_large = $original;
             }
             else {
-              $medium_large_url = $large_url;
+              $medium_large = $large;
             }
           }
-        if ( !$thumbnail_url ) {
-          $thumbnail_url = $medium_large_url;
+        if ( !$thumbnail['url'] ) {
+          $thumbnail = $medium_large;
         }
 
         $data[$images_id] = [
           'title' => get_the_title($images_id),
           'caption' => wp_get_attachment_caption($images_id),
           'description' => $post->post_content,
-          'width' => $meta['width'],
-          'height' => $meta['height'],
-          'url' => $url,
-          'thumbnail_url' => $thumbnail_url,
-          'medium_large_url' => $medium_large_url,
+
+          'original' => $original,
+          'thumbnail' => $thumbnail,
+          'medium_large' => $medium_large,
         ];
       }
 
