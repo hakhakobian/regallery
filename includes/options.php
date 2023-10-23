@@ -77,7 +77,7 @@ class AIG_Options {
    *
    * @return WP_Error|WP_REST_Response
    */
-  private function set(WP_REST_Request $request): WP_Error|WP_REST_Response {
+  private function set(WP_REST_Request $request) {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
@@ -116,7 +116,7 @@ class AIG_Options {
    *
    * @return WP_Error|WP_REST_Response|null
    */
-  private function get( WP_REST_Request $request = null): WP_Error|WP_REST_Response|null {
+  private function get( WP_REST_Request $request = null) {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
@@ -148,7 +148,7 @@ class AIG_Options {
    *
    * @return WP_Error|WP_REST_Response
    */
-  private function delete($request): WP_Error|WP_REST_Response {
+  private function delete($request) {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
