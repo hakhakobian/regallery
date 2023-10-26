@@ -73,6 +73,7 @@ class AIGLibrary {
    */
   public static function get_rest_routs($rest_root, $gallery_id): void {
     $url = $rest_root . "aig/v1/";
+    $get_gallery_url = $url . "gallery/" . $gallery_id;
     $get_gallery_images_url = $url . "gallery/" . $gallery_id . "/images";
     $options_url = $url . "options/" . $gallery_id;
     $google_fonts_url = $url . "google-fonts";
@@ -80,6 +81,7 @@ class AIGLibrary {
          class="aig-gallery aig-preview"
          data-options-section="<?php echo (int) is_admin(); ?>"
          data-get-google-fonts="<?php echo esc_url_raw($google_fonts_url); ?>"
+         data-get-gallery-url="<?php echo esc_url_raw($get_gallery_url); ?>"
          data-get-images-url="<?php echo esc_url_raw($get_gallery_images_url); ?>"
          data-options-url="<?php echo esc_url_raw($options_url); ?>"></div><?php
   }

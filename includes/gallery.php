@@ -22,11 +22,29 @@ class AIG_Gallery {
     // Register an ajax action to save images to the gallery.
     add_action('wp_ajax_' . $this->ajax_slug, [ $this, 'save_images' ]);
 
-    // Register a route to make the gallery data available with the API.
+    // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ $this, 'get_images'],
+        'args' => array(
+          'id' => array(
+            'validate_callback' => function($param, $request, $key) {
+              return is_numeric( $param );
+            }
+          ),
+        ),
+        //        'permission_callback' => function () {
+        //          return current_user_can( 'edit_posts' );
+        //        }
+      ) );
+    } );
+
+    // Register a route to make the gallery data available with the API.
+    add_action( 'rest_api_init', function () {
+      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)', array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [ $this, 'get_gallery'],
         'args' => array(
           'id' => array(
             'validate_callback' => function($param, $request, $key) {
@@ -118,6 +136,34 @@ class AIG_Gallery {
         break;
       }
     }
+  }
+
+  /**
+   * Get gallery data.
+   *
+   * @param WP_REST_Request $request
+   *
+   * @return void
+   */
+  public function get_gallery( WP_REST_Request $request ) {
+    $parameters = $request->get_url_params();
+
+    if ( !isset($parameters['id']) ) {
+      return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
+    }
+    $gallery_id = (int) $parameters['id'];
+
+    $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
+
+    $data = [];
+    $data['images_count'] = 0;
+    if ( !empty($images_ids) ) {
+      $images_ids_arr = json_decode($images_ids);
+
+      $data['images_count'] = count($images_ids_arr);
+    }
+
+    return new WP_REST_Response( wp_send_json($data), 200 );
   }
 
   /**
