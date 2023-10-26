@@ -83,6 +83,8 @@ final class AIG {
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
+    // Enqueue block editor assets for Gutenberg.
+    add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
 
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
@@ -187,6 +189,25 @@ final class AIG {
    */
   public function register_frontend_scripts(): void {
     $this->register_general_scripts();
+  }
+
+  /**
+   * Enqueue scripts/styles for Gutenberg.
+   *
+   * @return void
+   */
+  public function enqueue_block_editor_assets(): void {
+
+    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
+    wp_localize_script($this->prefix . '_gutenberg', 'aig', array(
+      'title' => $this->nicename,
+      'titleSelect' => sprintf(__('Select %s', 'aig'), $this->nicename),
+      'iconUrl' => $this->plugin_url . '/assets/images/shortcode_new.jpg',
+      'iconSvgUrl' => $this->plugin_url . '/assets/images/icon.svg',
+      'shortcodeUrl' => add_query_arg(array('action' => 'shortcode_bwg'), admin_url('admin-ajax.php')),
+      'data' => AIGLibrary::get_shortcodes($this),
+    ));
+    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/assets/css/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
   }
 
   /**

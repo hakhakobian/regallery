@@ -114,7 +114,7 @@ class AIG_Gallery {
         break;
       }
       case 'aig_shortcode': {
-        echo "<code>" . $this->get_shortcode($post_id) . "</code>";
+        echo "<code>" . AIGLibrary::get_shortcode($this->obj, $post_id) . "</code>";
         break;
       }
     }
@@ -264,24 +264,9 @@ class AIG_Gallery {
     // Save the shortcode as the post content.
     wp_update_post([
                      'ID' => $post_id,
-                     'post_content' => $this->get_shortcode($post_id),
+                     'post_content' => AIGLibrary::get_shortcode($this->obj, $post_id),
                    ]);
     add_action( 'save_post', [ $this, 'save_post' ], 10, 2 );
-  }
-
-  /**
-   * Get a shortcode for the given gallery ID.
-   *
-   * @param $id
-   *
-   * @return bool|string
-   */
-  private function get_shortcode($id): bool|string {
-    if ( !$id ) {
-      return false;
-    }
-
-    return '[' . $this->obj->shortcode . ' id="' . $id . '"]';
   }
 
   /**
@@ -346,9 +331,9 @@ class AIG_Gallery {
          data-ajax-url="<?php echo esc_url(add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'))); ?>">
       <div class="aig_item aig_item_new">
         <div class="aig_item_image">
-          <a id="aig-add-images">
-            <p id="add_album_gallery_text"><?php _e('Add images', 'aig'); ?></p>
-          </a>
+          <!--<a id="aig-add-images">
+            <p id="add_album_gallery_text"><?php /*_e('Add images', 'aig'); */?></p>
+          </a>-->
         </div>
       </div><?php
       if ( !empty($images_ids) ) {

@@ -25,6 +25,8 @@
 .aig_item_new .aig_item_image {
   background-image: url(../images/add_new_image.png);
   cursor: pointer;
+  background-size: 130px;
+  background-position-y: -14px;
 }
 
 .aig_item_image {

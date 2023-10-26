@@ -1,6 +1,6 @@
 jQuery(document).ready(function () {
   // Bind an event to the add image button.
-  jQuery("#aig-add-images").on("click", function (event) {
+  jQuery(".aig_item_new ").on("click", function (event) {
     aig_media_uploader( event );
   });
 

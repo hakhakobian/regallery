@@ -89,4 +89,47 @@ class AIGLibrary {
     wp_enqueue_script($obj->prefix . '_thumbnails');
 //    wp_enqueue_script($obj->prefix . '_thumbnails', $obj->plugin_url . '/assets/js/wp-gallery.js', array(), $obj->version, array('in_footer' => true));
   }
+
+  /**
+   * Get a shortcode for the given gallery ID.
+   *
+   * @param $id
+   *
+   * @return bool|string
+   */
+  public static function get_shortcode($obj, $id): bool|string {
+    if ( !$id ) {
+      return false;
+    }
+
+    return '[' . $obj->shortcode . ' id="' . $id . '"]';
+  }
+
+  public static function get_shortcodes($obj) {
+    $posts = get_posts(array(
+//                                'fields'          => 'ids',
+                                'posts_per_page'  => -1,
+                                'post_type' => 'aig'
+                              ));
+    $data = [];
+    foreach ( $posts as $key => $post ) {
+      $data[$key] = [];
+      $data[$key]['id'] = $post->ID;
+      $data[$key]['title'] = intval($post->post_name) === 0 ? $post->post_name : '(no title)';
+      $data[$key]['shortcode'] = self::get_shortcode($obj, $post->ID);
+    }
+//    foreach ( $post_ids as $post_id) {
+//
+//    }
+//    $data = array();
+//    $data['shortcode_prefix'] = WDFMInstance(self::PLUGIN)->is_free == 2 ? 'wd_contact_form' : 'Form';
+//    $data['inputs'][] = array(
+//      'type' => 'select',
+//      'id' => WDFMInstance(self::PLUGIN)->prefix . '_id',
+//      'name' => WDFMInstance(self::PLUGIN)->prefix . '_id',
+//      'shortcode_attibute_name' => 'id',
+//      'options'  => $rows,
+//    );
+    return json_encode($data);
+  }
 }
