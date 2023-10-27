@@ -95,6 +95,7 @@ class AIGLibrary {
   /**
    * Get a shortcode for the given gallery ID.
    *
+   * @param $obj
    * @param $id
    *
    * @return bool|string
@@ -107,31 +108,38 @@ class AIGLibrary {
     return '[' . $obj->shortcode . ' id="' . $id . '"]';
   }
 
-  public static function get_shortcodes($obj) {
+  /**
+   * Get shortcodes list.
+   *
+   * @param $obj
+   * @param bool $include_empty
+   *
+   * @return false|string
+   */
+  public static function get_shortcodes( $obj, bool $include_empty = FALSE) {
     $posts = get_posts(array(
-//                                'fields'          => 'ids',
-                                'posts_per_page'  => -1,
-                                'post_type' => 'aig'
-                              ));
-    $data = [];
-    foreach ( $posts as $key => $post ) {
-      $data[$key] = [];
-      $data[$key]['id'] = $post->ID;
-      $data[$key]['title'] = intval($post->post_name) === 0 ? $post->post_name : '(no title)';
-      $data[$key]['shortcode'] = self::get_shortcode($obj, $post->ID);
+                         'posts_per_page' => -1,
+                         'post_type' => 'aig',
+                       ));
+    if ( $include_empty ) {
+      $data[0] = [];
+      $data[0]['id'] = 0;
+      $data[0]['title'] = __( 'Select gallery', 'aig' );
+      $data[0]['shortcode'] = '';
+      $key_shifter = 1;
     }
-//    foreach ( $post_ids as $post_id) {
-//
-//    }
-//    $data = array();
-//    $data['shortcode_prefix'] = WDFMInstance(self::PLUGIN)->is_free == 2 ? 'wd_contact_form' : 'Form';
-//    $data['inputs'][] = array(
-//      'type' => 'select',
-//      'id' => WDFMInstance(self::PLUGIN)->prefix . '_id',
-//      'name' => WDFMInstance(self::PLUGIN)->prefix . '_id',
-//      'shortcode_attibute_name' => 'id',
-//      'options'  => $rows,
-//    );
+    else {
+      $data = [];
+      $key_shifter = 0;
+    }
+
+    foreach ( $posts as $key => $post ) {
+      $data[$key + $key_shifter] = [];
+      $data[$key + $key_shifter]['id'] = $post->ID;
+      $data[$key + $key_shifter]['title'] = intval($post->post_name) === 0 ? $post->post_name : __( '(no title)', 'aig' );
+      $data[$key + $key_shifter]['shortcode'] = self::get_shortcode($obj, $post->ID);
+    }
+
     return json_encode($data);
   }
 }

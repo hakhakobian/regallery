@@ -201,11 +201,8 @@ final class AIG {
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'aig', array(
       'title' => $this->nicename,
-      'titleSelect' => sprintf(__('Select %s', 'aig'), $this->nicename),
-      'iconUrl' => $this->plugin_url . '/assets/images/shortcode_new.jpg',
-      'iconSvgUrl' => $this->plugin_url . '/assets/images/icon.svg',
-      'shortcodeUrl' => add_query_arg(array('action' => 'shortcode_bwg'), admin_url('admin-ajax.php')),
-      'data' => AIGLibrary::get_shortcodes($this),
+      'icon' => $this->plugin_url . '/assets/images/icon.svg',
+      'data' => AIGLibrary::get_shortcodes($this, TRUE),
     ));
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/assets/css/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
   }
