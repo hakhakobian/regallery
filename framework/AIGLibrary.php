@@ -77,7 +77,7 @@ class AIGLibrary {
     $get_gallery_images_url = $url . "gallery/" . $gallery_id . "/images";
     $options_url = $url . "options/" . $gallery_id;
     $google_fonts_url = $url . "google-fonts";
-    ?><div id="root"
+    ?><div id="root<?php echo (int) $gallery_id; ?>"
          class="aig-gallery aig-preview"
          data-options-section="<?php echo (int) is_admin(); ?>"
          data-get-google-fonts="<?php echo esc_url_raw($google_fonts_url); ?>"

@@ -24,7 +24,7 @@
       // Create the shortcodes list and the container for preview.
       let cont = el( "div", {}, shortcodeList(), showPreview());
       console.log(props.attributes.shortcode_id);
-      jQuery("laodUp").data("id", props.attributes.shortcode_id).trigger("click");
+
       return cont;
 
       /**
@@ -47,11 +47,11 @@
         } );
 
         // Return the complete html list of items.
-        return el( 'form', { onSubmit: itemSelect }, el( 'select', {
+        return el( 'select', {
           value: props.attributes.shortcode_id,
           onChange: itemSelect,
           class: 'aig-gbShortcodesList'
-        }, shortcode_list ));
+        }, shortcode_list );
       }
 
       /**
@@ -66,6 +66,15 @@
           shortcode: selected.dataset.shortcode,
           shortcode_id: selected.value,
         } );
+
+        let cont = event.target.parentElement.querySelector(".aig-gallery");
+        cont.setAttribute('data-get-gallery-url', "http://localhost/wordpress/wp-json/aig/v1/gallery/" + selected.value);
+        cont.setAttribute('data-get-images-url', "http://localhost/wordpress/wp-json/aig/v1/gallery/" + selected.value + "/images");
+        cont.setAttribute('data-options-url', "http://localhost/wordpress/wp-json/aig/v1/options/" + selected.value);
+        cont.setAttribute('id', 'root' + selected.value);
+        document.getElementById('loadApp').setAttribute('data-id', 'root' + selected.value);
+        document.getElementById('loadApp').click();
+
         event.preventDefault();
       }
 
@@ -76,7 +85,7 @@
        */
       function showPreview() {
         let shortcode_id = props.attributes.shortcode_id;
-        return el( 'div', {
+        let cont = el( 'div', {
           'data-options-section': 1,
           'data-get-google-fonts': "http://localhost/wordpress/wp-json/aig/v1/google-fonts",
           'data-get-gallery-url': "http://localhost/wordpress/wp-json/aig/v1/gallery/" + shortcode_id,
@@ -84,12 +93,12 @@
           'data-options-url': "http://localhost/wordpress/wp-json/aig/v1/options/" + shortcode_id,
           class: "aig-gallery aig-preview",
           id: "root" + shortcode_id,
-          style: {
-            'width': "100px",
-            'height': "100px",
-            'background-color': "red"
-          },
         } );
+
+        //document.getElementById('loadApp').setAttribute('data-id', 'root' + props.attributes.shortcode_id);
+        //document.getElementById('loadApp').click();
+
+        return cont;
       }
     },
 
