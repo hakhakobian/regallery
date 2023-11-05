@@ -197,7 +197,6 @@ final class AIG {
    * @return void
    */
   public function enqueue_block_editor_assets(): void {
-
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'aig', array(
       'title' => $this->nicename,

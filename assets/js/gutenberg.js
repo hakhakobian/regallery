@@ -24,6 +24,7 @@
       // Create the shortcodes list and the container for preview.
       let cont = el( "div", {}, shortcodeList(), showPreview());
       console.log(props.attributes.shortcode_id);
+      jQuery("laodUp").data("id", props.attributes.shortcode_id).trigger("click");
       return cont;
 
       /**
@@ -82,7 +83,7 @@
           'data-get-images-url': "http://localhost/wordpress/wp-json/aig/v1/gallery/" + shortcode_id + "/images",
           'data-options-url': "http://localhost/wordpress/wp-json/aig/v1/options/" + shortcode_id,
           class: "aig-gallery aig-preview",
-          id: "root",
+          id: "root" + shortcode_id,
           style: {
             'width': "100px",
             'height': "100px",
