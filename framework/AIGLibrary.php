@@ -136,7 +136,7 @@ class AIGLibrary {
     foreach ( $posts as $key => $post ) {
       $data[$key + $key_shifter] = [];
       $data[$key + $key_shifter]['id'] = $post->ID;
-      $data[$key + $key_shifter]['title'] = intval($post->post_name) === 0 ? $post->post_name : __( '(no title)', 'aig' );
+      $data[$key + $key_shifter]['title'] = $post->post_title ? $post->post_title : __( '(no title)', 'aig' );
       $data[$key + $key_shifter]['shortcode'] = self::get_shortcode($obj, $post->ID);
     }
 

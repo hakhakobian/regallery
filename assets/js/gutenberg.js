@@ -23,7 +23,6 @@
     edit: function ( props ) {
       // Create the shortcodes list and the container for preview.
       let cont = el( "div", {}, shortcodeList(), showPreview());
-      console.log(props.attributes.shortcode_id);
 
       return cont;
 
