@@ -93,9 +93,11 @@
           class: "aig-gallery aig-preview",
           id: "root" + shortcode_id,
         } );
-
-        //document.getElementById('loadApp').setAttribute('data-id', 'root' + props.attributes.shortcode_id);
-        //document.getElementById('loadApp').click();
+        if ( document.getElementsByClassName("aig-gallery").length > 0
+          && document.getElementsByClassName("aig-gallery")[0].getInnerHTML() == '' ) {
+          document.getElementById('loadApp').setAttribute('data-id', 'root' + props.attributes.shortcode_id);
+          document.getElementById('loadApp').click();
+        }
 
         return cont;
       }
