@@ -11,7 +11,7 @@ class AIG_Shortcode {
     add_shortcode($that->shortcode, array($this, 'content'));
   }
 
-  public function content( $params = array() ): array|bool|string {
+  public function content( $params = array() ) {
     if ( (is_admin() && defined('DOING_AJAX') && !DOING_AJAX) || !isset($params['id']) ) {
       return false;
     }

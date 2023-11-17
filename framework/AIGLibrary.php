@@ -100,7 +100,7 @@ class AIGLibrary {
    *
    * @return bool|string
    */
-  public static function get_shortcode($obj, $id): bool|string {
+  public static function get_shortcode($obj, $id) {
     if ( !$id ) {
       return false;
     }
