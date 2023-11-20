@@ -156,6 +156,9 @@ class AIG_Gallery {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
 
     $data = [];
+    $data['texts'] = array(
+      'load_more' => __('Load more', 'aig'),
+    );
     $data['images_count'] = 0;
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids);
@@ -261,16 +264,18 @@ class AIG_Gallery {
         }
       }
       // Run pagination on the data.
-      $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 20;
-      // We need one of these two parameters (page or offset, where offset is at which element to start).
-      if ( isset($_GET['page']) ) {
-        $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
-        $offset = ($page - 1) * $per_page;
+      if ( !empty($_GET['per_page']) ) {
+        $per_page = (int) $_GET['per_page'];
+        // We need one of these two parameters (page or offset, where offset is at which element to start).
+        if ( isset($_GET['page']) ) {
+          $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
+          $offset = ($page - 1) * $per_page;
+        }
+        else {
+          $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;
+        }
+        $data = array_slice($data, $offset, $per_page);
       }
-      else {
-        $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;
-      }
-      $data = array_slice($data, $offset, $per_page);
     }
 
     return wp_send_json($data);

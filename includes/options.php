@@ -22,6 +22,16 @@ class AIG_Options {
     'titleColor' => '#FFFFFF', #string
     'titleFontSize' => 12, #number
     'titleFontFamily' => 'Abel', #string
+
+    'paginationType' => 'scroll', #string simple | scroll | loadMore | none
+    'itemsPerPage' => 20, #number
+    'activeButtonColor' => '#FFFFFF', #string
+    'inactiveButtonColor' => '#00000014', #string
+    'paginationButtonShape' => 'circular', #string rounded | circular
+    'loadMoreButtonColor' => '#000000de', #string
+    'paginationTextColor' => '#000000de', #string
+
+    'useLightbox' => TRUE, #boolean
   ];
 
   public function __construct($activate) {

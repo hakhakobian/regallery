@@ -127,7 +127,8 @@ function aig_media_uploader( e ) {
     let selected_images = media_uploader.state().get( 'selection' ).toJSON();
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
-      let thumbnail_url = selected_images[key].sizes.thumbnail.url;
+      let sizes = selected_images[key].sizes;
+      let thumbnail_url = typeof sizes.thumbnail !== 'undefined' ? sizes.thumbnail.url : sizes.full.url;
       let image_id = selected_images[key].id;
 
       // Add an image to the gallery, if it doesn't already exist.
