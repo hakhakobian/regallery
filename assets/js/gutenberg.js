@@ -1,7 +1,7 @@
 ( function ( blocks, element ) {
   let el = element.createElement;
-  let pluginData = aig;
-  blocks.registerBlockType( "aig/gallery", {
+  let pluginData = reacg;
+  blocks.registerBlockType( "reacg/gallery", {
     title: pluginData.title,
     icon: el( 'img', {
       width: 20,
@@ -49,7 +49,7 @@
         return el( 'select', {
           value: props.attributes.shortcode_id,
           onChange: itemSelect,
-          class: 'aig-gbShortcodesList'
+          class: 'reacg-gbShortcodesList'
         }, shortcode_list );
       }
 
@@ -66,10 +66,11 @@
           shortcode_id: selected.value,
         } );
 
-        let cont = event.target.parentElement.querySelector(".aig-gallery");
-        cont.setAttribute('data-get-gallery-url', "http://localhost/wordpress/wp-json/aig/v1/gallery/" + selected.value);
-        cont.setAttribute('data-get-images-url', "http://localhost/wordpress/wp-json/aig/v1/gallery/" + selected.value + "/images");
-        cont.setAttribute('data-options-url', "http://localhost/wordpress/wp-json/aig/v1/options/" + selected.value);
+        let cont = event.target.parentElement.querySelector(".reacg-gallery");
+        cont.setAttribute('data-gallery-id', selected.value);
+        cont.setAttribute('data-get-gallery-url', reacg_global.rest_root + "gallery/" + selected.value);
+        cont.setAttribute('data-get-images-url', reacg_global.rest_root + "gallery/" + selected.value + "/images");
+        cont.setAttribute('data-options-url', reacg_global.rest_root + "options/" + selected.value);
         cont.setAttribute('id', 'root' + selected.value);
         document.getElementById('loadApp').setAttribute('data-id', 'root' + selected.value);
         document.getElementById('loadApp').click();
@@ -86,15 +87,17 @@
         let shortcode_id = props.attributes.shortcode_id;
         let cont = el( 'div', {
           'data-options-section': 1,
-          'data-get-google-fonts': "http://localhost/wordpress/wp-json/aig/v1/google-fonts",
-          'data-get-gallery-url': "http://localhost/wordpress/wp-json/aig/v1/gallery/" + shortcode_id,
-          'data-get-images-url': "http://localhost/wordpress/wp-json/aig/v1/gallery/" + shortcode_id + "/images",
-          'data-options-url': "http://localhost/wordpress/wp-json/aig/v1/options/" + shortcode_id,
-          class: "aig-gallery aig-preview",
+          'data-url': reacg_global.rest_root,
+          'data-gallery-id': shortcode_id,
+          'data-get-google-fonts': reacg_global.rest_root + "google-fonts",
+          'data-get-gallery-url': reacg_global.rest_root + "gallery/" + shortcode_id,
+          'data-get-images-url': reacg_global.rest_root + "gallery/" + shortcode_id + "/images",
+          'data-options-url': reacg_global.rest_root + "options/" + shortcode_id,
+          class: "reacg-gallery reacg-preview",
           id: "root" + shortcode_id,
         } );
-        if ( document.getElementsByClassName("aig-gallery").length > 0
-          && document.getElementsByClassName("aig-gallery")[0].getInnerHTML() == '' ) {
+        if ( document.getElementsByClassName("reacg-gallery").length > 0
+          && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() == '' ) {
           document.getElementById('loadApp').setAttribute('data-id', 'root' + props.attributes.shortcode_id);
           document.getElementById('loadApp').click();
         }

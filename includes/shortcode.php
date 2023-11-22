@@ -1,12 +1,12 @@
 <?php
 defined('ABSPATH') || die('Access Denied');
 
-class AIG_Shortcode {
+class REACG_Shortcode {
   private $obj;
 
   public function __construct($that) {
     $this->obj = $that;
-    AIGLibrary::enqueue_scripts($this->obj);
+    REACGLibrary::enqueue_scripts($this->obj);
 
     add_shortcode($that->shortcode, array($this, 'content'));
   }
@@ -18,7 +18,7 @@ class AIG_Shortcode {
 
     $id = (int) $params['id'];
     ob_start();
-    AIGLibrary::get_rest_routs($this->obj->rest_root, $id);
+    REACGLibrary::get_rest_routs($this->obj->rest_root, $id);
 
     return str_replace(array( "\r\n", "\n", "\r" ), '', ob_get_clean());
   }

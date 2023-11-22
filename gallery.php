@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: AI Gallery
+ * Plugin Name: Reactive Gallery
  * Plugin URI: https://10web.io/plugins/wordpress-gallery/
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
  * Version: 1.0.0
@@ -13,7 +13,7 @@
 defined('ABSPATH') || die('Access Denied');
 
 $bwg = 0;
-final class AIG {
+final class REACG {
   /**
    * The single instance of the class.
    */
@@ -26,10 +26,10 @@ final class AIG {
   public string $main_file = '';
   public string $version = '1.0.0';
 
-  public string $prefix = 'aig';
-  public string $shortcode = 'AIG';
-  public string $nicename = 'AI Gallery';
-  public string $nonce = 'aig_nonce';
+  public string $prefix = 'reacg';
+  public string $shortcode = 'REACG';
+  public string $nicename = 'Reactive Gallery';
+  public string $nonce = 'reacg_nonce';
   public string $rest_root = "";
   public string $rest_nonce = "";
 //  public $is_pro = TRUE;
@@ -44,7 +44,7 @@ final class AIG {
    *
    * @return  self|null
    */
-  public static function instance(): ?AIG {
+  public static function instance(): ?REACG {
     if ( is_null( self::$_instance ) ) {
       self::$_instance = new self();
     }
@@ -59,9 +59,9 @@ final class AIG {
   private function define_constants() {
     $this->plugin_dir = WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__));
 
-    require_once $this->plugin_dir . '/framework/AIGLibrary.php';
+    require_once $this->plugin_dir . '/framework/REACGLibrary.php';
 
-    $this->abspath = AIGLibrary::get_abspath();
+    $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
 //    $upload_dir = wp_upload_dir();
@@ -96,9 +96,9 @@ final class AIG {
    * Languages localization.
    */
   public function language_load(): void {
-    $this->rest_root = rest_url();
+    $this->rest_root = rest_url() . "reacg/v1/";
     $this->rest_nonce = wp_create_nonce( 'wp_rest' );
-    load_plugin_textdomain('aig', FALSE, basename(dirname(__FILE__)) . '/languages');
+    load_plugin_textdomain('reacg', FALSE, basename(dirname(__FILE__)) . '/languages');
   }
 
   /**
@@ -106,7 +106,7 @@ final class AIG {
    */
   public function post_type_gallery(): void {
     require_once($this->plugin_dir . '/includes/gallery.php');
-    new AIG_Gallery($this);
+    new REACG_Gallery($this);
   }
 
   /**
@@ -114,7 +114,7 @@ final class AIG {
    */
   public function shortcode(): void {
     require_once($this->plugin_dir . '/includes/shortcode.php');
-    new AIG_Shortcode($this);
+    new REACG_Shortcode($this);
   }
 
   /**
@@ -125,9 +125,9 @@ final class AIG {
     $parent_slug = 'galleries_' . $this->prefix;
 
     add_menu_page($this->nicename, $this->nicename, $permissions, $parent_slug, array($this , 'admin_pages'), $this->plugin_url . '/images/icons/icon.svg');
-    add_submenu_page($parent_slug, __('Add Galleries/Images', 'aig'), __('Add Galleries/Images', 'aig'), $permissions, $parent_slug, array($this , 'admin_pages'));
+    add_submenu_page($parent_slug, __('Add Galleries/Images', 'reacg'), __('Add Galleries/Images', 'reacg'), $permissions, $parent_slug, array($this , 'admin_pages'));
 
-//    add_submenu_page(NULL, __('Generate Shortcode', 'aig'), __('Generate Shortcode', 'aig'), $permissions, 'shortcode_' . $this->prefix, array($this , 'admin_pages'));
+//    add_submenu_page(NULL, __('Generate Shortcode', 'reacg'), __('Generate Shortcode', 'reacg'), $permissions, 'shortcode_' . $this->prefix, array($this , 'admin_pages'));
   }
 
   /**
@@ -137,7 +137,7 @@ final class AIG {
     $required_scripts = [];
     $required_styles = [];
 
-    $used_fonts = is_admin() ? AIGLibrary::get_fonts(FALSE) : AIGLibrary::get_used_fonts();
+    $used_fonts = is_admin() ? REACGLibrary::get_fonts(FALSE) : REACGLibrary::get_used_fonts();
     if ( !empty($used_fonts) ) {
       $query = implode("|", str_replace(' ', '+', $used_fonts));
 
@@ -149,7 +149,7 @@ final class AIG {
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
-    wp_localize_script( $this->prefix . '_thumbnails', 'aig_global', array(
+    wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'rest_nonce' => $this->rest_nonce,
     ) );
@@ -173,11 +173,11 @@ final class AIG {
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
 
     wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version);
-    wp_localize_script($this->prefix . '_admin', 'aig', array(
-      'insert' => __('Insert', 'aig'),
-      'update' => __('Update', 'aig'),
-      'edit_image' => __('Edit image', 'aig'),
-      'choose_images' => __('Choose images', 'aig'),
+    wp_localize_script($this->prefix . '_admin', 'reacg', array(
+      'insert' => __('Insert', 'reacg'),
+      'update' => __('Update', 'reacg'),
+      'edit_image' => __('Edit image', 'reacg'),
+      'choose_images' => __('Choose images', 'reacg'),
     ));
 
     // Register general styles/scripts.
@@ -198,10 +198,10 @@ final class AIG {
    */
   public function enqueue_block_editor_assets(): void {
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
-    wp_localize_script($this->prefix . '_gutenberg', 'aig', array(
+    wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
       'title' => $this->nicename,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
-      'data' => AIGLibrary::get_shortcodes($this, TRUE),
+      'data' => REACGLibrary::get_shortcodes($this, TRUE),
     ));
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/assets/css/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
   }
@@ -242,8 +242,8 @@ final class AIG {
    * Activate.
    */
   public function activate($activate = TRUE): void {
-    require_once AIG()->plugin_dir . "/includes/options.php";
-    new AIG_Options($activate);
+    require_once REACG()->plugin_dir . "/includes/options.php";
+    new REACG_Options($activate);
   }
 
   /**
@@ -283,7 +283,7 @@ final class AIG {
 //  }
 //
 //  public function enqueue_elementor_widget_scripts() {
-//    wp_enqueue_script(AIG()->prefix . 'elementor_widget_js', plugins_url('js/bwg_elementor_widget.js', __FILE__), array( 'jquery' ));
+//    wp_enqueue_script(REACG()->prefix . 'elementor_widget_js', plugins_url('js/bwg_elementor_widget.js', __FILE__), array( 'jquery' ));
 //  }
 
   /*
@@ -298,12 +298,12 @@ final class AIG {
 }
 
 /**
- * Main instance of AIG.
+ * Main instance of REACG.
  *
- * @return AIG The main instance to prevent the need to use globals.
+ * @return REACG The main instance to prevent the need to use globals.
  */
-function AIG() {
-  return AIG::instance();
+function REACG() {
+  return REACG::instance();
 }
 
-AIG();
+REACG();
