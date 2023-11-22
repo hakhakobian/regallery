@@ -1,11 +1,11 @@
-.aig-gallery img,
-.aig-gallery ul,
-.aig-gallery li {
+.reacg-gallery img,
+.reacg-gallery ul,
+.reacg-gallery li {
   margin: 0;
   padding: 0;
 }
 
-.aig-gallery .settings input {
+.reacg-gallery .settings input {
   border: none;
   line-height: 1;
   margin: 0;

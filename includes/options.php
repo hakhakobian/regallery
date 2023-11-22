@@ -1,8 +1,8 @@
 <?php
 defined('ABSPATH') || die('Access Denied');
 
-class AIG_Options {
-  private string $name = "aig_options";
+class REACG_Options {
+  private string $name = "reacg_options";
   private $obj;
   private array $options = [
     'title' => 'Default', #string
@@ -22,6 +22,16 @@ class AIG_Options {
     'titleColor' => '#FFFFFF', #string
     'titleFontSize' => 12, #number
     'titleFontFamily' => 'Abel', #string
+
+    'paginationType' => 'scroll', #string simple | scroll | loadMore | none
+    'itemsPerPage' => 20, #number
+    'activeButtonColor' => '#FFFFFF', #string
+    'inactiveButtonColor' => '#00000014', #string
+    'paginationButtonShape' => 'circular', #string rounded | circular
+    'loadMoreButtonColor' => '#000000de', #string
+    'paginationTextColor' => '#000000de', #string
+
+    'useLightbox' => TRUE, #boolean
   ];
 
   public function __construct($activate) {
@@ -81,13 +91,13 @@ class AIG_Options {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
+      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $data = $request->get_body();
 
     if ( empty($data) ) {
-      return new WP_Error( '404', __( 'Nothing to save.', 'aig' ) );
+      return new WP_Error( '404', __( 'Nothing to save.', 'reacg' ) );
     }
     $data = (array) json_decode($data);
     array_walk($data, function (&$value) {
@@ -102,10 +112,10 @@ class AIG_Options {
       return new WP_REST_Response( TRUE, 200 );
     }
     elseif ( $old_options === $new_options ) {
-      return new WP_Error( '304', __( 'Nothing changed.', 'aig' ) );
+      return new WP_Error( '304', __( 'Nothing changed.', 'reacg' ) );
     }
     else {
-      return new WP_Error( '403', __( 'Nothing saved.', 'aig' ) );
+      return new WP_Error( '403', __( 'Nothing saved.', 'reacg' ) );
     }
   }
 
@@ -120,7 +130,7 @@ class AIG_Options {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
+      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $options = get_option($this->name . $gallery_id, FALSE);
@@ -152,7 +162,7 @@ class AIG_Options {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
+      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $deleted = delete_option($this->name . $gallery_id);
@@ -161,7 +171,7 @@ class AIG_Options {
       return new WP_REST_Response( TRUE, 200 );
     }
     else {
-      return new WP_Error( '403', __( 'Nothing deleted.', 'aig' ) );
+      return new WP_Error( '403', __( 'Nothing deleted.', 'reacg' ) );
     }
   }
 

@@ -1,48 +1,48 @@
 jQuery(document).ready(function () {
   // Bind an event to the add image button.
-  jQuery(".aig_item_new ").on("click", function (event) {
-    aig_media_uploader( event );
+  jQuery(".reacg_item_new ").on("click", function (event) {
+    reacg_media_uploader( event );
   });
 
   // Make the image items sortable.
-  jQuery( ".aig_items" ).sortable( {
-    items: ".aig-sortable",
+  jQuery( ".reacg_items" ).sortable( {
+    items: ".reacg-sortable",
     update: function ( event, tr ) {
       let images_ids = [];
-      jQuery( ".aig_items > .aig-sortable" ).each( function () {
+      jQuery( ".reacg_items > .reacg-sortable" ).each( function () {
         images_ids.push(jQuery( this ).data( 'id' ));
       } );
-      aig_set_image_ids( images_ids );
+      reacg_set_image_ids( images_ids );
       // Save the images.
-      aig_save_images();
+      reacg_save_images();
     }
   } );
 
   // Bind a delete event to the every image item.
-  jQuery(document).on("click", ".aig_item .aig-delete", function () {
-    let item = jQuery(this).closest(".aig_item");
+  jQuery(document).on("click", ".reacg_item .reacg-delete", function () {
+    let item = jQuery(this).closest(".reacg_item");
     // The image id to be deleted.
     let image_id = item.data("id");
     item.remove();
 
-    let images_ids = aig_get_image_ids(true);
+    let images_ids = reacg_get_image_ids(true);
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
-    aig_set_image_ids(images_ids);
+    reacg_set_image_ids(images_ids);
     // Save the images.
-    aig_save_images();
+    reacg_save_images();
   });
 
   // Bind an edit event to the every image item.
-  jQuery(document).on("click", ".aig_item .aig-edit", function () {
-    let item = jQuery(this).closest(".aig_item");
+  jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
+    let item = jQuery(this).closest(".reacg_item");
     // The image id to be edited.
     let image_id = item.data("id");
 
     let media_uploader = wp.media( {
-      title: aig.edit_image,
+      title: reacg.edit_image,
       library: { type: 'image' },
-      button: { text: aig.update },
+      button: { text: reacg.update },
       multiple: false
     } );
     media_uploader.on('open', function() {
@@ -59,7 +59,7 @@ jQuery(document).ready(function () {
  * @param parsed
  * @returns {any|*[]}
  */
-function aig_get_image_ids(parsed) {
+function reacg_get_image_ids(parsed) {
   let data = jQuery("#images_ids").val();
   if ( parsed === true ) {
     return data !== "" ? JSON.parse(data) : [];
@@ -74,18 +74,18 @@ function aig_get_image_ids(parsed) {
  *
  * @param arr
  */
-function aig_set_image_ids(arr) {
+function reacg_set_image_ids(arr) {
   jQuery("#images_ids").val(JSON.stringify(arr));
 }
 
 /**
  * Disable images which are already added to the gallery.
  */
-function aig_check_images() {
-  let images_ids = aig_get_image_ids(true);
+function reacg_check_images() {
+  let images_ids = reacg_get_image_ids(true);
   jQuery("ul.attachments li").each(function () {
     if (jQuery.inArray(jQuery(this).data("id"), images_ids) !== -1) {
-      jQuery(this).attr("title", "Already added").addClass("aig-already-added");
+      jQuery(this).attr("title", "Already added").addClass("reacg-already-added");
       jQuery(this).find(".thumbnail").on("click", function (e) {
         e.stopPropagation();
       });
@@ -98,21 +98,21 @@ function aig_check_images() {
  * @param e
  * @param multiple
  */
-function aig_media_uploader( e ) {
+function reacg_media_uploader( e ) {
   e.preventDefault();
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
-    title: aig.choose_images,
+    title: reacg.choose_images,
     library: { type: 'image' },
-    button: { text: aig.insert },
+    button: { text: reacg.insert },
     multiple: true
   } );
   media_uploader.on('open', function () {
     setTimeout(function (){
-      aig_check_images();
+      reacg_check_images();
     }, 500);
     jQuery("#menu-item-browse").on("click", function () {
-      aig_check_images();
+      reacg_check_images();
     });
   });
   media_uploader.open();
@@ -121,23 +121,24 @@ function aig_media_uploader( e ) {
     // Get images already added.
     //let images = jQuery("#images").val() != "" ? JSON.parse(jQuery("#images").val()) : [];
     // Get images ids already added.
-    let images_ids = aig_get_image_ids(true);
+    let images_ids = reacg_get_image_ids(true);
 
     // Get selected images.
     let selected_images = media_uploader.state().get( 'selection' ).toJSON();
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
-      let thumbnail_url = selected_images[key].sizes.thumbnail.url;
+      let sizes = selected_images[key].sizes;
+      let thumbnail_url = typeof sizes.thumbnail !== 'undefined' ? sizes.thumbnail.url : sizes.full.url;
       let image_id = selected_images[key].id;
 
       // Add an image to the gallery, if it doesn't already exist.
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
         // Add selected image to the existing list of visual items.
-        let clone = jQuery(".aig-template").clone();
+        let clone = jQuery(".reacg-template").clone();
         clone.attr("data-id", image_id);
-        clone.find(".aig_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
-        clone.removeClass("aig-hidden aig-template").addClass("aig-sortable");
-        clone.insertAfter(".aig_item_new");
+        clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
+        clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
+        clone.insertAfter(".reacg_item_new");
         // Add selected image to the existing list.
         //images.push({id: image_id, title: title, url: thumbnail_url});
         // Add selected image id to the existing list.
@@ -146,11 +147,11 @@ function aig_media_uploader( e ) {
     }
 
     // Update the images data.
-    aig_set_image_ids(images_ids);
+    reacg_set_image_ids(images_ids);
     //jQuery("#images").val(JSON.stringify(images));
 
     // Save the images.
-    aig_save_images();
+    reacg_save_images();
 
     media_uploader.close();
   } );
@@ -159,18 +160,18 @@ function aig_media_uploader( e ) {
 /**
  * Save the images IDs to the gallery.
  */
-function aig_save_images() {
-  aig_loading();
+function reacg_save_images() {
+  reacg_loading();
 
   jQuery.ajax({
     type: 'POST',
-    url: jQuery(".aig_items").data("ajax-url"),
+    url: jQuery(".reacg_items").data("ajax-url"),
     data: {
-      'post_id': jQuery(".aig_items").data("post-id"),
-      'images_ids': aig_get_image_ids(false)
+      'post_id': jQuery(".reacg_items").data("post-id"),
+      'images_ids': reacg_get_image_ids(false)
     },
     complete: function (data) {
-      aig_loading();
+      reacg_loading();
       // Trigger hidden button click to reload the preview.
       jQuery("#reloadData").trigger("click");
     }
@@ -180,7 +181,7 @@ function aig_save_images() {
 /**
  * Add/remove loading.
  */
-function aig_loading() {
+function reacg_loading() {
   jQuery("#publishing-action .spinner").toggleClass("is-active");
   jQuery("#publishing-action #publish").toggleClass("disabled");
 }

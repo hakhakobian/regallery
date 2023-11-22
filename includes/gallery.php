@@ -1,9 +1,9 @@
 <?php
 defined('ABSPATH') || die('Access Denied');
 
-class AIG_Gallery {
-  private string $post_type = "aig";
-  private string $ajax_slug = "aig_save_images";
+class REACG_Gallery {
+  private string $post_type = "reacg";
+  private string $ajax_slug = "reacg_save_images";
   private $obj;
 
   public function __construct($that) {
@@ -11,7 +11,7 @@ class AIG_Gallery {
     wp_enqueue_media();
     wp_enqueue_script($this->obj->prefix . '_admin');
     wp_enqueue_style($this->obj->prefix . '_admin');
-    AIGLibrary::enqueue_scripts($this->obj);
+    REACGLibrary::enqueue_scripts($this->obj);
     $this->register_post_type();
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'thumbnail_column' ]);
@@ -60,8 +60,8 @@ class AIG_Gallery {
 
     // Register a route to get/set/delete options for the gallery with the API.
     add_action( 'rest_api_init', function () {
-      require_once AIG()->plugin_dir . "/includes/options.php";
-      $options = new AIG_Options(true);
+      require_once REACG()->plugin_dir . "/includes/options.php";
+      $options = new REACG_Options(true);
       register_rest_route( $this->obj->prefix . '/v1', '/options/(?P<gallery_id>\d+)', array(
         'methods' => WP_REST_Server::READABLE . ", " . WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
         'callback' => [ $options, 'options'],
@@ -82,7 +82,7 @@ class AIG_Gallery {
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/google-fonts', array(
         'methods' => WP_REST_Server::READABLE,
-        'callback' => [ 'AIGLibrary', 'get_fonts'],
+        'callback' => [ 'REACGLibrary', 'get_fonts'],
         //        'permission_callback' => function () {
         //          return current_user_can( 'edit_posts' );
         //        }
@@ -98,8 +98,8 @@ class AIG_Gallery {
    * @return array
    */
   public function thumbnail_column($columns): array {
-    $columns = array_merge(array_slice($columns, 0, 1), array('aig_thumbnail' => __('Thumbnail', 'aig')), array_slice($columns, 1));
-    $columns = array_merge(array_slice($columns, 0, 3), array('aig_shortcode' => __('Shortcode', 'aig'), 'aig_images_count' => __('Images count', 'aig')), array_slice($columns, 3));
+    $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
+    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
 
     return $columns;
   }
@@ -116,7 +116,7 @@ class AIG_Gallery {
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $images_ids_arr = !empty($images_ids) ? json_decode($images_ids) : [];
     switch ( $column_id ) {
-      case 'aig_thumbnail': {
+      case 'reacg_thumbnail': {
         if ( !empty($images_ids_arr) ) {
           $image = wp_get_attachment_image($images_ids_arr[0], array(50, 50));
         }
@@ -127,12 +127,12 @@ class AIG_Gallery {
         echo $image;
         break;
       }
-      case 'aig_images_count': {
+      case 'reacg_images_count': {
         echo count($images_ids_arr);
         break;
       }
-      case 'aig_shortcode': {
-        echo "<code>" . AIGLibrary::get_shortcode($this->obj, $post_id) . "</code>";
+      case 'reacg_shortcode': {
+        echo "<code>" . REACGLibrary::get_shortcode($this->obj, $post_id) . "</code>";
         break;
       }
     }
@@ -149,13 +149,16 @@ class AIG_Gallery {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'aig' ) );
+      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
     }
     $gallery_id = (int) $parameters['id'];
 
     $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
 
     $data = [];
+    $data['texts'] = array(
+      'load_more' => __('Load more', 'reacg'),
+    );
     $data['images_count'] = 0;
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids);
@@ -261,16 +264,18 @@ class AIG_Gallery {
         }
       }
       // Run pagination on the data.
-      $per_page = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 20;
-      // We need one of these two parameters (page or offset, where offset is at which element to start).
-      if ( isset($_GET['page']) ) {
-        $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
-        $offset = ($page - 1) * $per_page;
+      if ( !empty($_GET['per_page']) ) {
+        $per_page = (int) $_GET['per_page'];
+        // We need one of these two parameters (page or offset, where offset is at which element to start).
+        if ( isset($_GET['page']) ) {
+          $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
+          $offset = ($page - 1) * $per_page;
+        }
+        else {
+          $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;
+        }
+        $data = array_slice($data, $offset, $per_page);
       }
-      else {
-        $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;
-      }
-      $data = array_slice($data, $offset, $per_page);
     }
 
     return wp_send_json($data);
@@ -298,7 +303,7 @@ class AIG_Gallery {
    * @return void
    */
   public function save_post($post_id, $post): void {
-    if ( is_null($post) || 'aig' !== $post->post_type ) {
+    if ( is_null($post) || 'reacg' !== $post->post_type ) {
       return;
     }
 
@@ -310,7 +315,7 @@ class AIG_Gallery {
     // Save the shortcode as the post content.
     wp_update_post([
                      'ID' => $post_id,
-                     'post_content' => AIGLibrary::get_shortcode($this->obj, $post_id),
+                     'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
                    ]);
     add_action( 'save_post', [ $this, 'save_post' ], 10, 2 );
   }
@@ -322,7 +327,34 @@ class AIG_Gallery {
    */
   private function register_post_type(): void {
     $args = array(
-      'label' => __('Galleries', 'aig'),
+      'label' => __('Galleries', 'reacg'),
+      'labels' => array(
+        'add_new' => __('Add New Gallery', 'reacg'),
+        'add_new_item' => __('Add New Gallery', 'reacg'),
+        'edit_item' => __('Edit Gallery', 'reacg'),
+        'new_item' => __('New Gallery', 'reacg'),
+        'view_item' => __('View Gallery', 'reacg'),
+        'view_items' => __('View Galleries', 'reacg'),
+        'search_items' => __('Search Galleries', 'reacg'),
+        'not_found' => __('No galleries found', 'reacg'),
+        'not_found_in_trash' => __('No galleries found in Trash', 'reacg'),
+        'all_items' => __('All Galleries', 'reacg'),
+        'filter_items_list' => __('Filter galleries list', 'reacg'),
+        'items_list_navigation' => __('Galleries list navigation', 'reacg'),
+        'items_list' => __('Galleries list', 'reacg'),
+        'archives' => __('Gallery Archives', 'reacg'),
+        'attributes' => __('Gallery Attributes', 'reacg'),
+        'insert_into_item' => __('Insert into gallery', 'reacg'),
+        'uploaded_to_this_item' => __('Uploaded to this gallery', 'reacg'),
+        'item_published' => __('Gallery published.', 'reacg'),
+        'item_published_privately' => __('Gallery published privately.', 'reacg'),
+        'item_reverted_to_draft' => __('Gallery reverted to draft.', 'reacg'),
+        'item_trashed' => __('Gallery trashed.', 'reacg'),
+        'item_scheduled' => __('Gallery scheduled.', 'reacg'),
+        'item_updated' => __('Gallery updated.', 'reacg'),
+        'item_link' => __('Gallery Link', 'reacg'),
+        'item_link_description' => __('A link to a gallery', 'reacg'),
+      ),
       'public' => TRUE,
       'exclude_from_search' => TRUE,
       'publicly_queryable' => TRUE,
@@ -333,8 +365,8 @@ class AIG_Gallery {
       'rewrite' => TRUE,
       'supports' => array('title'),
     );
-    register_post_type( 'aig', $args );
-    add_action( 'add_meta_boxes_aig', [ $this, 'add_meta_boxes' ], 1 );
+    register_post_type( 'reacg', $args );
+    add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );
   }
 
   /**
@@ -345,7 +377,7 @@ class AIG_Gallery {
    * @return void
    */
   public function add_meta_boxes($post): void {
-    if ( 'aig' !== $post->post_type ) {
+    if ( 'reacg' !== $post->post_type ) {
       return;
     }
 
@@ -353,14 +385,14 @@ class AIG_Gallery {
     $this->remove_all_the_metaboxes();
 
     // Metabox for adding images.
-    add_meta_box( 'gallery-images', __( 'Images', 'aig' ), [ $this, 'meta_box_images' ], 'aig', 'normal', 'high' );
+    add_meta_box( 'gallery-images', __( 'Images', 'reacg' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
 
     // Metabox for live preview.
-    add_meta_box( 'gallery-preview', __( 'Preview', 'aig' ), [ $this, 'meta_box_preview' ], 'aig', 'normal', 'high' );
+    add_meta_box( 'gallery-preview', __( 'Preview', 'reacg' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
   }
 
   public function meta_box_preview($post): void {
-    AIGLibrary::get_rest_routs($this->obj->rest_root, $post->ID);
+    REACGLibrary::get_rest_routs($this->obj->rest_root, $post->ID);
   }
 
   /**
@@ -372,13 +404,13 @@ class AIG_Gallery {
    */
   public function meta_box_images($post): void {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
-    ?><div class="aig_items"
+    ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post->ID); ?>"
          data-ajax-url="<?php echo esc_url(add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'))); ?>">
-      <div class="aig_item aig_item_new">
-        <div class="aig_item_image">
-          <!--<a id="aig-add-images">
-            <p id="add_album_gallery_text"><?php /*_e('Add images', 'aig'); */?></p>
+      <div class="reacg_item reacg_item_new">
+        <div class="reacg_item_image">
+          <!--<a id="reacg-add-images">
+            <p id="add_album_gallery_text"><?php /*_e('Add images', 'reacg'); */?></p>
           </a>-->
         </div>
       </div><?php
@@ -409,14 +441,14 @@ class AIG_Gallery {
       ];
       $template = TRUE;
     }
-    ?><div data-id="<?php echo esc_attr($data['id']); ?>" class="aig_item <?php echo esc_attr($template ? "aig-template aig-hidden" : "aig-sortable"); ?>">
-    <div class="aig_item_image"
+    ?><div data-id="<?php echo esc_attr($data['id']); ?>" class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
+    <div class="reacg_item_image"
          title="<?php echo esc_attr($data['title']); ?>"
          style="background-image: url('<?php echo urldecode($data['url']); ?>')">
-      <div class="aig-overlay">
-        <div class="aig-hover-buttons">
-          <span class="aig-edit dashicons dashicons-edit" title="<?php _e('Edit', 'aig'); ?>"></span>
-          <span class="aig-delete dashicons dashicons-trash" title="<?php _e('Remove', 'aig'); ?>"></span>
+      <div class="reacg-overlay">
+        <div class="reacg-hover-buttons">
+          <span class="reacg-edit dashicons dashicons-edit" title="<?php _e('Edit', 'reacg'); ?>"></span>
+          <span class="reacg-delete dashicons dashicons-trash" title="<?php _e('Remove', 'reacg'); ?>"></span>
         </div>
       </div>
     </div>
