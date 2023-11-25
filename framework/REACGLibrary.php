@@ -77,7 +77,7 @@ class REACGLibrary {
     $get_gallery_images_url = $url . "gallery/" . $gallery_id . "/images";
     $options_url = $url . "options/" . $gallery_id;
     $google_fonts_url = $url . "google-fonts";
-    ?><div id="root<?php echo (int) $gallery_id; ?>"
+    ?><div id="reacg-root<?php echo (int) $gallery_id; ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo (int) is_admin(); ?>"
          data-url="<?php echo esc_url_raw($url); ?>"

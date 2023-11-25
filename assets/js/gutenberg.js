@@ -71,9 +71,9 @@
         cont.setAttribute('data-get-gallery-url', reacg_global.rest_root + "gallery/" + selected.value);
         cont.setAttribute('data-get-images-url', reacg_global.rest_root + "gallery/" + selected.value + "/images");
         cont.setAttribute('data-options-url', reacg_global.rest_root + "options/" + selected.value);
-        cont.setAttribute('id', 'root' + selected.value);
-        document.getElementById('loadApp').setAttribute('data-id', 'root' + selected.value);
-        document.getElementById('loadApp').click();
+        cont.setAttribute('id', 'reacg-root' + selected.value);
+        document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + selected.value);
+        document.getElementById('reacg-loadApp').click();
 
         event.preventDefault();
       }
@@ -94,12 +94,12 @@
           'data-get-images-url': reacg_global.rest_root + "gallery/" + shortcode_id + "/images",
           'data-options-url': reacg_global.rest_root + "options/" + shortcode_id,
           class: "reacg-gallery reacg-preview",
-          id: "root" + shortcode_id,
+          id: "reacg-root" + shortcode_id,
         } );
         if ( document.getElementsByClassName("reacg-gallery").length > 0
           && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() == '' ) {
-          document.getElementById('loadApp').setAttribute('data-id', 'root' + props.attributes.shortcode_id);
-          document.getElementById('loadApp').click();
+          document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + props.attributes.shortcode_id);
+          document.getElementById('reacg-loadApp').click();
         }
 
         return cont;

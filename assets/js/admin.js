@@ -173,7 +173,8 @@ function reacg_save_images() {
     complete: function (data) {
       reacg_loading();
       // Trigger hidden button click to reload the preview.
-      jQuery("#reloadData").trigger("click");
+      
+      jQuery("#reacg-reloadData").trigger("click");
     }
   });
 }
