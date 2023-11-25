@@ -1,26 +1,23 @@
 <?php
 /**
  * Plugin Name: Reactive Gallery
- * Plugin URI: https://10web.io/plugins/wordpress-gallery/
+ * Plugin URI:
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
  * Version: 1.0.0
- * Author: Gallery Team
+ * Author: Reactive Gallery
  * Author URI:
- * Text Domain: ai-gallery
+ * Text Domain: reacg
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 defined('ABSPATH') || die('Access Denied');
 
-$bwg = 0;
 final class REACG {
   /**
    * The single instance of the class.
    */
   protected static $_instance = null;
 
-  public string $plugin_link = 'https://my_website.io/ai-gallery/';
-  public string $utm_source = '?utm_source=ai_gallery&utm_medium=free_plugin';
   public string $plugin_dir = '';
   public string $plugin_url = '';
   public string $main_file = '';
@@ -32,10 +29,6 @@ final class REACG {
   public string $nonce = 'reacg_nonce';
   public string $rest_root = "";
   public string $rest_nonce = "";
-//  public $is_pro = TRUE;
-//  public $options = array();
-  public string $upload_dir = '';
-  public string $upload_url = '';
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
   public string $abspath = '';
 
@@ -64,10 +57,6 @@ final class REACG {
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
-//    $upload_dir = wp_upload_dir();
-//    if ( isset($upload_dir->url) ) {
-//      $this->upload_url = $upload_dir->url;
-//    }
   }
 
   /**
@@ -77,8 +66,6 @@ final class REACG {
     add_action('init', array($this, 'language_load'), 9);
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
-//    add_action('admin_menu', array( $this, 'admin_menu' ) );
-
 
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
@@ -115,19 +102,6 @@ final class REACG {
   public function shortcode(): void {
     require_once($this->plugin_dir . '/includes/shortcode.php');
     new REACG_Shortcode($this);
-  }
-
-  /**
-   * Plugin menu.
-   */
-  public function admin_menu(): void {
-    $permissions = 'manage_options';
-    $parent_slug = 'galleries_' . $this->prefix;
-
-    add_menu_page($this->nicename, $this->nicename, $permissions, $parent_slug, array($this , 'admin_pages'), $this->plugin_url . '/images/icons/icon.svg');
-    add_submenu_page($parent_slug, __('Add Galleries/Images', 'reacg'), __('Add Galleries/Images', 'reacg'), $permissions, $parent_slug, array($this , 'admin_pages'));
-
-//    add_submenu_page(NULL, __('Generate Shortcode', 'reacg'), __('Generate Shortcode', 'reacg'), $permissions, 'shortcode_' . $this->prefix, array($this , 'admin_pages'));
   }
 
   /**
@@ -269,32 +243,6 @@ final class REACG {
     }
     $this->activate(false);
   }
-
-  /**
-   * Prevent adding shortcode conflict with some builders.
-   */
-//  private function before_shortcode_add_builder_editor() {
-//    if ( defined('ELEMENTOR_VERSION') && did_action( 'elementor/loaded' ) ) {
-//      add_action('elementor/editor/footer', array( $this, 'global_script' ));
-//    }
-//    if ( class_exists('FLBuilder') ) {
-//      add_action('wp_enqueue_scripts', array( $this, 'global_script' ));
-//    }
-//  }
-//
-//  public function enqueue_elementor_widget_scripts() {
-//    wp_enqueue_script(REACG()->prefix . 'elementor_widget_js', plugins_url('js/bwg_elementor_widget.js', __FILE__), array( 'jquery' ));
-//  }
-
-  /*
-   * Change image editors library.
-   *
-   * Changes the order of use of the image editor library.
-   * First, "WP_Image_Editor_GD" is used.
-   * */
-//  function bwg_change_image_editors_library() {
-//    return array( 'WP_Image_Editor_GD', 'WP_Image_Editor_Imagick' );
-//  }
 }
 
 /**

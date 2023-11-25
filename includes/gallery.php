@@ -34,9 +34,7 @@ class REACG_Gallery {
             }
           ),
         ),
-        //        'permission_callback' => function () {
-        //          return current_user_can( 'edit_posts' );
-        //        }
+        'permission_callback' => [$this, 'privileged_permission'],
       ) );
     } );
 
@@ -52,9 +50,7 @@ class REACG_Gallery {
             }
           ),
         ),
-        //        'permission_callback' => function () {
-        //          return current_user_can( 'edit_posts' );
-        //        }
+        'permission_callback' => [$this, 'privileged_permission'],
       ) );
     } );
 
@@ -72,9 +68,7 @@ class REACG_Gallery {
             }
           ),
         ),
-        //        'permission_callback' => function () {
-        //          return current_user_can( 'edit_posts' );
-        //        }
+        'permission_callback' => [$this, 'privileged_permission'],
       ) );
     } );
 
@@ -83,11 +77,29 @@ class REACG_Gallery {
       register_rest_route( $this->obj->prefix . '/v1', '/google-fonts', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ 'REACGLibrary', 'get_fonts'],
-        //        'permission_callback' => function () {
-        //          return current_user_can( 'edit_posts' );
-        //        }
+        'permission_callback' => [$this, 'restricted_permission'],
       ) );
     } );
+  }
+
+  /**
+   * @param $request
+   *
+   * @return bool
+   */
+  public function privileged_permission($request): bool {
+    if ( $request->get_method() === 'GET' ) {
+      return TRUE;
+    }
+
+    return current_user_can( 'edit_posts' );
+  }
+
+  /**
+   * @return bool
+   */
+  public function restricted_permission(): bool {
+    return current_user_can( 'edit_posts' );
   }
 
   /**

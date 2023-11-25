@@ -75,10 +75,6 @@
   margin-right: 5px;
 }
 
-.bwg_tab_status {
-  cursor: move !important;
-}
-
 .reacg_item_image:hover .reacg-overlay {
   display: block;
 }
