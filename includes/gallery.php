@@ -87,9 +87,9 @@ class REACG_Gallery {
    *
    * @return bool
    */
-  public function privileged_permission($request): bool {
+  public function privileged_permission($request) {
     if ( $request->get_method() === 'GET' ) {
-      return TRUE;
+      return '__return_true';
     }
 
     return current_user_can( 'edit_posts' );
@@ -168,9 +168,6 @@ class REACG_Gallery {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
 
     $data = [];
-    $data['texts'] = array(
-      'load_more' => __('Load more', 'reacg'),
-    );
     $data['images_count'] = 0;
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids);

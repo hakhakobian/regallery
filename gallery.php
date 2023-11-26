@@ -126,6 +126,10 @@ final class REACG {
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'rest_nonce' => $this->rest_nonce,
+      'text' => [
+        'load_more' => __('Load more', 'reacg'),
+        'no_data' => __('There is not data.', 'reacg'),
+      ]
     ) );
   }
 

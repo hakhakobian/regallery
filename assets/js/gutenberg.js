@@ -68,9 +68,6 @@
 
         let cont = event.target.parentElement.querySelector(".reacg-gallery");
         cont.setAttribute('data-gallery-id', selected.value);
-        cont.setAttribute('data-get-gallery-url', reacg_global.rest_root + "gallery/" + selected.value);
-        cont.setAttribute('data-get-images-url', reacg_global.rest_root + "gallery/" + selected.value + "/images");
-        cont.setAttribute('data-options-url', reacg_global.rest_root + "options/" + selected.value);
         cont.setAttribute('id', 'reacg-root' + selected.value);
         document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + selected.value);
         document.getElementById('reacg-loadApp').click();
@@ -87,12 +84,7 @@
         let shortcode_id = props.attributes.shortcode_id;
         let cont = el( 'div', {
           'data-options-section': 1,
-          'data-url': reacg_global.rest_root,
           'data-gallery-id': shortcode_id,
-          'data-get-google-fonts': reacg_global.rest_root + "google-fonts",
-          'data-get-gallery-url': reacg_global.rest_root + "gallery/" + shortcode_id,
-          'data-get-images-url': reacg_global.rest_root + "gallery/" + shortcode_id + "/images",
-          'data-options-url': reacg_global.rest_root + "options/" + shortcode_id,
           class: "reacg-gallery reacg-preview",
           id: "reacg-root" + shortcode_id,
         } );
