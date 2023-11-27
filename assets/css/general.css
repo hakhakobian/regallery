@@ -13,3 +13,7 @@
   box-shadow: none;
   outline: none;
 }
+
+.yarl__portal.yarl__portal_open {
+  z-index: 100000;
+}
