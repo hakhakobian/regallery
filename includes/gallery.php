@@ -336,7 +336,7 @@ class REACG_Gallery {
    */
   private function register_post_type(): void {
     $args = array(
-      'label' => __('Galleries', 'reacg'),
+      'label' => __('ReGallery', 'reacg'),
       'labels' => array(
         'add_new' => __('Add New Gallery', 'reacg'),
         'add_new_item' => __('Add New Gallery', 'reacg'),
@@ -397,7 +397,7 @@ class REACG_Gallery {
     add_meta_box( 'gallery-images', __( 'Images', 'reacg' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
 
     // Metabox for live preview.
-    add_meta_box( 'gallery-preview', __( 'Preview', 'reacg' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
   }
 
   public function meta_box_preview($post): void {

@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Reactive Gallery
+ * Plugin Name: ReGallery
  * Plugin URI:
- * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
+ * Description: This plugin is a fully responsive gallery plugin with advanced functionality. It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
  * Version: 1.0.0
- * Author: Reactive Gallery
+ * Author: ReGallery team
  * Author URI:
  * Text Domain: reacg
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -25,7 +25,7 @@ final class REACG {
 
   public string $prefix = 'reacg';
   public string $shortcode = 'REACG';
-  public string $nicename = 'Reactive Gallery';
+  public string $nicename = 'ReGallery';
   public string $nonce = 'reacg_nonce';
   public string $rest_root = "";
   public string $rest_nonce = "";
