@@ -50,6 +50,12 @@ jQuery(document).ready(function () {
       selection.add(wp.media.attachment(image_id));
     });
     media_uploader.open();
+    media_uploader.on( 'select', function () {
+      // Save the images.
+      reacg_save_images();
+
+      media_uploader.close();
+    } );
   });
 });
 
@@ -118,8 +124,6 @@ function reacg_media_uploader( e ) {
   media_uploader.open();
 
   media_uploader.on( 'select', function () {
-    // Get images already added.
-    //let images = jQuery("#images").val() != "" ? JSON.parse(jQuery("#images").val()) : [];
     // Get images ids already added.
     let images_ids = reacg_get_image_ids(true);
 
@@ -139,8 +143,6 @@ function reacg_media_uploader( e ) {
         clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(".reacg_item_new");
-        // Add selected image to the existing list.
-        //images.push({id: image_id, title: title, url: thumbnail_url});
         // Add selected image id to the existing list.
         images_ids.unshift(image_id);
       }
@@ -148,7 +150,6 @@ function reacg_media_uploader( e ) {
 
     // Update the images data.
     reacg_set_image_ids(images_ids);
-    //jQuery("#images").val(JSON.stringify(images));
 
     // Save the images.
     reacg_save_images();
