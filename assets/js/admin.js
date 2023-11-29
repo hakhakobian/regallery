@@ -1,10 +1,14 @@
 jQuery(document).ready(function () {
-  // Bind an event to the add image button.
+  /* Save options on saving the gallery.*/
+  jQuery("#publish").on("click", function () {
+    jQuery( ".MuiButton-root" ).trigger("click");
+  });
+  /* Bind an event to the add image button.*/
   jQuery(".reacg_item_new ").on("click", function (event) {
     reacg_media_uploader( event );
   });
 
-  // Make the image items sortable.
+  /* Make the image items sortable.*/
   jQuery( ".reacg_items" ).sortable( {
     items: ".reacg-sortable",
     update: function ( event, tr ) {
@@ -13,15 +17,15 @@ jQuery(document).ready(function () {
         images_ids.push(jQuery( this ).data( 'id' ));
       } );
       reacg_set_image_ids( images_ids );
-      // Save the images.
+      /* Save the images.*/
       reacg_save_images();
     }
   } );
 
-  // Bind a delete event to the every image item.
+  /* Bind a delete event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-delete", function () {
     let item = jQuery(this).closest(".reacg_item");
-    // The image id to be deleted.
+    /* The image id to be deleted.*/
     let image_id = item.data("id");
     item.remove();
 
@@ -29,14 +33,14 @@ jQuery(document).ready(function () {
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
     reacg_set_image_ids(images_ids);
-    // Save the images.
+    /* Save the images.*/
     reacg_save_images();
   });
 
-  // Bind an edit event to the every image item.
+  /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
     let item = jQuery(this).closest(".reacg_item");
-    // The image id to be edited.
+    /* The image id to be edited.*/
     let image_id = item.data("id");
 
     let media_uploader = wp.media( {
@@ -51,7 +55,7 @@ jQuery(document).ready(function () {
     });
     media_uploader.open();
     media_uploader.on( 'select', function () {
-      // Save the images.
+      /* Save the images.*/
       reacg_save_images();
 
       media_uploader.close();
@@ -124,10 +128,10 @@ function reacg_media_uploader( e ) {
   media_uploader.open();
 
   media_uploader.on( 'select', function () {
-    // Get images ids already added.
+    /* Get images ids already added.*/
     let images_ids = reacg_get_image_ids(true);
 
-    // Get selected images.
+    /* Get selected images.*/
     let selected_images = media_uploader.state().get( 'selection' ).toJSON();
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
@@ -135,23 +139,23 @@ function reacg_media_uploader( e ) {
       let thumbnail_url = typeof sizes.thumbnail !== 'undefined' ? sizes.thumbnail.url : sizes.full.url;
       let image_id = selected_images[key].id;
 
-      // Add an image to the gallery, if it doesn't already exist.
+      /* Add an image to the gallery, if it doesn't already exist.*/
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
-        // Add selected image to the existing list of visual items.
+        /* Add selected image to the existing list of visual items.*/
         let clone = jQuery(".reacg-template").clone();
         clone.attr("data-id", image_id);
         clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(".reacg_item_new");
-        // Add selected image id to the existing list.
+        /* Add selected image id to the existing list.*/
         images_ids.unshift(image_id);
       }
     }
 
-    // Update the images data.
+    /* Update the images data.*/
     reacg_set_image_ids(images_ids);
 
-    // Save the images.
+    /* Save the images.*/
     reacg_save_images();
 
     media_uploader.close();
@@ -173,7 +177,7 @@ function reacg_save_images() {
     },
     complete: function (data) {
       reacg_loading();
-      // Trigger hidden button click to reload the preview.
+      /* Trigger hidden button click to reload the preview.*/
       
       jQuery("#reacg-reloadData").trigger("click");
     }

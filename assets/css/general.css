@@ -1,10 +1,14 @@
+.editor-styles-wrapper .reacg-gallery img,
 .reacg-gallery img,
+.editor-styles-wrapper .reacg-gallery ul,
 .reacg-gallery ul,
+.editor-styles-wrapper .reacg-gallery li,
 .reacg-gallery li {
   margin: 0;
   padding: 0;
 }
 
+.editor-styles-wrapper .reacg-gallery .settings input,
 .reacg-gallery .settings input {
   border: none;
   line-height: 1;
@@ -12,6 +16,10 @@
   padding: 0;
   box-shadow: none;
   outline: none;
+}
+
+.editor-styles-wrapper .MuiSwitch-switchBase input[type=checkbox] {
+  position: absolute !important;
 }
 
 .yarl__portal.yarl__portal_open {
