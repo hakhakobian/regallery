@@ -85,19 +85,19 @@ class REACG_Options {
    *
    * @param WP_REST_Request $request
    *
-   * @return WP_Error|WP_REST_Response
+   * @return WP_REST_Response
    */
   private function set(WP_REST_Request $request) {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Missing gallery ID.', 'reacg' )), 400 );
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $data = $request->get_body();
 
     if ( empty($data) ) {
-      return new WP_Error( '404', __( 'Nothing to save.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Nothing to save.', 'reacg' )), 400 );
     }
     $data = (array) json_decode($data);
     array_walk($data, function (&$value) {
@@ -109,13 +109,13 @@ class REACG_Options {
     $new_options = get_option($this->name . $gallery_id, $options);
 
     if ( $saved === TRUE ) {
-      return new WP_REST_Response( TRUE, 200 );
+      return $this->get(NULL, $gallery_id);
     }
     elseif ( $old_options === $new_options ) {
-      return new WP_Error( '304', __( 'Nothing changed.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Nothing changed.', 'reacg' )), 400 );
     }
     else {
-      return new WP_Error( '403', __( 'Nothing saved.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Nothing saved.', 'reacg' )), 400 );
     }
   }
 
@@ -123,16 +123,19 @@ class REACG_Options {
    * Get the default options or the options for the given gallery.
    *
    * @param WP_REST_Request|NULL $request
+   * @param int                  $gallery_id
    *
-   * @return WP_Error|WP_REST_Response|null
+   * @return WP_REST_Response
    */
-  private function get( WP_REST_Request $request = null) {
-    $parameters = $request->get_url_params();
-
-    if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
+  private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
+    if ( $gallery_id === 0 ) {
+      $parameters = $request->get_url_params();
+      if ( !isset($parameters['gallery_id']) ) {
+        return new WP_REST_Response( wp_send_json(__( 'Missing gallery ID.', 'reacg' )), 400 );
+      }
+      $gallery_id = (int) $parameters['gallery_id'];
     }
-    $gallery_id = (int) $parameters['gallery_id'];
+
     $options = get_option($this->name . $gallery_id, FALSE);
     if ( $options === FALSE ) {
       $options = get_option($this->name, FALSE);
@@ -156,22 +159,22 @@ class REACG_Options {
    *
    * @param $request
    *
-   * @return WP_Error|WP_REST_Response
+   * @return WP_REST_Response
    */
   private function delete($request) {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return new WP_Error( '404', __( 'Missing gallery ID.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Missing gallery ID.', 'reacg' )), 400 );
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $deleted = delete_option($this->name . $gallery_id);
 
     if ( $deleted === TRUE ) {
-      return new WP_REST_Response( TRUE, 200 );
+      return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' )), 200 );
     }
     else {
-      return new WP_Error( '403', __( 'Nothing deleted.', 'reacg' ) );
+      return new WP_REST_Response( wp_send_json(__( 'Nothing deleted.', 'reacg' )), 400 );
     }
   }
 
