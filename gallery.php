@@ -63,7 +63,6 @@ final class REACG {
    * Actions.
    */
   private function add_actions(): void {
-    add_action('init', array($this, 'language_load'), 9);
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
 
@@ -83,15 +82,15 @@ final class REACG {
    * Languages localization.
    */
   public function language_load(): void {
-    $this->rest_root = rest_url() . "reacg/v1/";
-    $this->rest_nonce = wp_create_nonce( 'wp_rest' );
-    load_plugin_textdomain('reacg', FALSE, basename(dirname(__FILE__)) . '/languages');
+
   }
 
   /**
    * Create custom post types.
    */
   public function post_type_gallery(): void {
+    $this->rest_root = rest_url() . "reacg/v1/";
+    $this->rest_nonce = wp_create_nonce( 'wp_rest' );
     require_once($this->plugin_dir . '/includes/gallery.php');
     new REACG_Gallery($this);
   }
