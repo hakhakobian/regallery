@@ -31,11 +31,12 @@
 
 .reacg_item_image {
   background-repeat: no-repeat;
-  background-position: 54% 37%;
+  background-position: center;
   width: 100%;
   height: 100%;
   position: relative;
   cursor: move;
+  background-size: cover;
 }
 
 .reacg_item_new p {
@@ -86,5 +87,5 @@
 .column-reacg_thumbnail,
 .column-reacg_images_count,
 .column-reacg_shortcode {
-  width: 110px;
+  width: 130px;
 }
