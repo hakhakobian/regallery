@@ -130,10 +130,10 @@ class REACG_Gallery {
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
         if ( !empty($images_ids_arr) ) {
-          $image = wp_get_attachment_image($images_ids_arr[0], array(50, 50));
+          $image = "<div style='background-image: url(" . wp_get_attachment_thumb_url($images_ids_arr[0]) . ")'></div>";
         }
         else {
-          $image = __('No image', 'wde');
+          $image = __('No image', 'reacg');
         }
 
         echo $image;
