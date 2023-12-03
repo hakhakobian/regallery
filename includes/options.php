@@ -100,6 +100,9 @@ class REACG_Options {
       return new WP_REST_Response( wp_send_json(__( 'Nothing to save.', 'reacg' )), 400 );
     }
     $data = (array) json_decode($data);
+    if ( empty($data) ) {
+      return new WP_REST_Response( wp_send_json(__( 'Nothing to save.', 'reacg' )), 400 );
+    }
     array_walk($data, function (&$value) {
       $value = sanitize_text_field(stripslashes($value));
     });
