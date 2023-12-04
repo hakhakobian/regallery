@@ -161,7 +161,7 @@ class REACG_Gallery {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['id']) ) {
-      return new WP_REST_Response( wp_send_json(__( 'Missing gallery ID.', 'reacg' )), 400 );
+      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ));
     }
     $gallery_id = (int) $parameters['id'];
 
