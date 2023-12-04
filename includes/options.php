@@ -34,6 +34,56 @@ class REACG_Options {
     'useLightbox' => TRUE, #boolean
   ];
 
+  /**
+   * Validate specific data.
+   *
+   * @param $key
+   * @param $value
+   *
+   * @return mixed
+   */
+  private function validate($key, $value): mixed {
+    $number = [
+      'width',
+      'height',
+      'columns',
+      'gap',
+      'padding',
+      'borderRadius',
+      'titleFontSize',
+      'itemsPerPage',
+    ];
+    $specific = [
+      'titleVisibility' => [
+        'allowed' => [ 'always', 'onHover', 'none' ],
+        'default' => 'onHover',
+      ],
+      'titlePosition' => [
+        'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
+        'default' => 'bottom',
+      ],
+      'titleAlignment' => [
+        'allowed' => [ 'left', 'center', 'right' ],
+        'default' => 'left',
+      ],
+      'paginationType' => [
+        'allowed' => [ 'simple', 'scroll', 'loadMore', 'none' ],
+        'default' => 'scroll',
+      ],
+      'paginationButtonShape' => [
+        'allowed' => [ 'rounded', 'circular' ],
+        'default' => 'circular',
+      ],
+    ];
+    if ( in_array($key, $number) ) {
+      return max($value, 1);
+    }
+    elseif ( in_array($key, $specific) ) {
+      return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
+    }
+    return $value;
+  }
+
   public function __construct($activate) {
     if ( $activate ) {
       $this->add_option();
@@ -100,22 +150,22 @@ class REACG_Options {
       return new WP_REST_Response( wp_send_json(__( 'Nothing to save.', 'reacg' )), 400 );
     }
     $data = (array) json_decode($data);
-    if ( empty($data) ) {
-      return new WP_REST_Response( wp_send_json(__( 'Nothing to save.', 'reacg' )), 400 );
-    }
+
     array_walk($data, function (&$value) {
       $value = sanitize_text_field(stripslashes($value));
     });
+
+    // Data validation on allowed values.
+    foreach ( $data as $key => $item ) {
+      $data[$key] = $this->validate($key, $item);
+    }
     $options = json_encode($data);
     $old_options = get_option($this->name . $gallery_id, $options);
     $saved = update_option($this->name . $gallery_id, $options);
     $new_options = get_option($this->name . $gallery_id, $options);
 
-    if ( $saved === TRUE ) {
+    if ( $saved === TRUE || $old_options === $new_options ) {
       return $this->get(NULL, $gallery_id);
-    }
-    elseif ( $old_options === $new_options ) {
-      return new WP_REST_Response( wp_send_json(__( 'Nothing changed.', 'reacg' )), 400 );
     }
     else {
       return new WP_REST_Response( wp_send_json(__( 'Nothing saved.', 'reacg' )), 400 );
