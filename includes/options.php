@@ -47,13 +47,13 @@ class REACG_Options {
       'width',
       'height',
       'columns',
+      'itemsPerPage',
     ];
     $empty_number = [
       'gap',
       'padding',
       'borderRadius',
       'titleFontSize',
-      'itemsPerPage',
     ];
     $specific = [
       'titleVisibility' => [
@@ -146,13 +146,13 @@ class REACG_Options {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ));
+      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $data = $request->get_body();
 
     if ( empty($data) ) {
-      return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ));
+      return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
     $data = (array) json_decode($data);
 
@@ -173,7 +173,7 @@ class REACG_Options {
       return $this->get(NULL, $gallery_id);
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'reacg' ), array( 'status' => 400 ) ));
+      return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
   }
 
@@ -189,7 +189,7 @@ class REACG_Options {
     if ( $gallery_id === 0 ) {
       $parameters = $request->get_url_params();
       if ( !isset($parameters['gallery_id']) ) {
-        return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ));
+        return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
       }
       $gallery_id = (int) $parameters['gallery_id'];
     }
@@ -209,7 +209,7 @@ class REACG_Options {
       }
     }
 
-    return new WP_REST_Response( wp_send_json($options), 200 );
+    return new WP_REST_Response( wp_send_json($options, 200), 200 );
   }
 
   /**
@@ -223,16 +223,16 @@ class REACG_Options {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters['gallery_id']) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ));
+      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
     $gallery_id = (int) $parameters['gallery_id'];
     $deleted = delete_option($this->name . $gallery_id);
 
     if ( $deleted === TRUE ) {
-      return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' )), 200 );
+      return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' ), 200), 200 );
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 400 ) ));
+      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
   }
 
