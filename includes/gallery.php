@@ -237,7 +237,7 @@ class REACG_Gallery {
           $thumbnail = $medium_large;
         }
 
-        $data[$images_id] = [
+        $data[] = [
           'title' => get_the_title($images_id),
           'caption' => wp_get_attachment_caption($images_id),
           'description' => $post->post_content,
@@ -287,7 +287,7 @@ class REACG_Gallery {
       }
     }
 
-    return wp_send_json($data);
+    return new WP_REST_Response( wp_send_json($data, 200), 200 );
   }
 
   /**
