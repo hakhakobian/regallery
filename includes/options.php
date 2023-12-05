@@ -48,12 +48,12 @@ class REACG_Options {
       'height',
       'columns',
       'itemsPerPage',
+      'titleFontSize',
     ];
     $empty_number = [
       'gap',
       'padding',
       'borderRadius',
-      'titleFontSize',
     ];
     $specific = [
       'titleVisibility' => [
