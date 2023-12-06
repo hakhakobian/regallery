@@ -164,6 +164,7 @@ class REACG_Options {
     foreach ( $data as $key => $item ) {
       $data[$key] = $this->validate($key, $item);
     }
+
     $options = json_encode($data);
     $old_options = get_option($this->name . $gallery_id, $options);
     $saved = update_option($this->name . $gallery_id, $options);

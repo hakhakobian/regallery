@@ -401,7 +401,7 @@ class REACG_Gallery {
   }
 
   public function meta_box_preview($post): void {
-    REACGLibrary::get_rest_routs($this->obj->rest_root, $post->ID);
+    REACGLibrary::get_rest_routs($post->ID);
   }
 
   /**

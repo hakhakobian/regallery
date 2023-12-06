@@ -66,17 +66,11 @@ class REACGLibrary {
   /**
    * Container with necessary rest routs.
    *
-   * @param $rest_root
    * @param $gallery_id
    *
    * @return void
    */
-  public static function get_rest_routs($rest_root, $gallery_id): void {
-    $url = $rest_root;
-    $get_gallery_url = $url . "gallery/" . $gallery_id;
-    $get_gallery_images_url = $url . "gallery/" . $gallery_id . "/images";
-    $options_url = $url . "options/" . $gallery_id;
-    $google_fonts_url = $url . "google-fonts";
+  public static function get_rest_routs($gallery_id): void {
     ?><div id="reacg-root<?php echo (int) $gallery_id; ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo (int) is_admin(); ?>"
@@ -86,7 +80,6 @@ class REACGLibrary {
   public static function enqueue_scripts($obj): void {
     wp_enqueue_style($obj->prefix . '_general');
     wp_enqueue_script($obj->prefix . '_thumbnails');
-//    wp_enqueue_script($obj->prefix . '_thumbnails', $obj->plugin_url . '/assets/js/wp-gallery.js', array(), $obj->version, array('in_footer' => true));
   }
 
   /**
