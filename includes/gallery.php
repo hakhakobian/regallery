@@ -18,6 +18,7 @@ class REACG_Gallery {
     add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'thumbnail_column_content' ], 10, 2);
 
     add_action('save_post', [ $this, 'save_post' ], 10, 2);
+    add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
 
     // Register an ajax action to save images to the gallery.
     add_action('wp_ajax_' . $this->ajax_slug, [ $this, 'save_images' ]);
@@ -317,6 +318,22 @@ class REACG_Gallery {
                      'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
                    ]);
     add_action( 'save_post', [ $this, 'save_post' ], 10, 2 );
+  }
+
+  /**
+   * Delete the post metas on the post delete.
+   *
+   * @param $post_id
+   * @param $post
+   *
+   * @return void
+   */
+  public function delete_post($post_id, $post): void {
+    if ( is_null($post) || 'reacg' !== $post->post_type ) {
+      return;
+    }
+
+    delete_post_meta($post_id, 'images_ids');
   }
 
   /**

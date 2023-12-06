@@ -149,7 +149,7 @@ class REACGLibrary {
     }
     $gallery_id = (int) $parameters[$param];
 
-    if ( get_post_status( $gallery_id ) === FALSE ) {
+    if ( $gallery_id !== 0 && get_post_status( $gallery_id ) === FALSE ) {
       return wp_send_json(new WP_Error( 'wrong_gallery', __( 'There is no such a gallery.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
 
