@@ -158,12 +158,7 @@ class REACG_Gallery {
    * @return WP_REST_Response
    */
   public function get_gallery( WP_REST_Request $request ) {
-    $parameters = $request->get_url_params();
-
-    if ( !isset($parameters['id']) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
-    }
-    $gallery_id = (int) $parameters['id'];
+    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
 
     $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
 
@@ -186,12 +181,7 @@ class REACG_Gallery {
    * @return void
    */
   public function get_images( WP_REST_Request $request ) {
-    $parameters = $request->get_url_params();
-
-    if ( !isset($parameters['id']) ) {
-      return;
-    }
-    $gallery_id = (int) $parameters['id'];
+    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
 
     $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
 

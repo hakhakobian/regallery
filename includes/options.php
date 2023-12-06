@@ -143,12 +143,8 @@ class REACG_Options {
    * @return WP_REST_Response
    */
   private function set(WP_REST_Request $request) {
-    $parameters = $request->get_url_params();
+    $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
 
-    if ( !isset($parameters['gallery_id']) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
-    }
-    $gallery_id = (int) $parameters['gallery_id'];
     $data = $request->get_body();
 
     if ( empty($data) ) {
@@ -188,11 +184,7 @@ class REACG_Options {
    */
   private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
     if ( $gallery_id === 0 ) {
-      $parameters = $request->get_url_params();
-      if ( !isset($parameters['gallery_id']) ) {
-        return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
-      }
-      $gallery_id = (int) $parameters['gallery_id'];
+      $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
     }
 
     $options = get_option($this->name . $gallery_id, FALSE);
@@ -221,12 +213,8 @@ class REACG_Options {
    * @return WP_REST_Response
    */
   private function delete($request) {
-    $parameters = $request->get_url_params();
+    $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
 
-    if ( !isset($parameters['gallery_id']) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
-    }
-    $gallery_id = (int) $parameters['gallery_id'];
     $deleted = delete_option($this->name . $gallery_id);
 
     if ( $deleted === TRUE ) {
