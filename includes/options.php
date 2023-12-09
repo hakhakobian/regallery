@@ -42,7 +42,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function validate($key, $value): mixed {
+  private function validate($key, $value) {
     $number = [
       'width',
       'height',
@@ -103,7 +103,7 @@ class REACG_Options {
    *
    * @return void
    */
-  private function add_option(): void {
+  private function add_option() {
     add_option($this->name, json_encode($this->options));
   }
 
@@ -114,7 +114,7 @@ class REACG_Options {
    *
    * @return void
    */
-  public function options(WP_REST_Request $request = null): void {
+  public function options(WP_REST_Request $request = null) {
     if ( !is_null($request) ) {
       switch ( $request->get_method() ) {
         case "GET": {
@@ -230,7 +230,7 @@ class REACG_Options {
    *
    * @return void
    */
-  private function remove_options(): void {
+  private function remove_options() {
     delete_option($this->name);
   }
 }

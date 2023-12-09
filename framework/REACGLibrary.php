@@ -6,7 +6,7 @@ class REACGLibrary {
    *
    * @return string
    */
-  public static function get_abspath(): string {
+  public static function get_abspath() {
     $dirpath = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR : ABSPATH;
     $folder_name = defined('WP_CONTENT_FOLDERNAME') ? WP_CONTENT_FOLDERNAME : "wp-content";
     $array = explode($folder_name, $dirpath);
@@ -70,14 +70,14 @@ class REACGLibrary {
    *
    * @return void
    */
-  public static function get_rest_routs($gallery_id): void {
+  public static function get_rest_routs($gallery_id) {
     ?><div id="reacg-root<?php echo (int) $gallery_id; ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo (int) is_admin(); ?>"
          data-gallery-id="<?php echo (int) $gallery_id; ?>"></div><?php
   }
 
-  public static function enqueue_scripts($obj): void {
+  public static function enqueue_scripts($obj) {
     wp_enqueue_style($obj->prefix . '_general');
     wp_enqueue_script($obj->prefix . '_thumbnails');
   }

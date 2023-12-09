@@ -99,7 +99,7 @@ class REACG_Gallery {
   /**
    * @return bool
    */
-  public function restricted_permission(): bool {
+  public function restricted_permission() {
     return current_user_can( 'edit_posts' );
   }
 
@@ -110,7 +110,7 @@ class REACG_Gallery {
    *
    * @return array
    */
-  public function thumbnail_column($columns): array {
+  public function thumbnail_column($columns) {
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
     $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
 
@@ -125,7 +125,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function thumbnail_column_content($column_id, $post_id): void {
+  public function thumbnail_column_content($column_id, $post_id) {
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $images_ids_arr = !empty($images_ids) ? json_decode($images_ids) : [];
     switch ( $column_id ) {
@@ -286,7 +286,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function save_images(): void {
+  public function save_images() {
     if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
       update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
     }
@@ -302,7 +302,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function save_post($post_id, $post): void {
+  public function save_post($post_id, $post) {
     if ( is_null($post) || 'reacg' !== $post->post_type ) {
       return;
     }
@@ -328,7 +328,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function delete_post($post_id, $post): void {
+  public function delete_post($post_id, $post) {
     if ( is_null($post) || 'reacg' !== $post->post_type ) {
       return;
     }
@@ -341,7 +341,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  private function register_post_type(): void {
+  private function register_post_type() {
     $args = array(
       'label' => __('ReGallery', 'reacg'),
       'labels' => array(
@@ -392,7 +392,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function add_meta_boxes($post): void {
+  public function add_meta_boxes($post) {
     if ( 'reacg' !== $post->post_type ) {
       return;
     }
@@ -407,7 +407,7 @@ class REACG_Gallery {
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
   }
 
-  public function meta_box_preview($post): void {
+  public function meta_box_preview($post) {
     REACGLibrary::get_rest_routs($post->ID);
   }
 
@@ -418,7 +418,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function meta_box_images($post): void {
+  public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post->ID); ?>"
@@ -447,7 +447,7 @@ class REACG_Gallery {
     </div><?php
   }
 
-  private function image_item($data = FALSE): void {
+  private function image_item($data = FALSE) {
     $template = FALSE;
     if ( $data === FALSE ) {
       $data = [
@@ -476,7 +476,7 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function remove_all_the_metaboxes(): void {
+  public function remove_all_the_metaboxes() {
     global $wp_meta_boxes;
 
     // This is the post type you want to target. Adjust it to match yours.

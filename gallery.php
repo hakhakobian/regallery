@@ -1,11 +1,9 @@
 <?php
 /**
  * Plugin Name: ReGallery
- * Plugin URI:
- * Description: This plugin is a fully responsive gallery plugin with advanced functionality. It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
+ * Description: The plugin designed to suit a wide range of users, from professional photographers to hobbyists, this plugin combines unparalleled speed, lightweight architecture, and the power of React.js for a seamless, real-time interface experience.
  * Version: 1.0.0
  * Author: ReGallery team
- * Author URI:
  * Text Domain: reacg
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -37,7 +35,7 @@ final class REACG {
    *
    * @return  self|null
    */
-  public static function instance(): ?REACG {
+  public static function instance() {
     if ( is_null( self::$_instance ) ) {
       self::$_instance = new self();
     }
@@ -62,7 +60,7 @@ final class REACG {
   /**
    * Actions.
    */
-  private function add_actions(): void {
+  private function add_actions() {
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
 
@@ -81,14 +79,14 @@ final class REACG {
   /**
    * Languages localization.
    */
-  public function language_load(): void {
+  public function language_load() {
 
   }
 
   /**
    * Create custom post types.
    */
-  public function post_type_gallery(): void {
+  public function post_type_gallery() {
     $this->rest_root = rest_url() . "reacg/v1/";
     $this->rest_nonce = wp_create_nonce( 'wp_rest' );
     require_once($this->plugin_dir . '/includes/gallery.php');
@@ -98,7 +96,7 @@ final class REACG {
   /**
    * Add a shortcode.
    */
-  public function shortcode(): void {
+  public function shortcode() {
     require_once($this->plugin_dir . '/includes/shortcode.php');
     new REACG_Shortcode($this);
   }
@@ -106,7 +104,7 @@ final class REACG {
   /**
    * Register general scripts/styles.
    */
-  private function register_general_scripts(): void {
+  private function register_general_scripts() {
     $required_scripts = [];
     $required_styles = [];
 
@@ -135,7 +133,7 @@ final class REACG {
   /**
    * Register admin pages scripts/styles.
    */
-  public function register_admin_scripts(): void {
+  public function register_admin_scripts() {
     $required_scripts = array(
       'jquery',
       'jquery-ui-sortable',
@@ -164,7 +162,7 @@ final class REACG {
   /**
    * Register frontend scripts and styles.
    */
-  public function register_frontend_scripts(): void {
+  public function register_frontend_scripts() {
     $this->register_general_scripts();
   }
 
@@ -173,7 +171,7 @@ final class REACG {
    *
    * @return void
    */
-  public function enqueue_block_editor_assets(): void {
+  public function enqueue_block_editor_assets() {
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
       'title' => $this->nicename,
@@ -188,7 +186,7 @@ final class REACG {
    *
    * @param $networkwide
    */
-  public function global_activate($networkwide): void {
+  public function global_activate($networkwide) {
     if ( function_exists('is_multisite') && is_multisite() ) {
       // Run the activation function for each blog, if it is a network activation.
       if ( $networkwide ) {
@@ -207,7 +205,7 @@ final class REACG {
     $this->activate();
   }
 
-  public function new_blog_added( $blog_id, $user_id, $domain, $path, $site_id, $meta ): void {
+  public function new_blog_added( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
     if ( is_plugin_active_for_network('gallery/gallery.php') ) {
       switch_to_blog($blog_id);
       $this->activate();
@@ -218,7 +216,7 @@ final class REACG {
   /**
    * Activate.
    */
-  public function activate($activate = TRUE): void {
+  public function activate($activate = TRUE) {
     require_once REACG()->plugin_dir . "/includes/options.php";
     new REACG_Options($activate);
   }
@@ -228,7 +226,7 @@ final class REACG {
    *
    * @param $networkwide
    */
-  public function global_deactivate($networkwide): void {
+  public function global_deactivate($networkwide) {
     if ( function_exists('is_multisite') && is_multisite() ) {
       // Run the deactivation function for each blog, if it is a network deactivation.
       if ( $networkwide ) {
