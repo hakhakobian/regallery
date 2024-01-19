@@ -71,10 +71,10 @@ class REACGLibrary {
    * @return void
    */
   public static function get_rest_routs($gallery_id) {
-    ?><div id="reacg-root<?php echo (int) $gallery_id; ?>"
+    ?><div id="reacg-root<?php esc_attr_e((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview"
-         data-options-section="<?php echo (int) is_admin(); ?>"
-         data-gallery-id="<?php echo (int) $gallery_id; ?>"></div><?php
+         data-options-section="<?php esc_attr_e((int) is_admin()); ?>"
+         data-gallery-id="<?php esc_attr_e((int) $gallery_id); ?>"></div><?php
   }
 
   public static function enqueue_scripts($obj) {

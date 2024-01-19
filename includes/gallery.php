@@ -131,21 +131,23 @@ class REACG_Gallery {
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
         if ( !empty($images_ids_arr) ) {
-          $image = "<div style='background-image: url(" . wp_get_attachment_thumb_url($images_ids_arr[0]) . ")'></div>";
+          $url = wp_get_attachment_thumb_url($images_ids_arr[0]);
+          $basename = basename($url);
+          $url = str_replace($basename, urlencode($basename), $url);
+          ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
         }
         else {
-          $image = __('No image', 'reacg');
+          esc_html_e('No image', 'reacg');
         }
 
-        echo $image;
         break;
       }
       case 'reacg_images_count': {
-        echo count($images_ids_arr);
+        esc_html_e(count($images_ids_arr));
         break;
       }
       case 'reacg_shortcode': {
-        echo "<code>" . REACGLibrary::get_shortcode($this->obj, $post_id) . "</code>";
+        ?><code><?php esc_html_e(REACGLibrary::get_shortcode($this->obj, $post_id)); ?></code><?php
         break;
       }
     }
@@ -421,19 +423,17 @@ class REACG_Gallery {
   public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
     ?><div class="reacg_items"
-         data-post-id="<?php echo esc_attr($post->ID); ?>"
+         data-post-id="<?php esc_attr_e($post->ID); ?>"
          data-ajax-url="<?php echo esc_url(add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'))); ?>">
       <div class="reacg_item reacg_item_new">
-        <div class="reacg_item_image">
-          <!--<a id="reacg-add-images">
-            <p id="add_album_gallery_text"><?php /*_e('Add images', 'reacg'); */?></p>
-          </a>-->
-        </div>
+        <div class="reacg_item_image"></div>
       </div><?php
       if ( !empty($images_ids) ) {
         foreach (json_decode($images_ids) as $image_id) {
           $title = get_the_title($image_id);
           $url = wp_get_attachment_thumb_url($image_id);
+          $basename = basename($url);
+          $url = str_replace($basename, urlencode($basename), $url);
           $data = [
             "id" => $image_id,
             "title" => $title,
@@ -443,7 +443,7 @@ class REACG_Gallery {
         }
       }
       $this->image_item();
-      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
+      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php esc_attr_e($images_ids); ?>" />
     </div><?php
   }
 
@@ -457,14 +457,14 @@ class REACG_Gallery {
       ];
       $template = TRUE;
     }
-    ?><div data-id="<?php echo esc_attr($data['id']); ?>" class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
+    ?><div data-id="<?php esc_attr_e($data['id']); ?>" class="reacg_item <?php esc_attr_e($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
     <div class="reacg_item_image"
-         title="<?php echo esc_attr($data['title']); ?>"
-         style="background-image: url('<?php echo urldecode($data['url']); ?>')">
+         title="<?php esc_attr_e($data['title']); ?>"
+         style="background-image: url('<?php echo esc_url($data['url']); ?>')">
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
-          <span class="reacg-edit dashicons dashicons-edit" title="<?php _e('Edit', 'reacg'); ?>"></span>
-          <span class="reacg-delete dashicons dashicons-trash" title="<?php _e('Remove', 'reacg'); ?>"></span>
+          <span class="reacg-edit dashicons dashicons-edit" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
+          <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
         </div>
       </div>
     </div>
