@@ -143,11 +143,11 @@ class REACG_Gallery {
         break;
       }
       case 'reacg_images_count': {
-        esc_html_e(count($images_ids_arr));
+        echo esc_html(count($images_ids_arr));
         break;
       }
       case 'reacg_shortcode': {
-        ?><code><?php esc_html_e(REACGLibrary::get_shortcode($this->obj, $post_id)); ?></code><?php
+        ?><code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post_id)); ?></code><?php
         break;
       }
     }
@@ -423,7 +423,7 @@ class REACG_Gallery {
   public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
     ?><div class="reacg_items"
-         data-post-id="<?php esc_attr_e($post->ID); ?>"
+         data-post-id="<?php echo esc_attr($post->ID); ?>"
          data-ajax-url="<?php echo esc_url(add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'))); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
@@ -443,7 +443,7 @@ class REACG_Gallery {
         }
       }
       $this->image_item();
-      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php esc_attr_e($images_ids); ?>" />
+      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
     </div><?php
   }
 
@@ -457,9 +457,9 @@ class REACG_Gallery {
       ];
       $template = TRUE;
     }
-    ?><div data-id="<?php esc_attr_e($data['id']); ?>" class="reacg_item <?php esc_attr_e($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
+    ?><div data-id="<?php echo esc_attr($data['id']); ?>" class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
     <div class="reacg_item_image"
-         title="<?php esc_attr_e($data['title']); ?>"
+         title="<?php echo esc_attr($data['title']); ?>"
          style="background-image: url('<?php echo esc_url($data['url']); ?>')">
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
