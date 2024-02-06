@@ -45,7 +45,7 @@ jQuery(document).ready(function () {
 
     let media_uploader = wp.media( {
       title: reacg.edit_image,
-      library: { type: 'image' },
+      library: { type: 'image,video' },
       button: { text: reacg.update },
       multiple: false
     } );
@@ -113,7 +113,7 @@ function reacg_media_uploader( e ) {
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
     title: reacg.choose_images,
-    library: { type: 'image' },
+    library: { type: 'image,video' },
     button: { text: reacg.insert },
     multiple: true
   } );
@@ -136,7 +136,17 @@ function reacg_media_uploader( e ) {
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
       let sizes = selected_images[key].sizes;
-      let thumbnail_url = typeof sizes.thumbnail !== 'undefined' ? sizes.thumbnail.url : sizes.full.url;
+      let thumbnail_url = "";
+      if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
+        thumbnail_url = selected_images[key].thumb.src;
+      }
+      else if ( typeof sizes.thumbnail !== 'undefined' ) {
+        thumbnail_url = sizes.thumbnail.url;
+      }
+      else if ( typeof sizes.full.url !== 'undefined' ) {
+        thumbnail_url = sizes.full.url;
+      }
+
       let image_id = selected_images[key].id;
 
       /* Add an image to the gallery, if it doesn't already exist.*/
