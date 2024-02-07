@@ -196,7 +196,7 @@ class REACG_Gallery {
         $post = get_post($images_id);
         $meta = wp_get_attachment_metadata($images_id);
         $url = wp_get_attachment_url($images_id);
-        $base_name = basename($meta['file']);
+        $base_name = isset($meta['file']) ? basename($meta['file']) : "";
 
         $original = [];
         $original['url'] = $url;
