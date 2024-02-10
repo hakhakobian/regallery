@@ -289,7 +289,10 @@ class REACG_Gallery {
    * @return void
    */
   public function save_images() {
-    if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce])
+      && isset($_POST['post_id'])
+      && isset($_POST['images_ids']) ) {
       update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
     }
 
@@ -422,9 +425,11 @@ class REACG_Gallery {
    */
   public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
+    $ajax_url = add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'));
+    $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post->ID); ?>"
-         data-ajax-url="<?php echo esc_url(add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'))); ?>">
+         data-ajax-url="<?php echo esc_url($ajax_url); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
       </div><?php
