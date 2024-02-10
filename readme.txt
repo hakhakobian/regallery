@@ -93,6 +93,19 @@ The live demo allows you to see changes in real-time as you adjust settings, off
 
 No limits! Create as many galleries as you need, each with its unique flair.
 
+
+== Find the source code ==
+
+The plugin contains wp-gallery.js minified JavaScript file which is a build result of the following React application:
+https://github.com/GarikHarutyunyan/wp-gallery
+
+This repository contains the unpacked JavaScript portion of the plugin.
+You can use this open-source React application to modify the plugin's JS component.
+Simply clone the repository, execute the necessary npm commands to initialize the project, and proceed to modify
+the React app. After running the "npm run build" command, the wp-gallery.js minified file will be generated.
+Replace the existing file in the plugin to view the changes you've made.
+
+
 == Changelog ==
 
 = 1.0.0 =
