@@ -432,10 +432,13 @@ class REACG_Gallery {
         foreach (json_decode($images_ids) as $image_id) {
           $title = get_the_title($image_id);
           $url = wp_get_attachment_thumb_url($image_id);
+          $metadata = wp_get_attachment_metadata($image_id);
+          $type = ( isset($metadata['mime_type']) && strpos($metadata['mime_type'], "video") !== -1 ) ? "video" : "image";
           $basename = basename($url);
           $url = str_replace($basename, urlencode($basename), $url);
           $data = [
             "id" => $image_id,
+            "type" => $type,
             "title" => $title,
             "url" => $url,
           ];
@@ -453,16 +456,20 @@ class REACG_Gallery {
       $data = [
         "id" => 0,
         "title" => '',
+        "type" => 'image',
         "url" => '',
       ];
       $template = TRUE;
     }
-    ?><div data-id="<?php echo esc_attr($data['id']); ?>" class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
+    ?><div data-id="<?php echo esc_attr($data['id']); ?>"
+           data-type="<?php echo esc_attr($data['type']); ?>"
+           class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
     <div class="reacg_item_image"
          title="<?php echo esc_attr($data['title']); ?>"
          style="background-image: url('<?php echo esc_url($data['url']); ?>')">
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
+          <span class="reacg-edit-thumbnail dashicons dashicons-edit <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit thumbnail', 'reacg'); ?>"></span>
           <span class="reacg-edit dashicons dashicons-edit" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
           <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
         </div>

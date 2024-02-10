@@ -42,10 +42,11 @@ jQuery(document).ready(function () {
     let item = jQuery(this).closest(".reacg_item");
     /* The image id to be edited.*/
     let image_id = item.data("id");
+    let type = item.data("type");
 
     let media_uploader = wp.media( {
-      title: reacg.edit_image,
-      library: { type: 'image,video' },
+      title: reacg.edit,
+      library: { type: 'image' + (type === "video" ? "" : ",video") },
       button: { text: reacg.update },
       multiple: false
     } );
@@ -55,8 +56,12 @@ jQuery(document).ready(function () {
     });
     media_uploader.open();
     media_uploader.on( 'select', function () {
-      /* Save the images.*/
-      reacg_save_images();
+      if ( type === "video" ) {
+        let selected_image = media_uploader.state().get('selection').toJSON();
+        if ( typeof selected_image[0] !== "undefined" ) {
+          reacg_save_images(selected_image[0].id);
+        }
+      }
 
       media_uploader.close();
     } );
@@ -136,9 +141,11 @@ function reacg_media_uploader( e ) {
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
       let sizes = selected_images[key].sizes;
+      let type = "image";
       let thumbnail_url = "";
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
         thumbnail_url = selected_images[key].thumb.src;
+        type = "video";
       }
       else if ( typeof sizes.thumbnail !== 'undefined' ) {
         thumbnail_url = sizes.thumbnail.url;
@@ -153,7 +160,11 @@ function reacg_media_uploader( e ) {
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
         /* Add selected image to the existing list of visual items.*/
         let clone = jQuery(".reacg-template").clone();
+        if ( type === "video" ) {
+          clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
+        }
         clone.attr("data-id", image_id);
+        clone.attr("data-type", type);
         clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(".reacg_item_new");
@@ -189,6 +200,27 @@ function reacg_save_images() {
       reacg_loading();
       /* Trigger hidden button click to reload the preview.*/
       
+      jQuery("#reacg-reloadData").trigger("click");
+    }
+  });
+}
+
+/**
+ * Save the images IDs to the gallery.
+ */
+function reacg_save_image_meta(thumbnail_id) {
+  reacg_loading();
+
+  jQuery.ajax({
+    type: 'POST',
+    url: jQuery(".reacg_items").data("ajax-url"),
+    data: {
+      'thumbnail_id': thumbnail_id
+    },
+    complete: function (data) {
+      reacg_loading();
+
+      /* Trigger hidden button click to reload the preview.*/
       jQuery("#reacg-reloadData").trigger("click");
     }
   });

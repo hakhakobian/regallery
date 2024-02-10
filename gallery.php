@@ -151,7 +151,7 @@ final class REACG {
     wp_localize_script($this->prefix . '_admin', 'reacg', array(
       'insert' => __('Insert', 'reacg'),
       'update' => __('Update', 'reacg'),
-      'edit_image' => __('Edit image', 'reacg'),
+      'edit' => __('Edit', 'reacg'),
       'choose_images' => __('Choose images', 'reacg'),
     ));
 
