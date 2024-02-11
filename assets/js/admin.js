@@ -17,7 +17,6 @@ jQuery(document).ready(function () {
         images_ids.push(jQuery( this ).data( 'id' ));
       } );
       reacg_set_image_ids( images_ids );
-      /* Save the images.*/
       reacg_save_images();
     }
   } );
@@ -33,7 +32,6 @@ jQuery(document).ready(function () {
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
     reacg_set_image_ids(images_ids);
-    /* Save the images.*/
     reacg_save_images();
   });
 
@@ -46,7 +44,6 @@ jQuery(document).ready(function () {
 
     let media_uploader = wp.media( {
       title: reacg.edit,
-      library: { type: 'image' + (type === "video" ? "" : ",video") },
       button: { text: reacg.update },
       multiple: false
     } );
@@ -55,12 +52,35 @@ jQuery(document).ready(function () {
       selection.add(wp.media.attachment(image_id));
     });
     media_uploader.open();
+  });
+
+  /* Bind an edit thumbnail event to the every video item.*/
+  jQuery(document).on("click", ".reacg_item .reacg-edit-thumbnail", function () {
+    let item = jQuery(this).closest(".reacg_item");
+    /* The image id to be edited.*/
+    let image_id = item.data("id");
+
+    let media_uploader = wp.media( {
+      title: reacg.edit_thumbnail,
+      library: { type: 'image' },
+      button: { text: reacg.update_thumbnail },
+      multiple: false
+    } );
+    media_uploader.open();
     media_uploader.on( 'select', function () {
-      if ( type === "video" ) {
-        let selected_image = media_uploader.state().get('selection').toJSON();
-        if ( typeof selected_image[0] !== "undefined" ) {
-          reacg_save_images(selected_image[0].id);
+      let selected_image = media_uploader.state().get('selection').toJSON();
+      if ( typeof selected_image[0] !== "undefined" ) {
+        reacg_save_thumbnail(image_id, selected_image[0].id);
+        /* Change the item thumbnail in item view.*/
+        let sizes = selected_image[0].sizes;
+        let thumbnail_url = reacg.no_image;
+        if ( typeof sizes.thumbnail !== 'undefined' ) {
+          thumbnail_url = sizes.thumbnail.url;
         }
+        else if ( typeof sizes.full.url !== 'undefined' ) {
+          thumbnail_url = sizes.full.url;
+        }
+        item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
       }
 
       media_uploader.close();
@@ -118,7 +138,6 @@ function reacg_media_uploader( e ) {
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
     title: reacg.choose_images,
-    library: { type: 'image,video' },
     button: { text: reacg.insert },
     multiple: true
   } );
@@ -142,9 +161,11 @@ function reacg_media_uploader( e ) {
       let title = selected_images[key].title;
       let sizes = selected_images[key].sizes;
       let type = "image";
-      let thumbnail_url = "";
+      let thumbnail_url = reacg.no_image;
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
-        thumbnail_url = selected_images[key].thumb.src;
+        if ( selected_images[key].thumb.src.search("media/video.png") === -1 )  {
+          thumbnail_url = selected_images[key].thumb.src;
+        }
         type = "video";
       }
       else if ( typeof sizes.thumbnail !== 'undefined' ) {
@@ -176,7 +197,6 @@ function reacg_media_uploader( e ) {
     /* Update the images data.*/
     reacg_set_image_ids(images_ids);
 
-    /* Save the images.*/
     reacg_save_images();
 
     media_uploader.close();
@@ -197,31 +217,32 @@ function reacg_save_images() {
       'images_ids': reacg_get_image_ids(false)
     },
     complete: function (data) {
-      reacg_loading();
       /* Trigger hidden button click to reload the preview.*/
-      
       jQuery("#reacg-reloadData").trigger("click");
+      reacg_loading();
     }
   });
 }
 
 /**
- * Save the images IDs to the gallery.
+ * Save the thumbnail for the given item.
+ *
+ * @param id
+ * @param thumbnail_id
  */
-function reacg_save_image_meta(thumbnail_id) {
+function reacg_save_thumbnail(id, thumbnail_id) {
   reacg_loading();
-
   jQuery.ajax({
     type: 'POST',
     url: jQuery(".reacg_items").data("ajax-url"),
     data: {
+      'id': id,
       'thumbnail_id': thumbnail_id
     },
     complete: function (data) {
-      reacg_loading();
-
       /* Trigger hidden button click to reload the preview.*/
       jQuery("#reacg-reloadData").trigger("click");
+      reacg_loading();
     }
   });
 }

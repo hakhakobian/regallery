@@ -27,6 +27,7 @@ final class REACG {
   public string $nonce = 'reacg_nonce';
   public string $rest_root = "";
   public string $rest_nonce = "";
+  public string $no_image = '/assets/images/no_image.png';
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
   public string $abspath = '';
 
@@ -151,8 +152,11 @@ final class REACG {
     wp_localize_script($this->prefix . '_admin', 'reacg', array(
       'insert' => __('Insert', 'reacg'),
       'update' => __('Update', 'reacg'),
+      'update_thumbnail' => __('Update thumbnail', 'reacg'),
       'edit' => __('Edit', 'reacg'),
+      'edit_thumbnail' => __('Edit thumbnail', 'reacg'),
       'choose_images' => __('Choose images', 'reacg'),
+      'no_image' => $this->plugin_url . $this->no_image,
     ));
 
     // Register general styles/scripts.

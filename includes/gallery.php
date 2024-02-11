@@ -3,7 +3,6 @@ defined('ABSPATH') || die('Access Denied');
 
 class REACG_Gallery {
   private string $post_type = "reacg";
-  private string $ajax_slug = "reacg_save_images";
   private $obj;
 
   public function __construct($that) {
@@ -21,7 +20,7 @@ class REACG_Gallery {
     add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
 
     // Register an ajax action to save images to the gallery.
-    add_action('wp_ajax_' . $this->ajax_slug, [ $this, 'save_images' ]);
+    add_action('wp_ajax_reacg_save', [ $this, 'save' ]);
 
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
@@ -131,10 +130,8 @@ class REACG_Gallery {
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
         if ( !empty($images_ids_arr) ) {
-          $url = wp_get_attachment_thumb_url($images_ids_arr[0]);
-          $basename = basename($url);
-          $url = str_replace($basename, urlencode($basename), $url);
-          ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
+          $item = $this->get_item_data($images_ids_arr[0]);
+          ?><div style='background-image: url("<?php echo esc_url($item['thumbnail']['url']); ?>")'></div><?php
         }
         else {
           esc_html_e('No image', 'reacg');
@@ -192,53 +189,13 @@ class REACG_Gallery {
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids);
 
-      foreach ( $images_ids_arr as $images_id ) {
-        $post = get_post($images_id);
-        $meta = wp_get_attachment_metadata($images_id);
-        $url = wp_get_attachment_url($images_id);
-        $base_name = isset($meta['file']) ? basename($meta['file']) : "";
-
-        $original = [];
-        $original['url'] = $url;
-        $original['width'] = !empty($meta['width']) ? $meta['width'] : 0;
-        $original['height'] = !empty($meta['height']) ? $meta['height'] : 0;
-
-        $thumbnail = [];
-        $thumbnail['url'] = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, $meta['sizes']['thumbnail']['file'], $url) : '';
-        $thumbnail['width'] = !empty($meta['sizes']['thumbnail']['width']) ? $meta['sizes']['thumbnail']['width'] : 0;
-        $thumbnail['height'] = !empty($meta['sizes']['thumbnail']['height']) ? $meta['sizes']['thumbnail']['height'] : 0;
-
-        $medium_large = [];
-        $medium_large['url'] = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, $meta['sizes']['medium_large']['file'], $url) : '';
-        $medium_large['width'] = !empty($meta['sizes']['medium_large']['width']) ? $meta['sizes']['medium_large']['width'] : 0;
-        $medium_large['height'] = !empty($meta['sizes']['medium_large']['height']) ? $meta['sizes']['medium_large']['height'] : 0;
-
-        $large = [];
-        $large['url'] = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, $meta['sizes']['large']['file'], $url) : '';
-        $large['width'] = !empty($meta['sizes']['large']['width']) ? $meta['sizes']['large']['width'] : 0;
-        $large['height'] = !empty($meta['sizes']['large']['height']) ? $meta['sizes']['large']['height'] : 0;
-
-        if ( !$medium_large['url'] ) {
-            if ( !$large['url'] ) {
-              $medium_large = $original;
-            }
-            else {
-              $medium_large = $large;
-            }
-          }
-        if ( !$thumbnail['url'] ) {
-          $thumbnail = $medium_large;
-        }
-
-        $data[] = [
-          'title' => get_the_title($images_id),
-          'caption' => wp_get_attachment_caption($images_id),
-          'description' => $post->post_content,
-
-          'original' => $original,
-          'thumbnail' => $thumbnail,
-          'medium_large' => $medium_large,
-        ];
+      foreach ( $images_ids_arr as $image_id ) {
+        $post = get_post($image_id);
+        $item = $this->get_item_data($image_id);
+        $item['title'] = get_the_title($image_id);
+        $item['caption'] = wp_get_attachment_caption($image_id);
+        $item['description'] = $post->post_content;
+        $data[] = $item;
       }
 
       // Filter the data by title and description.
@@ -284,19 +241,42 @@ class REACG_Gallery {
   }
 
   /**
-   * Save the metadata on an ajax call.
+   * Ajax call.
    *
    * @return void
    */
-  public function save_images() {
+  public function save() {
     if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce])
-      && isset($_POST['post_id'])
-      && isset($_POST['images_ids']) ) {
-      update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
+        $this->save_images();
+      }
+      elseif ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
+        $this->save_attachment((int) $_POST['id'], (int) $_POST['thumbnail_id']);
+      }
     }
 
     wp_die();
+  }
+
+  /**
+   * Save the gallery metadata.
+   *
+   * @return void
+   */
+  private function save_images() {
+    update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
+  }
+
+  /**
+   * Save the attachment metadata.
+   *
+   * @return void
+   */
+  private function save_attachment( $id, $thumbnail_id ) {
+    $metadata = wp_get_attachment_metadata($id);
+    $metadata['thumbnail_id'] = $thumbnail_id;
+    wp_update_attachment_metadata( $id, $metadata );
   }
 
   /**
@@ -417,6 +397,102 @@ class REACG_Gallery {
   }
 
   /**
+   * Return the given image all size URLs.
+   *
+   * @param $id
+   *
+   * @return array|array[]
+   */
+  private function get_image_urls($id) {
+    $url = wp_get_attachment_url($id);
+    if ( !$url ) {
+      $no_image = [
+        'url' => $this->obj->plugin_url . $this->obj->no_image,
+        'width' => 700,
+        'height' => 700,
+      ];
+      return [
+        'original' => $no_image,
+        'thumbnail' => $no_image,
+        'medium_large' => $no_image,
+      ];
+    }
+
+    $meta = wp_get_attachment_metadata($id);
+    $base_name = isset($meta['file']) ? basename($meta['file']) : "";
+
+    $thumbnail = [];
+    $thumbnail['url'] = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, urlencode($meta['sizes']['thumbnail']['file']), $url) : '';
+    $thumbnail['width'] = !empty($meta['sizes']['thumbnail']['width']) ? $meta['sizes']['thumbnail']['width'] : 0;
+    $thumbnail['height'] = !empty($meta['sizes']['thumbnail']['height']) ? $meta['sizes']['thumbnail']['height'] : 0;
+
+    $medium_large = [];
+    $medium_large['url'] = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, urlencode($meta['sizes']['medium_large']['file']), $url) : '';
+    $medium_large['width'] = !empty($meta['sizes']['medium_large']['width']) ? $meta['sizes']['medium_large']['width'] : 0;
+    $medium_large['height'] = !empty($meta['sizes']['medium_large']['height']) ? $meta['sizes']['medium_large']['height'] : 0;
+
+    $large = [];
+    $large['url'] = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, urlencode($meta['sizes']['large']['file']), $url) : '';
+    $large['width'] = !empty($meta['sizes']['large']['width']) ? $meta['sizes']['large']['width'] : 0;
+    $large['height'] = !empty($meta['sizes']['large']['height']) ? $meta['sizes']['large']['height'] : 0;
+
+    $original = [];
+    $basename = basename($url);
+    $original['url'] = str_replace($basename, urlencode($basename), $url);
+    $original['width'] = !empty($meta['width']) ? $meta['width'] : 0;
+    $original['height'] = !empty($meta['height']) ? $meta['height'] : 0;
+
+    if ( !$medium_large['url'] ) {
+      if ( !$large['url'] ) {
+        $medium_large = $original;
+      }
+      else {
+        $medium_large = $large;
+      }
+    }
+    if ( !$thumbnail['url'] ) {
+      $thumbnail = $medium_large;
+    }
+
+    return [
+      'original' => $original,
+      'thumbnail' => $thumbnail,
+      'medium_large' => $medium_large,
+    ];
+  }
+
+  /**
+   * Return the given item data.
+   *
+   * @param $id
+   *
+   * @return array|array[]
+   */
+  private function get_item_data($id) {
+    $meta = wp_get_attachment_metadata($id);
+
+    if ( isset($meta['mime_type']) && strpos($meta['mime_type'], "video") !== -1 ) {
+      // Get Video URL as an original URL and selected image URL as a thumbnail URL.
+      $thumbnail_id = isset($meta['thumbnail_id']) ? $meta['thumbnail_id'] : 0;
+      $data = $this->get_image_urls($thumbnail_id);
+      $url = wp_get_attachment_url($id);
+      $meta = wp_get_attachment_metadata($id);
+
+      $basename = basename($url);
+      $data['original']['url'] = str_replace($basename, urlencode($basename), $url);
+      $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
+      $data['original']['height'] = !empty($meta['height']) ? $meta['height'] : 0;
+      $data['type'] = "video";
+    }
+    else {
+      $data = $this->get_image_urls($id);
+      $data['type'] = "image";
+    }
+
+    return $data;
+  }
+
+  /**
    * Metabox to add and show added images.
    *
    * @param $post
@@ -425,7 +501,7 @@ class REACG_Gallery {
    */
   public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
-    $ajax_url = add_query_arg(array('action' => $this->ajax_slug), admin_url('admin-ajax.php'));
+    $ajax_url = add_query_arg(array('action' => 'reacg_save'), admin_url('admin-ajax.php'));
     $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post->ID); ?>"
@@ -436,16 +512,12 @@ class REACG_Gallery {
       if ( !empty($images_ids) ) {
         foreach (json_decode($images_ids) as $image_id) {
           $title = get_the_title($image_id);
-          $url = wp_get_attachment_thumb_url($image_id);
-          $metadata = wp_get_attachment_metadata($image_id);
-          $type = ( isset($metadata['mime_type']) && strpos($metadata['mime_type'], "video") !== -1 ) ? "video" : "image";
-          $basename = basename($url);
-          $url = str_replace($basename, urlencode($basename), $url);
+          $item = $this->get_item_data($image_id);
           $data = [
             "id" => $image_id,
-            "type" => $type,
+            "type" => $item['type'],
             "title" => $title,
-            "url" => $url,
+            "url" => $item['thumbnail']['url'],
           ];
           $this->image_item($data);
         }
@@ -474,7 +546,7 @@ class REACG_Gallery {
          style="background-image: url('<?php echo esc_url($data['url']); ?>')">
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
-          <span class="reacg-edit-thumbnail dashicons dashicons-edit <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit thumbnail', 'reacg'); ?>"></span>
+          <span class="reacg-edit-thumbnail dashicons dashicons-screenoptions <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit thumbnail', 'reacg'); ?>"></span>
           <span class="reacg-edit dashicons dashicons-edit" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
           <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
         </div>
