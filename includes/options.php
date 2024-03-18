@@ -19,7 +19,7 @@ class REACG_Options {
     'titleVisibility' => 'onHover', #string always | onHover | none
     'titlePosition' => 'bottom', #string; bottom | top | center | above | below
     'titleAlignment' => 'left', #string left | center | right
-    'titleColor' => '#FFFFFF', #string
+    'titleColor' => '#CCCCCC', #string
     'titleFontSize' => 12, #number
     'titleFontFamily' => 'Abel', #string
 

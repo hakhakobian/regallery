@@ -377,6 +377,7 @@ class REACG_Gallery {
         'item_link_description' => __('A link to a gallery', 'reacg'),
       ),
       'public' => TRUE,
+      'menu_icon' => $this->obj->plugin_url . '/assets/images/logo.png',
       'exclude_from_search' => TRUE,
       'publicly_queryable' => TRUE,
       'show_ui' => TRUE,

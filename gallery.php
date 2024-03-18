@@ -1,11 +1,13 @@
 <?php
 /**
  * Plugin Name: ReGallery
- * Description: The plugin designed to suit a wide range of users, from professional photographers to hobbyists, this plugin combines unparalleled speed, lightweight architecture, and the power of React.js for a seamless, real-time interface experience.
+ * Description: ReGallery, the responsive gallery plugin, is your ideal solution for easily building stunning, mobile-friendly galleries in just minutes.
  * Version: 1.0.0
- * Author: ReGallery team
+ * Requires at least: 4.6
+ * Requires PHP: 7.0
+ * Author: ReGallery Team
  * Text Domain: reacg
- * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 defined('ABSPATH') || die('Access Denied');
