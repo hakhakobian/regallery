@@ -32,6 +32,30 @@ class REACG_Options {
     'paginationTextColor' => '#000000de', #string
 
     'useLightbox' => TRUE, #boolean
+
+    'lightbox' => array(
+      'isFullscreen' => TRUE, #boolean
+      'width' => 800, #number
+      'height' => 600, #number
+      'areControlButtonsShown' => TRUE, #boolean
+      'isInfinite' => TRUE, #boolean
+      'padding' => 0, #number
+      'canDownload' => FALSE, #boolean
+      'canZoom' => TRUE, #boolean
+      'isSlideshowAllowed' => TRUE, #boolean
+      'isFullscreenAllowed' => TRUE, #boolean
+      'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
+      'thumbnailWidth' => 120, #number
+      'thumbnailHeight' => 90, #number
+      'thumbnailBorder' => 0, #number
+      'thumbnailBorderColor' => '', #string
+      'thumbnailBorderRadius' => 0, #number
+      'thumbnailPadding' => 0, #number
+      'thumbnailGap' => 5, #number
+      'captionsPosition' => 'bottom', #string top | bottom | above | below | none
+      'captionFontFamily' => 'Abel', #string
+      'captionColor' => '#FFFFFF', #string;
+    ),
   ];
 
   /**
