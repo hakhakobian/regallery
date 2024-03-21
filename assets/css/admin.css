@@ -103,3 +103,10 @@
   cursor: move;
   background-size: cover;
 }
+
+/* Editor in the custom post type edit screen is not used, but added during post registration and hiding with CSS
+to avoid a bug connected with preview.
+ */
+.post-type-reacg #postdivrich {
+  display: none;
+}

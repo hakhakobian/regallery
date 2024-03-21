@@ -385,7 +385,8 @@ class REACG_Gallery {
       'show_in_nav_menus' => TRUE,
       'permalink_epmask' => TRUE,
       'rewrite' => TRUE,
-      'supports' => array('title'),
+      // Editor is not used, but added to avoid a bug connected with preview. It is hidden with CSS (admin.css)
+      'supports' => array('title', 'editor'),
     );
     register_post_type( 'reacg', $args );
     add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );
