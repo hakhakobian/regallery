@@ -124,10 +124,13 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.0.0: Initial version. Enjoy free functionality and add your suggestions via WP forum.
+* 1.0.1: Fixed compatibility with PHP v7.0.
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed: Compatibility with PHP v7.0.
 
 = 1.0.0 =
 * Initial version.
