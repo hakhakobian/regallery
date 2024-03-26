@@ -76,13 +76,15 @@ final class REACG {
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
+
+    add_action('init', array($this, 'load_string'), 8);
   }
 
   /**
-   * Languages localization.
+   * Load translated strings.
    */
-  public function language_load() {
-
+  public function load_string() {
+    load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
   /**

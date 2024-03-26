@@ -348,7 +348,7 @@ class REACG_Gallery {
    */
   private function register_post_type() {
     $args = array(
-      'label' => __('ReGallery', 'reacg'),
+      'label' => $this->obj->nicename,
       'labels' => array(
         'add_new' => __('Add New Gallery', 'reacg'),
         'add_new_item' => __('Add New Gallery', 'reacg'),
