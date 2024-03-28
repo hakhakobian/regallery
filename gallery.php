@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: ReGallery, the responsive gallery plugin, is your ideal solution for easily building stunning, mobile-friendly galleries in just minutes.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -18,19 +18,19 @@ final class REACG {
    */
   protected static $_instance = null;
 
-  public string $plugin_dir = '';
-  public string $plugin_url = '';
-  public string $main_file = '';
-  public string $version = '1.0.0';
+  public $plugin_dir = '';
+  public $plugin_url = '';
+  public $main_file = '';
+  public $version = '1.0.1';
 
-  public string $prefix = 'reacg';
-  public string $shortcode = 'REACG';
-  public string $nicename = 'ReGallery';
-  public string $nonce = 'reacg_nonce';
-  public string $rest_root = "";
-  public string $rest_nonce = "";
+  public $prefix = 'reacg';
+  public $shortcode = 'REACG';
+  public $nicename = 'ReGallery';
+  public $nonce = 'reacg_nonce';
+  public $rest_root = "";
+  public $rest_nonce = "";
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
-  public string $abspath = '';
+  public $abspath = '';
 
   /**
    * Ensures only one instance is loaded or can be loaded.
@@ -76,13 +76,15 @@ final class REACG {
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
+
+    add_action('init', array($this, 'load_string'), 8);
   }
 
   /**
-   * Languages localization.
+   * Load translated strings.
    */
-  public function language_load() {
-
+  public function load_string() {
+    load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
   /**

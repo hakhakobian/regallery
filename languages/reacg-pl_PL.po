@@ -1,0 +1,941 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reach\n"
+"POT-Creation-Date: 2024-03-26 15:58+0400\n"
+"PO-Revision-Date: 2024-03-26 16:31+0400\n"
+"Last-Translator: Tomasz Mróz <info@viewpro.pl>\n"
+"Language-Team: \n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: framework/REACGLibrary.php:117
+#| msgid "Select all"
+msgid "Select gallery"
+msgstr ""
+
+#: framework/REACGLibrary.php:129
+msgid "(no title)"
+msgstr ""
+
+#: framework/REACGLibrary.php:148
+#| msgid "Gallery Type:"
+msgid "Missing gallery ID."
+msgstr ""
+
+#: framework/REACGLibrary.php:153
+msgid "There is no such a gallery."
+msgstr ""
+
+#: gallery.php:131
+#| msgid "Load More"
+msgid "Load more"
+msgstr "Załaduj więcej"
+
+#: gallery.php:132
+#| msgid "There are no images."
+msgid "There is not data."
+msgstr "Nie ma danych."
+
+#: gallery.php:156
+msgid "Insert"
+msgstr ""
+
+#: gallery.php:157
+msgid "Update"
+msgstr ""
+
+#: gallery.php:158
+#| msgid "Add to image"
+msgid "Edit image"
+msgstr ""
+
+#: gallery.php:159
+#| msgid "Reset image"
+msgid "Choose images"
+msgstr ""
+
+#: includes/gallery.php:114
+msgid "Thumbnail"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Shortcode"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Images count"
+msgstr ""
+
+#: includes/gallery.php:140
+#| msgid "Add to image"
+msgid "No image"
+msgstr ""
+
+#: includes/gallery.php:353 includes/gallery.php:354
+#| msgid "Gallery title"
+msgid "Add New Gallery"
+msgstr ""
+
+#: includes/gallery.php:355
+#| msgid "Gallery"
+msgid "Edit Gallery"
+msgstr ""
+
+#: includes/gallery.php:356
+#| msgid "Gallery"
+msgid "New Gallery"
+msgstr ""
+
+#: includes/gallery.php:357
+#| msgid "Gallery"
+msgid "View Gallery"
+msgstr ""
+
+#: includes/gallery.php:358
+#| msgid "Galleries"
+msgid "View Galleries"
+msgstr ""
+
+#: includes/gallery.php:359
+#| msgid "Galleries"
+msgid "Search Galleries"
+msgstr ""
+
+#: includes/gallery.php:360
+#| msgid "Show images count"
+msgid "No galleries found"
+msgstr ""
+
+#: includes/gallery.php:361
+msgid "No galleries found in Trash"
+msgstr ""
+
+#: includes/gallery.php:362
+msgid "All Galleries"
+msgstr ""
+
+#: includes/gallery.php:363
+#| msgid "There are no images in this gallery."
+msgid "Filter galleries list"
+msgstr ""
+
+#: includes/gallery.php:364
+#| msgid "Gallery role"
+msgid "Galleries list navigation"
+msgstr ""
+
+#: includes/gallery.php:365
+#| msgid "Galleries"
+msgid "Galleries list"
+msgstr ""
+
+#: includes/gallery.php:366
+#| msgid "Galleries"
+msgid "Gallery Archives"
+msgstr ""
+
+#: includes/gallery.php:367
+#| msgid "Gallery title"
+msgid "Gallery Attributes"
+msgstr ""
+
+#: includes/gallery.php:368
+#| msgid "Add selected images to gallery"
+msgid "Insert into gallery"
+msgstr ""
+
+#: includes/gallery.php:369
+#| msgid "Download gallery"
+msgid "Uploaded to this gallery"
+msgstr ""
+
+#: includes/gallery.php:370
+#| msgid "Gallery is empty."
+msgid "Gallery published."
+msgstr ""
+
+#: includes/gallery.php:371
+#| msgid "Gallery is empty."
+msgid "Gallery published privately."
+msgstr ""
+
+#: includes/gallery.php:372
+msgid "Gallery reverted to draft."
+msgstr ""
+
+#: includes/gallery.php:373
+#| msgid "Gallery tags"
+msgid "Gallery trashed."
+msgstr ""
+
+#: includes/gallery.php:374
+#| msgid "Gallery Tags"
+msgid "Gallery scheduled."
+msgstr ""
+
+#: includes/gallery.php:375
+#| msgid "Gallery group"
+msgid "Gallery updated."
+msgstr ""
+
+#: includes/gallery.php:376
+#| msgid "Gallery"
+msgid "Gallery Link"
+msgstr ""
+
+#: includes/gallery.php:377
+#| msgid "Download gallery"
+msgid "A link to a gallery"
+msgstr ""
+
+#: includes/gallery.php:411
+#| msgid "All images"
+msgid "Images"
+msgstr ""
+
+#: includes/gallery.php:473
+msgid "Edit"
+msgstr ""
+
+#: includes/gallery.php:474
+msgid "Remove"
+msgstr ""
+
+#: includes/options.php:151
+msgid "Nothing to save."
+msgstr ""
+
+#: includes/options.php:173
+msgid "Nothing saved."
+msgstr ""
+
+#: includes/options.php:221
+msgid "Successfully deleted."
+msgstr ""
+
+#: includes/options.php:224
+msgid "Nothing deleted."
+msgstr ""
+
+#~ msgid "Delete"
+#~ msgstr "Usuń komentarz"
+
+#~ msgid "Comments"
+#~ msgstr "Komentarz"
+
+#~ msgid "Instagram only"
+#~ msgstr "Tylko Instagram"
+
+#~ msgid "Facebook"
+#~ msgstr "Podziel się na Facebooku."
+
+#~ msgid "Random"
+#~ msgstr "przypadkowy"
+
+#~ msgid "All galleries"
+#~ msgstr "Wszyst. galerie"
+
+#~ msgid "Name"
+#~ msgstr "Nazwa"
+
+#, fuzzy
+#~| msgid "Reset image"
+#~ msgid "Remove from image"
+#~ msgstr "Zresetować"
+
+#~ msgid "Add New"
+#~ msgstr "Dodaj nowe"
+
+#~ msgid "Search"
+#~ msgstr "Szukaj"
+
+#~ msgid "First page"
+#~ msgstr "Pierwsza"
+
+#~ msgid "Previous page"
+#~ msgstr "Poprzednia"
+
+#~ msgid "Current Page"
+#~ msgstr "Bieżąca"
+
+#~ msgid "of"
+#~ msgstr "z"
+
+#~ msgid "Next page"
+#~ msgstr "Następna"
+
+#~ msgid "Last page"
+#~ msgstr "Ostatnia"
+
+#~ msgid "Select All"
+#~ msgstr "Wybierz wszyst."
+
+#~ msgid "Apply"
+#~ msgstr "Zastosuj"
+
+#~ msgid "Title"
+#~ msgstr "Tytuł"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgid "Preview"
+#~ msgstr "Poprzedni"
+
+#~ msgid "Show more details"
+#~ msgstr "Pokaż komentarze"
+
+#~ msgid "Basic"
+#~ msgstr "Podstawowe"
+
+#~ msgid "Published"
+#~ msgstr "Opublikuj"
+
+#~ msgid "Yes"
+#~ msgstr "Tak"
+
+#~ msgid "No"
+#~ msgstr "Nie"
+
+#~ msgid "Description"
+#~ msgstr "Opis"
+
+#~ msgid "Email"
+#~ msgstr "E-mail "
+
+#~ msgid "Comment"
+#~ msgstr "Komentarz"
+
+#~ msgid "Crop"
+#~ msgstr "Przytnij"
+
+#~ msgid "Grayscale"
+#~ msgstr "Skla szarości"
+
+#~ msgid "Negative"
+#~ msgstr "Negatyw"
+
+#~ msgid "Sepia"
+#~ msgstr "Sepia"
+
+#~ msgid "Saturate"
+#~ msgstr "Saturacja"
+
+#~ msgid "Contrast"
+#~ msgstr "Kontrast"
+
+#~ msgid "Gallery autoupdate option"
+#~ msgstr "Galeria zdjęć plugin interwał automatycznej aktualizacji."
+
+#~ msgid "No update"
+#~ msgstr "Brak aktualizacji"
+
+#~ msgid "Cancel"
+#~ msgstr "Anuluj"
+
+#~ msgid "Description: "
+#~ msgstr "Opis:"
+
+#~ msgid "You have unsaved changes."
+#~ msgstr "Masz niezapisane zmiany."
+
+#~ msgid "Show order column"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Saturate"
+#~ msgid "Numerate"
+#~ msgstr "Saturacja"
+
+#, fuzzy
+#~| msgid "Order"
+#~ msgid "Ordering"
+#~ msgstr "Sortuj według"
+
+#~ msgid "Filename"
+#~ msgstr "Nazwa pliku"
+
+#~ msgid "Resolution"
+#~ msgstr "Rozdzielczość"
+
+#~ msgid "Size"
+#~ msgstr "Rozmiar"
+
+#~ msgid "Reset"
+#~ msgstr "Zresetować"
+
+#, fuzzy
+#~| msgid "This is not a valid email address."
+#~ msgid "Please enter a valid email."
+#~ msgstr "To nie jest prawidłowy adres e-mail. "
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Gallery Group defaults"
+#~ msgstr "Grupa gelerii"
+
+#~ msgid "Watermark"
+#~ msgstr "Znak wodny"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show custom posts"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show comments for custom posts"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Enable comments"
+#~ msgid "Enable Google fonts"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Enable info"
+#~ msgid "Enable HTML editor"
+#~ msgstr "Włącz informacje"
+
+#~ msgid "Gallery autoupdate interval"
+#~ msgstr "Aktualizacja galerii co"
+
+#~ msgid "hour"
+#~ msgstr "godz."
+
+#~ msgid "min"
+#~ msgstr "min."
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Gallery group restrictions"
+#~ msgstr "Grupa gelerii"
+
+#~ msgid "Text"
+#~ msgstr "Treść"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "Select Image"
+#~ msgstr "Wybierz wszystkie"
+
+#, fuzzy
+#~| msgid "hour"
+#~ msgid "or"
+#~ msgstr "godz."
+
+#~ msgid "Default"
+#~ msgstr "Domyślnie"
+
+#, fuzzy
+#~| msgid "Watermark"
+#~ msgid "Watermark URL"
+#~ msgstr "Znak wodny"
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order by"
+#~ msgstr "Sortuj według"
+
+#~ msgid "Show tag box"
+#~ msgstr "Pokaż tag"
+
+#~ msgid "Show on hover"
+#~ msgstr "Pokaż informacje"
+
+#~ msgid "Show ecommerce icon"
+#~ msgstr "Pokaż ikonę sklepu"
+
+#, fuzzy
+#~| msgid "Show images count"
+#~ msgid "Show image descriptions"
+#~ msgstr "Pokaż licznik zdjęć"
+
+#, fuzzy
+#~| msgid "Show images count"
+#~ msgid "Show image description"
+#~ msgstr "Pokaż licznik zdjęć"
+
+#~ msgid "Gallery groups per page"
+#~ msgstr "Ilość galerii na stronie"
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Order Gallery group by"
+#~ msgstr "Grupa gelerii"
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order images by"
+#~ msgstr "Sortuj według"
+
+#, fuzzy
+#~| msgid "Gallery title"
+#~ msgid "Gallery view type"
+#~ msgstr "Tytuł galerii"
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Gallery group thumbnail width"
+#~ msgstr "Grupa gelerii"
+
+#, fuzzy
+#~| msgid "Enable fullscreen"
+#~ msgid "Enable fullscreen button"
+#~ msgstr "Włącz pełny ekran"
+
+#~ msgid "Enable comments"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Email for comments"
+#~ msgstr "Pokaż komentarze"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Captcha for comments"
+#~ msgstr "Pokaż komentarze"
+
+#~ msgid "Enable comments moderation"
+#~ msgstr "Włącz moderację komentarzy"
+
+#, fuzzy
+#~| msgid "Show images count"
+#~ msgid "Show image info"
+#~ msgstr "Pokaż licznik zdjęć"
+
+#~ msgid "Enable rating"
+#~ msgstr "Włącz oceny"
+
+#, fuzzy
+#~| msgid "Show images count"
+#~ msgid "Show image counter"
+#~ msgstr "Pokaż licznik zdjęć"
+
+#, fuzzy
+#~| msgid "Enable loop"
+#~ msgid "Enable looping"
+#~ msgstr "Włącz pętlę"
+
+#~ msgid "Enable"
+#~ msgstr "Włącz"
+
+#, fuzzy
+#~| msgid "Enable Facebook button"
+#~ msgid "Show Facebook button"
+#~ msgstr "Włącz przycisk Facebook"
+
+#, fuzzy
+#~| msgid "Share on Twitter"
+#~ msgid "Show Twitter button"
+#~ msgstr "Podziel się na Twitterze."
+
+#, fuzzy
+#~| msgid "Share on Pinterest"
+#~ msgid "Show Pinterest button"
+#~ msgstr "Udostępnij na Pinterest"
+
+#, fuzzy
+#~| msgid "Share on Tumblr"
+#~ msgid "Show Tumblr button"
+#~ msgstr "Podziel się na Tumblr"
+
+#, fuzzy
+#~| msgid "Show Ecommerce"
+#~ msgid "Show Ecommerce button"
+#~ msgstr "Pokaż sklep"
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Gallery Group"
+#~ msgstr "Grupa gelerii"
+
+#, fuzzy
+#~| msgid "Show title"
+#~ msgid "Theme title"
+#~ msgstr "Pokaż tytuł"
+
+#~ msgid "Border style:"
+#~ msgstr "Styl ramki"
+
+#, fuzzy
+#~| msgid "Gallery title"
+#~ msgid "Gallery title alignment:"
+#~ msgstr "Tytuł galerii"
+
+#, fuzzy
+#~| msgid "Share buttons color:"
+#~ msgid "Back Font color:"
+#~ msgstr "Podziel się na Facebooku."
+
+#, fuzzy
+#~| msgid "Description: "
+#~ msgid "Description alignment:"
+#~ msgstr "Opis:"
+
+#~ msgid "Share buttons color:"
+#~ msgstr "Podziel się na Facebooku."
+
+#~ msgid "Comments Width:"
+#~ msgstr "Komentarz"
+
+#~ msgid "Gallery Type:"
+#~ msgstr "Typ galerii"
+
+#~ msgid "First"
+#~ msgstr "Pierwszy"
+
+#~ msgid "Last"
+#~ msgstr "Trwać"
+
+#~ msgid "Remove items"
+#~ msgstr "pozycja"
+
+#~ msgid "Order by:"
+#~ msgstr "Sortuj według"
+
+#~ msgid "Back"
+#~ msgstr "Powrót"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "Select Files"
+#~ msgstr "Wybierz wszystkie"
+
+#~ msgid "item"
+#~ msgstr "pozycja"
+
+#~ msgid "Gallery Tags"
+#~ msgstr "Tagi galerii"
+
+#~ msgid "rotated left"
+#~ msgstr "Jeszcze nie ocenione. "
+
+#~ msgid "reset"
+#~ msgstr "Zresetować"
+
+#, fuzzy
+#~| msgid "Description"
+#~ msgid "Edit description"
+#~ msgstr "Opis"
+
+#, fuzzy
+#~| msgid "Remove items"
+#~ msgid "Add/Remove tag"
+#~ msgstr "pozycja"
+
+#~ msgid "Add pricelist"
+#~ msgstr "Dodaj cennik"
+
+#~ msgid "Remove pricelist"
+#~ msgstr "Skasuj cennik"
+
+#, fuzzy
+#~| msgid "Photo Gallery Facebook"
+#~ msgid "Photo Gallery Premium"
+#~ msgstr "Podziel się na Facebooku."
+
+#, fuzzy
+#~| msgid "Pro Version"
+#~ msgid "Premium Version"
+#~ msgstr "Wersja Pro"
+
+#, fuzzy
+#~| msgid "All images"
+#~ msgid "All tags"
+#~ msgstr "Wszyst. zdjęcia"
+
+#, fuzzy, php-format
+#~| msgid "This is not a valid email address."
+#~ msgid "The %s field must contain a valid email address."
+#~ msgstr "To nie jest prawidłowy adres e-mail. "
+
+#, fuzzy
+#~| msgid "Error. Incorrect Verification Code."
+#~ msgid "Incorrect Security code."
+#~ msgstr "Błąd. Nieprawidłowy kod weryfikacyjny. "
+
+#, fuzzy
+#~| msgid "There is no gallery selected or the gallery was deleted."
+#~ msgid "There is no album selected or the gallery was deleted."
+#~ msgstr "Nie wybrano galeria lub galeria została usunięta"
+
+#~ msgid "There is no gallery selected or the gallery was deleted."
+#~ msgstr "Nie wybrano galeria lub galeria została usunięta"
+
+#~ msgid "More"
+#~ msgstr "Więcej"
+
+#~ msgid "Hide"
+#~ msgstr "Ukryć"
+
+#~ msgid "Show comments"
+#~ msgstr "Pokaż komentarze"
+
+#~ msgid "Share on Facebook"
+#~ msgstr "Podziel się na Facebooku."
+
+#~ msgid "Share on Twitter"
+#~ msgstr "Podziel się na Twitterze."
+
+#~ msgid "Share on Pinterest"
+#~ msgstr "Udostępnij na Pinterest"
+
+#~ msgid "Share on Tumblr"
+#~ msgstr "Podziel się na Tumblr"
+
+#~ msgid "Show ecommerce"
+#~ msgstr "Pokaż sklep"
+
+#~ msgid "There are no images to download."
+#~ msgstr "Nie ma zdjęć w tej galerii."
+
+#~ msgid "The image has been deleted."
+#~ msgstr "Obraz został usunięty."
+
+#~ msgid "Play"
+#~ msgstr "Odtwórz"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksymalizacji"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Pełny ekran"
+
+#~ msgid "Show info"
+#~ msgstr "Pokaż informacje"
+
+#~ msgid "Show rating"
+#~ msgstr "Pokaż ocenę"
+
+#~ msgid "Open image in original size."
+#~ msgstr "Otwórz obraz w oryginalnym rozmiarze. "
+
+#~ msgid "Download original image"
+#~ msgstr "Pobierz oryginalny obraz"
+
+#~ msgid "Ecommerce"
+#~ msgstr "Sklep"
+
+#~ msgid "Hits: "
+#~ msgstr "Odsłon: "
+
+#~ msgid "Rated."
+#~ msgstr "Ocenione."
+
+#~ msgid "Hide Comments"
+#~ msgstr "Ukryj komentarze"
+
+#~ msgid "Verification Code"
+#~ msgstr "Kod weryfikacyjny"
+
+#~ msgid "Privacy Policy"
+#~ msgstr "Polityka Prywatności"
+
+#~ msgid "Submit"
+#~ msgstr "Zatwierdź"
+
+#~ msgid "Your comment is awaiting moderation"
+#~ msgstr "Twój komentarz oczekuje na moderację "
+
+#~ msgid "Hide Ecommerce"
+#~ msgstr "Ukryj sklep"
+
+#~ msgid "Add to cart"
+#~ msgstr "Dodaj do koszyka"
+
+#~ msgid "items"
+#~ msgstr "pozycja"
+
+#~ msgid "Price"
+#~ msgstr "Cena"
+
+#~ msgid "Count"
+#~ msgstr "Ilość"
+
+#~ msgid "Total"
+#~ msgstr "Suma"
+
+#~ msgid "View cart"
+#~ msgstr "Pokaż koszyk"
+
+#~ msgid "Delete Comment"
+#~ msgstr "Usuń komentarz"
+
+#~ msgid "Open"
+#~ msgstr "Otwórz"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by Default"
+#~ msgstr "Sortuj według"
+
+#~ msgid " item(s)"
+#~ msgstr "pozycja/e"
+
+#~ msgid "Previous"
+#~ msgstr "Poprzedni"
+
+#~ msgid "Next"
+#~ msgstr "Następny"
+
+#~ msgid "Go to the first page"
+#~ msgstr "Przejdź do pierwszej strony"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "Przejdź do poprzedniej strony"
+
+#~ msgid "Go to the next page"
+#~ msgstr "Przejdź do następnej strony"
+
+#~ msgid "Go to the last page"
+#~ msgstr "Idź do ostatniej strony"
+
+#, fuzzy, php-format
+#~| msgid "Select all"
+#~ msgid "Select %s"
+#~ msgstr "Wybierz wszystkie"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "- Select -"
+#~ msgstr "Wybierz wszystkie"
+
+#, fuzzy
+#~| msgid "rotated left"
+#~ msgid "rotate"
+#~ msgstr "Jeszcze nie ocenione. "
+
+#~ msgid "Options"
+#~ msgstr "Opcje"
+
+#, fuzzy
+#~| msgid "Options"
+#~ msgid "Options page"
+#~ msgstr "Opcje"
+
+#~ msgid "This is not a valid email address."
+#~ msgstr "To nie jest prawidłowy adres e-mail. "
+
+#~ msgid "There are no images matching your search."
+#~ msgstr "Nie ma żadnych zdjęć pasujących do wyszukiwania."
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order By"
+#~ msgstr "Sortuj według"
+
+#~ msgid "Show Ecommerce"
+#~ msgstr "Pokaż sklep"
+
+#~ msgid "Show Comments"
+#~ msgstr "Pokaż komentarze"
+
+#~ msgid "Restore"
+#~ msgstr "Przywróć"
+
+#~ msgid "Exit Fullscreen"
+#~ msgstr "Zamknij tryb pełnoekranowy"
+
+#~ msgid "Pause"
+#~ msgstr "Pauza"
+
+#~ msgid "Hide info"
+#~ msgstr "Ukryj informacje"
+
+#~ msgid "Hide rating"
+#~ msgstr "Ukryj ocenił"
+
+#~ msgid "Editing Comments"
+#~ msgstr "Ukryj komentarze"
+
+#~ msgid "Photo gallery plugin autoupdate interval."
+#~ msgstr "Galeria zdjęć plugin interwał automatycznej aktualizacji."
+
+#~ msgid "Rate"
+#~ msgstr "Ocenione."
+
+#, fuzzy
+#~| msgid "Back"
+#~ msgid "Backup"
+#~ msgstr "Powrót"
+
+#, fuzzy
+#~| msgid "Load More"
+#~ msgid "Learn More"
+#~ msgstr "Więcej"
+
+#~ msgid "Demo"
+#~ msgstr "Demo"
+
+#~ msgid "Terms of Use"
+#~ msgstr "Regulamin"
+
+#~ msgid "Pricelist"
+#~ msgstr "Cennik"
+
+#~ msgid "Enable Ecommerce button"
+#~ msgstr "Włącz przycisk sklepu"
+
+#~ msgid "Watermark url"
+#~ msgstr "Link znaku wodnego"
+
+#~ msgid "Ecommerce icon"
+#~ msgstr "Ikona sklepu"
+
+#~ msgid "Albums per page"
+#~ msgstr "Ilość albumów na stronie"
+
+#~ msgid "Album title"
+#~ msgstr "Tytuł albumu"
+
+#~ msgid "Album view type"
+#~ msgstr "Pokaż typ albumu"
+
+#~ msgid "Enable Ecommerce for images."
+#~ msgstr "Włącz sklep dla zdjęć."
+
+#~ msgid "There is no theme selected or the theme was deleted."
+#~ msgstr "Nie wybrano motyw lub motyw została usunięta."
+
+#~ msgid "There is no album selected or the album was deleted."
+#~ msgstr "Nie wybrano albumu lub albumu została usunięta."
+
+#~ msgid "Album is empty."
+#~ msgstr "Album jest pusty."
+
+#~ msgid "Share on Google+"
+#~ msgstr "Udostępnij na Google+."
+
+#~ msgid "Not rated yet."
+#~ msgstr "Jeszcze nie ocenione. "
+
+#~ msgid "Votes: "
+#~ msgstr "Głosów: "
+
+#~ msgid "Cancel your rating."
+#~ msgstr "Anuluj ocenę. "
+
+#~ msgid "You have already rated."
+#~ msgstr "Już oceniłeś."
+
+#~ msgid "Theme 1"
+#~ msgstr "Wygląd 1"
+
+#~ msgid "Theme 2"
+#~ msgstr "Wygląd 2"
+
+#~ msgid "More features"
+#~ msgstr "Więcej funkcji"
+
+#~ msgid "Overview"
+#~ msgstr "Przegląd"

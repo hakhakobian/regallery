@@ -51,8 +51,8 @@ class REACGLibrary {
         if ( isset($row->option_value) ) {
           $option = json_decode($row->option_value);
           foreach ( $option as $value ) {
-            $is_google_fonts = in_array((string) $value, $google_fonts);
-            if ( $is_google_fonts ) {
+            // Get all font families saved in the DB.
+            if ( is_string($value) && in_array($value, $google_fonts) ) {
               $used_fonts[$value] = $value;
             }
           }
