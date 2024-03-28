@@ -28,7 +28,7 @@ class REACG_Options {
     'activeButtonColor' => '#FFFFFF', #string
     'inactiveButtonColor' => '#00000014', #string
     'paginationButtonShape' => 'circular', #string rounded | circular
-    'loadMoreButtonColor' => '#000000de', #string
+    'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
 
     'useLightbox' => TRUE, #boolean
