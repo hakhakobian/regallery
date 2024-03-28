@@ -2,8 +2,8 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Gallery {
-  private string $post_type = "reacg";
-  private string $ajax_slug = "reacg_save_images";
+  private $post_type = "reacg";
+  private $ajax_slug = "reacg_save_images";
   private $obj;
 
   public function __construct($that) {
@@ -258,11 +258,15 @@ class REACG_Gallery {
       if ( in_array($order_by, array('title', 'caption', 'description')) ) {
         if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
           // For descending order.
-          usort($data, fn( $a, $b ) => strtolower($b[$order_by]) <=> strtolower($a[$order_by]));
+          usort($data, function($a, $b) use ($order_by) {
+            return strtolower($b[$order_by]) <=> strtolower($a[$order_by]);
+          });
         }
         else {
           // For ascending order.
-          usort($data, fn( $a, $b ) => strtolower($a[$order_by]) <=> strtolower($b[$order_by]));
+          usort($data, function($a, $b) use ($order_by) {
+            return strtolower($a[$order_by]) <=> strtolower($b[$order_by]);
+          });
         }
       }
       // Run pagination on the data.

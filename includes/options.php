@@ -2,9 +2,9 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Options {
-  private string $name = "reacg_options";
+  private $name = "reacg_options";
   private $obj;
-  private array $options = [
+  private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
     'width' => 200, #number
