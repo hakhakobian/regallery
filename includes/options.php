@@ -73,11 +73,17 @@ class REACG_Options {
       'columns',
       'itemsPerPage',
       'titleFontSize',
+      'thumbnailWidth',
+      'thumbnailHeight',
+      'thumbnailGap',
     ];
     $empty_number = [
       'gap',
       'padding',
       'borderRadius',
+      'thumbnailBorder',
+      'thumbnailBorderRadius',
+      'thumbnailPadding',
     ];
     $specific = [
       'titleVisibility' => [
@@ -100,6 +106,15 @@ class REACG_Options {
         'allowed' => [ 'rounded', 'circular' ],
         'default' => 'circular',
       ],
+      'thumbnailsPosition' => [
+        'allowed' => [ 'top', 'bottom', 'start', 'end', 'none' ],
+        'default' => 'bottom',
+      ],
+      'captionsPosition' => [
+        'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
+        'default' => 'bottom',
+      ],
+
     ];
     if ( in_array($key, $number) ) {
       return max($value, 1);
@@ -160,6 +175,28 @@ class REACG_Options {
   }
 
   /**
+   * Sanitizing and validating the given array.
+   *
+   * @param $data
+   *
+   * @return mixed
+   */
+  private function sanitize($data) {
+    foreach ( $data as $key => $item ) {
+      if ( is_array($item) ) {
+        $data[$key] = $this->sanitize($item);
+      }
+      else {
+        $item = sanitize_text_field(stripslashes($item));
+        // Data validation on allowed values.
+        $data[$key] = $this->validate($key, $item);
+      }
+    }
+
+    return $data;
+  }
+
+  /**
    * Set options for the given gallery.
    *
    * @param WP_REST_Request $request
@@ -174,16 +211,9 @@ class REACG_Options {
     if ( empty($data) ) {
       return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
-    $data = (array) json_decode($data);
+    $data = (array) json_decode($data, true);
 
-    array_walk($data, function (&$value) {
-      $value = sanitize_text_field(stripslashes($value));
-    });
-
-    // Data validation on allowed values.
-    foreach ( $data as $key => $item ) {
-      $data[$key] = $this->validate($key, $item);
-    }
+    $data = $this->sanitize($data);
 
     $options = json_encode($data);
     $old_options = get_option($this->name . $gallery_id, $options);
