@@ -1,11 +1,11 @@
 === ReGallery - The Intuitive Photo Gallery Plugin ===
-Contributors: hakhakob, regallery
+Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,10 +124,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.0.0: Initial version. Enjoy free functionality and add your suggestions via WP forum.
+* 1.0.1: Minor fixes. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Added: Translation files for 10 languages.
+* Fixed: Compatibility with PHP v7.0.
+* Fixed: Missing content when checking with "Preview Changes" button.
+* Fixed: Save options in the Playground․
 
 = 1.0.0 =
 * Initial version.
