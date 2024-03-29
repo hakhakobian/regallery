@@ -17,7 +17,7 @@ jQuery(document).ready(function () {
         images_ids.push(jQuery( this ).data( 'id' ));
       } );
       reacg_set_image_ids( images_ids );
-      /* Save the images.*/
+      /* Save images on reorder.*/
       reacg_save_images();
     }
   } );
@@ -33,7 +33,7 @@ jQuery(document).ready(function () {
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
     reacg_set_image_ids(images_ids);
-    /* Save the images.*/
+    /* Save images on delete.*/
     reacg_save_images();
   });
 
@@ -55,7 +55,7 @@ jQuery(document).ready(function () {
     });
     media_uploader.open();
     media_uploader.on( 'select', function () {
-      /* Save the images.*/
+      /* Save images on inserting from media library.*/
       reacg_save_images();
 
       media_uploader.close();
@@ -178,8 +178,12 @@ function reacg_save_images() {
     complete: function (data) {
       reacg_loading();
       /* Trigger hidden button click to reload the preview.*/
-      
       jQuery("#reacg-reloadData").trigger("click");
+
+      /* Run autosave for newly added posts.*/
+      if ( jQuery("#original_post_status").val() === "auto-draft" ) {
+        jQuery("#publish").trigger("click");
+      }
     }
   });
 }
