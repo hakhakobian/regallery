@@ -3,11 +3,11 @@
   let pluginData = reacg;
   blocks.registerBlockType( "reacg/gallery", {
     title: pluginData.title,
-    /*icon: el( 'img', {
+    icon: el( 'img', {
       width: 20,
       height: 20,
       src: pluginData.icon
-    } ),*/
+    } ),
     category: 'common',
     attributes: {
       shortcode: {

@@ -2,9 +2,9 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Options {
-  private string $name = "reacg_options";
+  private $name = "reacg_options";
   private $obj;
-  private array $options = [
+  private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
     'width' => 200, #number
@@ -19,7 +19,7 @@ class REACG_Options {
     'titleVisibility' => 'onHover', #string always | onHover | none
     'titlePosition' => 'bottom', #string; bottom | top | center | above | below
     'titleAlignment' => 'left', #string left | center | right
-    'titleColor' => '#FFFFFF', #string
+    'titleColor' => '#CCCCCC', #string
     'titleFontSize' => 12, #number
     'titleFontFamily' => 'Abel', #string
 
@@ -28,10 +28,34 @@ class REACG_Options {
     'activeButtonColor' => '#FFFFFF', #string
     'inactiveButtonColor' => '#00000014', #string
     'paginationButtonShape' => 'circular', #string rounded | circular
-    'loadMoreButtonColor' => '#000000de', #string
+    'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
 
     'useLightbox' => TRUE, #boolean
+
+    'lightbox' => array(
+      'isFullscreen' => TRUE, #boolean
+      'width' => 800, #number
+      'height' => 600, #number
+      'areControlButtonsShown' => TRUE, #boolean
+      'isInfinite' => TRUE, #boolean
+      'padding' => 0, #number
+      'canDownload' => FALSE, #boolean
+      'canZoom' => TRUE, #boolean
+      'isSlideshowAllowed' => TRUE, #boolean
+      'isFullscreenAllowed' => TRUE, #boolean
+      'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
+      'thumbnailWidth' => 120, #number
+      'thumbnailHeight' => 90, #number
+      'thumbnailBorder' => 0, #number
+      'thumbnailBorderColor' => '', #string
+      'thumbnailBorderRadius' => 0, #number
+      'thumbnailPadding' => 0, #number
+      'thumbnailGap' => 5, #number
+      'captionsPosition' => 'bottom', #string top | bottom | above | below | none
+      'captionFontFamily' => 'Abel', #string
+      'captionColor' => '#FFFFFF', #string;
+    ),
   ];
 
   /**
@@ -49,11 +73,17 @@ class REACG_Options {
       'columns',
       'itemsPerPage',
       'titleFontSize',
+      'thumbnailWidth',
+      'thumbnailHeight',
+      'thumbnailGap',
     ];
     $empty_number = [
       'gap',
       'padding',
       'borderRadius',
+      'thumbnailBorder',
+      'thumbnailBorderRadius',
+      'thumbnailPadding',
     ];
     $specific = [
       'titleVisibility' => [
@@ -76,6 +106,15 @@ class REACG_Options {
         'allowed' => [ 'rounded', 'circular' ],
         'default' => 'circular',
       ],
+      'thumbnailsPosition' => [
+        'allowed' => [ 'top', 'bottom', 'start', 'end', 'none' ],
+        'default' => 'bottom',
+      ],
+      'captionsPosition' => [
+        'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
+        'default' => 'bottom',
+      ],
+
     ];
     if ( in_array($key, $number) ) {
       return max($value, 1);
@@ -136,6 +175,28 @@ class REACG_Options {
   }
 
   /**
+   * Sanitizing and validating the given array.
+   *
+   * @param $data
+   *
+   * @return mixed
+   */
+  private function sanitize($data) {
+    foreach ( $data as $key => $item ) {
+      if ( is_array($item) ) {
+        $data[$key] = $this->sanitize($item);
+      }
+      else {
+        $item = sanitize_text_field(stripslashes($item));
+        // Data validation on allowed values.
+        $data[$key] = $this->validate($key, $item);
+      }
+    }
+
+    return $data;
+  }
+
+  /**
    * Set options for the given gallery.
    *
    * @param WP_REST_Request $request
@@ -150,16 +211,9 @@ class REACG_Options {
     if ( empty($data) ) {
       return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
-    $data = (array) json_decode($data);
+    $data = (array) json_decode($data, true);
 
-    array_walk($data, function (&$value) {
-      $value = sanitize_text_field(stripslashes($value));
-    });
-
-    // Data validation on allowed values.
-    foreach ( $data as $key => $item ) {
-      $data[$key] = $this->validate($key, $item);
-    }
+    $data = $this->sanitize($data);
 
     $options = json_encode($data);
     $old_options = get_option($this->name . $gallery_id, $options);

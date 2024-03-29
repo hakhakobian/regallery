@@ -51,8 +51,8 @@ class REACGLibrary {
         if ( isset($row->option_value) ) {
           $option = json_decode($row->option_value);
           foreach ( $option as $value ) {
-            $is_google_fonts = in_array((string) $value, $google_fonts);
-            if ( $is_google_fonts ) {
+            // Get all font families saved in the DB.
+            if ( is_string($value) && in_array($value, $google_fonts) ) {
               $used_fonts[$value] = $value;
             }
           }
@@ -72,7 +72,7 @@ class REACGLibrary {
    */
   public static function get_rest_routs($gallery_id) {
     ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
-         class="reacg-gallery reacg-preview"
+         class="reacg-gallery reacg-preview alignfull"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
          data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
   }

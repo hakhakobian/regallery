@@ -1,0 +1,4135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reacg\n"
+"POT-Creation-Date: 2024-03-26 15:36+0400\n"
+"PO-Revision-Date: 2024-03-26 15:37+0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: framework/REACGLibrary.php:117
+msgid "Select gallery"
+msgstr "Seleccionar galería"
+
+#: framework/REACGLibrary.php:129
+msgid "(no title)"
+msgstr "(Sin título)"
+
+#: framework/REACGLibrary.php:148
+msgid "Missing gallery ID."
+msgstr "Falta el ID de la galería."
+
+#: framework/REACGLibrary.php:153
+msgid "There is no such a gallery."
+msgstr "No existe tal galería."
+
+#: gallery.php:131
+msgid "Load more"
+msgstr "Carga más"
+
+#: gallery.php:132
+msgid "There is not data."
+msgstr "No hay datos."
+
+#: gallery.php:156
+msgid "Insert"
+msgstr "Insertar"
+
+#: gallery.php:157
+msgid "Update"
+msgstr "Actualizar"
+
+#: gallery.php:158
+msgid "Edit image"
+msgstr "Editar imagen"
+
+#: gallery.php:159
+msgid "Choose images"
+msgstr "Elige imágenes"
+
+#: includes/gallery.php:114
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+#: includes/gallery.php:115
+msgid "Shortcode"
+msgstr "Código corto"
+
+#: includes/gallery.php:115
+msgid "Images count"
+msgstr "Las imágenes cuentan"
+
+#: includes/gallery.php:140
+msgid "No image"
+msgstr "Sin imágen"
+
+#: includes/gallery.php:353 includes/gallery.php:354
+msgid "Add New Gallery"
+msgstr "Agregar nueva galería"
+
+#: includes/gallery.php:355
+msgid "Edit Gallery"
+msgstr "Editar galería"
+
+#: includes/gallery.php:356
+msgid "New Gallery"
+msgstr "Nueva galería"
+
+#: includes/gallery.php:357
+msgid "View Gallery"
+msgstr "Ver galería"
+
+#: includes/gallery.php:358
+msgid "View Galleries"
+msgstr "Ver galerías"
+
+#: includes/gallery.php:359
+msgid "Search Galleries"
+msgstr "Buscar galerías"
+
+#: includes/gallery.php:360
+msgid "No galleries found"
+msgstr "No se encontraron galerías"
+
+#: includes/gallery.php:361
+msgid "No galleries found in Trash"
+msgstr "No se encontraron galerías en la Papelera"
+
+#: includes/gallery.php:362
+msgid "All Galleries"
+msgstr "Todas las galerías"
+
+#: includes/gallery.php:363
+msgid "Filter galleries list"
+msgstr "Lista de galerías de filtrado"
+
+#: includes/gallery.php:364
+msgid "Galleries list navigation"
+msgstr "Navegación por la lista de galerías"
+
+#: includes/gallery.php:365
+msgid "Galleries list"
+msgstr "Lista de galerías"
+
+#: includes/gallery.php:366
+msgid "Gallery Archives"
+msgstr "Archivos de la galería"
+
+#: includes/gallery.php:367
+msgid "Gallery Attributes"
+msgstr "Atributos de la galería"
+
+#: includes/gallery.php:368
+msgid "Insert into gallery"
+msgstr "Insertar en la galería"
+
+#: includes/gallery.php:369
+msgid "Uploaded to this gallery"
+msgstr "Subido a esta galería"
+
+#: includes/gallery.php:370
+msgid "Gallery published."
+msgstr "Galería publicada."
+
+#: includes/gallery.php:371
+msgid "Gallery published privately."
+msgstr "Galería publicada de forma privada."
+
+#: includes/gallery.php:372
+msgid "Gallery reverted to draft."
+msgstr "La galería volvió al borrador."
+
+#: includes/gallery.php:373
+msgid "Gallery trashed."
+msgstr "Galería destrozada."
+
+#: includes/gallery.php:374
+msgid "Gallery scheduled."
+msgstr "Galería programada."
+
+#: includes/gallery.php:375
+msgid "Gallery updated."
+msgstr "Galería actualizada."
+
+#: includes/gallery.php:376
+msgid "Gallery Link"
+msgstr "Enlace a la galería"
+
+#: includes/gallery.php:377
+msgid "A link to a gallery"
+msgstr "Un enlace a una galería"
+
+#: includes/gallery.php:411
+msgid "Images"
+msgstr "Imágenes"
+
+#: includes/gallery.php:473
+msgid "Edit"
+msgstr "Editar"
+
+#: includes/gallery.php:474
+msgid "Remove"
+msgstr "Eliminar"
+
+#: includes/options.php:151
+msgid "Nothing to save."
+msgstr "Nada que salvar."
+
+#: includes/options.php:173
+msgid "Nothing saved."
+msgstr "Nada guardado."
+
+#: includes/options.php:221
+msgid "Successfully deleted."
+msgstr "Eliminada con éxito."
+
+#: includes/options.php:224
+msgid "Nothing deleted."
+msgstr "No se eliminó nada."
+
+#~ msgid "Photo Gallery Ecommerce"
+#~ msgstr "Photo Gallery Ecommerce"
+
+#~ msgid "Using Photo Gallery Ecommerce you can sell images included in galleries either as digital downloads or products/prints via Paypal or Stripe."
+#~ msgstr "Usando Photo Gallery Ecommerce puede vender imágenes incluidas en galerías como descargas digitales o productos / impresiones a través de Paypal o Stripe."
+
+#~ msgid "NextGen Gallery Import to Photo Gallery"
+#~ msgstr "Importación de la galería NextGen a la galería de fotos"
+
+#~ msgid "This addon integrates NextGen with Photo Gallery allowing to import images and related data from NextGen to use with Photo Gallery"
+#~ msgstr "Este complemento integra NextGen con Photo Gallery, lo que permite importar imágenes y datos relacionados de NextGen para usar con Photo Gallery"
+
+#~ msgid "Photo Gallery Export / Import"
+#~ msgstr "Galería de fotos Exportar / Importar"
+
+#~ msgid "Photo Gallery Export/Import helps to move created galleries and gallery groups from one site to another. This way you can save the gallery/album options and manual modifications."
+#~ msgstr "Galería de fotos Exportar / Importar ayuda a mover galerías y grupos de galería creados de un sitio a otro. De esta forma puede guardar las opciones de la galería / álbum y las modificaciones manuales."
+
+#, fuzzy
+#~| msgid "Photo Gallery Facebook Integration"
+#~ msgid "Photo Gallery Google Photos Integration"
+#~ msgstr "Galería de fotos Integración de Facebook"
+
+#~ msgid "Photo Gallery Add-ons"
+#~ msgstr "Complementos Photo Gallery"
+
+#~ msgid "GET THIS ADD ON"
+#~ msgstr "OBTENGA ESTE ADD-ON"
+
+#~ msgid "Tags"
+#~ msgstr "Etiquetas"
+
+#~ msgid "Publish"
+#~ msgstr "Tasar"
+
+#~ msgid "published"
+#~ msgstr "publicado"
+
+#~ msgid "Unpublish"
+#~ msgstr "Despublicar"
+
+#~ msgid "unpublished"
+#~ msgstr "no publicado"
+
+#~ msgid "Duplicate"
+#~ msgstr "Duplicar"
+
+#~ msgid "duplicate"
+#~ msgstr "duplicar"
+
+#~ msgid "Delete"
+#~ msgstr "Eliminar"
+
+#~ msgid "Gallery Groups"
+#~ msgstr "Grupos de la galería"
+
+#~ msgid "Galleries / Gallery groups"
+#~ msgstr "Galerías / grupos de galerías"
+
+#~ msgid "Comments"
+#~ msgstr "Comentarios"
+
+#~ msgid "Filter by gallery"
+#~ msgstr "Filtrar por galería"
+
+#~ msgid "Filter by image"
+#~ msgstr "Filtrar por imagen"
+
+#~ msgid "Mixed"
+#~ msgstr "Mezclado"
+
+#~ msgid "Instagram only"
+#~ msgstr "Solo Instagram"
+
+#~ msgid "Facebook"
+#~ msgstr "Facebook"
+
+#~ msgid "Edit options"
+#~ msgstr "Editar opciones"
+
+#~ msgid "Thumbnails"
+#~ msgstr "Miniaturas"
+
+#~ msgid "Masonry"
+#~ msgstr "Masonry"
+
+#~ msgid "Mosaic"
+#~ msgstr "Mosaico"
+
+#~ msgid "Slideshow"
+#~ msgstr "Galería"
+
+#~ msgid "Image Browser"
+#~ msgstr "Navegador de imágenes"
+
+#~ msgid "Blog Style"
+#~ msgstr "Estilo del Blog"
+
+#~ msgid "Carousel"
+#~ msgstr "Carrusel"
+
+#~ msgid "Compact"
+#~ msgstr "Compacto"
+
+#~ msgid "Extended"
+#~ msgstr "Extendido"
+
+#~ msgid "Default values restored. Changes must be saved."
+#~ msgstr "Valores predeterminados restaurados Los cambios deben ser guardados."
+
+#~ msgid "Uploads directory doesn't exist. Old value is restored."
+#~ msgstr "El directorio de cargas no existe. El valor anterior se restaura."
+
+#~ msgid "Warning: \"photo-gallery\" folder already exists in uploads directory. Old value is restored."
+#~ msgstr "Advertencia: la carpeta \\ \"photo-gallery \" ya existe en el directorio de carga. El valor anterior se restaura."
+
+#~ msgid "All thumbnails are successfully recreated."
+#~ msgstr "Todas las miniaturas se recrean con éxito."
+
+#~ msgid "Item Succesfully Saved."
+#~ msgstr "Artículo exitosamente guardado."
+
+#~ msgid "All images are successfully watermarked."
+#~ msgstr "Todas las imágenes tienen una marca de agua exitosa."
+
+#~ msgid "Ratings"
+#~ msgstr "Valoraciones"
+
+#~ msgid "duplicated"
+#~ msgstr "duplicado"
+
+#~ msgid "Themes"
+#~ msgstr "Temas"
+
+#~ msgid "Image browser"
+#~ msgstr "Navegador de imágenes"
+
+#~ msgid "Compact album"
+#~ msgstr "Álbum compacto"
+
+#~ msgid "Masonry album"
+#~ msgstr "Álbum de mampostería"
+
+#~ msgid "Extended album"
+#~ msgstr "Álbum extendido"
+
+#~ msgid "Blog style"
+#~ msgstr "Estilo del Blog"
+
+#~ msgid "Lightbox"
+#~ msgstr "Lightbox"
+
+#~ msgid "Navigation"
+#~ msgstr "Navegación"
+
+#~ msgid "None"
+#~ msgstr "Nada"
+
+#~ msgid "Solid"
+#~ msgstr "Solido"
+
+#~ msgid "Dotted"
+#~ msgstr "Punteado"
+
+#~ msgid "Dashed"
+#~ msgstr "Discontinua"
+
+#~ msgid "Double"
+#~ msgstr "Doble"
+
+#~ msgid "Groove"
+#~ msgstr "Surco"
+
+#~ msgid "Ridge"
+#~ msgstr "Ridge"
+
+#~ msgid "Inset"
+#~ msgstr "Recuadro"
+
+#~ msgid "Outset"
+#~ msgstr "Comienzo"
+
+#~ msgid "Left"
+#~ msgstr "Izquierda"
+
+#~ msgid "Center"
+#~ msgstr "Centrar"
+
+#~ msgid "Right"
+#~ msgstr "Derecha"
+
+#~ msgid "Lighter"
+#~ msgstr "Más ligero"
+
+#~ msgid "Normal"
+#~ msgstr "Media"
+
+#~ msgid "Bold"
+#~ msgstr "Negrita"
+
+#~ msgid "Rotate"
+#~ msgstr "Rotar"
+
+#~ msgid "Scale"
+#~ msgstr "Escala"
+
+#~ msgid "Skew"
+#~ msgstr "Sesgar"
+
+#~ msgid "Angle"
+#~ msgstr "Angulo"
+
+#~ msgid "Chevron"
+#~ msgstr "Chevron"
+
+#~ msgid "Star"
+#~ msgstr "Estrella"
+
+#~ msgid "Bell"
+#~ msgstr "Campana"
+
+#~ msgid "Circle"
+#~ msgstr "Circulo"
+
+#~ msgid "Flag"
+#~ msgstr "Flag"
+
+#~ msgid "Heart"
+#~ msgstr "Corazón"
+
+#~ msgid "Square"
+#~ msgstr "Cuadrado"
+
+#, php-format
+#~ msgid "Uninstall %s"
+#~ msgstr "Desinstalar %s"
+
+#~ msgid "Add Photo Gallery albums or galleries to Your widget area."
+#~ msgstr "Agrega álbumes o galerías de la galería de fotos a tu área de widgets."
+
+#~ msgid "Add Photo Gallery slideshow to Your widget area."
+#~ msgstr "Agregue la galería de fotos a su área de widgets."
+
+#~ msgid "Cube Horizontal"
+#~ msgstr "Cubo horizontal"
+
+#~ msgid "Cube Vertical"
+#~ msgstr "Cubo Vertical"
+
+#~ msgid "Fade"
+#~ msgstr "Fundido"
+
+#~ msgid "Slice Horizontal"
+#~ msgstr "Rebanada horizontal"
+
+#~ msgid "Slice Vertical"
+#~ msgstr "Rebanada vertical"
+
+#~ msgid "Slide Horizontal"
+#~ msgstr "Deslizamiento horizontal"
+
+#~ msgid "Slide Vertical"
+#~ msgstr "Deslizamiento Vertical"
+
+#~ msgid "Scale Out"
+#~ msgstr "Aumentar escala"
+
+#~ msgid "Scale In"
+#~ msgstr "Reducir escala"
+
+#~ msgid "Block Scale"
+#~ msgstr "Escala de bloque"
+
+#~ msgid "Kaleidoscope"
+#~ msgstr "Caleidoscopio"
+
+#~ msgid "Fan"
+#~ msgstr "Ventilador"
+
+#~ msgid "Blind Horizontal"
+#~ msgstr "Persiana horizontal"
+
+#~ msgid "Blind Vertical"
+#~ msgstr "Persiana vertical"
+
+#~ msgid "Random"
+#~ msgstr "Aleatorio"
+
+#~ msgid "Add Photo Gallery Tags dynamic cloud to Your widget area."
+#~ msgstr "Agregar fotos de la galería de fotos de la nube dinámica a su área de widgets."
+
+#~ msgid "General"
+#~ msgstr "General"
+
+#~ msgid "All galleries"
+#~ msgstr "Todas las galerias"
+
+#~ msgid "All images"
+#~ msgstr "Todas las imágenes"
+
+#~ msgid "Selected pricelist item longest dimension greater than some original images dimensions."
+#~ msgstr "Elemento seleccionado de la lista de precios dimensión más larga mayor que algunas dimensiones de las imágenes originales."
+
+#~ msgid "Name"
+#~ msgstr "Nombre"
+
+#, fuzzy
+#~| msgid "Remove tag"
+#~ msgid "Remove from image"
+#~ msgstr "Eliminar Etiqueta"
+
+#~ msgid "Add New"
+#~ msgstr "Add New"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
+
+#~ msgid "First page"
+#~ msgstr "Primera página"
+
+#~ msgid "Previous page"
+#~ msgstr "Anterior página"
+
+#~ msgid "Current Page"
+#~ msgstr "Página Actual"
+
+#~ msgid "of"
+#~ msgstr "de"
+
+#~ msgid "Next page"
+#~ msgstr "Siguiente página"
+
+#~ msgid "Last page"
+#~ msgstr "Última página"
+
+#~ msgid "Select All"
+#~ msgstr "Seleccionar todo"
+
+#~ msgid "Select bulk action"
+#~ msgstr "Seleccionar acción masiva"
+
+#~ msgid "Bulk Actions"
+#~ msgstr "Acciones masivas"
+
+#, fuzzy
+#~| msgid "This option is disabled in free version."
+#~ msgid "This option is disabled in demo."
+#~ msgstr "Esta opción está deshabilitada en la versión gratuita."
+
+#~ msgid "Apply"
+#~ msgstr "Aplicar"
+
+#~ msgid "Title"
+#~ msgstr "Título"
+
+#~ msgid "Author"
+#~ msgstr "Autor"
+
+#~ msgid "Unpublished"
+#~ msgstr "No publicado"
+
+#~ msgid "Do you want to delete selected item?"
+#~ msgstr "¿Quieres eliminar el elemento seleccionado?"
+
+#~ msgid "Preview"
+#~ msgstr "Previsualizar"
+
+#~ msgid "Show more details"
+#~ msgstr "Mostrar más detalles"
+
+#~ msgid "Gallery Group Title"
+#~ msgstr "Título del grupo de la galería"
+
+#~ msgid "Toggle panel:"
+#~ msgstr "Panel de alternativas:"
+
+#~ msgid "Basic"
+#~ msgstr "Básico"
+
+#~ msgid "Preview image"
+#~ msgstr "Previsualizar Imagen"
+
+#~ msgid "Add Preview Image"
+#~ msgstr "Agregar imagen de previsualización"
+
+#~ msgid "Add"
+#~ msgstr "Añadir"
+
+#~ msgid "Published"
+#~ msgstr "Publicado"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Advanced"
+#~ msgstr "Avanzado"
+
+#~ msgid "Slug"
+#~ msgstr "Slug"
+
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
+#~ msgid "Galleries and Gallery Groups"
+#~ msgstr "Galerías y grupos de galerías"
+
+#~ msgid "Drag to re-order"
+#~ msgstr "Arrastrar para reordenar"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"
+
+#~ msgid "Add to Gallery Group"
+#~ msgstr "Agregar al grupo de la galería"
+
+#~ msgid "Email"
+#~ msgstr "Correo electrónico"
+
+#~ msgid "Comment"
+#~ msgstr "Comentario"
+
+#~ msgid "Date"
+#~ msgstr "Día"
+
+#~ msgid "You can't crop this type of image."
+#~ msgstr "No puedes recortar este tipo de imagen."
+
+#~ msgid "Select the area for the thumbnail."
+#~ msgstr "Seleccione el área para la miniatura."
+
+#~ msgid "Keep aspect ratio"
+#~ msgstr "Mantener la relación de aspecto"
+
+#~ msgid "Crop"
+#~ msgstr "Recortar"
+
+#, fuzzy
+#~| msgid "The thumbnail successfully croped."
+#~ msgid "The thumbnail was successfully cropped."
+#~ msgstr "La miniatura se recortó con éxito."
+
+#~ msgid "Grayscale"
+#~ msgstr "Escala de grises"
+
+#~ msgid "Negative"
+#~ msgstr "Negativa"
+
+#~ msgid "Removal"
+#~ msgstr "Remover"
+
+#~ msgid "Sepia"
+#~ msgstr "Sepia"
+
+#~ msgid "Slate"
+#~ msgstr "Pizarra"
+
+#~ msgid "Saturate"
+#~ msgstr "Saturar"
+
+#~ msgid "Do you want to reset the image?"
+#~ msgstr "¿Quieres restablecer la imagen?"
+
+#~ msgid "Reset image"
+#~ msgstr "Restablecer imagen"
+
+#~ msgid "Brightness"
+#~ msgstr "Brillo"
+
+#~ msgid "Press for result"
+#~ msgstr "Presione para resultado"
+
+#~ msgid "Contrast"
+#~ msgstr "Contraste"
+
+#~ msgid "Gallery content type"
+#~ msgstr "Tipo de contenido de la galería"
+
+#~ msgid "Number of Instagram recent posts to add to gallery"
+#~ msgstr "Número de publicaciones recientes de Instagram para agregar a la galería"
+
+#~ msgid "Instagram embed type"
+#~ msgstr "Tipo de inserción de Instagram"
+
+#~ msgid "Content"
+#~ msgstr "Contenido"
+
+#~ msgid "Whole post"
+#~ msgstr "Toda la publicación"
+
+#~ msgid "Gallery autoupdate option"
+#~ msgstr "Opción de auto actualizado de galería"
+
+#~ msgid "No update"
+#~ msgstr "Ninguna actualización"
+
+#~ msgid "Add new media, keep old ones published."
+#~ msgstr "Agregue nuevos medios, mantenga publicados los anteriores."
+
+#~ msgid "Add new media, unpublish old ones."
+#~ msgstr "Agregue nuevos medios, anule la publicación de los antiguos."
+
+#~ msgid "Add Instagram Gallery"
+#~ msgstr "Agregar Galería de Instagram"
+
+#~ msgid "Photo Gallery Facebook Integration"
+#~ msgstr "Galería de fotos Integración de Facebook"
+
+#, php-format
+#~ msgid "Please install %s add-on to use this feature."
+#~ msgstr "Instale %s add-on para usar esta característica."
+
+#~ msgid "Add Images"
+#~ msgstr "Añadir Imágenes"
+
+#~ msgid "Import from Media Library"
+#~ msgstr "Importar desde la biblioteca multimedia"
+
+#~ msgid "Embed Media"
+#~ msgstr "Incrustar medios"
+
+#~ msgid "Social Bulk Embed"
+#~ msgstr "Embolsado social a granel"
+
+#~ msgid "This option is disabled in free version."
+#~ msgstr "Esta opción está deshabilitada en la versión gratuita."
+
+#~ msgid "Optimize Images"
+#~ msgstr "Optimizar imágenes"
+
+#~ msgid "Enter YouTube, Vimeo, Instagram, Flickr or Dailymotion URL here."
+#~ msgstr "Ingrese a YouTube, Vimeo, Instagram, Facebook, Flickr o Dailymotion URL aquí."
+
+#~ msgid "Cancel"
+#~ msgstr "Cancel"
+
+#~ msgid "<b>Youtube</b> URL example:"
+#~ msgstr "<b> Youtube </ b> Ejemplo de URL:"
+
+#~ msgid "<b>Vimeo</b> URL example:"
+#~ msgstr "<b> Vimeo </ b> Ejemplo de URL:"
+
+#~ msgid "<b>Instagram</b> URL example:"
+#~ msgstr "<b> Instagram </ b> Ejemplo de URL:"
+
+#~ msgid "post"
+#~ msgstr "entrada"
+
+#~ msgid "to the end of URL if you want to embed the whole Instagram post, not only its content."
+#~ msgstr "hasta el final de la URL si desea insertar toda la publicación de Instagram, no solo su contenido."
+
+#~ msgid "<b>Flickr</b> URL example:"
+#~ msgstr "<b> Flickr </ b> Ejemplo de URL:"
+
+#~ msgid "<b>Dailymotion</b> URL example:"
+#~ msgstr "<b> Dailymotion </ b> Ejemplo de URL:"
+
+#~ msgid "username:"
+#~ msgstr "nombre:"
+
+#~ msgid "Number of Instagram recent posts to add to gallery:"
+#~ msgstr "Número de publicaciones recientes de Instagram para agregar a la galería:"
+
+#~ msgid "embed type:"
+#~ msgstr "tipo de inserción:"
+
+#~ msgid "Resize images to: "
+#~ msgstr "Cambiar el tamaño de las imágenes a: "
+
+#~ msgid "The maximum size of resized image."
+#~ msgstr "El tamaño máximo de la imagen redimensionada."
+
+#~ msgid "Resize"
+#~ msgstr "Cambiar tamaño"
+
+#~ msgid "Alt/Title: "
+#~ msgstr "Alt / Título: "
+
+#, fuzzy
+#~| msgid "Save Tag"
+#~ msgid "Save changes"
+#~ msgstr "Guardar etiqueta"
+
+#~ msgid "Redirect URL: "
+#~ msgstr "Redireccionar URL "
+
+#~ msgid "Description: "
+#~ msgstr "Descripción: "
+
+#~ msgid "You have unsaved changes."
+#~ msgstr "Tienes cambios sin guardar."
+
+#~ msgid "Show order column"
+#~ msgstr "Mostrar columna del orden"
+
+#, fuzzy
+#~| msgid "Generate"
+#~ msgid "Numerate"
+#~ msgstr "Generar"
+
+#, fuzzy
+#~| msgid "Order"
+#~ msgid "Ordering"
+#~ msgstr "Ordenar por"
+
+#~ msgid "Filename"
+#~ msgstr "Nombre del archivo"
+
+#~ msgid "Resolution"
+#~ msgstr "Resolución"
+
+#~ msgid "Size"
+#~ msgstr "Tamaño"
+
+#, fuzzy
+#~| msgid "Thumbnail"
+#~ msgid "Crop Thumbnail"
+#~ msgstr "Miniatura"
+
+#~ msgid "Reset"
+#~ msgstr "Restablecer"
+
+#~ msgid "Alt/Title"
+#~ msgstr "Alt / Título"
+
+#~ msgid "Redirect URL"
+#~ msgstr "Redireccionar URL"
+
+#~ msgid "Remove tag"
+#~ msgstr "Eliminar Etiqueta"
+
+#~ msgid "Add tag"
+#~ msgstr "Añadir etiqueta"
+
+#, fuzzy
+#~| msgid "Name field is required."
+#~ msgid "Name is required."
+#~ msgstr "El cambo nombre es requerido."
+
+#, fuzzy
+#~| msgid "Please enter url to embed."
+#~ msgid "Please enter a valid email."
+#~ msgstr "Por favor ingrese url para incrustar."
+
+#~ msgid "Save"
+#~ msgstr "Salvar"
+
+#~ msgid "Reset all options"
+#~ msgstr "Reiniciar todas las opciones"
+
+#~ msgid "Do you want to reset to default?"
+#~ msgstr "¿Desea restablecer a los valores predeterminados?"
+
+#, fuzzy
+#~| msgid "Gallery Groups"
+#~ msgid "Gallery Group defaults"
+#~ msgstr "Grupos de la galería"
+
+#, fuzzy
+#~| msgid "Lightbox effect"
+#~ msgid "Lightbox defaults"
+#~ msgstr "Efecto de caja de luz"
+
+#~ msgid "Watermark"
+#~ msgstr "Marca de Agua"
+
+#~ msgid "Images directory"
+#~ msgstr "Directorio de imágenes"
+
+#, fuzzy
+#~| msgid "Input an existing directory inside the Wordpress directory to store uploaded images.<br />Old directory content will be moved to the new one."
+#~ msgid "Provide the path of an existing folder inside the WordPress directory of your website to store uploaded images.<br />The content of the previous directory will be moved to the new one."
+#~ msgstr "Ingrese un directorio existente dentro del directorio de Wordpress para almacenar las imágenes cargadas. <br /> El contenido del directorio antiguo se moverá al nuevo."
+
+#~ msgid "Image click action"
+#~ msgstr "Imagen haga clic en acción"
+
+#~ msgid "Open lightbox"
+#~ msgstr "Abrir Lightbox"
+
+#~ msgid "Redirect to url"
+#~ msgstr "Redirigir a url"
+
+#~ msgid "Do Nothing"
+#~ msgstr "No hacer nada"
+
+#~ msgid "Open in a new window"
+#~ msgstr "Open in a new window"
+
+#~ msgid "Image dimensions"
+#~ msgstr "Dimensones de la imagen"
+
+#, fuzzy
+#~| msgid "The maximum size of the uploaded image (0 for original size)."
+#~ msgid "Specify the maximum dimensions of uploaded images (set 0 for original size)."
+#~ msgstr "El tamaño máximo de la imagen cargada (0 para el tamaño del original)."
+
+#~ msgid "Generated thumbnail dimensions"
+#~ msgstr "Dimensiones de miniaturas generadas"
+
+#~ msgid "Recreate"
+#~ msgstr "Recrear"
+
+#, fuzzy
+#~| msgid "The maximum size of the generated thumbnail. Its dimensions should be larger than the ones of the frontend thumbnail."
+#~ msgid "Specify the maximum dimensions of generated thumbnails. They must be larger than frontend thumbnail dimensions."
+#~ msgstr "El tamaño máximo de la miniatura generada. Sus dimensiones deben ser más grandes que las de la miniatura frontend."
+
+#~ msgid "Image quality"
+#~ msgstr "Calidad de imagen"
+
+#~ msgid "Set the quality of gallery images. Provide a value from 0 to 100%."
+#~ msgstr "Establecer la calidad de las imágenes de la galería. Proporcione un valor de 0 a 100%."
+
+#, fuzzy
+#~| msgid "Recreate thumbnail"
+#~ msgid "Resizable thumbnails"
+#~ msgstr "Recrear miniatura"
+
+#~ msgid "Preload images"
+#~ msgstr "Precargar imágenes"
+
+#, fuzzy
+#~| msgid "Number of image rows:"
+#~ msgid "Number of preloaded images"
+#~ msgstr "Número de filas de imágenes:"
+
+#, fuzzy
+#~| msgid "Count of images to preload (0 for all)."
+#~ msgid "Specify the number of images to preload, e.g. 5 (set 0 for all)."
+#~ msgstr "Recuento de imágenes para precargar (0 para todos)."
+
+#, fuzzy
+#~| msgid "Show/hide custom post types"
+#~ msgid "Show custom posts"
+#~ msgstr "Mostrar / ocultar tipos de publicaciones personalizadas"
+
+#, fuzzy
+#~| msgid "Show/hide comments for custom post types"
+#~ msgid "Show comments for custom posts"
+#~ msgstr "Mostrar / ocultar comentarios para tipos de publicaciones personalizadas"
+
+#, fuzzy
+#~| msgid "Save"
+#~ msgid "Save IP "
+#~ msgstr "Salvar"
+
+#, fuzzy
+#~| msgid "Right click protection"
+#~ msgid "Right-click protection"
+#~ msgstr "Haga clic derecho en la protección"
+
+#, fuzzy
+#~| msgid "Include styles/scripts in necessary pages only"
+#~ msgid "Include styles/scripts on gallery pages only"
+#~ msgstr "Incluir estilos / scripts solo en páginas necesarias"
+
+#, fuzzy
+#~| msgid "Enable Google+ button"
+#~ msgid "Enable Google fonts"
+#~ msgstr "Habilitar botón de Google+"
+
+#, fuzzy
+#~| msgid "Enable html editor"
+#~ msgid "Enable HTML editor"
+#~ msgstr "Habilitar el editor html"
+
+#~ msgid "Enable href attribute"
+#~ msgstr "Habilitar atributo href"
+
+#, fuzzy
+#~| msgid "Disable this option only if it conflicts with your theme."
+#~ msgid "Disable this option only if Photo Gallery conflicts with your theme."
+#~ msgstr "Desactive esta opción solo si entra en conflicto con su tema."
+
+#, fuzzy
+#~| msgid "Enabling this option the meta description of the image will be automatically filled in image description field."
+#~ msgid "Enabling this option will let the plugin fill in meta descriptions of photos into Image Description option automatically."
+#~ msgstr "Al habilitar esta opción, la metadescripción de la imagen se completará automáticamente en el campo de descripción de la imagen."
+
+#~ msgid "Generate Shortcode"
+#~ msgstr "Generar shortcode"
+
+#, fuzzy
+#~| msgid "Galleries and Gallery Groups"
+#~ msgid "Enable dynamic URLs for galleries and gallery groups"
+#~ msgstr "Galerías y grupos de galerías"
+
+#~ msgid "Uninstall"
+#~ msgstr "Desinstalar"
+
+#~ msgid "View type"
+#~ msgstr "Tipo de vista"
+
+#~ msgid "This view is not available in free version."
+#~ msgstr "Esta vista no está disponible en versión gratuita."
+
+#, fuzzy
+#~| msgid "Social Options"
+#~ msgid "Social"
+#~ msgstr "Opciones de Redes Sociales"
+
+#~ msgid "Gallery autoupdate interval"
+#~ msgstr "Iintervalo de actualización automática del plugin Photo gallery"
+
+#~ msgid "hour"
+#~ msgstr "hora"
+
+#~ msgid "min"
+#~ msgstr "min"
+
+#~ msgid "Instagram"
+#~ msgstr "Instagram"
+
+#~ msgid "Sign in with Instagram"
+#~ msgstr "Inicia sesión con Instagram"
+
+#~ msgid "Are you sure you want to reset access token, after resetting it you will need to log in with Instagram again for using plugin"
+#~ msgstr "¿Estás seguro de que deseas restablecer el token de acceso?, después de restablecerlo necesitarás volver a iniciar sesión con Instagram para usar el complemento"
+
+#, fuzzy
+#~| msgid "Sign out with Instagram"
+#~ msgid "Sign out from Instagram"
+#~ msgstr "Salir con Instagram"
+
+#~ msgid "Roles"
+#~ msgstr "Roles"
+
+#, fuzzy
+#~| msgid "Choose a user type who can add/edit galleries, images, gallery groups and tags."
+#~ msgid "Choose a WordPress user role which can add and edit galleries, images, gallery groups and tags."
+#~ msgstr "Elija un tipo de usuario que pueda agregar / editar galerías, imágenes, grupos de galería y etiquetas."
+
+#, fuzzy
+#~| msgid "Gallery role"
+#~ msgid "Gallery role restrictions"
+#~ msgstr "Rol de galería"
+
+#, fuzzy
+#~| msgid "Gallery group role"
+#~ msgid "Gallery group restrictions"
+#~ msgstr "Papel del grupo de la galería"
+
+#, fuzzy
+#~| msgid "Image click action"
+#~ msgid "Image role restrictions"
+#~ msgstr "Imagen haga clic en acción"
+
+#~ msgid "Advertisement"
+#~ msgstr "Anuncio"
+
+#~ msgid "Advertisement type"
+#~ msgstr "Tipo de Publicidad"
+
+#~ msgid "Text"
+#~ msgstr "Texto"
+
+#, fuzzy
+#~| msgid "Advertisement"
+#~ msgid "Advertisement URL"
+#~ msgstr "Anuncio"
+
+#, fuzzy
+#~| msgid "Select Tag"
+#~ msgid "Select Image"
+#~ msgstr "Seleccionar etiqueta"
+
+#, fuzzy
+#~| msgid "for"
+#~ msgid "or"
+#~ msgstr "de"
+
+#~ msgid "Advertisement text"
+#~ msgstr "Texto publicitario"
+
+#~ msgid "Advertisement link"
+#~ msgstr "Enlace publicitario"
+
+#~ msgid "Advertisement dimensions"
+#~ msgstr "Dimensiones del anuncio"
+
+#~ msgid "Advertisement font size"
+#~ msgstr "Tamaño de fuente de publicidad"
+
+#~ msgid "Advertisement font style"
+#~ msgstr "Estilo de fuente de publicidad"
+
+#~ msgid "Google fonts"
+#~ msgstr "Google fonts"
+
+#~ msgid "Default"
+#~ msgstr "Defecto"
+
+#~ msgid "Advertisement color"
+#~ msgstr "Anuncio de color"
+
+#~ msgid "Advertisement opacity"
+#~ msgstr "Opacidad publicitaria"
+
+#~ msgid "Advertisement position"
+#~ msgstr "Posición publicitaria"
+
+#~ msgid "Watermark type"
+#~ msgstr "Tipo de marca de agua"
+
+#, fuzzy
+#~| msgid "Watermark"
+#~ msgid "Watermark URL"
+#~ msgstr "Marca de Agua"
+
+#~ msgid "Only .png format is supported."
+#~ msgstr "Solo el formato .png es compatible."
+
+#~ msgid "Watermark text"
+#~ msgstr "Texto de marca de agua"
+
+#~ msgid "Watermark size"
+#~ msgstr "Tamaño de la marca de agua"
+
+#, fuzzy
+#~| msgid "Enter size of watermark in percents according to image."
+#~ msgid "Specify the size of watermark on images in percent."
+#~ msgstr "Introduzca el tamaño de la marca de agua en porcentajes según la imagen."
+
+#~ msgid "Watermark font size"
+#~ msgstr "Tamaño de letra de marca de agua"
+
+#~ msgid "Watermark font style"
+#~ msgstr "Estilo de fuente de marca de agua"
+
+#~ msgid "Watermark color"
+#~ msgstr "Color de la marca de agua"
+
+#~ msgid "Watermark opacity"
+#~ msgstr "Opacidad de la marca de agua"
+
+#~ msgid "Watermark position"
+#~ msgstr "Marca de agua"
+
+#~ msgid "Set watermark"
+#~ msgstr "Establecer marca de agua"
+
+#~ msgid "Set Watermark"
+#~ msgstr "Establecer marca de agua"
+
+#~ msgid "Reset watermark"
+#~ msgstr "Restablecer marca de agua"
+
+#~ msgid "Reset Watermark"
+#~ msgstr "Restablecer marca de agua"
+
+#, fuzzy
+#~| msgid "Image Thumbnail dimensions"
+#~ msgid "Thumbnail dimensions"
+#~ msgstr "Dimensiones de la imagen en miniatura"
+
+#, fuzzy
+#~| msgid "The default size of the thumbnail which will be displayed in the website."
+#~ msgid "The default dimensions of thumbnails which will display on published galleries."
+#~ msgstr "El tamaño predeterminado de la miniatura que se mostrará en el sitio web."
+
+#~ msgid "Number of image columns"
+#~ msgstr "Número de columnas de imagen"
+
+#, fuzzy
+#~| msgid "Page Navigation"
+#~ msgid "Pagination"
+#~ msgstr "Navegación entre páginas"
+
+#~ msgid "Load More"
+#~ msgstr "Cargar más"
+
+#~ msgid "Scroll Load"
+#~ msgstr "Desplazar carga"
+
+#~ msgid "Images per page"
+#~ msgstr "Imágenes por página"
+
+#~ msgid "Images per load"
+#~ msgstr "Imágenes por carga"
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order by"
+#~ msgstr "Ordenar por:"
+
+#~ msgid "Ascending"
+#~ msgstr "Ascendente"
+
+#~ msgid "Descending"
+#~ msgstr "Descendente"
+
+#~ msgid "Show search box"
+#~ msgstr "Mostrar cuadro de búsqueda"
+
+#~ msgid "Add placeholder to search"
+#~ msgstr "Añadir marcador de posición para buscar"
+
+#, fuzzy
+#~| msgid "Search box width"
+#~ msgid "Search box maximum width"
+#~ msgstr "Ancho del cuadro de búsqueda"
+
+#~ msgid "Show \"Order by\" dropdown list"
+#~ msgstr "Mostrar \\ \"Ordenar por \" lista desplegable"
+
+#~ msgid "Show tag box"
+#~ msgstr "Mostrar caja de etiquetas"
+
+#~ msgid "Show gallery title"
+#~ msgstr "Mostrar título de la galería"
+
+#~ msgid "Show gallery description"
+#~ msgstr "Mostrar la descripción de la galería"
+
+#~ msgid "Show image title"
+#~ msgstr "Mostrar el título de la imagen"
+
+#~ msgid "Show on hover"
+#~ msgstr "Mostrar si se pasa por encima"
+
+#~ msgid "Always show"
+#~ msgstr "Mostrar siempre"
+
+#~ msgid "Don't show"
+#~ msgstr "No mostrar"
+
+#, fuzzy
+#~| msgid "Play icon over the video thumbnail"
+#~ msgid "Show Play icon on video thumbnails"
+#~ msgstr "Reproducir el ícono sobre la miniatura del video"
+
+#~ msgid "Enable bulk download button"
+#~ msgstr "Habilitar botón de descarga masiva"
+
+#~ msgid "Show ecommerce icon"
+#~ msgstr "Mostrar icono carrito"
+
+#, fuzzy
+#~| msgid "Thumbnails"
+#~ msgid "Thumbnail size"
+#~ msgstr "Miniaturas"
+
+#, fuzzy
+#~| msgid "The default size of the thumbnail which will be displayed in the website."
+#~ msgid "The default size of thumbnails which will display on published galleries."
+#~ msgstr "El tamaño predeterminado de la miniatura que se mostrará en el sitio web."
+
+#, fuzzy
+#~| msgid "Number of image rows:"
+#~ msgid "Number of image rows"
+#~ msgstr "Número de filas de imágenes:"
+
+#, fuzzy
+#~| msgid "Show gallery description"
+#~ msgid "Show image descriptions"
+#~ msgstr "Mostrar la descripción de la galería"
+
+#, fuzzy
+#~| msgid "Enable title, description for images."
+#~ msgid "Enable this setting to display descriptions under images."
+#~ msgstr "Habilitar título, descripción de imágenes."
+
+#~ msgid "Vertical"
+#~ msgstr "Vertical"
+
+#~ msgid "Horizontal"
+#~ msgstr "Horizontal"
+
+#~ msgid "Resizable mosaic"
+#~ msgstr "Mosaico redimensionable"
+
+#, fuzzy
+#~| msgid "Total width of mosaic"
+#~ msgid "Width of mosaic galleries"
+#~ msgstr "Ancho total del mosaico"
+
+#, fuzzy
+#~| msgid "Width of mosaic as a percentage of container's width."
+#~ msgid "The total width of mosaic galleries as a percentage of container's width."
+#~ msgstr "Ancho del mosaico como porcentaje del ancho del contenedor."
+
+#~ msgid "Slideshow effect"
+#~ msgstr "Efecto de presentación"
+
+#~ msgid "This effect is disabled in free version."
+#~ msgstr "Este efecto está deshabilitado en la versión gratuita."
+
+#~ msgid "Effect duration"
+#~ msgstr "Duración del efecto"
+
+#~ msgid "Time interval"
+#~ msgstr "Intervalo de tiempo"
+
+#~ msgid "Slideshow dimensions"
+#~ msgstr "Dimensiones de la presentación"
+
+#~ msgid "Enable autoplay"
+#~ msgstr "Habilitar la reproducción automática"
+
+#~ msgid "Enable shuffle"
+#~ msgstr "Habilitar reproducción aleatoria"
+
+#~ msgid "Enable control buttons"
+#~ msgstr "Habilitar botones de control"
+
+#~ msgid "Show Next / Previous buttons"
+#~ msgstr "Mostrar botones Siguiente / Anterior"
+
+#~ msgid "On hover"
+#~ msgstr "En hover"
+
+#~ msgid "Always"
+#~ msgstr "Siempre"
+
+#~ msgid "Enable slideshow filmstrip"
+#~ msgstr "Habilitar tira de película de diapositivas"
+
+#~ msgid "Slideshow filmstrip size"
+#~ msgstr "Tamaño de la tira de película de diapositivas"
+
+#~ msgid "Title position"
+#~ msgstr "Posición del título"
+
+#, fuzzy
+#~| msgid "Image title position on slideshow."
+#~ msgid "Set the position of image titles in Slideshow view."
+#~ msgstr "Posición del título de la imagen en la presentación."
+
+#~ msgid "Full width title"
+#~ msgstr "Título de ancho completo"
+
+#~ msgid "Display image title based on the slideshow dimensions."
+#~ msgstr "Muestra el título de la imagen según las dimensiones de la presentación."
+
+#, fuzzy
+#~| msgid "Show gallery description"
+#~ msgid "Show image description"
+#~ msgstr "Mostrar la descripción de la galería"
+
+#, fuzzy
+#~| msgid "Enable title, description for images."
+#~ msgid "Enable this setting to show descriptions of images in Slideshow view."
+#~ msgstr "Habilitar título, descripción de imágenes."
+
+#~ msgid "Description position"
+#~ msgstr "Posición de descripción"
+
+#~ msgid "Enable slideshow Music"
+#~ msgstr "Habilitar la presentación"
+
+#~ msgid "Image width"
+#~ msgstr "Ancho de imagen"
+
+#~ msgid "Max. number of images"
+#~ msgstr "Max. numero de imagenes"
+
+#, fuzzy
+#~| msgid "Carousel image ratio"
+#~ msgid "Carousel ratio"
+#~ msgstr "Relación de imagen del carrusel"
+
+#~ msgid "Fixed width"
+#~ msgstr "Ancho fijo"
+
+#~ msgid "Container fit"
+#~ msgstr "Ajuste de contenedor"
+
+#~ msgid "Next/Previous buttons"
+#~ msgstr "Botones de siguiente/anterior"
+
+#, fuzzy
+#~| msgid "Play/Pause button"
+#~ msgid "Play/Pause buttons"
+#~ msgstr "Botón Reproducir / Pausa"
+
+#~ msgid "Number of gallery group columns"
+#~ msgstr "Número de columnas de grupos de galería"
+
+#, fuzzy
+#~| msgid "Gallery group thumbnail dimensions:"
+#~ msgid "Gallery group thumbnail dimensions"
+#~ msgstr "Dimensiones de la miniatura del grupo de la galería:"
+
+#~ msgid "Gallery groups per page"
+#~ msgstr "Grupos de galería por página"
+
+#, fuzzy
+#~| msgid "Gallery group"
+#~ msgid "Order Gallery group by"
+#~ msgstr "Grupo de galerías"
+
+#, fuzzy
+#~| msgid "Order images"
+#~ msgid "Order images by"
+#~ msgstr "Ordenar imágenes"
+
+#, fuzzy
+#~| msgid "Show gallery group/gallery name"
+#~ msgid "Show gallery group or gallery title"
+#~ msgstr "Mostrar el nombre del grupo de la galería / galería"
+
+#, fuzzy
+#~| msgid "Show gallery group/gallery name"
+#~ msgid "Show gallery group or gallery description"
+#~ msgstr "Mostrar el nombre del grupo de la galería / galería"
+
+#, fuzzy
+#~| msgid "Gallery group view type"
+#~ msgid "Gallery view type"
+#~ msgstr "Tipo de vista de grupo de galerías"
+
+#, fuzzy
+#~| msgid "Gallery group thumbnail dimensions:"
+#~ msgid "Gallery group thumbnail width"
+#~ msgstr "Dimensiones de la miniatura del grupo de la galería:"
+
+#, fuzzy
+#~| msgid "Album Thumbnail width"
+#~ msgid "Thumbnail width"
+#~ msgstr "Ancho de la miniatura del álbum"
+
+#, fuzzy
+#~| msgid "Extended gallery group height:"
+#~ msgid "Extended gallery group height"
+#~ msgstr "Altura del grupo de la galería extendida:"
+
+#, fuzzy
+#~| msgid "Number of image columns"
+#~ msgid "Number of columns"
+#~ msgstr "Número de columnas de imagen"
+
+#, fuzzy
+#~| msgid "Max. number of image columns"
+#~ msgid "Set the maximum number of columns."
+#~ msgstr "Max. cantidad de columnas de imagen"
+
+#, fuzzy
+#~| msgid "Enable extended gallery group description"
+#~ msgid "Show extended gallery group description"
+#~ msgstr "Habilitar la descripción del grupo de galería extendida"
+
+#, fuzzy
+#~| msgid "Full width lightbox"
+#~ msgid "Full-width lightbox"
+#~ msgstr "Caja de luz de ancho completo"
+
+#~ msgid "Lightbox dimensions"
+#~ msgstr "Dimensiones de la caja de luz"
+
+#~ msgid "Lightbox effect"
+#~ msgstr "Efecto de caja de luz"
+
+#~ msgid "Lightbox autoplay"
+#~ msgstr "Reproducción automática de Lightbox"
+
+#~ msgid "Enable filmstrip"
+#~ msgstr "Habilitar tira de película"
+
+#~ msgid "Filmstrip size"
+#~ msgstr "Tamaño de la tira de película"
+
+#, fuzzy
+#~| msgid "Enable control buttons in lightbox."
+#~ msgid "Enable this option to show control buttons on Photo Gallery lightbox."
+#~ msgstr "Habilita los botones de control en lightbox."
+
+#, fuzzy
+#~| msgid "Enable fullscreen"
+#~ msgid "Enable fullscreen button"
+#~ msgstr "Habilitar pantalla completa"
+
+#~ msgid "Enable comments"
+#~ msgstr "Habilitar comentarios"
+
+#, fuzzy
+#~| msgid "Enable Email for comments"
+#~ msgid "Show Email for comments"
+#~ msgstr "Habilitar el correo electrónico para comentarios"
+
+#, fuzzy
+#~| msgid "Enable Captcha for comments"
+#~ msgid "Show Captcha for comments"
+#~ msgstr "Habilitar Captcha para comentarios"
+
+#~ msgid "Enable comments moderation"
+#~ msgstr "Habilitar moderación de comentarios"
+
+#, fuzzy
+#~| msgid "Show image title"
+#~ msgid "Show image info"
+#~ msgstr "Mostrar el título de la imagen"
+
+#~ msgid "Display info by default"
+#~ msgstr "Mostrar información por defecto"
+
+#~ msgid "Full width info"
+#~ msgstr "Información de ancho completo"
+
+#, fuzzy
+#~| msgid "Display hit counter"
+#~ msgid "Display views counter"
+#~ msgstr "Mostrar contador de visitas"
+
+#~ msgid "Enable rating"
+#~ msgstr "Habilitar valoraciones"
+
+#, fuzzy
+#~| msgid "Enable original image display button"
+#~ msgid "Show Display Original Image button"
+#~ msgstr "Habilitar botón de visualización de imagen original"
+
+#, fuzzy
+#~| msgid "Enable download button"
+#~ msgid "Show download button"
+#~ msgstr "Habilitar botón de descarga"
+
+#, fuzzy
+#~| msgid "Show images count"
+#~ msgid "Show image counter"
+#~ msgstr "Mostrar cuenta de visualizaciones"
+
+#, fuzzy
+#~| msgid "Enable loop"
+#~ msgid "Enable looping"
+#~ msgstr "Activar bucle"
+
+#~ msgid "Enable"
+#~ msgstr "Habilitar"
+
+#, fuzzy
+#~| msgid "profile id"
+#~ msgid "profile ID"
+#~ msgstr "id del perfil"
+
+#, php-format
+#~ msgid "Create an account %s."
+#~ msgstr "Crea una cuenta %s ."
+
+#~ msgid "here"
+#~ msgstr "aquí"
+
+#, fuzzy
+#~| msgid "Enable Facebook button"
+#~ msgid "Show Facebook button"
+#~ msgstr "Habilitar el botón Facebook"
+
+#, fuzzy
+#~| msgid "Enable Twitter button"
+#~ msgid "Show Twitter button"
+#~ msgstr "Habilitar botón de Twitter"
+
+#, fuzzy
+#~| msgid "Enable Pinterest button"
+#~ msgid "Show Pinterest button"
+#~ msgstr "Habilitar el botón Pinterest"
+
+#, fuzzy
+#~| msgid "Enable Tumblr button"
+#~ msgid "Show Tumblr button"
+#~ msgstr "Habilitar el botón Tumblr"
+
+#, fuzzy
+#~| msgid "Show Ecommerce"
+#~ msgid "Show Ecommerce button"
+#~ msgstr "Mostrar carrito ecommerce"
+
+#~ msgid "IP"
+#~ msgstr "IP"
+
+#~ msgid "Rating"
+#~ msgstr "Rating"
+
+#, fuzzy
+#~| msgid "Select the area for the thumbnail."
+#~ msgid "Select the gallery to display."
+#~ msgstr "Seleccione el área para la miniatura."
+
+#, fuzzy
+#~| msgid "Gallery Groups"
+#~ msgid "Gallery Group"
+#~ msgstr "Grupos de la galería"
+
+#, fuzzy
+#~| msgid "Select the area for the thumbnail."
+#~ msgid "Select the gallery group to display."
+#~ msgstr "Seleccione el área para la miniatura."
+
+#~ msgid "Tag"
+#~ msgstr "Etiqueta"
+
+#~ msgid "Theme"
+#~ msgstr "Tema"
+
+#~ msgid "Use default options"
+#~ msgstr "Use las opciones predeterminadas"
+
+#, php-format
+#~ msgid "You can change the default options %s."
+#~ msgstr "Puede cambiar las opciones predeterminadas %s ."
+
+#~ msgid "Toggle panel"
+#~ msgstr "Panel de alternancia"
+
+#~ msgid "Insert into post"
+#~ msgstr "Insertar en la publicación"
+
+#~ msgid "New shortcode"
+#~ msgstr "Nuevo shortcode"
+
+#~ msgid "Generate"
+#~ msgstr "Generar"
+
+#~ msgid "PHP function"
+#~ msgstr "Función de PHP"
+
+#~ msgid "There is no shortcode with such ID!"
+#~ msgstr "¡No hay shortcode con dicha identificación!"
+
+#, fuzzy
+#~| msgid "Image thumbnail width: "
+#~ msgid "Image thumbnail width "
+#~ msgstr "Ancho de miniatura de la imagen: "
+
+#, fuzzy
+#~| msgid "Image thumbnail height:"
+#~ msgid "Image thumbnail height"
+#~ msgstr "Altura de la miniatura de la imagen:"
+
+#~ msgid "You can't change theme parameters in free version."
+#~ msgstr "No puede cambiar los parámetros del tema en la versión gratuita."
+
+#, fuzzy
+#~| msgid "Image title"
+#~ msgid "Theme title"
+#~ msgstr "Título de la imagen"
+
+#~ msgid "Reset to default theme"
+#~ msgstr "Restablecer el tema predeterminado"
+
+#~ msgid "Padding:"
+#~ msgstr "Relleno:"
+
+#~ msgid "Border width:"
+#~ msgstr "Ancho del borde:"
+
+#~ msgid "Border style:"
+#~ msgstr "Estilo del borde:"
+
+#~ msgid "Border color:"
+#~ msgstr "Color del borde:"
+
+#~ msgid "Border radius:"
+#~ msgstr "Borde del radio:"
+
+#~ msgid "Use CSS type values."
+#~ msgstr "Use valores de tipo CSS."
+
+#~ msgid "Shadow:"
+#~ msgstr "Sombra:"
+
+#~ msgid "Hover effect:"
+#~ msgstr "Efecto de desplazamiento:"
+
+#~ msgid "Hover effect value:"
+#~ msgstr "Valor del efecto de desplazamiento:"
+
+#, fuzzy
+#~| msgid "E.g. Rotate: 10deg, Scale: 1.5, Skew: 10deg."
+#~ msgid "E.g. Rotate: 10deg, Scale/Zoom: 1.5, Skew: 10deg."
+#~ msgstr "Ej. Rotar: 10deg, Escala: 1.5, Sesgo: 10deg."
+
+#~ msgid "Transition:"
+#~ msgstr "Transición:"
+
+#~ msgid "Thumbnail background color:"
+#~ msgstr "Color de fondo de la miniatura:"
+
+#~ msgid "Thumbnail transparency:"
+#~ msgstr "Transparencia de miniaturas:"
+
+#~ msgid "Value must be between 0 to 100."
+#~ msgstr "El valor debe estar entre 0 y 100."
+
+#~ msgid "Full background color:"
+#~ msgstr "Color de fondo completo:"
+
+#~ msgid "Full background transparency:"
+#~ msgstr "Completa transparencia de fondo:"
+
+#~ msgid "Alignment:"
+#~ msgstr "Alineacion:"
+
+#~ msgid "Title position:"
+#~ msgstr "Posición del Título:"
+
+#~ msgid "Top"
+#~ msgstr "Arriba"
+
+#~ msgid "Bottom"
+#~ msgstr "Abajo"
+
+#~ msgid "Title font size:"
+#~ msgstr "Tamaño del texto del título:"
+
+#~ msgid "Title font color:"
+#~ msgstr "Color de texto para el título:"
+
+#, fuzzy
+#~| msgid "Title font color:"
+#~ msgid "Title font color (Show on hover):"
+#~ msgstr "Color de texto para el título:"
+
+#~ msgid "Title font family:"
+#~ msgstr "Familia de tipografía para el título:"
+
+#~ msgid "Title font weight:"
+#~ msgstr "Peso de la fuente del título:"
+
+#~ msgid "Title box shadow:"
+#~ msgstr "Sombra del cuadro de título:"
+
+#~ msgid "Title margin:"
+#~ msgstr "Margen del título:"
+
+#~ msgid "Gallery title/description font size:"
+#~ msgstr "Tamaño de la fuente del título de la galería / descripción:"
+
+#~ msgid "Gallery title/description font color:"
+#~ msgstr "Título de la galería / color de fuente de la descripción:"
+
+#~ msgid "Gallery title/description font family:"
+#~ msgstr "Familia de fuentes de título / descripción de la galería:"
+
+#~ msgid "Gallery title/description font weight:"
+#~ msgstr "Título de la galería / peso de la fuente de la descripción:"
+
+#~ msgid "Gallery title/description box shadow:"
+#~ msgstr "Sombra del cuadro de título / descripción de la galería:"
+
+#~ msgid "Gallery title/description margin:"
+#~ msgstr "Título de la galería / margen de descripción:"
+
+#, fuzzy
+#~| msgid "Gallery title/description alignment:"
+#~ msgid "Gallery title alignment:"
+#~ msgstr "Alineación de título / descripción de la galería:"
+
+#~ msgid "E.g. Rotate: 10deg, Scale: 1.5, Skew: 10deg."
+#~ msgstr "Ej. Rotar: 10deg, Escala: 1.5, Sesgo: 10deg."
+
+#~ msgid "Transparency:"
+#~ msgstr "Transparencia:"
+
+#, fuzzy
+#~| msgid "Full background color:"
+#~ msgid "Full Background color:"
+#~ msgstr "Color de fondo completo:"
+
+#~ msgid "Background transparency:"
+#~ msgstr "Transparencia del Fondo:"
+
+#~ msgid "Description font size:"
+#~ msgstr "Tamaño de la fuente de descripción:"
+
+#~ msgid "Description font color:"
+#~ msgstr "Color de la Fuente de la Descripción:"
+
+#~ msgid "Description font family:"
+#~ msgstr "Familia de fuentes de descripción:"
+
+#~ msgid "Background color:"
+#~ msgstr "Color de fondo:"
+
+#~ msgid "Right, left buttons size:"
+#~ msgstr "Tamaño de botones derecho e izquierdo:"
+
+#~ msgid "Play, pause buttons size:"
+#~ msgstr "Reproducir, pausa el tamaño de los botones:"
+
+#~ msgid "Buttons color:"
+#~ msgstr "Color de los botones:"
+
+#~ msgid "Buttons transparency:"
+#~ msgstr "Transparencia de botones:"
+
+#~ msgid "Buttons hover color:"
+#~ msgstr "Botones de color flotar:"
+
+#~ msgid "Right, left buttons width:"
+#~ msgstr "Ancho de botones derecho e izquierdo:"
+
+#~ msgid "Right, left buttons height:"
+#~ msgstr "Derecha, izquierda botones altura:"
+
+#~ msgid "Right, left buttons background color:"
+#~ msgstr "Derecha, botones izquierdo color de fondo:"
+
+#~ msgid "Right, left buttons border width:"
+#~ msgstr "A la derecha, ancho del borde izquierdo de los botones:"
+
+#~ msgid "Right, left buttons border style:"
+#~ msgstr "Derecha, botones izquierdos borde estilo:"
+
+#~ msgid "Right, left buttons border color:"
+#~ msgstr "Derecha, botones izquierdo color del borde:"
+
+#~ msgid "Right, left buttons border radius:"
+#~ msgstr "Derecha, izquierda, botones, borde, radio:"
+
+#~ msgid "Right, left buttons style:"
+#~ msgstr "Derecha, estilo de botones a la izquierda:"
+
+#~ msgid "Right, left buttons box shadow:"
+#~ msgstr "A la derecha, a la izquierda sombra del cuadro de botones:"
+
+#~ msgid "Filmstrip/Slider bullet position:"
+#~ msgstr "Tira de película / posición de bala deslizante:"
+
+#~ msgid "Filmstrip margin:"
+#~ msgstr "Margen de tira de película:"
+
+#~ msgid "Filmstrip border width:"
+#~ msgstr "Ancho del borde de la tira de película:"
+
+#~ msgid "Filmstrip border style:"
+#~ msgstr "Estilo de borde de tira de película:"
+
+#~ msgid "Filmstrip border color:"
+#~ msgstr "Color del borde de la tira de película:"
+
+#~ msgid "Filmstrip border radius:"
+#~ msgstr "Radio del borde de la tira de película:"
+
+#~ msgid "Filmstrip active border width:"
+#~ msgstr "Ancho del borde activo de la tira de película:"
+
+#~ msgid "Filmstrip active border color:"
+#~ msgstr "Color del borde activo de la tira de película:"
+
+#~ msgid "Filmstrip deactive transparency: "
+#~ msgstr "Transparencia de desactivación de película de diapositivas: "
+
+#~ msgid "Filmstrip right, left buttons background color: "
+#~ msgstr "Tira de película derecha, botón izquierdo color de fondo: "
+
+#~ msgid "Filmstrip right, left buttons color:"
+#~ msgstr "Tira de película derecha, botón de color izquierdo:"
+
+#~ msgid "Filmstrip right, left buttons size:"
+#~ msgstr "Tira de película derecha, tamaño de botones izquierdo:"
+
+#~ msgid "Slider bullet width: "
+#~ msgstr "Ancho de bala del control deslizante: "
+
+#~ msgid "Slider bullet height:"
+#~ msgstr "Altura de bala del control deslizante:"
+
+#~ msgid "Slider bullet border radius: "
+#~ msgstr "Radio de borde de bala del control deslizante: "
+
+#~ msgid "Slider bullet background color:"
+#~ msgstr "Color de fondo de bala deslizante:"
+
+#~ msgid "Slider bullet margin:"
+#~ msgstr "Margen de viñeta del control deslizante:"
+
+#~ msgid "Slider bullet active background color: "
+#~ msgstr "Control deslizante viñeta color de fondo activo: "
+
+#~ msgid "Slider bullet active border width:"
+#~ msgstr "Ancho del borde activo del control deslizante del control deslizante:"
+
+#~ msgid "Slider bullet active border color: "
+#~ msgstr "Control deslizante bullet color de borde activo: "
+
+#~ msgid "Title background color: "
+#~ msgstr "Color de fondo del título: "
+
+#~ msgid "Title transparency: "
+#~ msgstr "Transparencia del título: "
+
+#~ msgid "Title border radius:"
+#~ msgstr "Radio del borde del título:"
+
+#~ msgid "Title padding: "
+#~ msgstr "Padding del título: "
+
+#~ msgid "Title font size: "
+#~ msgstr "Tamaño del texto del título: "
+
+#~ msgid "Title color: "
+#~ msgstr "Color del Título: "
+
+#~ msgid "Description background color:"
+#~ msgstr "Color de fondo de la descripción:"
+
+#~ msgid "Description transparency:"
+#~ msgstr "Descripción transparencia:"
+
+#~ msgid "Description border radius:"
+#~ msgstr "Descripción del radio del borde:"
+
+#~ msgid "Description padding:"
+#~ msgstr "Descripción de relleno:"
+
+#~ msgid "Description color:"
+#~ msgstr "Descripción color:"
+
+#~ msgid "Full padding:"
+#~ msgstr "Relleno completo:"
+
+#~ msgid "Full border radius:"
+#~ msgstr "Radio de borde completo:"
+
+#~ msgid "Full border width:"
+#~ msgstr "Ancho del borde completo:"
+
+#~ msgid "Full border style:"
+#~ msgstr "Estilo de borde completo:"
+
+#~ msgid "Full border color:"
+#~ msgstr "Color de borde completo:"
+
+#~ msgid "Margin:"
+#~ msgstr "Margen:"
+
+#~ msgid "Box shadow:"
+#~ msgstr "Sombra del contenedor:"
+
+#~ msgid "Title alignment:"
+#~ msgstr "Alineación del título:"
+
+#~ msgid "Font size:"
+#~ msgstr "Tamaño de fuente:"
+
+#~ msgid "Font color:"
+#~ msgstr "Color de fuente:"
+
+#~ msgid "Font family:"
+#~ msgstr "Familia tipográfica:"
+
+#~ msgid "Description margin:"
+#~ msgstr "Margen de descripción:"
+
+#~ msgid "Description border width:"
+#~ msgstr "Descripción del ancho del borde:"
+
+#~ msgid "Description border style:"
+#~ msgstr "Descripción estilo de borde:"
+
+#~ msgid "Description border color:"
+#~ msgstr "Descripción del color del borde:"
+
+#~ msgid "Thumbnail transition:"
+#~ msgstr "Transición de miniatura:"
+
+#, fuzzy
+#~| msgid "Back font size:"
+#~ msgid "Back Font size:"
+#~ msgstr "Tamaño de fuente posterior:"
+
+#, fuzzy
+#~| msgid "Back font color:"
+#~ msgid "Back Font color:"
+#~ msgstr "Color de la fuente posterior:"
+
+#, fuzzy
+#~| msgid "Back font family:"
+#~ msgid "Back Font family:"
+#~ msgstr "Familia de fuentes traseras:"
+
+#, fuzzy
+#~| msgid "Back font weight:"
+#~ msgid "Back Font weight:"
+#~ msgstr "Peso de la fuente posterior:"
+
+#~ msgid "Back padding:"
+#~ msgstr "Relleno de espalda:"
+
+#~ msgid "Thumbnail margin:"
+#~ msgstr "Margen de miniaturas:"
+
+#~ msgid "Thumbnail padding:"
+#~ msgstr "Relleno de la miniatura:"
+
+#~ msgid "Thumbnail border width:"
+#~ msgstr "Ancho del borde de la miniatura:"
+
+#~ msgid "Thumbnail border style:"
+#~ msgstr "Estilo de borde de miniatura:"
+
+#~ msgid "Thumbnail border color:"
+#~ msgstr "Color del borde de la miniatura:"
+
+#~ msgid "Thumbnail border radius:"
+#~ msgstr "Radio de borde de miniatura:"
+
+#~ msgid "Thumbnail box shadow:"
+#~ msgstr "Sombra de la caja de miniaturas:"
+
+#, fuzzy
+#~| msgid "Description margin:"
+#~ msgid "Description alignment:"
+#~ msgstr "Margen de descripción:"
+
+#~ msgid "Thumbnail hover effect:"
+#~ msgstr "Efecto de desplazamiento en miniatura:"
+
+#~ msgid "Thumbnails background color:"
+#~ msgstr "Color de fondo de miniaturas:"
+
+#~ msgid "Thumbnail background transparency:"
+#~ msgstr "Transparencia de fondo en miniatura:"
+
+#~ msgid "Thumbnail div padding:"
+#~ msgstr "Acolchado div en miniatura:"
+
+#~ msgid "Thumbnail div background color:"
+#~ msgstr "Color de fondo div en miniatura:"
+
+#~ msgid "Thumbnail div border width:"
+#~ msgstr "Ancho de borde div en miniatura:"
+
+#~ msgid "humbnail div border style:"
+#~ msgstr "estilo de borde div de humbnail:"
+
+#~ msgid "Thumbnail div border color:"
+#~ msgstr "Color del borde div en miniatura:"
+
+#~ msgid "Thumbnail div border radius:"
+#~ msgstr "Radio del borde div en miniatura:"
+
+#~ msgid "Separator width:"
+#~ msgstr "Ancho del separador:"
+
+#~ msgid "Separator style:"
+#~ msgstr "Estilo del separador:"
+
+#~ msgid "Separator color:"
+#~ msgstr "Color del separador:"
+
+#~ msgid "Back font size:"
+#~ msgstr "Tamaño de fuente posterior:"
+
+#~ msgid "Back font color:"
+#~ msgstr "Color de la fuente posterior:"
+
+#~ msgid "Back font family:"
+#~ msgstr "Familia de fuentes traseras:"
+
+#~ msgid "Back font weight:"
+#~ msgstr "Peso de la fuente posterior:"
+
+#, fuzzy
+#~| msgid "Gallery title/description alignment:"
+#~ msgid "Title/description alignment:"
+#~ msgstr "Alineación de título / descripción de la galería:"
+
+#~ msgid "Text div padding:"
+#~ msgstr "Text div padding:"
+
+#~ msgid "Text div border width:"
+#~ msgstr "Ancho de borde div de texto:"
+
+#~ msgid "Text border style:"
+#~ msgstr "Estilo de borde de texto:"
+
+#~ msgid "Text border color:"
+#~ msgstr "Color del borde del texto:"
+
+#~ msgid "Text div border radius:"
+#~ msgstr "Radio de borde de div de texto:"
+
+#~ msgid "Text background color:"
+#~ msgstr "Color del fondo del texto:"
+
+#~ msgid "Title padding:"
+#~ msgstr "Relleno del título:"
+
+#~ msgid "Title border width:"
+#~ msgstr "Ancho del borde del título:"
+
+#~ msgid "Title border style:"
+#~ msgstr "Estilo del borde del título:"
+
+#~ msgid "Title border color:"
+#~ msgstr "Color del borde del título:"
+
+#~ msgid "Description font weight:"
+#~ msgstr "Peso de la fuente de descripción:"
+
+#~ msgid "Description more size:"
+#~ msgstr "Descripción más tamaño:"
+
+#~ msgid "Description more color:"
+#~ msgstr "Descripción más color:"
+
+#~ msgid "Buttons and title margin:"
+#~ msgstr "Botones y margen de título:"
+
+#~ msgid "Buttons size:"
+#~ msgstr "Tamaño de los botones:"
+
+#~ msgid "Buttons and title border width:"
+#~ msgstr "Botones y ancho del borde del título:"
+
+#~ msgid "Buttons and title border style:"
+#~ msgstr "Botones y estilo del borde del título:"
+
+#~ msgid "Buttons and title border color:"
+#~ msgstr "Botones y color del borde del título:"
+
+#~ msgid "Buttons and title border radius:"
+#~ msgstr "Botones y radio del borde del título:"
+
+#~ msgid "Buttons and title background color:"
+#~ msgstr "Botones y color de fondo del título:"
+
+#~ msgid "Buttons and title background transparency:"
+#~ msgstr "Botones y transparencia de fondo del título:"
+
+#~ msgid "Buttons or title alignment:"
+#~ msgstr "Botones o alineación del título:"
+
+#~ msgid "Overlay background color:"
+#~ msgstr "Color de fondo superpuesto:"
+
+#~ msgid "Overlay background transparency:"
+#~ msgstr "Transparencia de fondo de superposición:"
+
+#~ msgid "Lightbox background color:"
+#~ msgstr "Color de fondo de la caja de luz:"
+
+#~ msgid "Lightbox background transparency:"
+#~ msgstr "Transparencia del fondo de la caja de luz:"
+
+#~ msgid "Control buttons height:"
+#~ msgstr "Altura de los botones de control:"
+
+#~ msgid "Control buttons margin (top):"
+#~ msgstr "Margen de botones de control (arriba):"
+
+#~ msgid "Control buttons margin (left):"
+#~ msgstr "Margen de botones de control (izquierda):"
+
+#~ msgid "Control buttons position:"
+#~ msgstr "Posición de los botones de control:"
+
+#~ msgid "Control buttons background color:"
+#~ msgstr "Color de fondo de los botones de control:"
+
+#~ msgid "Control buttons container border radius:"
+#~ msgstr "Botones de control radio de borde del contenedor:"
+
+#~ msgid "Control buttons container background transparency:"
+#~ msgstr "Botones de control transparencia del fondo del contenedor:"
+
+#~ msgid "Control buttons alignment:"
+#~ msgstr "Alineación de botones de control:"
+
+#~ msgid "Control buttons color:"
+#~ msgstr "Botones de control de color:"
+
+#~ msgid "Control buttons transparency:"
+#~ msgstr "Controle la transparencia de los botones:"
+
+#~ msgid "Toggle button height:"
+#~ msgstr "Alternar la altura del botón:"
+
+#~ msgid "Toggle button width:"
+#~ msgstr "Ancho del botón de alternar:"
+
+#~ msgid "Close button border radius:"
+#~ msgstr "Radio de borde de botón cerrado:"
+
+#~ msgid "Close button border width:"
+#~ msgstr "Cerrar el ancho del borde del botón:"
+
+#~ msgid "Close button border style:"
+#~ msgstr "Estilo de borde de botón cerrado:"
+
+#~ msgid "Close button border color:"
+#~ msgstr "Cerrar el color del borde del botón:"
+
+#~ msgid "Close button box shadow:"
+#~ msgstr "Cerrar la sombra de la caja del botón:"
+
+#~ msgid "Close button background color:"
+#~ msgstr "Cerrar el color de fondo del botón:"
+
+#~ msgid "Close button transparency:"
+#~ msgstr "Cerrar la transparencia del botón:"
+
+#~ msgid "Close button width:"
+#~ msgstr "Ancho del botón de cierre:"
+
+#~ msgid "Close button height:"
+#~ msgstr "Altura del botón de cierre:"
+
+#~ msgid "Close button top:"
+#~ msgstr "Cerrar el botón superior:"
+
+#~ msgid "Close button right:"
+#~ msgstr "Cerrar el botón a la derecha:"
+
+#~ msgid "Close button size:"
+#~ msgstr "Tamaño del botón de cierre:"
+
+#~ msgid "Close button color:"
+#~ msgstr "Cerrar el color del botón:"
+
+#~ msgid "Fullscreen close button color:"
+#~ msgstr "Color de botón de cierre a pantalla completa:"
+
+#~ msgid "Share buttons color:"
+#~ msgstr "Color de los botones de compartir:"
+
+#~ msgid "Right, left buttons transparency:"
+#~ msgstr "Derecha, izquierda botones de transparencia:"
+
+#~ msgid "Right, left, close buttons hover color:"
+#~ msgstr "Derecha, izquierda, botones de cierre color flotar:"
+
+#~ msgid "Right, left buttons color:"
+#~ msgstr "Derecha, color de botones izquierdo:"
+
+#~ msgid "Filmstrip position:"
+#~ msgstr "Posición de la tira de película:"
+
+#~ msgid "Filmstrip thumbnail margin:"
+#~ msgstr "Margen de miniatura de la tira de película:"
+
+#~ msgid "Filmstrip thumbnail border width:"
+#~ msgstr "Ancho del borde de la miniatura de la tira de película:"
+
+#~ msgid "Filmstrip thumbnail border style:"
+#~ msgstr "Estilo de borde de miniatura de tira de película:"
+
+#~ msgid "Filmstrip thumbnail border color:"
+#~ msgstr "Color de borde de miniatura de tira de película:"
+
+#~ msgid "Filmstrip thumbnail border radius:"
+#~ msgstr "Radio de borde de miniatura de película:"
+
+#~ msgid "Filmstrip thumbnail active border width:"
+#~ msgstr "Ancho del borde activo de la miniatura de tira de película:"
+
+#~ msgid "Filmstrip thumbnail active border color:"
+#~ msgstr "Color de borde activo de miniatura de tira de película:"
+
+#~ msgid "Filmstrip thumbnail deactive transparency:"
+#~ msgstr "Transparencia de desactivación de miniaturas de diapositivas:"
+
+#~ msgid "Filmstrip right, left button background color:"
+#~ msgstr "Tira de película derecha, color de fondo del botón izquierdo:"
+
+#~ msgid "Rating position:"
+#~ msgstr "Posición de calificación:"
+
+#~ msgid "Rating alignment:"
+#~ msgstr "Alineación de calificación:"
+
+#~ msgid "Rating icon:"
+#~ msgstr "Ícono de clasificación:"
+
+#~ msgid "Rating color:"
+#~ msgstr "Color de clasificación:"
+
+#~ msgid "Rating hover color:"
+#~ msgstr "Puntuación del color de desplazamiento:"
+
+#~ msgid "Rating size:"
+#~ msgstr "Tamaño de calificación:"
+
+#~ msgid "Rating icon count:"
+#~ msgstr "Recuento de iconos de clasificación:"
+
+#~ msgid "Rating padding:"
+#~ msgstr "Relleno de calificación:"
+
+#~ msgid "Hit counter position:"
+#~ msgstr "Posición del contador de visitas:"
+
+#~ msgid "Hit counter alignment:"
+#~ msgstr "Alineamiento del contador de vistas:"
+
+#~ msgid "Hit counter background color:"
+#~ msgstr "Color de fondo del contador de vistas:"
+
+#~ msgid "Hit counter background transparency:"
+#~ msgstr "Transparencia del fondo del contador:"
+
+#~ msgid "Hit counter border width:"
+#~ msgstr "Ancho del borde del contador:"
+
+#~ msgid "Hit counter border style:"
+#~ msgstr "Estilo del borde del contador:"
+
+#~ msgid "Hit counter border color:"
+#~ msgstr "Color del borde del contador:"
+
+#~ msgid "Hit counter border radius:"
+#~ msgstr "Radio del borde del contador:"
+
+#~ msgid "Hit counter padding:"
+#~ msgstr "Relleno del contador:"
+
+#~ msgid "Hit counter margin:"
+#~ msgstr "Margen de contador:"
+
+#~ msgid "Hit counter font color:"
+#~ msgstr "Color de la fuente del contador:"
+
+#~ msgid "Hit counter font family:"
+#~ msgstr "Familia de la fuente del contador:"
+
+#~ msgid "Hit counter font weight:"
+#~ msgstr "Peso de la fuente del contador:"
+
+#~ msgid "Hit counter font size:"
+#~ msgstr "Tamaño de la fuente del contador:"
+
+#~ msgid "Info position:"
+#~ msgstr "Posición de la información:"
+
+#~ msgid "Info alignment:"
+#~ msgstr "Alineación de información:"
+
+#~ msgid "Info background color:"
+#~ msgstr "Color de fondo de información:"
+
+#~ msgid "Info background transparency:"
+#~ msgstr "Transparencia de fondo de información:"
+
+#~ msgid "Info border width:"
+#~ msgstr "Ancho del borde de información:"
+
+#~ msgid "Info border style:"
+#~ msgstr "Estilo de borde de información:"
+
+#~ msgid "Info border color:"
+#~ msgstr "Color del borde de información:"
+
+#~ msgid "Info border radius:"
+#~ msgstr "Radio de borde de información:"
+
+#~ msgid "Info padding:"
+#~ msgstr "Relleno de información:"
+
+#~ msgid "Info margin:"
+#~ msgstr "Margen de información:"
+
+#~ msgid "Comments Width:"
+#~ msgstr "Anchura de comentarios:"
+
+#~ msgid "Comments position:"
+#~ msgstr "Posición de los comentarios:"
+
+#~ msgid "Comments background color:"
+#~ msgstr "Color de fondo de comentarios:"
+
+#~ msgid "Comments font size:"
+#~ msgstr "Tamaño de letra de los comentarios:"
+
+#~ msgid "Comments font color:"
+#~ msgstr "Color de fuente de comentarios:"
+
+#~ msgid "Comments font family:"
+#~ msgstr "Familia de fuentes de comentarios:"
+
+#~ msgid "Comments author font size:"
+#~ msgstr "Tamaño de la fuente del autor de los comentarios:"
+
+#~ msgid "Comments date font size:"
+#~ msgstr "Tamaño de letra de fecha de los comentarios:"
+
+#~ msgid "Comments body font size:"
+#~ msgstr "Tamaño de letra del cuerpo de comentarios:"
+
+#~ msgid "Comment input border width:"
+#~ msgstr "Ancho de borde de entrada de comentario:"
+
+#~ msgid "omment input border style:"
+#~ msgstr "estilo de borde de entrada omment:"
+
+#~ msgid "Comment input border color:"
+#~ msgstr "Color de borde de entrada de comentario:"
+
+#~ msgid "Comment input border radius:"
+#~ msgstr "Radio de entrada del comentario:"
+
+#~ msgid "Comment input padding:"
+#~ msgstr "Compensación de entrada de comentarios:"
+
+#~ msgid "Comment input background color:"
+#~ msgstr "Color de fondo de entrada de comentario:"
+
+#~ msgid "Comment button background color:"
+#~ msgstr "Color de fondo del botón de comentario:"
+
+#~ msgid "Comment button padding:"
+#~ msgstr "Relleno del botón de comentario:"
+
+#~ msgid "Comment button border width:"
+#~ msgstr "Ancho del borde del botón de comentario:"
+
+#~ msgid "Comment button border style:"
+#~ msgstr "Estilo del borde del botón de comentario:"
+
+#~ msgid "Comment button border color:"
+#~ msgstr "Color del borde del botón de comentario:"
+
+#~ msgid "omment button border radius:"
+#~ msgstr "radio de borde de botón de omisión:"
+
+#~ msgid "Comment separator width:"
+#~ msgstr "Ancho del separador de comentarios:"
+
+#~ msgid "Comment separator style:"
+#~ msgstr "Estilo de separador de comentarios:"
+
+#~ msgid "Comment separator color:"
+#~ msgstr "Color del separador de comentarios:"
+
+#~ msgid "Font weight:"
+#~ msgstr "Grosor de la fuente:"
+
+#~ msgid "Button background color:"
+#~ msgstr "Color del fondo de los botones:"
+
+#~ msgid "Button background transparency:"
+#~ msgstr "Transparencia de fondo del botón:"
+
+#~ msgid "Button transition:"
+#~ msgstr "Transición de botones:"
+
+#~ msgid "Position:"
+#~ msgstr "Posición:"
+
+#~ msgid "Numbering:"
+#~ msgstr "Numeración:"
+
+#~ msgid "Button text:"
+#~ msgstr "Texto de abajo:"
+
+#~ msgid "Arrow"
+#~ msgstr "Flecha"
+
+#~ msgid "Next, previous buttons values."
+#~ msgstr "A continuación, los valores de los botones anteriores."
+
+#~ msgid "Container opacity:"
+#~ msgstr "Opacidad del contenedor:"
+
+#~ msgid "Carousel margin:"
+#~ msgstr "Margen del carrusel:"
+
+#~ msgid "Image border width:"
+#~ msgstr "Ancho del borde de la imagen:"
+
+#~ msgid "Image border style:"
+#~ msgstr "Estilo de borde de la imagen:"
+
+#~ msgid "Image border color:"
+#~ msgstr "Color del borde de la imagen:"
+
+#~ msgid "Title background color:"
+#~ msgstr "Color de fondo del título:"
+
+#~ msgid "Title opacity:"
+#~ msgstr "Opacidad del título:"
+
+#~ msgid "Title Font family:"
+#~ msgstr "Familia de la fuente para el título:"
+
+#~ msgid "Title color:"
+#~ msgstr "Color del Título:"
+
+#~ msgid "support team"
+#~ msgstr "equipo de soporte"
+
+#~ msgid "Contact us"
+#~ msgstr "Contáctanos"
+
+#, php-format
+#~ msgid ""
+#~ "Before uninstalling the plugin, please Contact our %s. We'll do our best to help you out with your issue. We value each and every user and value what's right for our users in everything we do.<br />\n"
+#~ "      However, if anyway you have made a decision to uninstall the plugin, please take a minute to %s and tell what you didn't like for our plugins further improvement and development. Thank you !!!"
+#~ msgstr "Antes de desinstalar el complemento, póngase en contacto con nuestro %s . Haremos nuestro mejor esfuerzo para ayudarlo con su problema. Valoramos a todos y cada uno de los usuarios y valoramos lo que es correcto para nuestros usuarios en todo lo que hacemos. <br /> \\ n Sin embargo, si de todos modos ha tomado la decisión de desinstalar el complemento, tómese un minuto para %s y sepa lo que hizo Nos gusta para nuestros complementos más mejoras y desarrollo. Gracias !!!"
+
+#, php-format
+#~ msgid "Deactivating %s plugin does not remove any data that may have been created. To completely remove this plugin, you can uninstall it here."
+#~ msgstr "La desactivación del complemento %s no elimina ningún dato que pueda haberse creado. Para eliminar completamente este complemento, puede desinstalarlo aquí."
+
+#~ msgid "WARNING:"
+#~ msgstr "ADVERTENCIA:"
+
+#~ msgid "Once uninstalled, this can't be undone. You should use a Database Backup plugin of WordPress to back up all the data first."
+#~ msgstr "Una vez desinstalado, no se puede deshacer. Debe usar un complemento de copia de seguridad de la base de datos de WordPress para hacer una copia de seguridad de todos los datos primero."
+
+#~ msgid "The following Database Tables will be deleted:"
+#~ msgstr "Las siguientes tablas de base de datos se eliminarán:"
+
+#~ msgid "Database Tables"
+#~ msgstr "Tablas de la base de datos"
+
+#~ msgid "Delete the folder containing uploaded images."
+#~ msgstr "Elimina la carpeta que contiene las imágenes cargadas."
+
+#, php-format
+#~ msgid "Do you really want to uninstall %s?"
+#~ msgstr "¿Realmente quieres desinstalar %s ?"
+
+#~ msgid "UNINSTALL"
+#~ msgstr "DESINSTALAR"
+
+#, php-format
+#~ msgid "You are About to Uninstall %s from WordPress. This Action Is Not Reversible."
+#~ msgstr "Estás a punto de desinstalar %s de WordPress. Esta acción no es reversible."
+
+#~ msgid "Photo Gallery"
+#~ msgstr "Galería de fotos"
+
+#~ msgid "Title:"
+#~ msgstr "Título:"
+
+#~ msgid "Type:"
+#~ msgstr "Tipo:"
+
+#~ msgid "Gallery groups"
+#~ msgstr "Grupos de galerías"
+
+#~ msgid "Galleries:"
+#~ msgstr "Galerías:"
+
+#~ msgid "Gallery Type:"
+#~ msgstr "Tipo de galería:"
+
+#~ msgid "Gallery Groups:"
+#~ msgstr "Grupos de galerías:"
+
+#~ msgid "Sort:"
+#~ msgstr "Ordenar:"
+
+#~ msgid "First"
+#~ msgstr "Primero"
+
+#~ msgid "Last"
+#~ msgstr "Último"
+
+#~ msgid "Count:"
+#~ msgstr "Contador:"
+
+#~ msgid "Dimensions:"
+#~ msgstr "Dimensiones:"
+
+#~ msgid "Themes:"
+#~ msgstr "Temas:"
+
+#~ msgid "Photo Gallery Slideshow"
+#~ msgstr "Pase de diapositivas"
+
+#~ msgid "Select"
+#~ msgstr "Select"
+
+#~ msgid "Slideshow effect:"
+#~ msgstr "Efecto de presentaciόn:"
+
+#~ msgid "Enable shuffle:"
+#~ msgstr "Habilitar mezcla aleatoria:"
+
+#~ msgid "Enable autoplay:"
+#~ msgstr "Habilitar la reproducción automática:"
+
+#~ msgid "Enable control buttons:"
+#~ msgstr "Habilitar botones de control:"
+
+#~ msgid "Filmstrip height:"
+#~ msgstr "Altura de la tira de película:"
+
+#~ msgid "Time interval:"
+#~ msgstr "Intervalo de tiempo:"
+
+#~ msgid "Photo Gallery Tags Cloud"
+#~ msgstr "Galería de fotos Etiquetas Nube"
+
+#~ msgid "Show Tag Names:"
+#~ msgstr "Mostrar nombres de etiqueta:"
+
+#~ msgid "Open in:"
+#~ msgstr "Abrir en:"
+
+#~ msgid "Page"
+#~ msgstr "Página"
+
+#~ msgid "Number:"
+#~ msgstr "Número:"
+
+#~ msgid "0 for all."
+#~ msgstr "0 para todos."
+
+#~ msgid "Transparent Background:"
+#~ msgstr "Fondo transparente:"
+
+#~ msgid "Background Color:"
+#~ msgstr "Color de fondo:"
+
+#~ msgid "Text Color:"
+#~ msgstr "Color del texto:"
+
+#~ msgid "Activation"
+#~ msgstr "Activación"
+
+#~ msgid "Activate"
+#~ msgstr "Activar"
+
+#~ msgid "Install"
+#~ msgstr "Instalar"
+
+#~ msgid "Activation failed, please try again."
+#~ msgstr "La activación falló, por favor intente de nuevo."
+
+#~ msgid "Installation failed, please try again."
+#~ msgstr "La instalación falló, intente de nuevo."
+
+#~ msgid "Directory already exists."
+#~ msgstr "El directorio ya existe."
+
+#~ msgid "File doesn't exist."
+#~ msgstr "El archivo no existe."
+
+#~ msgid "Can't rename the file."
+#~ msgstr "No se puede cambiar el nombre del archivo."
+
+#~ msgid "Some of the files couldn't be removed."
+#~ msgstr "Algunos de los archivos no pudieron ser eliminados."
+
+#~ msgid "Failed to copy some of the files."
+#~ msgstr "Error al copiar algunos de los archivos."
+
+#~ msgid "Failed to move some of the files."
+#~ msgstr "Error al mover algunos de los archivos."
+
+#~ msgid "File loading failed"
+#~ msgstr "Error al cargar el archivo"
+
+#~ msgid "Are you sure you want to permanently remove selected items?"
+#~ msgstr "¿Seguro que quieres eliminar de forma permanente los elementos seleccionados?"
+
+#~ msgid "This will cancel uploads. Continue?"
+#~ msgstr "Esto cancelará las cargas. ¿Continuar?"
+
+#~ msgid "Enter directory name"
+#~ msgstr "Ingrese el nombre del directorio"
+
+#~ msgid "Enter new name"
+#~ msgstr "Ingresa un nuevo nombre"
+
+#~ msgid "Processing uploaded files..."
+#~ msgstr "Procesando archivos cargados ..."
+
+#~ msgid "Up"
+#~ msgstr "Arriba"
+
+#~ msgid "Make a directory"
+#~ msgstr "Hacer un directorio"
+
+#~ msgid "Rename item"
+#~ msgstr "Cambiar el nombre del elemento"
+
+#~ msgid "Copy"
+#~ msgstr "Copia"
+
+#~ msgid "Cut"
+#~ msgstr "Cortar"
+
+#~ msgid "Paste"
+#~ msgstr "Pegar"
+
+#~ msgid "Remove items"
+#~ msgstr "Eliminar objeto"
+
+#~ msgid "View thumbs"
+#~ msgstr "Ver miniaturas"
+
+#~ msgid "View list"
+#~ msgstr "Ver lista"
+
+#~ msgid "Upload files"
+#~ msgstr "Subir archivos"
+
+#~ msgid "Order by:"
+#~ msgstr "Ordenar por:"
+
+#~ msgid "Click to sort by name"
+#~ msgstr "Haga clic para ordenar por nombre"
+
+#~ msgid "Click to sort by size"
+#~ msgstr "Haga clic para ordenar por tamaño"
+
+#~ msgid "Click to sort by date modified"
+#~ msgstr "Haga clic para ordenar por fecha modificada"
+
+#~ msgid "Date modified"
+#~ msgstr "Fecha modificada"
+
+#~ msgid "Add selected images to gallery"
+#~ msgstr "Añadir las imágenes seleccionadas a la galería"
+
+#, fuzzy
+#~| msgid "Thumbnail Maximum Dimensions:"
+#~ msgid "Thumbnail Max Dimensions:"
+#~ msgstr "Dimensiones máximas en miniatura:"
+
+#~ msgid "Thumbnail:"
+#~ msgstr "Miniatura:"
+
+#~ msgid "Back"
+#~ msgstr "Atrás"
+
+#, fuzzy
+#~| msgid "Image Maximum Dimensions:"
+#~ msgid "Image Max Dimensions:"
+#~ msgstr "Dimensiones máximas de la imagen:"
+
+#~ msgid "Image:"
+#~ msgstr "Imagen:"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "Select Files"
+#~ msgstr "Seleccionar todo"
+
+#~ msgid "No files to upload"
+#~ msgstr "No hay archivos para cargar"
+
+#, fuzzy
+#~| msgid "Upload files"
+#~ msgid "Uploaded"
+#~ msgstr "Subir archivos"
+
+#, fuzzy
+#~| msgid "Upload files"
+#~ msgid "Upload failed"
+#~ msgstr "Subir archivos"
+
+#~ msgid "Item successfully saved."
+#~ msgstr "Artículo exitosamente guardado."
+
+#~ msgid "Failed."
+#~ msgstr "Falló."
+
+#~ msgid "You can't delete default theme."
+#~ msgstr "No puedes eliminar el tema predeterminado."
+
+#~ msgid "Items Successfully Deleted."
+#~ msgstr "Artículos eliminados con éxito."
+
+#, fuzzy
+#~| msgid "You must select at least one item."
+#~ msgid "You must set watermark type from Options page."
+#~ msgstr "Debe seleccionar al menos un elemento."
+
+#~ msgid "The item is successfully set as default."
+#~ msgstr "El elemento se configuró correctamente como predeterminado."
+
+#~ msgid "Options successfully saved."
+#~ msgstr "Opciones guardadas con éxito."
+
+#~ msgid "Item successfully published."
+#~ msgstr "Artículo publicado con éxito."
+
+#~ msgid "Item successfully unpublished."
+#~ msgstr "Artículo sin publicar exitosamente."
+
+#~ msgid "Item successfully duplicated."
+#~ msgstr "Artículo duplicado con éxito."
+
+#~ msgid "Items Succesfully Unpublished."
+#~ msgstr "Artículos exitosamente inéditos."
+
+#~ msgid "Ordering Succesfully Saved."
+#~ msgstr "Ordenar satisfactoriamente guardado."
+
+#~ msgid "A term with the name provided already exists."
+#~ msgstr "Un término con el nombre provisto ya existe."
+
+#~ msgid "Name field is required."
+#~ msgstr "El cambo nombre es requerido."
+
+#~ msgid "The slug must be unique."
+#~ msgstr "La babosa debe ser única."
+
+#~ msgid "Changes must be saved."
+#~ msgstr "Los cambios deben ser guardados."
+
+#~ msgid "Theme successfully copied."
+#~ msgstr "Tema copiado con éxito."
+
+#~ msgid "Items were reset successfully."
+#~ msgstr "Artículos restablecidos con éxito."
+
+#~ msgid "Watermark successfully set."
+#~ msgstr "Marca de agua establecida con éxito."
+
+#~ msgid "Items successfully rotated."
+#~ msgstr "Artículos girados con éxito."
+
+#~ msgid "Items successfully recreated."
+#~ msgstr "Artículos exitosamente recreados."
+
+#~ msgid "Items successfully resized."
+#~ msgstr "Artículos redimensionados con éxito."
+
+#~ msgid "Items successfully edited."
+#~ msgstr "Artículos editados con éxito."
+
+#~ msgid "Click to sort by this item"
+#~ msgstr "Haga clic para ordenar por este elemento"
+
+#~ msgid "item"
+#~ msgstr "objeto"
+
+#, php-format
+#~ msgid "No %s found."
+#~ msgstr "Ningún %s encontrado."
+
+#~ msgid "Gallery Tags"
+#~ msgstr "Etiquetas de galería"
+
+#~ msgid "resized"
+#~ msgstr "redimensionado"
+
+#~ msgid "Recreate thumbnail"
+#~ msgstr "Recrear miniatura"
+
+#~ msgid "recreated"
+#~ msgstr "recreado"
+
+#~ msgid "Rotate left"
+#~ msgstr "Girar a izquierda"
+
+#~ msgid "rotated left"
+#~ msgstr "girar a la izquierda"
+
+#~ msgid "Rotate right"
+#~ msgstr "Girar a derecha"
+
+#~ msgid "rotated right"
+#~ msgstr "girar a la derecha"
+
+#~ msgid "edited"
+#~ msgstr "editado"
+
+#~ msgid "reset"
+#~ msgstr "restablecer"
+
+#, fuzzy
+#~| msgid "Alt/Title"
+#~ msgid "Edit Alt/Title"
+#~ msgstr "Alt / Título"
+
+#, fuzzy
+#~| msgid "Description"
+#~ msgid "Edit description"
+#~ msgstr "Descripción"
+
+#, fuzzy
+#~| msgid "Redirect URL"
+#~ msgid "Edit redirect URL"
+#~ msgstr "Redireccionar URL"
+
+#, fuzzy
+#~| msgid "Remove tag"
+#~ msgid "Add/Remove tag"
+#~ msgstr "Eliminar Etiqueta"
+
+#~ msgid "Add pricelist"
+#~ msgstr "Agregar lista de precios"
+
+#~ msgid "Remove pricelist"
+#~ msgstr "Eliminar la lista de precios"
+
+#, fuzzy
+#~| msgid "Photo Gallery"
+#~ msgid "Photo Gallery Premium"
+#~ msgstr "Galería de fotos"
+
+#, fuzzy
+#~| msgid "User Guide"
+#~ msgid "User guide"
+#~ msgstr "Guía del usuario"
+
+#~ msgid "Add-ons"
+#~ msgstr "Complementos"
+
+#, fuzzy
+#~| msgid "Pro Version"
+#~ msgid "Premium Version"
+#~ msgstr "Versión Pro"
+
+#, fuzzy
+#~| msgid "All Tags"
+#~ msgid "All tags"
+#~ msgstr "Todos las Etiquetas"
+
+#, fuzzy
+#~| msgid "Insert Photo Gallery"
+#~ msgid "How to insert Photo Gallery (shortcode) ?"
+#~ msgstr "Insertar galería de fotos"
+
+#, fuzzy
+#~| msgid "Add Photo Gallery"
+#~ msgid "Click Add Photo Gallery Button"
+#~ msgstr "Agregar Galería de fotos"
+
+#, fuzzy
+#~| msgid "Insert Photo Gallery"
+#~ msgid "How to insert Photo Gallery as widget ?"
+#~ msgstr "Insertar galería de fotos"
+
+#, fuzzy
+#~| msgid "Photo Gallery Widget"
+#~ msgid "Add Gallery Widget"
+#~ msgstr "Widget de galería de fotos"
+
+#, fuzzy
+#~| msgid "Photo Gallery Add-ons"
+#~ msgid "Click the Photo Gallery Button"
+#~ msgstr "Complementos Photo Gallery"
+
+#, fuzzy
+#~| msgid "Advanced"
+#~ msgid "Advanced: PHP code"
+#~ msgstr "Avanzado"
+
+#, fuzzy
+#~| msgid "Activation"
+#~ msgid "Attention:"
+#~ msgstr "Activación"
+
+#, fuzzy
+#~| msgid "Copy to Clipboard"
+#~ msgid "Copy the Code"
+#~ msgstr "Copiar al portapapeles"
+
+#, fuzzy
+#~| msgid "How to use"
+#~ msgid "How to ..."
+#~ msgstr "Cómo utilizar"
+
+#~ msgid "How to use"
+#~ msgstr "Cómo utilizar"
+
+#, fuzzy, php-format
+#~| msgid "field is required."
+#~ msgid "The %s field is required."
+#~ msgstr "se requiere el campo."
+
+#, fuzzy, php-format
+#~| msgid "This is not a valid email address."
+#~ msgid "The %s field must contain a valid email address."
+#~ msgstr "Esta no es una dirección de correo electrónico válida."
+
+#, fuzzy
+#~| msgid "Error. Incorrect Verification Code."
+#~ msgid "Incorrect Security code."
+#~ msgstr "Error. Código de verificación incorrecto."
+
+#, fuzzy
+#~| msgid "There is no gallery selected or the gallery was deleted."
+#~ msgid "There is no album selected or the gallery was deleted."
+#~ msgstr "No hay ninguna galería seleccionada o la galería se ha eliminado."
+
+#~ msgid "There is no gallery selected or the gallery was deleted."
+#~ msgstr "No hay ninguna galería seleccionada o la galería se ha eliminado."
+
+#, fuzzy
+#~| msgid "No %s found."
+#~ msgid "No results found."
+#~ msgstr "Ningún %s encontrado."
+
+#~ msgid "More"
+#~ msgstr "Más"
+
+#~ msgid "Hide"
+#~ msgstr "Ocultar"
+
+#~ msgid "Show comments"
+#~ msgstr "Mostrar comentarios"
+
+#~ msgid "Share on Facebook"
+#~ msgstr "Compartir en Facebook"
+
+#~ msgid "Share on Twitter"
+#~ msgstr "Compartir en Twitter"
+
+#~ msgid "Share on Pinterest"
+#~ msgstr "Compartir en Pinterest"
+
+#~ msgid "Share on Tumblr"
+#~ msgstr "Compartir en Tumblr"
+
+#~ msgid "Show ecommerce"
+#~ msgstr "Mostrar carrito ecommerce"
+
+#~ msgid "There are no images to download."
+#~ msgstr "No hay imágenes para descargar."
+
+#~ msgid "The image has been deleted."
+#~ msgstr "La imagen ha sido borrada."
+
+#~ msgid "Play"
+#~ msgstr "Reproducir"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximizar"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Pantalla completa"
+
+#~ msgid "Show info"
+#~ msgstr "Mostrar información"
+
+#~ msgid "Show rating"
+#~ msgstr "Mostrar puntuación"
+
+#~ msgid "Open image in original size."
+#~ msgstr "Abrir imagen en tamaño original."
+
+#~ msgid "Download original image"
+#~ msgstr "Descargar la imagen original"
+
+#~ msgid "Ecommerce"
+#~ msgstr "Ecommerce"
+
+#~ msgid "Hits: "
+#~ msgstr "Visitas: "
+
+#~ msgid "Rated."
+#~ msgstr "Puntuada."
+
+#~ msgid "Hide Comments"
+#~ msgstr "Ocultar comentarios"
+
+#~ msgid "Verification Code"
+#~ msgstr "Código de Verificación"
+
+#~ msgid "Privacy Policy"
+#~ msgstr "Política de privacidad"
+
+#~ msgid "Submit"
+#~ msgstr "Enviar"
+
+#~ msgid "Your comment is awaiting moderation"
+#~ msgstr "Tu comentario está pendiente de moderación"
+
+#~ msgid "Hide Ecommerce"
+#~ msgstr "Ocultar carrito ecomerce"
+
+#~ msgid "Add to cart"
+#~ msgstr "Añadir al carro"
+
+#~ msgid "items"
+#~ msgstr "objetos"
+
+#~ msgid "Prints and products"
+#~ msgstr "Impresiones y productos"
+
+#~ msgid "Downloads"
+#~ msgstr "Descargas"
+
+#~ msgid "Price"
+#~ msgstr "Precio"
+
+#~ msgid "Count"
+#~ msgstr "Cantidad"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Dimensions"
+#~ msgstr "Dimensiones"
+
+#~ msgid "Choose"
+#~ msgstr "Selecciona"
+
+#~ msgid "View cart"
+#~ msgstr "Ver carrito"
+
+#~ msgid "Delete Comment"
+#~ msgstr "Eliminar comentario"
+
+#~ msgid "Open"
+#~ msgstr "Abr"
+
+#, fuzzy
+#~| msgid "No %s found."
+#~ msgid "No Images found."
+#~ msgstr "Ningún %s encontrado."
+
+#~ msgid "Download gallery"
+#~ msgstr "Descargar galería"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by Default"
+#~ msgstr "Ordenar por: "
+
+#~ msgid " item(s)"
+#~ msgstr " objeto(s)"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Next"
+#~ msgstr "Siguiente"
+
+#~ msgid "Go to the first page"
+#~ msgstr "Ir a la primera página"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "Ir a la página anterior"
+
+#~ msgid "Go to the next page"
+#~ msgstr "Ir a la página siguiente"
+
+#~ msgid "Go to the last page"
+#~ msgstr "Ir a la última página"
+
+#~ msgid "Load More..."
+#~ msgstr "Cargar más..."
+
+#, fuzzy
+#~| msgid "Lighter"
+#~ msgid "Light"
+#~ msgstr "Más ligero"
+
+#, fuzzy
+#~| msgid "plugins"
+#~ msgid "10WEB Plugins"
+#~ msgstr "complementos"
+
+#, fuzzy, php-format
+#~| msgid "Select"
+#~ msgid "Select %s"
+#~ msgstr "Select"
+
+#, fuzzy
+#~| msgid "Select"
+#~ msgid "- Select -"
+#~ msgstr "Select"
+
+#, fuzzy
+#~| msgid "edited"
+#~ msgid "edit"
+#~ msgstr "editado"
+
+#, fuzzy
+#~| msgid "Rotate"
+#~ msgid "rotate"
+#~ msgstr "Rotar"
+
+#~ msgid "Options"
+#~ msgstr "Opciones"
+
+#, fuzzy
+#~| msgid "Options"
+#~ msgid "Options page"
+#~ msgstr "Opciones"
+
+#~ msgid "Add Galleries/Images"
+#~ msgstr "Añadir galerías / imágenes"
+
+#, php-format
+#~ msgid "The controller %s file not exist."
+#~ msgstr "El archivo del controlador %s no existe."
+
+#, php-format
+#~ msgid "The view %s file not exist."
+#~ msgstr "El archivo de %s visualización no existe."
+
+#, php-format
+#~ msgid "The %s class not exist."
+#~ msgstr "La clase %s no existe."
+
+#~ msgid "Do you want to delete selected items?"
+#~ msgstr "¿Quieres eliminar elementos seleccionados?"
+
+#~ msgid "You must select at least one item."
+#~ msgstr "Debe seleccionar al menos un elemento."
+
+#, fuzzy
+#~| msgid "Do you want to delete selected items?"
+#~ msgid "Do you want to remove pricelist from selected items?"
+#~ msgstr "¿Quieres eliminar elementos seleccionados?"
+
+#~ msgid "field is required."
+#~ msgstr "se requiere el campo."
+
+#~ msgid "You must select an image file."
+#~ msgstr "Debe seleccionar un archivo de imagen."
+
+#~ msgid "You must select an audio file."
+#~ msgstr "Debe seleccionar un archivo de audio."
+
+#, fuzzy
+#~| msgid "You do not have Instagram access token. Sign in with Instagram in Options -> Advanced tab. "
+#~ msgid "You do not have Instagram access token. Sign in with Instagram in Options -> Advanced tab -> Social. "
+#~ msgstr "No tienes token de acceso a Instagram. Inicie sesión con Instagram en Opciones -> pestaña Avanzado. "
+
+#~ msgid "You do not have Instagram CLIENT_ID. Input its value in Options->Embed options."
+#~ msgstr "No tiene Instagram CLIENT_ID. Ingrese su valor en Opciones-> Opciones de inserción."
+
+#~ msgid "Instagram recent post number must be between 1 and 33."
+#~ msgstr "El número de publicación reciente de Instagram debe estar entre 1 y 33."
+
+#~ msgid "Please enter url to embed."
+#~ msgstr "Por favor ingrese url para incrustar."
+
+#~ msgid "Error: cannot get response from the server."
+#~ msgstr "Error: no se puede obtener respuesta del servidor."
+
+#~ msgid "Error: something wrong happened at the server."
+#~ msgstr "Error: algo malo sucedió en el servidor."
+
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid "Hide order column"
+#~ msgstr "Ocultar columna de pedido"
+
+#, fuzzy, php-format
+#~| msgid "Selected"
+#~ msgid "Selected %d item."
+#~ msgstr "Seleccionado"
+
+#, fuzzy, php-format
+#~| msgid "Selected"
+#~ msgid "Selected %d items."
+#~ msgstr "Seleccionado"
+
+#~ msgid "Items Succesfully Saved."
+#~ msgstr "Artículos exitosamente guardados."
+
+#~ msgid "Item Succesfully Recovered."
+#~ msgstr "Artículo exitosamente recuperado."
+
+#~ msgid "Item Succesfully Published."
+#~ msgstr "Artículo exitosamente publicado."
+
+#~ msgid "Item Succesfully Unpublished."
+#~ msgstr "Artículo exitosamente despublicados."
+
+#~ msgid "Item Succesfully Deleted."
+#~ msgstr "Artículo eliminado satisfactoriamente."
+
+#~ msgid "Items Succesfully resized."
+#~ msgstr "Artículos redimensionados con éxito."
+
+#~ msgid "Watermarks Succesfully Set."
+#~ msgstr "Marcas de agua establecidas con éxito."
+
+#~ msgid "Items Succesfully Reset."
+#~ msgstr "Elementos restablecidos con éxito."
+
+#~ msgid "Save Tag"
+#~ msgstr "Guardar etiqueta"
+
+#~ msgid "This action will reset gallery type to mixed and will save that choice. You cannot undo it."
+#~ msgstr "Esta acción restablecerá el tipo de galería a mixto y guardará esa elección. No puedes deshacerlo."
+
+#~ msgid "After pressing save/apply buttons, you cannot change gallery type back to Instagram!"
+#~ msgstr "¡Después de presionar los botones guardar / aplicar, no puede cambiar el tipo de galería a Instagram!"
+
+#~ msgid "Failed to import images from media library"
+#~ msgstr "Error al importar imágenes de la biblioteca multimedia"
+
+#, fuzzy
+#~| msgid "All thumbnails are successfully recreated."
+#~ msgid "Thumbnails successfully recreated."
+#~ msgstr "Todas las miniaturas se recrean con éxito."
+
+#~ msgid "All images are successfully reset."
+#~ msgstr "Todas las imágenes se restablecen con éxito."
+
+#~ msgid "Add Photo Gallery"
+#~ msgstr "Agregar Galería de fotos"
+
+#~ msgid "This is not a valid email address."
+#~ msgstr "Esta no es una dirección de correo electrónico válida."
+
+#~ msgid "There are no images matching your search."
+#~ msgstr "No hay imágenes que coincidan con su búsqueda."
+
+#~ msgid "Select Tag"
+#~ msgstr "Seleccionar etiqueta"
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order By"
+#~ msgstr "Ordenar por:"
+
+#~ msgid "Show Ecommerce"
+#~ msgstr "Mostrar carrito ecommerce"
+
+#~ msgid "Show Comments"
+#~ msgstr "Mostrar comentarios"
+
+#~ msgid "Restore"
+#~ msgstr "Restaurar"
+
+#~ msgid "Exit Fullscreen"
+#~ msgstr "Salir de pantalla completa"
+
+#, fuzzy
+#~| msgid "No %s found."
+#~ msgid "No tags found"
+#~ msgstr "Ningún %s encontrado."
+
+#, fuzzy
+#~| msgid "Selected"
+#~ msgid "tags selected"
+#~ msgstr "Seleccionado"
+
+#~ msgid "Pause"
+#~ msgstr "Pausar"
+
+#~ msgid "Hide info"
+#~ msgstr "Ocultar información"
+
+#~ msgid "Hide rating"
+#~ msgstr "Ocultar puntuación"
+
+#~ msgid "Photo Gallery is a fully responsive gallery plugin with advanced functionality. It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into gallery groups, and provide descriptions and tags."
+#~ msgstr "Photo Gallery es un complemento de galería totalmente receptivo con funcionalidad avanzada. Permite tener diferentes galerías de imágenes para tus publicaciones y páginas. Puede crear un número ilimitado de galerías, combinarlas en grupos de galería y proporcionar descripciones y etiquetas."
+
+#~ msgid "Easy Set-up and Management"
+#~ msgstr "Fácil configuración y administración"
+
+#~ msgid "Create stunning, 100% responsive, SEO-friendly photo galleries in minutes. Use the File Manager with single-step and easy-to-manage functionality to rename, upload, copy, add and remove images and image directories. Otherwise use WordPress built in media uploader."
+#~ msgstr "Cree galerías de fotos impresionantes, 100% receptivas y aptas para el SEO en cuestión de minutos. Utilice el Administrador de archivos con funcionalidad de un solo paso y fácil de administrar para cambiar el nombre, cargar, copiar, agregar y eliminar imágenes y directorios de imágenes. De lo contrario, use WordPress incorporado en el cargador multimedia."
+
+#~ msgid "Unlimited Photos and Albums"
+#~ msgstr "Fotos y álbumes ilimitados"
+
+#~ msgid "The plugin allows creating unlimited number of galleries or gallery groups and upload images in each gallery as many as you wish. Add single/ multiple galleries into your pages and posts with the help of functional shortcode; visual shortcodes for an easier management."
+#~ msgstr "El complemento permite crear un número ilimitado de galerías o grupos de galería y cargar imágenes en cada galería tantas como desee. Agregue galerías individuales / múltiples en sus páginas y publicaciones con la ayuda de shortcode funcional; códigos cortos visuales para una gestión más fácil."
+
+#~ msgid "Customizable"
+#~ msgstr "Personalizable"
+
+#~ msgid "The gallery plugin is easily customizable. You can edit themes changing sizes and colors for different features. Specify the number of images to display in a single row in an gallery group. Additionally, you can customize thumbnail images by cropping, flipping and rotating them."
+#~ msgstr "El plugin de la galería es fácilmente personalizable. Puede editar temas cambiando los tamaños y colores para diferentes funciones. Especifique la cantidad de imágenes para mostrar en una sola fila en un grupo de galería. Además, puede personalizar imágenes en miniatura recortando, volteándolas y rotándolas."
+
+#~ msgid "10 View Options"
+#~ msgstr "Ver opciones"
+
+#~ msgid "Photo Gallery plugin allows displaying galleries and gallery groups in 10 elegant and beautiful views:, Thumbnails, Masonry, Mosaic, Slideshow, Image Browser, Masonry Album, Compact Album, Extended Album, Blog Style Gallery, Ecommerce."
+#~ msgstr "Photo Gallery plugin permite mostrar galerías y grupos de galería en 10 vistas elegantes y hermosas: miniatura, mampostería, mosaico, presentación de diapositivas, navegador de imágenes, álbum de mampostería, álbum compacto, álbum ampliado, galería de estilo de blog, comercio electrónico."
+
+#~ msgid "Audio and Video Support"
+#~ msgstr "Soporte de audio y video"
+
+#, fuzzy
+#~| msgid "You can include both videos and images within a single gallery. WordPress Photo Gallery Plugin supports YouTube and Vimeo videos within Galleries. It’s also possible to add audio tracks for the image slideshow."
+#~ msgid "You can include both videos and images within a single gallery. WordPress Photo Gallery Plugin supports YouTube and Vimeo videos within Galleries. It's also possible to add audio tracks for the image slideshow."
+#~ msgstr "Puede incluir tanto videos como imágenes en una sola galería. El complemento de galería de fotos de WordPress es compatible con los videos de YouTube y Vimeo dentro de las galerías. También es posible agregar pistas de audio para la presentación de diapositivas de la imagen."
+
+#~ msgid "Installing"
+#~ msgstr "Instalación"
+
+#~ msgid "Creating/Editing Galleries"
+#~ msgstr "Creando / Editando Galerías"
+
+#~ msgid "Instagram Gallery"
+#~ msgstr "Galería de Instagram"
+
+#~ msgid "Creating/Editing Tags"
+#~ msgstr "Creando / Editando Etiquetas"
+
+#~ msgid "Creating/Editing Albums"
+#~ msgstr "Crear / editar álbumes"
+
+#~ msgid "Editing Options"
+#~ msgstr "Opciones de edición"
+
+#~ msgid "Global Options"
+#~ msgstr "Opciones globales"
+
+#~ msgid "Album Options"
+#~ msgstr "Opciones de álbum"
+
+#~ msgid "Thumbnail Options"
+#~ msgstr "Opciones de Miniaturas"
+
+#~ msgid "Image Options"
+#~ msgstr "Opciones de imagen"
+
+#~ msgid "Social Options"
+#~ msgstr "Opciones de Redes Sociales"
+
+#~ msgid "Carousel Options"
+#~ msgstr "Opciones de carrusel"
+
+#~ msgid "Creating/Editing Themes"
+#~ msgstr "Crear / editar temas"
+
+#~ msgid "Compact Album"
+#~ msgstr "Álbum Compacto"
+
+#~ msgid "Masonry Album"
+#~ msgstr "Álbum Masonry"
+
+#~ msgid "Extended Album"
+#~ msgstr "Álbum Extendido"
+
+#~ msgid "Generating Shortcode"
+#~ msgstr "Generando shortcode"
+
+#~ msgid "Editing Comments"
+#~ msgstr "Editar comentarios"
+
+#~ msgid "Editing Ratings"
+#~ msgstr "Edición de valoraciones"
+
+#~ msgid "Publishing the Created Photo Gallery"
+#~ msgstr "Publicando la Galería de fotos creada"
+
+#~ msgid "General Parameters"
+#~ msgstr "Parámetros Generales"
+
+#~ msgid "Lightbox Parameters"
+#~ msgstr "Parámetros de Lightbox"
+
+#~ msgid "Publishing Photo Gallery Widgets"
+#~ msgstr "Publicación Widgets de Galería de fotos"
+
+#~ msgid "Tag Cloud"
+#~ msgstr "Nube de etiquetas"
+
+#~ msgid "Photo Gallery Widget"
+#~ msgstr "Widget de galería de fotos"
+
+#~ msgid "Albums"
+#~ msgstr "Álbumes"
+
+#~ msgid "Photo gallery plugin autoupdate interval."
+#~ msgstr "Intervalo de actualización automática del plugin Photo gallery."
+
+#, php-format
+#~ msgid "Please update the %s add-on to start using."
+#~ msgstr "Actualice el complemento %s para comenzar a usarlos."
+
+#, php-format
+#~ msgid "Please update the %s add-ons to start using."
+#~ msgstr "Actualice los complementos %s para comenzar a usarlos."
+
+#~ msgid "Rate"
+#~ msgstr "Puntuación"
+
+#~ msgid "Technical problems / hard to use"
+#~ msgstr "Problemas técnicos / difíciles de usar"
+
+#~ msgid "Free version is limited"
+#~ msgstr "La versión gratuita es limitada"
+
+#~ msgid "Upgrading to paid version"
+#~ msgstr "Actualización a la versión paga"
+
+#~ msgid "Temporary deactivation"
+#~ msgstr "Desactivación temporal"
+
+#~ msgid "Leave A Review?"
+#~ msgstr "Dejar una reseña?"
+
+#, php-format
+#~ msgid "We hope you've enjoyed using WordPress %s! Would you consider leaving us a review on WordPress.org?"
+#~ msgstr "¡Esperamos que hayas disfrutado usando WordPress %s ! ¿Consideraría dejarnos una revisión en WordPress.org?"
+
+#~ msgid "Sure! I'd love to!"
+#~ msgstr "¡Por supuesto! ¡Me encantaría!"
+
+#~ msgid "I've already left a review"
+#~ msgstr "Ya he dejado una reseña"
+
+#~ msgid "Maybe Later"
+#~ msgstr "Tal vez mas tarde"
+
+#~ msgid "Never show again"
+#~ msgstr "Nunca lo muestres otra vez"
+
+#, fuzzy
+#~| msgid "Please let us know why you are deactivating. Your answer will help us to serve you better"
+#~ msgid "Please let us know why you are deactivating. Your answer will help us to provide you support or sometimes offer discounts. (Optional)"
+#~ msgstr "Por favor, háganos saber por qué está desactivando. Su respuesta nos ayudará a servirle mejor"
+
+#, fuzzy
+#~| msgid "Submit and deactivate"
+#~ msgid "Skip and Deactivate"
+#~ msgstr "Enviar y desactivar"
+
+#, fuzzy
+#~| msgid "Submit and deactivate"
+#~ msgid "Submit and Deactivate"
+#~ msgstr "Enviar y desactivar"
+
+#, fuzzy
+#~| msgid "Back"
+#~ msgid "Backup"
+#~ msgstr "Atrás"
+
+#, fuzzy
+#~| msgid "Image Options"
+#~ msgid "Image optimization"
+#~ msgstr "Opciones de imagen"
+
+#, fuzzy
+#~| msgid "Rating"
+#~ msgid "Hosting"
+#~ msgstr "Rating"
+
+#, fuzzy
+#~| msgid "Load More"
+#~ msgid "Learn More"
+#~ msgstr "Cargar más"
+
+#~ msgid "Demo"
+#~ msgstr "Manifestación"
+
+#~ msgid "User Guide"
+#~ msgstr "Guía del usuario"
+
+#, fuzzy
+#~| msgid "Hi there"
+#~ msgid "Hi there!"
+#~ msgstr "Hola"
+
+#, fuzzy, php-format
+#~| msgid "Allow %s to collect some usage data. This will allow  you to get more out of your plugin experience - get awesome customer support, receive exclusive deals and discounts on premium products and more. You can choose to skip this step, %s will still work just fine."
+#~ msgid "This will allow you to get more out of your plugin experience - get awesome customer support, receive exclusive deals and discounts on premium products and more. You can choose to skip this step, %s will still work just fine."
+#~ msgstr "Permita que %s recopile algunos datos de uso. Esto le permitirá obtener más de su experiencia de complementos: obtenga una atención al cliente increíble, reciba ofertas exclusivas y descuentos en productos premium y más. Puede optar por omitir este paso, %s seguirá funcionando bien."
+
+#~ msgid "What data is being collected?"
+#~ msgstr "¿Qué datos se están recopilando?"
+
+#, fuzzy
+#~| msgid "Email address"
+#~ msgid "Your name & Email address"
+#~ msgstr "Email"
+
+#, fuzzy
+#~| msgid "Wordpress version"
+#~ msgid "Site URL, Wordpress version"
+#~ msgstr "Versión de Wordpress"
+
+#~ msgid "List of plugins"
+#~ msgstr "Lista de complementos"
+
+#~ msgid "Terms of Use"
+#~ msgstr "Términos de Uso"
+
+#~ msgid "Photo Gallery Facebook"
+#~ msgstr "Photo Gallery Facebook"
+
+#~ msgid "Photo Gallery Facebook is an add-on, which helps to display Facebook photos and videos within Photo Gallery plugin. You can create Facebook-only galleries, embed individual images and videos or include Facebook albums within mixed type albums."
+#~ msgstr "Galería de fotos Facebook es un complemento que ayuda a mostrar fotos y videos de Facebook dentro del complemento de la galería de fotos. Puede crear galerías exclusivas de Facebook, insertar imágenes y videos individuales o incluir álbumes de Facebook en álbumes de tipos mixtos."
+
+#~ msgid " Selected pricelist item longest dimension greater than some original images dimensions."
+#~ msgstr " Elemento seleccionado de la lista de precios dimensión más larga mayor que algunas dimensiones de las imágenes originales."
+
+#~ msgid "Page or Post editor"
+#~ msgstr "Editor de página o publicación"
+
+#~ msgid "Insert it into an existing post with the button."
+#~ msgstr "Insértalo en una publicación existente con el botón."
+
+#~ msgid "Post editor"
+#~ msgstr "Editor de publicaciones"
+
+#~ msgid "PHP code"
+#~ msgstr "Código PHP"
+
+#~ msgid "Copy and paste the PHP code into your template file."
+#~ msgstr "Copie y pegue el código PHP en su archivo de plantilla."
+
+#~ msgid "Widget"
+#~ msgstr "Widget"
+
+#~ msgid "Insert as Widget."
+#~ msgstr "Insertar como Widget."
+
+#~ msgid "Instagram username"
+#~ msgstr "Nombre de usuario de Instagram"
+
+#~ msgid "Pricelist"
+#~ msgstr "Lista de Precios"
+
+#~ msgid "If enabled,it will be possible to download entire gallery with a single button."
+#~ msgstr "Si está habilitado, será posible descargar toda la galería con un solo botón."
+
+#~ msgid "Disable image right click possibility."
+#~ msgstr "Desactivar imagen haga clic derecho en la posibilidad."
+
+#~ msgid "Meta auto-fill"
+#~ msgstr "Meta autocompletar"
+
+#~ msgid "Only author can change a gallery."
+#~ msgstr "Solo el autor puede cambiar una galería."
+
+#~ msgid "Only author can change an gallery group."
+#~ msgstr "Solo el autor puede cambiar un grupo de galería."
+
+#~ msgid "Image role"
+#~ msgstr "Rol de imagen"
+
+#~ msgid "Only author can change an image."
+#~ msgstr "Solo el autor puede cambiar una imagen."
+
+#~ msgid "Generate or edit a shortcode."
+#~ msgstr "Genera o edita un código corto."
+
+#~ msgid "Frontend thumbnail dimensions"
+#~ msgstr "Dimensiones de la miniatura frontend"
+
+#~ msgid "Enable image pagination"
+#~ msgstr "Habilitar la paginación de la imagen"
+
+#~ msgid "Show gallery name"
+#~ msgstr "Mostrar el nombre de la galería"
+
+#~ msgid "Show description in Vertical Masonry view"
+#~ msgstr "Mostrar descripción en la vista de mampostería vertical"
+
+#~ msgid "Enable image title"
+#~ msgstr "Habilitar título de imagen"
+
+#~ msgid "Enable image description"
+#~ msgstr "Habilitar descripción de imagen"
+
+#~ msgid "Enable pagination"
+#~ msgstr "Habilitar paginación"
+
+#~ msgid "Image title position on slideshow"
+#~ msgstr "Posición del título de la imagen en la presentación"
+
+#~ msgid "Image description position on slideshow"
+#~ msgstr "Posición de descripción de la imagen en la presentación"
+
+#~ msgid "Music url"
+#~ msgstr "URL de la música"
+
+#~ msgid "Only"
+#~ msgstr "Solamente"
+
+#~ msgid "formats are supported."
+#~ msgstr "formatos son compatibles."
+
+#~ msgid "The gallery images view type in the gallery group."
+#~ msgstr "Los tipos de vistas de las galerías de imágenes in los grupos de imagen."
+
+#~ msgid "Enable full width feature for the lightbox."
+#~ msgstr "Habilita la función de ancho completo para el lightbox."
+
+#~ msgid "Enable info"
+#~ msgstr "Habilitar información"
+
+#~ msgid "Display image information based on the lightbox dimensions."
+#~ msgstr "Muestra información de imagen basada en las dimensiones de la caja de luz."
+
+#~ msgid "Enable Ecommerce button"
+#~ msgstr "Habilitar botón de comercio electrónico"
+
+#~ msgid "Minimum 1 min."
+#~ msgstr "Mínimo 1 min."
+
+#~ msgid "Watermark url"
+#~ msgstr "URL de la marca de agua"
+
+#~ msgid "Add Image"
+#~ msgstr "Añadir imagen"
+
+#~ msgid "Opacity value must be in the range of 0 to 100."
+#~ msgstr "El valor de opacidad debe estar en el rango de 0 a 100."
+
+#~ msgid "Advertisement url"
+#~ msgstr "URL publicitaria"
+
+#~ msgid "Enter absolute image file url or add file from Options page. (.jpg,.jpeg,.png,.gif formats are supported)"
+#~ msgstr "Ingrese la URL del archivo de imagen absoluta o agregue el archivo desde la página de Opciones. Los formatos (.jpg, .jpeg, .png, .gif son compatibles)"
+
+#~ msgid "Enter a URL to open when the advertisement banner is clicked."
+#~ msgstr "Ingrese una URL para abrir cuando se hace clic en el banner publicitario."
+
+#~ msgid "Maximum values for watermark image width and height."
+#~ msgstr "Valores máximos para el ancho y la altura de la imagen de marca de agua."
+
+#~ msgid "Album"
+#~ msgstr "Álbum"
+
+#~ msgid "Select Album"
+#~ msgstr "Seleccione Álbum"
+
+#~ msgid "The selected album expanded content will be displayed."
+#~ msgstr "Se mostrará el contenido expandido del álbum seleccionado."
+
+#~ msgid "Slideshow Effect"
+#~ msgstr "Efecto de presentación de diapositivas"
+
+#~ msgid "Interval between two images."
+#~ msgstr "Intervalo entre dos imágenes."
+
+#~ msgid "Maximum values for slideshow width and height."
+#~ msgstr "Valores máximos para el ancho y alto de la presentación."
+
+#~ msgid "Max. number of carousel images"
+#~ msgstr "Max. número de imágenes de carrusel"
+
+#~ msgid "Carousel dimensions"
+#~ msgstr "Dimensiones del carrusel"
+
+#~ msgid "Maximum values for carousel width and height."
+#~ msgstr "Valores máximos para el ancho y la altura del carrusel."
+
+#~ msgid "Image thumbnail width:"
+#~ msgstr "Ancho de miniatura de la imagen:"
+
+#~ msgid "Max. number of image columns: "
+#~ msgstr "Max. cantidad de columnas de imagen: "
+
+#~ msgid "Mosaic thumbnails do not have fixed size, but are proportional to the width of the parent container. This option keeps thumbs to look nice when viewed with very large or very small screen. Prevents zooming of thumbs."
+#~ msgstr "Las miniaturas de mosaico no tienen un tamaño fijo, pero son proporcionales al ancho del contenedor principal. Esta opción mantiene los pulgares para verse bien cuando se ve con pantalla muy grande o muy pequeña. Impide el acercamiento de los pulgares."
+
+#~ msgid "Percentage of container's width."
+#~ msgstr "Porcentaje del ancho del contenedor."
+
+#~ msgid "Maximum values for thumbnail dimension."
+#~ msgstr "Valores máximos para la dimensión de miniatura."
+
+#~ msgid "If you want to display all images you should leave it blank or insert 0."
+#~ msgstr "Si desea visualizar todas las imágenes, debe dejarlas en blanco o insertar 0."
+
+#~ msgid "Ecommerce icon"
+#~ msgstr "Ícono de comercio electrónico"
+
+#~ msgid "Max. number of album columns"
+#~ msgstr "Max. número de columnas del álbum"
+
+#~ msgid "Album Thumbnail dimensions"
+#~ msgstr "Dimensiones de la miniatura del álbum"
+
+#~ msgid "Maximum values for album thumb width and height."
+#~ msgstr "Valores máximos para el ancho y la altura del pulgar del álbum."
+
+#~ msgid "Image thumbnail dimensions"
+#~ msgstr "Dimensiones de la miniatura de la imagen"
+
+#~ msgid "Maximum values for thumbnail width and height."
+#~ msgstr "Valores máximos para el ancho y alto de la miniatura."
+
+#~ msgid "Maximum value for album thumbnail width."
+#~ msgstr "Valor máximo para el ancho de la miniatura del álbum."
+
+#~ msgid "Image thumbnail width"
+#~ msgstr "Ancho de la miniatura de la imagen"
+
+#~ msgid "Maximum value for thumbnail width."
+#~ msgstr "Valor máximo para el ancho de la miniatura."
+
+#~ msgid "Album row height"
+#~ msgstr "Altura de la fila del álbum"
+
+#~ msgid "Album thumbnail dimensions"
+#~ msgstr "Dimensiones de la miniatura del álbum"
+
+#~ msgid "Maximum value for image width."
+#~ msgstr "Valor máximo para el ancho de la imagen."
+
+#~ msgid "Sort images by"
+#~ msgstr "Ordenar imágenes por"
+
+#~ msgid "Enable Autoplay"
+#~ msgstr "Habilitar la reproducción automática"
+
+#~ msgid "Enable slideshow filmstrip view."
+#~ msgstr "Habilita la vista de diapositivas tira de película."
+
+#~ msgid "Slideshow Filmstrip size"
+#~ msgstr "Tamaño de tira de diapositivas de diapositivas"
+
+#~ msgid "Albums per page"
+#~ msgstr "Álbumes por página"
+
+#~ msgid "If you want to display all albums you should leave it blank or insert 0."
+#~ msgstr "Si desea visualizar todos los álbumes, debe dejarlos en blanco o insertar 0."
+
+#~ msgid "Albums per load"
+#~ msgstr "Álbumes por carga"
+
+#~ msgid "Show album title"
+#~ msgstr "Mostrar título del álbum"
+
+#~ msgid "Enable album description"
+#~ msgstr "Habilitar descripción del álbum"
+
+#~ msgid "If you disable description only the title of the album will be displayed."
+#~ msgstr "Si desactiva la descripción, solo se mostrará el título del álbum."
+
+#~ msgid "Enable Shuffle"
+#~ msgstr "Habilitar reproducción aleatoria"
+
+#~ msgid "Enable Image Title"
+#~ msgstr "Habilitar título de imagen"
+
+#~ msgid "Title Position"
+#~ msgstr "Posición del Título"
+
+#~ msgid "Enable Image Description"
+#~ msgstr "Habilitar descripción de imagen"
+
+#~ msgid "Description Position"
+#~ msgstr "Descripción Posición"
+
+#~ msgid "Image description position on slideshow."
+#~ msgstr "Posición de descripción de la imagen en la presentación."
+
+#~ msgid "Enable Slideshow Music"
+#~ msgstr "Habilitar la música del pase"
+
+#~ msgid "Enter absolute audio file url or add file from Options page."
+#~ msgstr "Ingrese la URL absoluta del archivo de audio o agregue el archivo desde la página de Opciones."
+
+#~ msgid "Album title"
+#~ msgstr "Título del album"
+
+#~ msgid "Album view type"
+#~ msgstr "Tipo de vista del album"
+
+#~ msgid "Max. number of image columns:"
+#~ msgstr "Max. cantidad de columnas de imagen:"
+
+#~ msgid "Open in new window"
+#~ msgstr "Abrir en Nueva ventana"
+
+#~ msgid "Open new window when redirecting."
+#~ msgstr "Abre una nueva ventana al redireccionar."
+
+#~ msgid "Maximum values for lightbox width and height."
+#~ msgstr "Valores máximos para ancho y alto de lightbox."
+
+#~ msgid "Lightbox slideshow effect."
+#~ msgstr "Efecto de presentación de la caja de luz."
+
+#~ msgid "Enable filmstrip in lightbox"
+#~ msgstr "Habilitar tira de película en lightbox"
+
+#~ msgid "Enable filmstrip view for images."
+#~ msgstr "Habilita la vista de tira de película para las imágenes."
+
+#~ msgid "Enable fullscreen view for images."
+#~ msgstr "Habilitar visualización a pantalla completa para imágenes."
+
+#~ msgid "Enable rating for images."
+#~ msgstr "Habilite la calificación de las imágenes."
+
+#~ msgid "Enable comments for images."
+#~ msgstr "Habilite los comentarios para las imágenes."
+
+#~ msgid "Enable Facebook share button for images."
+#~ msgstr "Habilite el botón Compartir de Facebook para las imágenes."
+
+#~ msgid "Enable Twitter share button for images."
+#~ msgstr "Habilite el botón Compartir de Twitter para las imágenes."
+
+#~ msgid "Enable Google+ share button for images."
+#~ msgstr "Habilite el botón compartir de Google+ para las imágenes."
+
+#~ msgid "Enable Pinterest share button for images."
+#~ msgstr "Habilite el botón Compartir de Pinterest para las imágenes."
+
+#~ msgid "Enable Tumblr share button for images."
+#~ msgstr "Habilite el botón de compartir de Tumblr para las imágenes."
+
+#~ msgid "Enable Ecommerce for images."
+#~ msgstr "Habilite el comercio electrónico para las imágenes."
+
+#~ msgid "Advertisement type:"
+#~ msgstr "Tipo de Publicidad:"
+
+#~ msgid "Enter absolute url."
+#~ msgstr "Ingrese la URL absoluta."
+
+#~ msgid "Enter absolute image file url or add file from Options page."
+#~ msgstr "Ingrese la URL del archivo de imagen absoluta o agregue el archivo desde la página de Opciones."
+
+#~ msgid "Image thumbnail dimensions:"
+#~ msgstr "Dimensiones de la miniatura de la imagen:"
+
+#~ msgid "Theme Name"
+#~ msgstr "Nombre del tema"
+
+#~ msgid "Thumbnail alignment:"
+#~ msgstr "Alineación de miniaturas:"
+
+#, php-format
+#~ msgid "%s to Finish the Uninstallation and %s will be Deactivated Automatically."
+#~ msgstr "%s para finalizar la desinstalación y %s se desactivará automáticamente."
+
+#~ msgid "Click Here"
+#~ msgstr "Haga clic aquí"
+
+#~ msgid "To change upload directory go to Options page."
+#~ msgstr "Para cambiar el directorio de carga vaya a la página de Opciones."
+
+#~ msgid "Drag files here or click the button below"
+#~ msgstr "Arrastre los archivos aquí o haga clic en el botón de abajo"
+
+#~ msgid "to upload files"
+#~ msgstr "para cargar archivos"
+
+#~ msgid "There is no theme selected or the theme was deleted."
+#~ msgstr "No hay ningún tema seleccionado o se ha eliminado el tema."
+
+#~ msgid "There is no album selected or the album was deleted."
+#~ msgstr "No hay ningún álbum seleccionado o se eliminó el álbum."
+
+#~ msgid "Album is empty."
+#~ msgstr "El álbum está vacío."
+
+#~ msgid "Share on Google+"
+#~ msgstr "Compartir en Google+"
+
+#~ msgid "Not rated yet."
+#~ msgstr "No se ha puntuado todavia."
+
+#~ msgid "Votes: "
+#~ msgstr "Votos: "
+
+#~ msgid "Cancel your rating."
+#~ msgstr "Cancelar su voto."
+
+#~ msgid "You have already rated."
+#~ msgstr "Ya lo has puntuado."
+
+#~ msgid "Please select at least one item"
+#~ msgstr "Seleccione al menos un elemento"
+
+#~ msgid "Please select Prints and products or Downloads"
+#~ msgstr "Seleccione Impresiones o Descargas"
+
+#~ msgid "Theme 1"
+#~ msgstr "Tema 1"
+
+#~ msgid "Theme 2"
+#~ msgstr "Tema 2"
+
+#~ msgid "The gallery is not empty. Please delete all the images first."
+#~ msgstr "La galería no está vacía. Por favor, elimine todas las imágenes primero."
+
+#, php-format
+#~ msgid "This section allows you to %s."
+#~ msgstr "Esta sección te permite %s ."
+
+#~ msgid "Read More in User Manual"
+#~ msgstr "Lea más en el manual de usuario"
+
+#~ msgid "Upgrade to paid version"
+#~ msgstr "Actualizar a la versión paga"
+
+#~ msgid "Support Forum"
+#~ msgstr "Foro de Soporte"
+
+#, php-format
+#~ msgid "%s advises: Install brand new %s plugin to optimize your website images quickly and easily."
+#~ msgstr "%s informa: Instale el nuevo %s plugin para optimizar las imágenes de su sitio web de forma rápida y sencilla."
+
+#~ msgid "More details"
+#~ msgstr "Más detalles"
+
+#~ msgid "Image Optimizer WD"
+#~ msgstr "Image Optimizer WD"
+
+#~ msgid "Optimize now"
+#~ msgstr "Optimiza ahora"
+
+#~ msgid "Premium is expensive"
+#~ msgstr "La prima es costosa"
+
+#~ msgid "Welcome"
+#~ msgstr "Gracias"
+
+#~ msgid "Deals"
+#~ msgstr "Ofertas"
+
+#~ msgid "Support"
+#~ msgstr "Apoyo"
+
+#~ msgid "Submit Your  Idea"
+#~ msgstr "Envía tu idea"
+
+#~ msgid "Forum"
+#~ msgstr "Foro"
+
+#~ msgid "Wordpress form builder plugin"
+#~ msgstr "Complemento del generador de formularios de Wordpress"
+
+#~ msgid "Form Maker is a modern and advanced tool for creating WordPress forms easily and fast."
+#~ msgstr "Form Maker es una herramienta moderna y avanzada para crear formularios de WordPress de manera fácil y rápida."
+
+#~ msgid "WordPress Photo Gallery plugin"
+#~ msgstr "Complemento de galería de fotos de WordPress"
+
+#~ msgid "Photo Gallery is a fully responsive WordPress Gallery plugin with advanced functionality."
+#~ msgstr "Photo Gallery es un plugin de WordPress Gallery totalmente receptivo con funcionalidad avanzada."
+
+#~ msgid "WordPress calendar plugin"
+#~ msgstr "Plugin de calendario de WordPress"
+
+#~ msgid "Organize and publish your events in an easy and elegant way using Event Calendar WD."
+#~ msgstr "Organice y publique sus eventos de una manera fácil y elegante usando Event Calendar WD."
+
+#~ msgid "WD Google Maps plugin"
+#~ msgstr "WD Google Maps plugin"
+
+#~ msgid "Google Maps WD is an intuitive tool for creating Google maps with advanced markers, custom layers and overlays for   your website."
+#~ msgstr "Google Maps WD es una herramienta intuitiva para crear mapas de Google con marcadores avanzados, capas personalizadas y superposiciones para su sitio web."
+
+#~ msgid "WordPress slider plugin"
+#~ msgstr "Plugin deslizante de WordPress"
+
+#~ msgid "Create responsive, highly configurable sliders with various effects for your WordPress site."
+#~ msgstr "Cree controles deslizantes receptivos y altamente configurables con diversos efectos para su sitio de WordPress."
+
+#~ msgid "WordPress event calendar plugin"
+#~ msgstr "Plugin de calendario de eventos de WordPress"
+
+#~ msgid "Spider Event Calendar is a highly configurable product which allows you to have multiple organized events."
+#~ msgstr "Spider Event Calendar es un producto altamente configurable que le permite tener múltiples eventos organizados."
+
+#~ msgid "WordPress Instagram Feed plugin"
+#~ msgstr "Plugin de WordPress Instagram Feed"
+
+#~ msgid "WD Instagram Feed is a user-friendly tool for displaying user or hashtag-based feeds on your website."
+#~ msgstr "WD Instagram Feed es una herramienta fácil de usar para mostrar feeds basados ​​en hashtag y usuarios en su sitio web."
+
+#~ msgid "Not set"
+#~ msgstr "No establecido"
+
+#~ msgid "On"
+#~ msgstr "Encendido"
+
+#~ msgid "Off"
+#~ msgstr "Apagado"
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#~ msgid " MByte"
+#~ msgstr " MByte"
+
+#~ msgid "Your name &"
+#~ msgstr "Tu nombre &"
+
+#~ msgid "Site URL"
+#~ msgstr "Sitio URL"
+
+#~ msgid "Deactivate"
+#~ msgstr "Desactivar"
+
+#, php-format
+#~ msgid "Welcome to %s"
+#~ msgstr "Bienvenido a %s"
+
+#, php-format
+#~ msgid "CONGRATS! You've successfully installed %s WordPress plugin."
+#~ msgstr "¡Felicidades! Has instalado con éxito el complemento %s WordPress."
+
+#, php-format
+#~ msgid "Get %s"
+#~ msgstr "Obtener %s"
+
+#~ msgid "only"
+#~ msgstr "solamente"
+
+#~ msgid "Save 80%"
+#~ msgstr "Ahorra el 80%"
+
+#~ msgid "Download"
+#~ msgstr "Descargar"
+
+#~ msgid "Get all plugins"
+#~ msgstr "Obtenga todos los complementos"
+
+#~ msgid "Get all 11 themes"
+#~ msgstr "Obtenga los 11 temas"
+
+#~ msgid "Save 70%"
+#~ msgstr "Ahorra el 70%"
+
+#~ msgid "Find out more"
+#~ msgstr "Saber más"
+
+#, php-format
+#~ msgid "You may contact us by filling in this form or by email %s any time you need professional support or have any questions. You can also fill in the form to leave your comments or feedback."
+#~ msgstr "Puede ponerse en contacto con nosotros rellenando este formulario o por correo electrónico %s cualquier momento que necesite ayuda profesional o si tiene alguna pregunta. También puede completar el formulario para dejar sus comentarios o comentarios."
+
+#~ msgid "Site Details"
+#~ msgstr "Detalles del Sitio"
+
+#~ msgid "When contacting support, consider copying and pasting this information in your support request."
+#~ msgstr "Cuando contacte al soporte, considere copiar y pegar esta información en su solicitud de soporte."
+
+#~ msgid "It helps us troubleshoot more quickly."
+#~ msgstr "Nos ayuda a resolver problemas más rápidamente."
+
+#~ msgid "Server Settings"
+#~ msgstr "Configuración del servidor"
+
+#~ msgid "Graphic Library"
+#~ msgstr "Biblioteca gráfica"
+
+#~ msgid "FAQ"
+#~ msgstr "FAQ"
+
+#~ msgid "Addons"
+#~ msgstr "Complementos"
+
+#~ msgid "Run Install Wizard "
+#~ msgstr "Ejecutar asistente de instalación "
+
+#~ msgid "More features"
+#~ msgstr "Más características"
+
+#~ msgid "Overview"
+#~ msgstr "Resumen"

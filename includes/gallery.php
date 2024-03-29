@@ -2,7 +2,7 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Gallery {
-  private string $post_type = "reacg";
+  private $post_type = "reacg";
   private $obj;
 
   public function __construct($that) {
@@ -215,11 +215,15 @@ class REACG_Gallery {
       if ( in_array($order_by, array('title', 'caption', 'description')) ) {
         if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
           // For descending order.
-          usort($data, fn( $a, $b ) => strtolower($b[$order_by]) <=> strtolower($a[$order_by]));
+          usort($data, function($a, $b) use ($order_by) {
+            return strtolower($b[$order_by]) <=> strtolower($a[$order_by]);
+          });
         }
         else {
           // For ascending order.
-          usort($data, fn( $a, $b ) => strtolower($a[$order_by]) <=> strtolower($b[$order_by]));
+          usort($data, function($a, $b) use ($order_by) {
+            return strtolower($a[$order_by]) <=> strtolower($b[$order_by]);
+          });
         }
       }
       // Run pagination on the data.
@@ -328,7 +332,7 @@ class REACG_Gallery {
    */
   private function register_post_type() {
     $args = array(
-      'label' => __('ReGallery', 'reacg'),
+      'label' => $this->obj->nicename,
       'labels' => array(
         'add_new' => __('Add New Gallery', 'reacg'),
         'add_new_item' => __('Add New Gallery', 'reacg'),
@@ -357,6 +361,7 @@ class REACG_Gallery {
         'item_link_description' => __('A link to a gallery', 'reacg'),
       ),
       'public' => TRUE,
+      'menu_icon' => $this->obj->plugin_url . '/assets/images/logo.png',
       'exclude_from_search' => TRUE,
       'publicly_queryable' => TRUE,
       'show_ui' => TRUE,
@@ -364,7 +369,8 @@ class REACG_Gallery {
       'show_in_nav_menus' => TRUE,
       'permalink_epmask' => TRUE,
       'rewrite' => TRUE,
-      'supports' => array('title'),
+      // Editor is not used, but added to avoid a bug connected with preview. It is hidden with CSS (admin.css)
+      'supports' => array('title', 'editor'),
     );
     register_post_type( 'reacg', $args );
     add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );

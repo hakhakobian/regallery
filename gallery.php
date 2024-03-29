@@ -1,11 +1,13 @@
 <?php
 /**
  * Plugin Name: ReGallery
- * Description: The plugin designed to suit a wide range of users, from professional photographers to hobbyists, this plugin combines unparalleled speed, lightweight architecture, and the power of React.js for a seamless, real-time interface experience.
- * Version: 1.0.0
- * Author: ReGallery team
+ * Description: ReGallery, the responsive gallery plugin, is your ideal solution for easily building stunning, mobile-friendly galleries in just minutes.
+ * Version: 1.0.1
+ * Requires at least: 4.6
+ * Requires PHP: 7.0
+ * Author: ReGallery Team
  * Text Domain: reacg
- * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 defined('ABSPATH') || die('Access Denied');
@@ -16,6 +18,7 @@ final class REACG {
    */
   protected static $_instance = null;
 
+<<<<<<< HEAD
   public string $plugin_dir = '';
   public string $plugin_url = '';
   public string $main_file = '';
@@ -28,8 +31,21 @@ final class REACG {
   public string $rest_root = "";
   public string $rest_nonce = "";
   public string $no_image = '/assets/images/no_image.png';
+=======
+  public $plugin_dir = '';
+  public $plugin_url = '';
+  public $main_file = '';
+  public $version = '1.0.1';
+
+  public $prefix = 'reacg';
+  public $shortcode = 'REACG';
+  public $nicename = 'ReGallery';
+  public $nonce = 'reacg_nonce';
+  public $rest_root = "";
+  public $rest_nonce = "";
+>>>>>>> 43093fcb446af5d761babb591e9660fb38da60f8
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
-  public string $abspath = '';
+  public $abspath = '';
 
   /**
    * Ensures only one instance is loaded or can be loaded.
@@ -75,13 +91,15 @@ final class REACG {
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
+
+    add_action('init', array($this, 'load_string'), 8);
   }
 
   /**
-   * Languages localization.
+   * Load translated strings.
    */
-  public function language_load() {
-
+  public function load_string() {
+    load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
   /**

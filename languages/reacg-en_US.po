@@ -1,0 +1,245 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reacg\n"
+"POT-Creation-Date: 2024-03-26 15:37+0400\n"
+"PO-Revision-Date: 2024-03-26 15:52+0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: framework/REACGLibrary.php:117
+msgid "Select gallery"
+msgstr ""
+
+#: framework/REACGLibrary.php:129
+msgid "(no title)"
+msgstr ""
+
+#: framework/REACGLibrary.php:148
+msgid "Missing gallery ID."
+msgstr ""
+
+#: framework/REACGLibrary.php:153
+msgid "There is no such a gallery."
+msgstr ""
+
+#: gallery.php:131
+msgid "Load more"
+msgstr ""
+
+#: gallery.php:132
+msgid "There is not data."
+msgstr ""
+
+#: gallery.php:156
+msgid "Insert"
+msgstr ""
+
+#: gallery.php:157
+msgid "Update"
+msgstr ""
+
+#: gallery.php:158
+msgid "Edit image"
+msgstr ""
+
+#: gallery.php:159
+msgid "Choose images"
+msgstr ""
+
+#: includes/gallery.php:114
+msgid "Thumbnail"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Shortcode"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Images count"
+msgstr ""
+
+#: includes/gallery.php:140
+msgid "No image"
+msgstr ""
+
+#: includes/gallery.php:353 includes/gallery.php:354
+msgid "Add New Gallery"
+msgstr ""
+
+#: includes/gallery.php:355
+msgid "Edit Gallery"
+msgstr ""
+
+#: includes/gallery.php:356
+msgid "New Gallery"
+msgstr ""
+
+#: includes/gallery.php:357
+msgid "View Gallery"
+msgstr ""
+
+#: includes/gallery.php:358
+msgid "View Galleries"
+msgstr ""
+
+#: includes/gallery.php:359
+msgid "Search Galleries"
+msgstr ""
+
+#: includes/gallery.php:360
+msgid "No galleries found"
+msgstr ""
+
+#: includes/gallery.php:361
+msgid "No galleries found in Trash"
+msgstr ""
+
+#: includes/gallery.php:362
+msgid "All Galleries"
+msgstr ""
+
+#: includes/gallery.php:363
+msgid "Filter galleries list"
+msgstr ""
+
+#: includes/gallery.php:364
+msgid "Galleries list navigation"
+msgstr ""
+
+#: includes/gallery.php:365
+msgid "Galleries list"
+msgstr ""
+
+#: includes/gallery.php:366
+msgid "Gallery Archives"
+msgstr ""
+
+#: includes/gallery.php:367
+msgid "Gallery Attributes"
+msgstr ""
+
+#: includes/gallery.php:368
+msgid "Insert into gallery"
+msgstr ""
+
+#: includes/gallery.php:369
+msgid "Uploaded to this gallery"
+msgstr ""
+
+#: includes/gallery.php:370
+msgid "Gallery published."
+msgstr ""
+
+#: includes/gallery.php:371
+msgid "Gallery published privately."
+msgstr ""
+
+#: includes/gallery.php:372
+msgid "Gallery reverted to draft."
+msgstr ""
+
+#: includes/gallery.php:373
+msgid "Gallery trashed."
+msgstr ""
+
+#: includes/gallery.php:374
+msgid "Gallery scheduled."
+msgstr ""
+
+#: includes/gallery.php:375
+msgid "Gallery updated."
+msgstr ""
+
+#: includes/gallery.php:376
+msgid "Gallery Link"
+msgstr ""
+
+#: includes/gallery.php:377
+msgid "A link to a gallery"
+msgstr ""
+
+#: includes/gallery.php:411
+msgid "Images"
+msgstr ""
+
+#: includes/gallery.php:473
+msgid "Edit"
+msgstr ""
+
+#: includes/gallery.php:474
+msgid "Remove"
+msgstr ""
+
+#: includes/options.php:151
+msgid "Nothing to save."
+msgstr ""
+
+#: includes/options.php:173
+msgid "Nothing saved."
+msgstr ""
+
+#: includes/options.php:221
+msgid "Successfully deleted."
+msgstr ""
+
+#: includes/options.php:224
+msgid "Nothing deleted."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery Group defaults"
+#~ msgstr "Gallery is empty."
+
+#, fuzzy
+#~| msgid "There are no images in this gallery."
+#~ msgid "The gallery images view type in the gallery group."
+#~ msgstr "There are no images in this gallery."
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Albums per page"
+#~ msgstr "Album is empty."
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album title"
+#~ msgstr "Album is empty."
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album view type"
+#~ msgstr "Album is empty."
+
+#~ msgid "There is no theme selected or the theme was deleted."
+#~ msgstr "There is no theme selected or the theme was deleted."
+
+#~ msgid "There is no album selected or the album was deleted."
+#~ msgstr "There is no album selected or the album was deleted."
+
+#~ msgid "Album is empty."
+#~ msgstr "Album is empty."
+
+#~ msgid "Share on Google+"
+#~ msgstr "Share on Google+"
+
+#~ msgid "Not rated yet."
+#~ msgstr "Not rated yet."
+
+#~ msgid "Votes: "
+#~ msgstr "Votes: "
+
+#~ msgid "Cancel your rating."
+#~ msgstr "Cancel your rating."
+
+#~ msgid "You have already rated."
+#~ msgstr "You have already rated."

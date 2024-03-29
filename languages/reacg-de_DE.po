@@ -1,0 +1,1235 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reacg\n"
+"POT-Creation-Date: 2024-03-26 15:56+0400\n"
+"PO-Revision-Date: 2024-03-26 16:25+0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: framework/REACGLibrary.php:117
+#| msgid "Select all"
+msgid "Select gallery"
+msgstr "Galerie auswählen"
+
+#: framework/REACGLibrary.php:129
+msgid "(no title)"
+msgstr ""
+
+#: framework/REACGLibrary.php:148
+#| msgid "Gallery is empty."
+msgid "Missing gallery ID."
+msgstr "Fehlende Galerie-ID."
+
+#: framework/REACGLibrary.php:153
+msgid "There is no such a gallery."
+msgstr "Eine solche Galerie gibt es nicht."
+
+#: gallery.php:131
+msgid "Load more"
+msgstr "Mehr laden"
+
+#: gallery.php:132
+#| msgid "There are no images in this gallery."
+msgid "There is not data."
+msgstr "Es liegen keine Daten vor."
+
+#: gallery.php:156
+msgid "Insert"
+msgstr "Einfügen"
+
+#: gallery.php:157
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: gallery.php:158
+#| msgid "Reset"
+msgid "Edit image"
+msgstr "Bild bearbeiten"
+
+#: gallery.php:159
+#| msgid "Reset"
+msgid "Choose images"
+msgstr "Wählen Sie Bilder aus"
+
+#: includes/gallery.php:114
+msgid "Thumbnail"
+msgstr "Miniaturansicht"
+
+#: includes/gallery.php:115
+msgid "Shortcode"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Images count"
+msgstr ""
+
+#: includes/gallery.php:140
+#| msgid "Reset"
+msgid "No image"
+msgstr ""
+
+#: includes/gallery.php:353 includes/gallery.php:354
+#| msgid "Add Galleries/Images"
+msgid "Add New Gallery"
+msgstr ""
+
+#: includes/gallery.php:355
+#| msgid "Add Galleries/Images"
+msgid "Edit Gallery"
+msgstr ""
+
+#: includes/gallery.php:356
+#| msgid "Gallery Tags"
+msgid "New Gallery"
+msgstr ""
+
+#: includes/gallery.php:357
+msgid "View Gallery"
+msgstr ""
+
+#: includes/gallery.php:358
+#| msgid "Galleries"
+msgid "View Galleries"
+msgstr ""
+
+#: includes/gallery.php:359
+#| msgid "Galleries"
+msgid "Search Galleries"
+msgstr ""
+
+#: includes/gallery.php:360
+#| msgid "Show comments"
+msgid "No galleries found"
+msgstr ""
+
+#: includes/gallery.php:361
+msgid "No galleries found in Trash"
+msgstr ""
+
+#: includes/gallery.php:362
+msgid "All Galleries"
+msgstr "Alle Galerien"
+
+#: includes/gallery.php:363
+#| msgid "There are no images in this gallery."
+msgid "Filter galleries list"
+msgstr ""
+
+#: includes/gallery.php:364
+#| msgid "Gallery is empty."
+msgid "Galleries list navigation"
+msgstr ""
+
+#: includes/gallery.php:365
+#| msgid "Galleries"
+msgid "Galleries list"
+msgstr ""
+
+#: includes/gallery.php:366
+#| msgid "Galleries"
+msgid "Gallery Archives"
+msgstr ""
+
+#: includes/gallery.php:367
+#| msgid "Gallery title"
+msgid "Gallery Attributes"
+msgstr ""
+
+#: includes/gallery.php:368
+#| msgid "Add selected images to gallery"
+msgid "Insert into gallery"
+msgstr ""
+
+#: includes/gallery.php:369
+#| msgid "Download original image"
+msgid "Uploaded to this gallery"
+msgstr ""
+
+#: includes/gallery.php:370
+#| msgid "Gallery is empty."
+msgid "Gallery published."
+msgstr ""
+
+#: includes/gallery.php:371
+#| msgid "Gallery is empty."
+msgid "Gallery published privately."
+msgstr ""
+
+#: includes/gallery.php:372
+msgid "Gallery reverted to draft."
+msgstr ""
+
+#: includes/gallery.php:373
+#| msgid "Gallery is empty."
+msgid "Gallery trashed."
+msgstr ""
+
+#: includes/gallery.php:374
+#| msgid "Gallery Tags"
+msgid "Gallery scheduled."
+msgstr ""
+
+#: includes/gallery.php:375
+#| msgid "Gallery is empty."
+msgid "Gallery updated."
+msgstr ""
+
+#: includes/gallery.php:376
+#| msgid "Gallery title"
+msgid "Gallery Link"
+msgstr ""
+
+#: includes/gallery.php:377
+#| msgid "Download original image"
+msgid "A link to a gallery"
+msgstr ""
+
+#: includes/gallery.php:411
+#| msgid "Add Images"
+msgid "Images"
+msgstr ""
+
+#: includes/gallery.php:473
+msgid "Edit"
+msgstr ""
+
+#: includes/gallery.php:474
+msgid "Remove"
+msgstr ""
+
+#: includes/options.php:151
+msgid "Nothing to save."
+msgstr ""
+
+#: includes/options.php:173
+msgid "Nothing saved."
+msgstr ""
+
+#: includes/options.php:221
+#| msgid "Item Succesfully Deleted."
+msgid "Successfully deleted."
+msgstr ""
+
+#: includes/options.php:224
+msgid "Nothing deleted."
+msgstr ""
+
+#~ msgid "Publish"
+#~ msgstr "Veröffentlichen"
+
+#, fuzzy
+#~| msgid "Delete Comment"
+#~ msgid "Delete"
+#~ msgstr "Kommentar löschen"
+
+#~ msgid "Gallery Groups"
+#~ msgstr "Galerie Gruppen"
+
+#~ msgid "Galleries / Gallery groups"
+#~ msgstr "Galerien / Galerie-gruppen"
+
+#, fuzzy
+#~| msgid "Comment"
+#~ msgid "Comments"
+#~ msgstr "Kommentar"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Facebook"
+#~ msgstr "Teilen auf Facebook"
+
+#, fuzzy
+#~| msgid "Changes must be saved."
+#~ msgid "Default values restored. Changes must be saved."
+#~ msgstr "Änderungen müssen gesichert werden."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "All thumbnails are successfully recreated."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#~ msgid "Item Succesfully Saved."
+#~ msgstr "Objekt erfolgreich gesichert."
+
+#~ msgid "Random"
+#~ msgstr "zufällig"
+
+#~ msgid "Name"
+#~ msgstr "Name"
+
+#, fuzzy
+#~| msgid "Reset"
+#~ msgid "Remove from image"
+#~ msgstr "Zurücksetzen"
+
+#~ msgid "Add New"
+#~ msgstr "Neue hinzufügen"
+
+#~ msgid "Search"
+#~ msgstr "Suchen"
+
+#, fuzzy
+#~| msgid "First"
+#~ msgid "First page"
+#~ msgstr "Erste"
+
+#, fuzzy
+#~| msgid "Previous"
+#~ msgid "Previous page"
+#~ msgstr "Zurück"
+
+#~ msgid "of"
+#~ msgstr "von"
+
+#, fuzzy
+#~| msgid "Next"
+#~ msgid "Next page"
+#~ msgstr "Weiter"
+
+#, fuzzy
+#~| msgid "Last"
+#~ msgid "Last page"
+#~ msgstr "Letzte"
+
+#~ msgid "Select All"
+#~ msgstr "Alle auswählen"
+
+#~ msgid "Bulk Actions"
+#~ msgstr "Sammelaktion"
+
+#~ msgid "Apply"
+#~ msgstr "Anwenden"
+
+#, fuzzy
+#~| msgid "You can't delete default theme"
+#~ msgid "Do you want to delete selected item?"
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#~ msgid "Preview"
+#~ msgstr "Vorschau"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show more details"
+#~ msgstr "Kommentare anzeigen"
+
+#~ msgid "Gallery Group Title"
+#~ msgstr "Galerie Gruppentitel"
+
+#~ msgid "Basic"
+#~ msgstr "Grundlegende Einstellungen"
+
+#~ msgid "Preview image"
+#~ msgstr "Vorschaubild der Galerie"
+
+#~ msgid "Add Preview Image"
+#~ msgstr "Vorschaubild hinzufügen"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Published"
+#~ msgstr "Veröffentlicht"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Advanced"
+#~ msgstr "Erweiterte Einstellungen"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
+
+#~ msgid "Galleries and Gallery Groups"
+#~ msgstr "Galerien und Galerie-gruppen"
+
+#~ msgid "Email"
+#~ msgstr "E-Mail "
+
+#~ msgid "Comment"
+#~ msgstr "Kommentar"
+
+#, fuzzy
+#~| msgid "The item is successfully set as default."
+#~ msgid "The thumbnail was successfully cropped."
+#~ msgstr "Das Objekt wurde erfolgreich als Standard gespeichert."
+
+#, fuzzy
+#~| msgid "Photo gallery plugin autoupdate interval."
+#~ msgid "Gallery autoupdate option"
+#~ msgstr "Intervall für automatische Aktualisierung von Photo Gallery."
+
+#~ msgid "Import from Media Library"
+#~ msgstr "Fotos von der Medienbibliothek hinzufügen"
+
+#~ msgid "Embed Media"
+#~ msgstr "Medien einbetten"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "You have unsaved changes."
+#~ msgstr "Sie haben nicht gespeicherte Änderungen."
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show order column"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Ordering"
+#~ msgstr "Sortieren nach:"
+
+#~ msgid "Filename"
+#~ msgstr "Dateiname"
+
+#~ msgid "Size"
+#~ msgstr "Größe"
+
+#, fuzzy
+#~| msgid "Recreate thumbnail"
+#~ msgid "Crop Thumbnail"
+#~ msgstr "Thumbnails neu erzeugen"
+
+#~ msgid "Reset"
+#~ msgstr "Zurücksetzen"
+
+#, fuzzy
+#~| msgid "Name field is required."
+#~ msgid "Name is required."
+#~ msgstr "Das Feld Name wird benötigt."
+
+#, fuzzy
+#~| msgid "This is not a valid email address."
+#~ msgid "Please enter a valid email."
+#~ msgstr "Dies ist keine gültige E-Mail-Adresse."
+
+#, fuzzy
+#~| msgid "Gallery Groups"
+#~ msgid "Gallery Group defaults"
+#~ msgstr "Galerie Gruppen"
+
+#, fuzzy
+#~| msgid "Recreate thumbnail"
+#~ msgid "Resizable thumbnails"
+#~ msgstr "Thumbnails neu erzeugen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show custom posts"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show comments for custom posts"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Enable Google fonts"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Hide info"
+#~ msgid "Enable HTML editor"
+#~ msgstr "Info ausblenden"
+
+#, fuzzy
+#~| msgid "Galleries and Gallery Groups"
+#~ msgid "Enable dynamic URLs for galleries and gallery groups"
+#~ msgstr "Galerien und Galerie-gruppen"
+
+#, fuzzy
+#~| msgid "Photo gallery plugin autoupdate interval."
+#~ msgid "Gallery autoupdate interval"
+#~ msgstr "Intervall für automatische Aktualisierung von Photo Gallery."
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery group restrictions"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "Select Image"
+#~ msgstr "Alle auswählen"
+
+#, fuzzy
+#~| msgid "More"
+#~ msgid "or"
+#~ msgstr "Mehr"
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "Load More"
+#~ msgstr "Mehr laden"
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order by"
+#~ msgstr "Sortieren nach:"
+
+#, fuzzy
+#~| msgid "Show rating"
+#~ msgid "Show tag box"
+#~ msgstr "Bewertung anzeigen"
+
+#, fuzzy
+#~| msgid "Show info"
+#~ msgid "Show on hover"
+#~ msgstr "Info anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show ecommerce icon"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image descriptions"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image description"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Gallery Group Title"
+#~ msgid "Gallery group thumbnail dimensions"
+#~ msgstr "Galerie Gruppentitel"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery groups per page"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Order Gallery group by"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order images by"
+#~ msgstr "Sortieren nach:"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery view type"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery group thumbnail width"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Exit Fullscreen"
+#~ msgid "Enable fullscreen button"
+#~ msgstr "Vollbildmodus beenden"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Enable comments"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Email for comments"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Captcha for comments"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Your comment is awaiting moderation"
+#~ msgid "Enable comments moderation"
+#~ msgstr "Ihr Kommentar wartet auf Moderation "
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image info"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Hide rating"
+#~ msgid "Enable rating"
+#~ msgstr "Bewertung ausblenden"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image counter"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Hide rating"
+#~ msgid "Enable looping"
+#~ msgstr "Bewertung ausblenden"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Show Facebook button"
+#~ msgstr "Teilen auf Facebook"
+
+#, fuzzy
+#~| msgid "Share on Twitter"
+#~ msgid "Show Twitter button"
+#~ msgstr "Teilen auf Twitter"
+
+#, fuzzy
+#~| msgid "Share on Pinterest"
+#~ msgid "Show Pinterest button"
+#~ msgstr "Teilen auf Pinterest"
+
+#, fuzzy
+#~| msgid "Share on Tumblr"
+#~ msgid "Show Tumblr button"
+#~ msgstr "Teilen auf Tumblr"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Ecommerce button"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "Gallery Groups"
+#~ msgid "Gallery Group"
+#~ msgstr "Galerie Gruppen"
+
+#, fuzzy, php-format
+#~| msgid "You can't delete default theme"
+#~ msgid "You can change the default options %s."
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#, fuzzy
+#~| msgid "Recreate thumbnail"
+#~ msgid "Image thumbnail width "
+#~ msgstr "Thumbnails neu erzeugen"
+
+#, fuzzy
+#~| msgid "Recreate thumbnail"
+#~ msgid "Image thumbnail height"
+#~ msgstr "Thumbnails neu erzeugen"
+
+#, fuzzy
+#~| msgid "Show rating"
+#~ msgid "Theme title"
+#~ msgstr "Bewertung anzeigen"
+
+#, fuzzy
+#~| msgid "You can't delete default theme"
+#~ msgid "Reset to default theme"
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Border style:"
+#~ msgstr "Sortieren nach:"
+
+#, fuzzy
+#~| msgid "Gallery title"
+#~ msgid "Gallery title alignment:"
+#~ msgstr "Galerie Titel"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Back Font color:"
+#~ msgstr "Teilen auf Facebook"
+
+#, fuzzy
+#~| msgid "Description"
+#~ msgid "Description alignment:"
+#~ msgstr "Beschreibung"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Share buttons color:"
+#~ msgstr "Teilen auf Facebook"
+
+#, fuzzy
+#~| msgid "Comment"
+#~ msgid "Comments Width:"
+#~ msgstr "Kommentar"
+
+#~ msgid "Galleries:"
+#~ msgstr "Galerien:"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery Type:"
+#~ msgstr "Galerie ist leer."
+
+#~ msgid "First"
+#~ msgstr "Erste"
+
+#~ msgid "Last"
+#~ msgstr "Letzte"
+
+#~ msgid "Processing uploaded files..."
+#~ msgstr "Hochgeladene Fotos werden verarbeitet"
+
+#~ msgid "Up"
+#~ msgstr "Zum übergeordneten Ordner gehen"
+
+#~ msgid "Make a directory"
+#~ msgstr "Ordner erstellen"
+
+#~ msgid "Rename item"
+#~ msgstr "Namen ändern"
+
+#~ msgid "Copy"
+#~ msgstr "Kopieren"
+
+#~ msgid "Cut"
+#~ msgstr "Ausschneiden"
+
+#~ msgid "Paste"
+#~ msgstr "Einfügen"
+
+#~ msgid "Remove items"
+#~ msgstr "Foto(s) löschen"
+
+#~ msgid "Upload files"
+#~ msgstr "Fotos hochladen"
+
+#~ msgid "Order by:"
+#~ msgstr "Sortieren nach:"
+
+#~ msgid "Date modified"
+#~ msgstr "Änderungsdatum"
+
+#~ msgid "Back"
+#~ msgstr "Zurück"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "Select Files"
+#~ msgstr "Alle auswählen"
+
+#~ msgid "No files to upload"
+#~ msgstr "Keine Fotos zum Hochladen ausgewählt"
+
+#, fuzzy
+#~| msgid "Upload files"
+#~ msgid "Uploaded"
+#~ msgstr "Fotos hochladen"
+
+#, fuzzy
+#~| msgid "Upload files"
+#~ msgid "Upload failed"
+#~ msgstr "Fotos hochladen"
+
+#~ msgid "Item successfully saved."
+#~ msgstr "Objekt erfolgreich gespeichert."
+
+#, fuzzy
+#~| msgid "You can't delete default theme"
+#~ msgid "You can't delete default theme."
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items Successfully Deleted."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "You must select at least one item."
+#~ msgid "You must set watermark type from Options page."
+#~ msgstr "Sie müssen mindestens ein Objekt auswählen."
+
+#~ msgid "The item is successfully set as default."
+#~ msgstr "Das Objekt wurde erfolgreich als Standard gespeichert."
+
+#, fuzzy
+#~| msgid "Options Succesfully Saved."
+#~ msgid "Options successfully saved."
+#~ msgstr "Optionen erfolgreich gespeichert."
+
+#, fuzzy
+#~| msgid "Item Succesfully Unpublished."
+#~ msgid "Item successfully published."
+#~ msgstr "Objekt erfolgreich nicht veröffentlicht."
+
+#, fuzzy
+#~| msgid "Item Succesfully Unpublished."
+#~ msgid "Item successfully unpublished."
+#~ msgstr "Objekt erfolgreich nicht veröffentlicht."
+
+#, fuzzy
+#~| msgid "Item Succesfully Published."
+#~ msgid "Item successfully duplicated."
+#~ msgstr "Objekt erfolgreich veröffentlicht."
+
+#~ msgid "Items Succesfully Unpublished."
+#~ msgstr "Objekte erfolgreich nicht veröffentlicht."
+
+#~ msgid "Ordering Succesfully Saved."
+#~ msgstr "Der Auftrag wurde erfolgreich gespeichert."
+
+#~ msgid "A term with the name provided already exists."
+#~ msgstr "Ein Begriff mit dem eingegebenen Namen existiert breits."
+
+#~ msgid "Name field is required."
+#~ msgstr "Das Feld Name wird benötigt."
+
+#~ msgid "The slug must be unique."
+#~ msgstr "Die Webadresse muss eindeutig sein."
+
+#~ msgid "Changes must be saved."
+#~ msgstr "Änderungen müssen gesichert werden."
+
+#, fuzzy
+#~| msgid "Item Succesfully Saved."
+#~ msgid "Theme successfully copied."
+#~ msgstr "Objekt erfolgreich gesichert."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items were reset successfully."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Item Succesfully Deleted."
+#~ msgid "Watermark successfully set."
+#~ msgstr "Objekt erfolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Item Succesfully Saved."
+#~ msgid "Items successfully rotated."
+#~ msgstr "Objekt erfolgreich gesichert."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items successfully recreated."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items successfully resized."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items successfully edited."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#~ msgid "item"
+#~ msgstr "Objekt"
+
+#~ msgid "Recreate thumbnail"
+#~ msgstr "Thumbnails neu erzeugen"
+
+#, fuzzy
+#~| msgid "Not rated yet."
+#~ msgid "rotated left"
+#~ msgstr "Noch nicht bewertet. "
+
+#, fuzzy
+#~| msgid "Reset"
+#~ msgid "reset"
+#~ msgstr "Zurücksetzen"
+
+#, fuzzy
+#~| msgid "Description"
+#~ msgid "Edit description"
+#~ msgstr "Beschreibung"
+
+#, fuzzy
+#~| msgid "Remove items"
+#~ msgid "Add/Remove tag"
+#~ msgstr "Foto(s) löschen"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Photo Gallery Premium"
+#~ msgstr "Teilen auf Facebook"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "All tags"
+#~ msgstr "Galerie ist leer."
+
+#, fuzzy
+#~| msgid "Advanced"
+#~ msgid "Advanced: PHP code"
+#~ msgstr "Erweiterte Einstellungen"
+
+#, fuzzy
+#~| msgid "How to use"
+#~ msgid "How to ..."
+#~ msgstr "Anleitung"
+
+#~ msgid "How to use"
+#~ msgstr "Anleitung"
+
+#, fuzzy, php-format
+#~| msgid "Name field is required."
+#~ msgid "The %s field is required."
+#~ msgstr "Das Feld Name wird benötigt."
+
+#, fuzzy, php-format
+#~| msgid "This is not a valid email address."
+#~ msgid "The %s field must contain a valid email address."
+#~ msgstr "Dies ist keine gültige E-Mail-Adresse."
+
+#, fuzzy
+#~| msgid "Error. Incorrect Verification Code."
+#~ msgid "Incorrect Security code."
+#~ msgstr "Fehler. Falscher Bestätigungs-Code."
+
+#, fuzzy
+#~| msgid "There is no gallery selected or the gallery was deleted."
+#~ msgid "There is no album selected or the gallery was deleted."
+#~ msgstr "Keine Galerie ausgewählt, oder die Galerie wurde gelöscht."
+
+#~ msgid "There is no gallery selected or the gallery was deleted."
+#~ msgstr "Keine Galerie ausgewählt, oder die Galerie wurde gelöscht."
+
+#~ msgid "More"
+#~ msgstr "Mehr"
+
+#~ msgid "Hide"
+#~ msgstr "Ausblenden"
+
+#~ msgid "Show comments"
+#~ msgstr "Kommentare anzeigen"
+
+#~ msgid "Share on Facebook"
+#~ msgstr "Teilen auf Facebook"
+
+#~ msgid "Share on Twitter"
+#~ msgstr "Teilen auf Twitter"
+
+#~ msgid "Share on Pinterest"
+#~ msgstr "Teilen auf Pinterest"
+
+#~ msgid "Share on Tumblr"
+#~ msgstr "Teilen auf Tumblr"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show ecommerce"
+#~ msgstr "Kommentare anzeigen"
+
+#, fuzzy
+#~| msgid "There are no images in this gallery."
+#~ msgid "There are no images to download."
+#~ msgstr "Es befinden sich keine Bilder in dieser Galerie."
+
+#~ msgid "The image has been deleted."
+#~ msgstr "Das Bild wurde gelöscht. "
+
+#~ msgid "Play"
+#~ msgstr "Wiedergabe"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximieren"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Vollbild"
+
+#~ msgid "Show info"
+#~ msgstr "Info anzeigen"
+
+#~ msgid "Show rating"
+#~ msgstr "Bewertung anzeigen"
+
+#~ msgid "Open image in original size."
+#~ msgstr "Bild in Originalgröße öffnen. "
+
+#~ msgid "Download original image"
+#~ msgstr "Originalbild herunterladen"
+
+#~ msgid "Hits: "
+#~ msgstr "Treffer: "
+
+#~ msgid "Rated."
+#~ msgstr "Bewertet."
+
+#~ msgid "Hide Comments"
+#~ msgstr "Kommentare ausblenden "
+
+#~ msgid "Verification Code"
+#~ msgstr "Bestätigungs-Code"
+
+#~ msgid "Submit"
+#~ msgstr "Absenden"
+
+#~ msgid "Your comment is awaiting moderation"
+#~ msgstr "Ihr Kommentar wartet auf Moderation "
+
+#, fuzzy
+#~| msgid "Hide Comments"
+#~ msgid "Hide Ecommerce"
+#~ msgstr "Kommentare ausblenden "
+
+#, fuzzy
+#~| msgid "item"
+#~ msgid "items"
+#~ msgstr "Objekt"
+
+#~ msgid "Delete Comment"
+#~ msgstr "Kommentar löschen"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by Default"
+#~ msgstr "Sortieren nach:"
+
+#~ msgid " item(s)"
+#~ msgstr "Objekt(e)"
+
+#~ msgid "Previous"
+#~ msgstr "Zurück"
+
+#~ msgid "Next"
+#~ msgstr "Weiter"
+
+#~ msgid "Go to the first page"
+#~ msgstr "Zur ersten Seite"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "Zur vorherigen Seite"
+
+#~ msgid "Go to the next page"
+#~ msgstr "Zur nächsten Seite"
+
+#~ msgid "Go to the last page"
+#~ msgstr "Zur letzten Seite"
+
+#~ msgid "Load More..."
+#~ msgstr "Laden Sie Mehr ..."
+
+#, fuzzy, php-format
+#~| msgid "Select all"
+#~ msgid "Select %s"
+#~ msgstr "Alle auswählen"
+
+#, fuzzy
+#~| msgid "Select all"
+#~ msgid "- Select -"
+#~ msgstr "Alle auswählen"
+
+#, fuzzy
+#~| msgid "Not rated yet."
+#~ msgid "rotate"
+#~ msgstr "Noch nicht bewertet. "
+
+#~ msgid "Options"
+#~ msgstr "Optionen"
+
+#, fuzzy
+#~| msgid "Options"
+#~ msgid "Options page"
+#~ msgstr "Optionen"
+
+#~ msgid "Add Galleries/Images"
+#~ msgstr "Galerien/Fotos hinzufügen"
+
+#, fuzzy
+#~| msgid "You can't delete default theme"
+#~ msgid "Do you want to delete selected items?"
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#~ msgid "You must select at least one item."
+#~ msgstr "Sie müssen mindestens ein Objekt auswählen."
+
+#, fuzzy
+#~| msgid "You can't delete default theme"
+#~ msgid "Do you want to remove pricelist from selected items?"
+#~ msgstr "Sie können das Standard Theme nicht löschen"
+
+#, fuzzy
+#~| msgid "Name field is required."
+#~ msgid "field is required."
+#~ msgstr "Das Feld Name wird benötigt."
+
+#, fuzzy
+#~| msgid "You must select at least one item."
+#~ msgid "You must select an image file."
+#~ msgstr "Sie müssen mindestens ein Objekt auswählen."
+
+#, fuzzy
+#~| msgid "You must select at least one item."
+#~ msgid "You must select an audio file."
+#~ msgstr "Sie müssen mindestens ein Objekt auswählen."
+
+#~ msgid "Items Succesfully Saved."
+#~ msgstr "Objekt erfolgreich gesichert."
+
+#, fuzzy
+#~| msgid "Item Succesfully Deleted."
+#~ msgid "Item Succesfully Recovered."
+#~ msgstr "Objekt erfolgreich gelöscht."
+
+#~ msgid "Item Succesfully Published."
+#~ msgstr "Objekt erfolgreich veröffentlicht."
+
+#~ msgid "Item Succesfully Unpublished."
+#~ msgstr "Objekt erfolgreich nicht veröffentlicht."
+
+#~ msgid "Item Succesfully Deleted."
+#~ msgstr "Objekt erfolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items Succesfully resized."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Item Succesfully Saved."
+#~ msgid "Watermarks Succesfully Set."
+#~ msgstr "Objekt erfolgreich gesichert."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Items Succesfully Reset."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "Items Succesfully Deleted."
+#~ msgid "Thumbnails successfully recreated."
+#~ msgstr "Objekte erfrolgreich gelöscht."
+
+#, fuzzy
+#~| msgid "The item is successfully set as default."
+#~ msgid "All images are successfully reset."
+#~ msgstr "Das Objekt wurde erfolgreich als Standard gespeichert."
+
+#~ msgid "This is not a valid email address."
+#~ msgstr "Dies ist keine gültige E-Mail-Adresse."
+
+#~ msgid "There are no images matching your search."
+#~ msgstr "Es gibt keine Bilder, die ihrer Suche entsprechen."
+
+#, fuzzy
+#~| msgid "Order by:"
+#~ msgid "Order By"
+#~ msgstr "Sortieren nach:"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Ecommerce"
+#~ msgstr "Kommentare anzeigen"
+
+#~ msgid "Show Comments"
+#~ msgstr "Kommentare anzeigen "
+
+#~ msgid "Restore"
+#~ msgstr "Wiederherstellen"
+
+#~ msgid "Exit Fullscreen"
+#~ msgstr "Vollbildmodus beenden"
+
+#~ msgid "Pause"
+#~ msgstr "Pause"
+
+#~ msgid "Hide info"
+#~ msgstr "Info ausblenden"
+
+#~ msgid "Hide rating"
+#~ msgstr "Bewertung ausblenden"
+
+#, fuzzy
+#~| msgid "Hide Comments"
+#~ msgid "Editing Comments"
+#~ msgstr "Kommentare ausblenden "
+
+#~ msgid "Photo gallery plugin autoupdate interval."
+#~ msgstr "Intervall für automatische Aktualisierung von Photo Gallery."
+
+#, fuzzy
+#~| msgid "Rated."
+#~ msgid "Rate"
+#~ msgstr "Bewertet."
+
+#, fuzzy
+#~| msgid "Back"
+#~ msgid "Backup"
+#~ msgstr "Zurück"
+
+#, fuzzy
+#~| msgid "Load More"
+#~ msgid "Learn More"
+#~ msgstr "Mehr laden"
+
+#, fuzzy
+#~| msgid "There are no images in this gallery."
+#~ msgid "The gallery images view type in the gallery group."
+#~ msgstr "Es befinden sich keine Bilder in dieser Galerie."
+
+#~ msgid "Add Image"
+#~ msgstr "Foto hinzufügen"
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Albums per page"
+#~ msgstr "Album ist leer."
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album title"
+#~ msgstr "Album ist leer."
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album view type"
+#~ msgstr "Album ist leer."
+
+#~ msgid "Drag files here or click the button below"
+#~ msgstr "Ziehe Fotos in dieses Fenster oder klick auf den Button unten"
+
+#~ msgid "to upload files"
+#~ msgstr "um Fotos hochzuladen"
+
+#~ msgid "There is no theme selected or the theme was deleted."
+#~ msgstr "Kein Theme ausgewählt, oder das Theme wurde gelöscht."
+
+#~ msgid "There is no album selected or the album was deleted."
+#~ msgstr "Kein Album ausgewählt, oder das Album wurde gelöscht."
+
+#~ msgid "Album is empty."
+#~ msgstr "Album ist leer."
+
+#~ msgid "Share on Google+"
+#~ msgstr "Teilen auf Google+ "
+
+#~ msgid "Not rated yet."
+#~ msgstr "Noch nicht bewertet. "
+
+#~ msgid "Votes: "
+#~ msgstr "Stimmen: "
+
+#~ msgid "Cancel your rating."
+#~ msgstr "Bewertung abbrechen."
+
+#~ msgid "You have already rated."
+#~ msgstr "Sie haben schon bewertet. "
+
+#, fuzzy
+#~| msgid "You must select at least one item."
+#~ msgid "Please select at least one item"
+#~ msgstr "Sie müssen mindestens ein Objekt auswählen."
+
+#~ msgid "Error. Please install plugin again."
+#~ msgstr "Fehler, bitte installiere das Plugin nocheinmal."
+
+#~ msgid "Items Succesfully Published."
+#~ msgstr "Objekte erfolgreich veröffentlicht."

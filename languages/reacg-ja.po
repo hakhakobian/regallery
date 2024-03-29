@@ -1,0 +1,818 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reacg\n"
+"POT-Creation-Date: 2024-03-26 15:57+0400\n"
+"PO-Revision-Date: 2024-03-26 16:29+0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: framework/REACGLibrary.php:117
+#| msgid "Reset"
+msgid "Select gallery"
+msgstr ""
+
+#: framework/REACGLibrary.php:129
+msgid "(no title)"
+msgstr ""
+
+#: framework/REACGLibrary.php:148
+#| msgid "Gallery is empty."
+msgid "Missing gallery ID."
+msgstr ""
+
+#: framework/REACGLibrary.php:153
+msgid "There is no such a gallery."
+msgstr ""
+
+#: gallery.php:131
+#| msgid "More"
+msgid "Load more"
+msgstr "Carica di più"
+
+#: gallery.php:132
+#| msgid "There are no images in this gallery."
+msgid "There is not data."
+msgstr "Non ci sono dati."
+
+#: gallery.php:156
+msgid "Insert"
+msgstr ""
+
+#: gallery.php:157
+msgid "Update"
+msgstr ""
+
+#: gallery.php:158
+#| msgid "Reset"
+msgid "Edit image"
+msgstr ""
+
+#: gallery.php:159
+#| msgid "Reset"
+msgid "Choose images"
+msgstr ""
+
+#: includes/gallery.php:114
+msgid "Thumbnail"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Shortcode"
+msgstr ""
+
+#: includes/gallery.php:115
+msgid "Images count"
+msgstr ""
+
+#: includes/gallery.php:140
+#| msgid "Reset"
+msgid "No image"
+msgstr ""
+
+#: includes/gallery.php:353 includes/gallery.php:354
+#| msgid "Gallery is empty."
+msgid "Add New Gallery"
+msgstr ""
+
+#: includes/gallery.php:355
+#| msgid "Gallery is empty."
+msgid "Edit Gallery"
+msgstr ""
+
+#: includes/gallery.php:356
+#| msgid "Gallery is empty."
+msgid "New Gallery"
+msgstr ""
+
+#: includes/gallery.php:357
+msgid "View Gallery"
+msgstr ""
+
+#: includes/gallery.php:358
+#| msgid "Gallery is empty."
+msgid "View Galleries"
+msgstr ""
+
+#: includes/gallery.php:359
+#| msgid "Gallery is empty."
+msgid "Search Galleries"
+msgstr ""
+
+#: includes/gallery.php:360
+#| msgid "Show comments"
+msgid "No galleries found"
+msgstr ""
+
+#: includes/gallery.php:361
+msgid "No galleries found in Trash"
+msgstr ""
+
+#: includes/gallery.php:362
+msgid "All Galleries"
+msgstr ""
+
+#: includes/gallery.php:363
+#| msgid "There are no images in this gallery."
+msgid "Filter galleries list"
+msgstr ""
+
+#: includes/gallery.php:364
+#| msgid "Gallery is empty."
+msgid "Galleries list navigation"
+msgstr ""
+
+#: includes/gallery.php:365
+#| msgid "Gallery is empty."
+msgid "Galleries list"
+msgstr ""
+
+#: includes/gallery.php:366
+#| msgid "Gallery is empty."
+msgid "Gallery Archives"
+msgstr ""
+
+#: includes/gallery.php:367
+#| msgid "Gallery is empty."
+msgid "Gallery Attributes"
+msgstr ""
+
+#: includes/gallery.php:368
+#| msgid "There are no images in this gallery."
+msgid "Insert into gallery"
+msgstr ""
+
+#: includes/gallery.php:369
+#| msgid "Download original image"
+msgid "Uploaded to this gallery"
+msgstr ""
+
+#: includes/gallery.php:370
+#| msgid "Gallery is empty."
+msgid "Gallery published."
+msgstr ""
+
+#: includes/gallery.php:371
+#| msgid "Gallery is empty."
+msgid "Gallery published privately."
+msgstr ""
+
+#: includes/gallery.php:372
+msgid "Gallery reverted to draft."
+msgstr ""
+
+#: includes/gallery.php:373
+#| msgid "Gallery is empty."
+msgid "Gallery trashed."
+msgstr ""
+
+#: includes/gallery.php:374
+#| msgid "Gallery is empty."
+msgid "Gallery scheduled."
+msgstr ""
+
+#: includes/gallery.php:375
+#| msgid "Gallery is empty."
+msgid "Gallery updated."
+msgstr ""
+
+#: includes/gallery.php:376
+#| msgid "Gallery is empty."
+msgid "Gallery Link"
+msgstr ""
+
+#: includes/gallery.php:377
+#| msgid "Download original image"
+msgid "A link to a gallery"
+msgstr ""
+
+#: includes/gallery.php:411
+msgid "Images"
+msgstr ""
+
+#: includes/gallery.php:473
+msgid "Edit"
+msgstr ""
+
+#: includes/gallery.php:474
+msgid "Remove"
+msgstr ""
+
+#: includes/options.php:151
+msgid "Nothing to save."
+msgstr ""
+
+#: includes/options.php:173
+msgid "Nothing saved."
+msgstr ""
+
+#: includes/options.php:221
+msgid "Successfully deleted."
+msgstr ""
+
+#: includes/options.php:224
+msgid "Nothing deleted."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Delete Comment"
+#~ msgid "Delete"
+#~ msgstr "コメントを削除します"
+
+#, fuzzy
+#~| msgid "Comment"
+#~ msgid "Comments"
+#~ msgstr "コメント"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Facebook"
+#~ msgstr "Facebook上で共有しています"
+
+#~ msgid "Random"
+#~ msgstr "ランダム"
+
+#~ msgid "Name"
+#~ msgstr "名前を付けます"
+
+#, fuzzy
+#~| msgid "Reset"
+#~ msgid "Remove from image"
+#~ msgstr "リセットします"
+
+#~ msgid "Search"
+#~ msgstr "検索"
+
+#, fuzzy
+#~| msgid "First"
+#~ msgid "First page"
+#~ msgstr "最初"
+
+#, fuzzy
+#~| msgid "Previous"
+#~ msgid "Previous page"
+#~ msgstr "前"
+
+#~ msgid "of"
+#~ msgstr "の"
+
+#, fuzzy
+#~| msgid "Next"
+#~ msgid "Next page"
+#~ msgstr " 次へ"
+
+#, fuzzy
+#~| msgid "Last"
+#~ msgid "Last page"
+#~ msgstr "最後"
+
+#, fuzzy
+#~| msgid "Previous"
+#~ msgid "Preview"
+#~ msgstr "前"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show more details"
+#~ msgstr "コメントを見る"
+
+#~ msgid "Email"
+#~ msgstr "Eメール"
+
+#~ msgid "Comment"
+#~ msgstr "コメント"
+
+#, fuzzy
+#~| msgid "Photo gallery plugin autoupdate interval."
+#~ msgid "Gallery autoupdate option"
+#~ msgstr "自動更新間隔をプラグインフォトギャラリー。"
+
+#, fuzzy
+#~| msgid "You have already rated."
+#~ msgid "You have unsaved changes."
+#~ msgstr "あなたは既に評価されています"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show order column"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Ordering"
+#~ msgstr "命令により"
+
+#~ msgid "Filename"
+#~ msgstr "ファイル名"
+
+#~ msgid "Size"
+#~ msgstr "サイズ"
+
+#~ msgid "Reset"
+#~ msgstr "リセットします"
+
+#, fuzzy
+#~| msgid "This is not a valid email address."
+#~ msgid "Please enter a valid email."
+#~ msgstr "これは有効なメールアドレスではありません。"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery Group defaults"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show custom posts"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show comments for custom posts"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Enable Google fonts"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Hide info"
+#~ msgid "Enable HTML editor"
+#~ msgstr "情報を隠す"
+
+#, fuzzy
+#~| msgid "Photo gallery plugin autoupdate interval."
+#~ msgid "Gallery autoupdate interval"
+#~ msgstr "自動更新間隔をプラグインフォトギャラリー。"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery group restrictions"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "More"
+#~ msgid "or"
+#~ msgstr "もっと"
+
+#~ msgid "Default"
+#~ msgstr "デフォルト"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by"
+#~ msgstr "命令により"
+
+#, fuzzy
+#~| msgid "Show rating"
+#~ msgid "Show tag box"
+#~ msgstr "評価を表示します"
+
+#, fuzzy
+#~| msgid "Show info"
+#~ msgid "Show on hover"
+#~ msgstr "情報を表示します"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show ecommerce icon"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image descriptions"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image description"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery groups per page"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Order Gallery group by"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order images by"
+#~ msgstr "命令により"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery view type"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery group thumbnail width"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Exit Fullscreen"
+#~ msgid "Enable fullscreen button"
+#~ msgstr "フルスクリーンを終了します"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Enable comments"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Email for comments"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Captcha for comments"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Your comment is awaiting moderation"
+#~ msgid "Enable comments moderation"
+#~ msgstr "あなたのコメント承認待ちです "
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image info"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Hide rating"
+#~ msgid "Enable rating"
+#~ msgstr "隠す評価"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show image counter"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Hide rating"
+#~ msgid "Enable looping"
+#~ msgstr "隠す評価"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Show Facebook button"
+#~ msgstr "Facebook上で共有しています"
+
+#, fuzzy
+#~| msgid "Share on Twitter"
+#~ msgid "Show Twitter button"
+#~ msgstr "Twitterで共有しています"
+
+#, fuzzy
+#~| msgid "Share on Pinterest"
+#~ msgid "Show Pinterest button"
+#~ msgstr "Pinterestの上の共有"
+
+#, fuzzy
+#~| msgid "Share on Tumblr"
+#~ msgid "Show Tumblr button"
+#~ msgstr "スキの共有"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Ecommerce button"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery Group"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Show rating"
+#~ msgid "Theme title"
+#~ msgstr "評価を表示します"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Border style:"
+#~ msgstr "命令により"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery title alignment:"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Back Font color:"
+#~ msgstr "Facebook上で共有しています"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Share buttons color:"
+#~ msgstr "Facebook上で共有しています"
+
+#, fuzzy
+#~| msgid "Comment"
+#~ msgid "Comments Width:"
+#~ msgstr "コメント"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "Gallery Type:"
+#~ msgstr "ギャラリーは空です"
+
+#~ msgid "First"
+#~ msgstr "最初"
+
+#~ msgid "Last"
+#~ msgstr "最後"
+
+#, fuzzy
+#~| msgid " item(s)"
+#~ msgid "Remove items"
+#~ msgstr "アイテム"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by:"
+#~ msgstr "命令により"
+
+#~ msgid "Back"
+#~ msgstr "戻る"
+
+#, fuzzy
+#~| msgid "Not rated yet."
+#~ msgid "rotated left"
+#~ msgstr "まだ評価されていません。 "
+
+#, fuzzy
+#~| msgid "Reset"
+#~ msgid "reset"
+#~ msgstr "リセットします"
+
+#, fuzzy
+#~| msgid " item(s)"
+#~ msgid "Add/Remove tag"
+#~ msgstr "アイテム"
+
+#, fuzzy
+#~| msgid "Share on Facebook"
+#~ msgid "Photo Gallery Premium"
+#~ msgstr "Facebook上で共有しています"
+
+#, fuzzy
+#~| msgid "Gallery is empty."
+#~ msgid "All tags"
+#~ msgstr "ギャラリーは空です"
+
+#, fuzzy, php-format
+#~| msgid "This is not a valid email address."
+#~ msgid "The %s field must contain a valid email address."
+#~ msgstr "これは有効なメールアドレスではありません。"
+
+#, fuzzy
+#~| msgid "Error. Incorrect Verification Code."
+#~ msgid "Incorrect Security code."
+#~ msgstr "エラーが発生しました。誤った認証コード。 "
+
+#, fuzzy
+#~| msgid "There is no gallery selected or the gallery was deleted."
+#~ msgid "There is no album selected or the gallery was deleted."
+#~ msgstr "そこに選択されていませんギャラリーはありませんかギャラリーが削除されました"
+
+#~ msgid "There is no gallery selected or the gallery was deleted."
+#~ msgstr "そこに選択されていませんギャラリーはありませんかギャラリーが削除されました"
+
+#~ msgid "More"
+#~ msgstr "もっと"
+
+#~ msgid "Hide"
+#~ msgstr "非表示にします"
+
+#~ msgid "Show comments"
+#~ msgstr "コメントを見る"
+
+#~ msgid "Share on Facebook"
+#~ msgstr "Facebook上で共有しています"
+
+#~ msgid "Share on Twitter"
+#~ msgstr "Twitterで共有しています"
+
+#~ msgid "Share on Pinterest"
+#~ msgstr "Pinterestの上の共有"
+
+#~ msgid "Share on Tumblr"
+#~ msgstr "スキの共有"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show ecommerce"
+#~ msgstr "コメントを見る"
+
+#, fuzzy
+#~| msgid "There are no images in this gallery."
+#~ msgid "There are no images to download."
+#~ msgstr "このギャラリーには画像がありません"
+
+#~ msgid "The image has been deleted."
+#~ msgstr "画像は削除されました"
+
+#~ msgid "Play"
+#~ msgstr "再生"
+
+#~ msgid "Maximize"
+#~ msgstr "最大化します"
+
+#~ msgid "Fullscreen"
+#~ msgstr "フルスクリーン"
+
+#~ msgid "Show info"
+#~ msgstr "情報を表示します"
+
+#~ msgid "Show rating"
+#~ msgstr "評価を表示します"
+
+#~ msgid "Open image in original size."
+#~ msgstr "元のサイズで画像を開く"
+
+#~ msgid "Download original image"
+#~ msgstr "元の画像をダウンロードしてください"
+
+#~ msgid "Hits: "
+#~ msgstr "ヒット数："
+
+#~ msgid "Rated."
+#~ msgstr "評価した。"
+
+#~ msgid "Hide Comments"
+#~ msgstr "コメントを非表示にします"
+
+#~ msgid "Verification Code"
+#~ msgstr "認証コード"
+
+#~ msgid "Submit"
+#~ msgstr "提出してください"
+
+#~ msgid "Your comment is awaiting moderation"
+#~ msgstr "あなたのコメント承認待ちです "
+
+#, fuzzy
+#~| msgid "Hide Comments"
+#~ msgid "Hide Ecommerce"
+#~ msgstr "コメントを非表示にします"
+
+#, fuzzy
+#~| msgid " item(s)"
+#~ msgid "items"
+#~ msgstr "アイテム"
+
+#~ msgid "Delete Comment"
+#~ msgstr "コメントを削除します"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order by Default"
+#~ msgstr "命令により"
+
+#~ msgid " item(s)"
+#~ msgstr "アイテム"
+
+#~ msgid "Previous"
+#~ msgstr "前"
+
+#~ msgid "Next"
+#~ msgstr " 次へ"
+
+#~ msgid "Go to the first page"
+#~ msgstr "最初のページに移動します"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "前のページに移動します"
+
+#~ msgid "Go to the next page"
+#~ msgstr "次のページに移動します"
+
+#~ msgid "Go to the last page"
+#~ msgstr "最後のページに移動します"
+
+#, fuzzy
+#~| msgid "Not rated yet."
+#~ msgid "rotate"
+#~ msgstr "まだ評価されていません。 "
+
+#, fuzzy
+#~| msgid "Previous"
+#~ msgid "Options page"
+#~ msgstr "前"
+
+#~ msgid "This is not a valid email address."
+#~ msgstr "これは有効なメールアドレスではありません。"
+
+#~ msgid "There are no images matching your search."
+#~ msgstr "検索に一致する画像がありません。"
+
+#, fuzzy
+#~| msgid "Order by: "
+#~ msgid "Order By"
+#~ msgstr "命令により"
+
+#, fuzzy
+#~| msgid "Show comments"
+#~ msgid "Show Ecommerce"
+#~ msgstr "コメントを見る"
+
+#~ msgid "Show Comments"
+#~ msgstr "コメントを表示します"
+
+#~ msgid "Restore"
+#~ msgstr "復元します"
+
+#~ msgid "Exit Fullscreen"
+#~ msgstr "フルスクリーンを終了します"
+
+#~ msgid "Pause"
+#~ msgstr "一時停止します"
+
+#~ msgid "Hide info"
+#~ msgstr "情報を隠す"
+
+#~ msgid "Hide rating"
+#~ msgstr "隠す評価"
+
+#, fuzzy
+#~| msgid "Hide Comments"
+#~ msgid "Editing Comments"
+#~ msgstr "コメントを非表示にします"
+
+#~ msgid "Photo gallery plugin autoupdate interval."
+#~ msgstr "自動更新間隔をプラグインフォトギャラリー。"
+
+#, fuzzy
+#~| msgid "Rated."
+#~ msgid "Rate"
+#~ msgstr "評価した。"
+
+#, fuzzy
+#~| msgid "Back"
+#~ msgid "Backup"
+#~ msgstr "戻る"
+
+#, fuzzy
+#~| msgid "More"
+#~ msgid "Learn More"
+#~ msgstr "もっと"
+
+#, fuzzy
+#~| msgid "There are no images in this gallery."
+#~ msgid "The gallery images view type in the gallery group."
+#~ msgstr "このギャラリーには画像がありません"
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Albums per page"
+#~ msgstr "アルバムは空です"
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album title"
+#~ msgstr "アルバムは空です"
+
+#, fuzzy
+#~| msgid "Album is empty."
+#~ msgid "Album view type"
+#~ msgstr "アルバムは空です"
+
+#~ msgid "There is no theme selected or the theme was deleted."
+#~ msgstr "そこに選択されていませんテーマはありませんかテーマが削除されました"
+
+#~ msgid "There is no album selected or the album was deleted."
+#~ msgstr "そこに選択されていませんアルバムはありませんか、アルバムが削除されました"
+
+#~ msgid "Album is empty."
+#~ msgstr "アルバムは空です"
+
+#~ msgid "Share on Google+"
+#~ msgstr "Google+で共有しています"
+
+#~ msgid "Not rated yet."
+#~ msgstr "まだ評価されていません。 "
+
+#~ msgid "Votes: "
+#~ msgstr "投票： "
+
+#~ msgid "Cancel your rating."
+#~ msgstr "あなたの評価をキャンセル。 "
+
+#~ msgid "You have already rated."
+#~ msgstr "あなたは既に評価されています"
