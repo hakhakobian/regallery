@@ -117,14 +117,15 @@ class REACG_Options {
 
     ];
     if ( in_array($key, $number) ) {
-      return max($value, 1);
+      return intval(max($value, 1));
     }
     elseif ( in_array($key, $empty_number) ) {
-      return intval($value) < 0 ? '' : $value;
+      return intval($value) < 0 ? '' : intval($value);
     }
     elseif ( in_array($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
     }
+
     return $value;
   }
 
@@ -254,6 +255,7 @@ class REACG_Options {
       if ( !isset($options->$key) ) {
         $options->$key = $value;
       }
+      $options->$key = $this->validate($key, $value);
     }
 
     return new WP_REST_Response( wp_send_json($options, 200), 200 );
