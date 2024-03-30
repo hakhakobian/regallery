@@ -72,6 +72,11 @@ final class REACG {
     // Enqueue block editor assets for Gutenberg.
     add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
 
+    // Register widget for Elementor.
+    add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
+    // Fires after elementor editor styles are enqueued.
+    add_action('elementor/editor/after_enqueue_styles', array($this, 'enqueue_elementor_styles'), 11);
+
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
@@ -88,13 +93,32 @@ final class REACG {
   }
 
   /**
+   * Register widget for Elementor.
+   */
+  public function register_elementor_widget() {
+    if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
+      require_once ($this->plugin_dir . '/includes/elementor.php');
+      \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
+    }
+  }
+
+  /**
+   * Enqueue Elementor widget styles.
+   *
+   * @return void
+   */
+  public function enqueue_elementor_styles() {
+    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/assets/css/elementor.css', [], $this->version);
+  }
+
+  /**
    * Create custom post types.
    */
   public function post_type_gallery() {
     $this->rest_root = rest_url() . "reacg/v1/";
     $this->rest_nonce = wp_create_nonce( 'wp_rest' );
     require_once($this->plugin_dir . '/includes/gallery.php');
-    new REACG_Gallery($this);
+    new REACG_Gallery( $this );
   }
 
   /**
@@ -102,7 +126,7 @@ final class REACG {
    */
   public function shortcode() {
     require_once($this->plugin_dir . '/includes/shortcode.php');
-    new REACG_Shortcode($this);
+    new REACG_Shortcode( $this );
   }
 
   /**
