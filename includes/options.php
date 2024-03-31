@@ -31,7 +31,7 @@ class REACG_Options {
     'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
 
-    'useLightbox' => TRUE, #boolean
+    'showLightbox' => TRUE, #boolean
 
     'lightbox' => array(
       'isFullscreen' => TRUE, #boolean
@@ -85,6 +85,16 @@ class REACG_Options {
       'thumbnailBorderRadius',
       'thumbnailPadding',
     ];
+    $boolean = [
+      'showLightbox',
+      'isFullscreen',
+      'areControlButtonsShown',
+      'isInfinite',
+      'canDownload',
+      'canZoom',
+      'isSlideshowAllowed',
+      'isFullscreenAllowed',
+    ];
     $specific = [
       'titleVisibility' => [
         'allowed' => [ 'always', 'onHover', 'none' ],
@@ -121,6 +131,9 @@ class REACG_Options {
     }
     elseif ( in_array($key, $empty_number) ) {
       return intval($value) < 0 ? '' : intval($value);
+    }
+    elseif ( in_array($key, $boolean) ) {
+      return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
     elseif ( in_array($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
