@@ -255,6 +255,9 @@ class REACG_Options {
       if ( !isset($options->$key) ) {
         $options->$key = $value;
       }
+    }
+
+    foreach ( $options as $key => $value ) {
       $options->$key = $this->validate($key, $value);
     }
 
