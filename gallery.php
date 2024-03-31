@@ -18,20 +18,6 @@ final class REACG {
    */
   protected static $_instance = null;
 
-<<<<<<< HEAD
-  public string $plugin_dir = '';
-  public string $plugin_url = '';
-  public string $main_file = '';
-  public string $version = '1.0.0';
-
-  public string $prefix = 'reacg';
-  public string $shortcode = 'REACG';
-  public string $nicename = 'ReGallery';
-  public string $nonce = 'reacg_nonce';
-  public string $rest_root = "";
-  public string $rest_nonce = "";
-  public string $no_image = '/assets/images/no_image.png';
-=======
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
@@ -43,7 +29,7 @@ final class REACG {
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
->>>>>>> 43093fcb446af5d761babb591e9660fb38da60f8
+  public $no_image = '/assets/images/no_image.png';
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
   public $abspath = '';
 
