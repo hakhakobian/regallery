@@ -31,7 +31,7 @@ class REACG_Options {
     'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
 
-    'useLightbox' => TRUE, #boolean
+    'showLightbox' => TRUE, #boolean
 
     'lightbox' => array(
       'isFullscreen' => TRUE, #boolean
@@ -85,6 +85,16 @@ class REACG_Options {
       'thumbnailBorderRadius',
       'thumbnailPadding',
     ];
+    $boolean = [
+      'showLightbox',
+      'isFullscreen',
+      'areControlButtonsShown',
+      'isInfinite',
+      'canDownload',
+      'canZoom',
+      'isSlideshowAllowed',
+      'isFullscreenAllowed',
+    ];
     $specific = [
       'titleVisibility' => [
         'allowed' => [ 'always', 'onHover', 'none' ],
@@ -117,14 +127,18 @@ class REACG_Options {
 
     ];
     if ( in_array($key, $number) ) {
-      return max($value, 1);
+      return intval(max($value, 1));
     }
     elseif ( in_array($key, $empty_number) ) {
-      return intval($value) < 0 ? '' : $value;
+      return intval($value) < 0 ? '' : intval($value);
+    }
+    elseif ( in_array($key, $boolean) ) {
+      return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
     elseif ( in_array($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
     }
+
     return $value;
   }
 
@@ -254,6 +268,10 @@ class REACG_Options {
       if ( !isset($options->$key) ) {
         $options->$key = $value;
       }
+    }
+
+    foreach ( $options as $key => $value ) {
+      $options->$key = $this->validate($key, $value);
     }
 
     return new WP_REST_Response( wp_send_json($options, 200), 200 );

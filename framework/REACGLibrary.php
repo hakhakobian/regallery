@@ -101,36 +101,48 @@ class REACGLibrary {
   /**
    * Get shortcodes list.
    *
-   * @param $obj
+   * @param      $obj
    * @param bool $include_empty
+   * @param      $associative
    *
-   * @return false|string
+   * @return array|false|string
    */
-  public static function get_shortcodes( $obj, bool $include_empty = FALSE) {
+  public static function get_shortcodes( $obj, bool $include_empty = FALSE, $associative = TRUE) {
     $posts = get_posts(array(
                          'posts_per_page' => -1,
                          'post_type' => 'reacg',
                        ));
-    if ( $include_empty ) {
-      $data[0] = [];
-      $data[0]['id'] = 0;
-      $data[0]['title'] = __( 'Select gallery', 'reacg' );
-      $data[0]['shortcode'] = '';
-      $key_shifter = 1;
+    $data = [];
+    if ( $associative ) {
+      if ( $include_empty ) {
+        $data[0] = [];
+        $data[0]['id'] = 0;
+        $data[0]['title'] = __('Select gallery', 'reacg');
+        $data[0]['shortcode'] = '';
+        $key_shifter = 1;
+      }
+      else {
+        $key_shifter = 0;
+      }
+      foreach ( $posts as $key => $post ) {
+        $data[$key + $key_shifter] = [];
+        $data[$key + $key_shifter]['id'] = $post->ID;
+        $data[$key + $key_shifter]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+        $data[$key + $key_shifter]['shortcode'] = self::get_shortcode($obj, $post->ID);
+      }
+
+      return json_encode($data);
     }
     else {
-      $data = [];
-      $key_shifter = 0;
-    }
+      if ( $include_empty ) {
+        $data[0] = __('Select gallery', 'reacg');
+      }
+      foreach ( $posts as $key => $post ) {
+        $data[$post->ID] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+      }
 
-    foreach ( $posts as $key => $post ) {
-      $data[$key + $key_shifter] = [];
-      $data[$key + $key_shifter]['id'] = $post->ID;
-      $data[$key + $key_shifter]['title'] = $post->post_title ? $post->post_title : __( '(no title)', 'reacg' );
-      $data[$key + $key_shifter]['shortcode'] = self::get_shortcode($obj, $post->ID);
+      return $data;
     }
-
-    return json_encode($data);
   }
 
   /**

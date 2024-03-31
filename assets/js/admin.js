@@ -17,6 +17,7 @@ jQuery(document).ready(function () {
         images_ids.push(jQuery( this ).data( 'id' ));
       } );
       reacg_set_image_ids( images_ids );
+      /* Save images on reorder.*/
       reacg_save_images();
     }
   } );
@@ -32,6 +33,7 @@ jQuery(document).ready(function () {
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
     reacg_set_image_ids(images_ids);
+    /* Save images on delete.*/
     reacg_save_images();
   });
 
@@ -82,6 +84,8 @@ jQuery(document).ready(function () {
         }
         item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
       }
+      /* Save images on inserting from media library.*/
+      reacg_save_images();
 
       media_uploader.close();
     } );
@@ -197,6 +201,7 @@ function reacg_media_uploader( e ) {
     /* Update the images data.*/
     reacg_set_image_ids(images_ids);
 
+    /* Save the images.*/
     reacg_save_images();
 
     media_uploader.close();
@@ -217,9 +222,14 @@ function reacg_save_images() {
       'images_ids': reacg_get_image_ids(false)
     },
     complete: function (data) {
+      reacg_loading();
       /* Trigger hidden button click to reload the preview.*/
       jQuery("#reacg-reloadData").trigger("click");
-      reacg_loading();
+
+      /* Run autosave for newly added posts.*/
+      if ( jQuery("#original_post_status").val() === "auto-draft" ) {
+        jQuery("#publish").trigger("click");
+      }
     }
   });
 }

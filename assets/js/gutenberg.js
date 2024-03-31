@@ -4,8 +4,8 @@
   blocks.registerBlockType( "reacg/gallery", {
     title: pluginData.title,
     icon: el( 'img', {
-      width: 20,
-      height: 20,
+      width: 24,
+      height: 24,
       src: pluginData.icon
     } ),
     category: 'common',
