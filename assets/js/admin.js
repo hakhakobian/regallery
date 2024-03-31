@@ -4,7 +4,7 @@ jQuery(document).ready(function () {
     jQuery( ".MuiButton-root" ).trigger("click");
   });
   /* Bind an event to the add image button.*/
-  jQuery(".reacg_item_new ").on("click", function (event) {
+  jQuery(".reacg_item_new").on("click", function (event) {
     reacg_media_uploader( event );
   });
 
@@ -118,12 +118,13 @@ function reacg_set_image_ids(arr) {
 }
 
 /**
- * Disable images which are already added to the gallery.
+ * Disable the images which are already added to the gallery.
+ *
+ * @param images_ids
  */
-function reacg_check_images() {
-  let images_ids = reacg_get_image_ids(true);
+function reacg_check_images(images_ids) {
   jQuery("ul.attachments li").each(function () {
-    if (jQuery.inArray(jQuery(this).data("id"), images_ids) !== -1) {
+    if ( jQuery.inArray(jQuery(this).data("id"), images_ids) !== -1 ) {
       jQuery(this).attr("title", "Already added").addClass("reacg-already-added");
       jQuery(this).find(".thumbnail").on("click", function (e) {
         e.stopPropagation();
@@ -131,6 +132,44 @@ function reacg_check_images() {
     }
   });
 }
+
+/**
+ * Disable the image which is already added to the gallery.
+ *
+ * @param images_ids
+ */
+function reacg_check_image(images_ids) {
+  // Select the container for images inside the media modal for the current uploader.
+  let container = jQuery('.media-frame-content .attachments:visible');
+  if ( container.length > 0 ) {
+    // Create a MutationObserver to watch for changes in the container.
+    let observer = new MutationObserver(function (mutationsList) {
+      // Check if the .attachment container is added to the DOM.
+      let attachmentContainer = container.find('.attachment');
+      if ( attachmentContainer.length > 0 ) {
+        // Attach load event listener to its images.
+        attachmentContainer.find('img').one('load', function () {
+          // Disable the image if it is already inserted into the gallery.
+          if ( jQuery.inArray(jQuery(this).closest("li").data("id"), images_ids) !== -1 ) {
+            jQuery(this).closest("li").attr("title", "Already added").addClass("reacg-already-added");
+            jQuery(this).closest("li").find(".thumbnail").on("click", function (e) {
+              e.stopPropagation();
+            });
+          }
+        }).each(function () {
+          if ( this.complete ) {
+            jQuery(this).trigger('load');
+          }
+        });
+        // Stop observing mutations once the container is found.
+        observer.disconnect();
+      }
+    });
+    // Start observing mutations in the container
+    observer.observe(container[0], {childList: true, subtree: true});
+  }
+}
+
 /**
  * Open Media uploader and set the event to the Insert button.
  *
@@ -145,13 +184,27 @@ function reacg_media_uploader( e ) {
     button: { text: reacg.insert },
     multiple: true
   } );
+
+  // Disable the images which are already added to the gallery.
   media_uploader.on('open', function () {
-    setTimeout(function (){
-      reacg_check_images();
-    }, 500);
-    jQuery("#menu-item-browse").on("click", function () {
-      reacg_check_images();
+    // Get the added images.
+    let images_ids = reacg_get_image_ids(true);
+
+    // On clicking Media library tab inside the uploader.
+    jQuery(document).on("click", "#menu-item-browse", function () {
+      // When images are already loaded (e.g. opening after closing the uploader).
+      reacg_check_images(images_ids);
+      // When images are not loaded (e.g. opening first time).
+      reacg_check_image(images_ids);
     });
+
+    // On clicking load more button in the uploader.
+    jQuery(document).on("click", ".load-more-wrapper .load-more", function () {
+      reacg_check_image(images_ids);
+    });
+
+    // On opening Media library tab when images are not loaded.
+    reacg_check_image(images_ids);
   });
   media_uploader.open();
 
