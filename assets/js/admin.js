@@ -220,7 +220,8 @@ function reacg_media_uploader( e ) {
       let type = "image";
       let thumbnail_url = reacg.no_image;
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
-        if ( selected_images[key].thumb.src.search("media/video.png") === -1 )  {
+        // If there is thumbnail for the video and it is not a default image (video.png/video.svg)
+        if ( selected_images[key].thumb.src.search("media/video.") === -1 )  {
           thumbnail_url = selected_images[key].thumb.src;
         }
         type = "video";
