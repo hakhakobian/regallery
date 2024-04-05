@@ -230,6 +230,9 @@ class REACG_Options {
     }
     $data = json_decode($data, TRUE);
 
+    // Modify the data structure based on the new structure.
+    $data = $this->modify($data);
+
     // Sanitizing and validating the given data.
     $data = $this->sanitize($data);
 
@@ -271,11 +274,11 @@ class REACG_Options {
       $options = json_decode($options, TRUE);
     }
 
-    // If an option is missing add it's default value.
-    $options = $this->defaults($this->options, $options);
-
     // Modify the data structure based on the new structure.
     $options = $this->modify($options);
+
+    // If an option is missing add it's default value.
+    $options = $this->defaults($this->options, $options);
 
     // Sanitizing and validating the given data.
     $options = $this->sanitize($options);
@@ -323,7 +326,7 @@ class REACG_Options {
       // If the new group exists.
       if ( isset($options[$to]) ) {
         foreach ( $old_keys as $old_key ) {
-          // If the old option exist.
+          // If the old option exists.
           if ( isset($options[$old_key]) ) {
             // Move the option to the new group.
             $options[$to][$old_key] = $options[$old_key];
