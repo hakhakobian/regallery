@@ -2,8 +2,6 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Options {
-  private $name = "reacg_options";
-  private $obj;
   private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
@@ -31,9 +29,8 @@ class REACG_Options {
     'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
 
-    'showLightbox' => TRUE, #boolean
-
     'lightbox' => array(
+      'showLightbox' => TRUE, #boolean
       'isFullscreen' => TRUE, #boolean
       'width' => 800, #number
       'height' => 600, #number
@@ -42,6 +39,8 @@ class REACG_Options {
       'padding' => 0, #number
       'canDownload' => FALSE, #boolean
       'canZoom' => TRUE, #boolean
+      'autoplay' => TRUE, #boolean
+      'slideDuration' => 5000, #number
       'isSlideshowAllowed' => TRUE, #boolean
       'isFullscreenAllowed' => TRUE, #boolean
       'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
@@ -57,9 +56,11 @@ class REACG_Options {
       'captionColor' => '#FFFFFF', #string;
     ),
   ];
+  private $name = "reacg_options";
+  private $obj;
 
   /**
-   * Validate specific data.
+   * Validate data on allowed values.
    *
    * @param $key
    * @param $value
@@ -76,6 +77,7 @@ class REACG_Options {
       'thumbnailWidth',
       'thumbnailHeight',
       'thumbnailGap',
+      'slideDuration',
     ];
     $empty_number = [
       'gap',
@@ -92,6 +94,7 @@ class REACG_Options {
       'isInfinite',
       'canDownload',
       'canZoom',
+      'autoplay',
       'isSlideshowAllowed',
       'isFullscreenAllowed',
     ];
@@ -189,7 +192,7 @@ class REACG_Options {
   }
 
   /**
-   * Sanitizing and validating the given array.
+   * Sanitizing and validating the given data.
    *
    * @param $data
    *
@@ -202,7 +205,7 @@ class REACG_Options {
       }
       else {
         $item = sanitize_text_field(stripslashes($item));
-        // Data validation on allowed values.
+        // Validate data on allowed values.
         $data[$key] = $this->validate($key, $item);
       }
     }
@@ -225,8 +228,12 @@ class REACG_Options {
     if ( empty($data) ) {
       return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
-    $data = (array) json_decode($data, true);
+    $data = json_decode($data, TRUE);
 
+    // Modify the data structure based on the new structure.
+    $data = $this->modify($data);
+
+    // Sanitizing and validating the given data.
     $data = $this->sanitize($data);
 
     $options = json_encode($data);
@@ -255,26 +262,82 @@ class REACG_Options {
       $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
     }
 
+    // Get options for the gallery.
     $options = get_option($this->name . $gallery_id, FALSE);
+
+    // Get default options if the gallery options do not exist.
     if ( $options === FALSE ) {
       $options = get_option($this->name, FALSE);
     }
 
     if ( !empty($options) ) {
-      $options = json_decode($options);
+      $options = json_decode($options, TRUE);
     }
 
-    foreach ( $this->options as $key => $value ) {
-      if ( !isset($options->$key) ) {
-        $options->$key = $value;
+    // Modify the data structure based on the new structure.
+    $options = $this->modify($options);
+
+    // If an option is missing add it's default value.
+    $options = $this->defaults($this->options, $options);
+
+    // Sanitizing and validating the given data.
+    $options = $this->sanitize($options);
+
+    return new WP_REST_Response( wp_send_json($options, 200), 200 );
+  }
+
+  /**
+   * If an option is missing add it's default value.
+   *
+   * @param $default_options
+   * @param $options
+   *
+   * @return mixed
+   */
+  private function defaults($default_options, $options) {
+    foreach ( $default_options as $key => $option ) {
+      if ( is_array($option) ) {
+        // If the option is a group of options (e.g. lightbox)
+        $options[$key] = $this->defaults($default_options[$key], $options[$key]);
+      }
+      elseif ( !isset($options[$key]) ) {
+        // If an option is missing add it's default value.
+        $options[$key] = $option;
       }
     }
 
-    foreach ( $options as $key => $value ) {
-      $options->$key = $this->validate($key, $value);
+    return $options;
+  }
+
+  /**
+   * Modify the data structure based on the new structure.
+   *
+   * @param $options
+   *
+   * @return mixed
+   */
+  private function modify($options) {
+    // Options to be moved.
+    $move = [
+      'lightbox' => ['showLightbox'],
+    ];
+
+    foreach ( $move as $to => $old_keys ) {
+      // If the new group exists.
+      if ( isset($options[$to]) ) {
+        foreach ( $old_keys as $old_key ) {
+          // If the old option exists.
+          if ( isset($options[$old_key]) ) {
+            // Move the option to the new group.
+            $options[$to][$old_key] = $options[$old_key];
+            // Remove the old option.
+            unset($options[$old_key]);
+          }
+        }
+      }
     }
 
-    return new WP_REST_Response( wp_send_json($options, 200), 200 );
+    return $options;
   }
 
   /**
