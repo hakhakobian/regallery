@@ -550,6 +550,8 @@ class REACG_Gallery {
     <div class="reacg_item_image"
          title="<?php echo esc_attr($data['title']); ?>"
          style="background-image: url('<?php echo esc_url($data['url']); ?>')">
+      <div class="reacg-cover <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>">
+      </div>
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
           <span class="reacg-edit-thumbnail dashicons dashicons-screenoptions <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit thumbnail', 'reacg'); ?>"></span>

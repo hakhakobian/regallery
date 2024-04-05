@@ -241,6 +241,7 @@ function reacg_media_uploader( e ) {
         let clone = jQuery(".reacg-template").clone();
         if ( type === "video" ) {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
+          clone.find(".reacg-cover").removeClass("reacg-hidden");
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
