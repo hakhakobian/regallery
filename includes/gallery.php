@@ -126,12 +126,19 @@ class REACG_Gallery {
    * @return void
    */
   public function thumbnail_column_content($column_id, $post_id) {
-    $images_ids = get_post_meta( $post_id, 'images_ids', true );
-    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids) : [];
+    $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
+    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
+        // Get the first existing image.
         if ( !empty($images_ids_arr) ) {
-          $url = wp_get_attachment_thumb_url($images_ids_arr[0]);
+          foreach ( $images_ids_arr as $images_id ) {
+            $url = wp_get_attachment_thumb_url($images_id);
+            if ( $url ) {
+              break;
+            }
+          }
+
           $basename = basename($url);
           $url = str_replace($basename, urlencode($basename), $url);
           ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
@@ -168,7 +175,7 @@ class REACG_Gallery {
     $data = [];
     $data['images_count'] = 0;
     if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids);
+      $images_ids_arr = json_decode($images_ids, TRUE);
 
       $data['images_count'] = count($images_ids_arr);
     }
@@ -186,16 +193,24 @@ class REACG_Gallery {
   public function get_images( WP_REST_Request $request ) {
     $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
 
-    $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
+    $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
     if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids);
-
-      foreach ( $images_ids_arr as $images_id ) {
+      $images_ids_arr = json_decode($images_ids, TRUE);
+      $is_deleted_attachment = FALSE;
+      foreach ( $images_ids_arr as $key => $images_id ) {
         $post = get_post($images_id);
         $meta = wp_get_attachment_metadata($images_id);
         $url = wp_get_attachment_url($images_id);
+
+        // The attachment doesn't exist.
+        if ( is_null($post) || !$meta || !$url ) {
+          unset($images_ids_arr[$key]);
+          $is_deleted_attachment = TRUE;
+          continue;
+        }
+
         $base_name = isset($meta['file']) ? basename($meta['file']) : "";
 
         $original = [];
@@ -239,6 +254,11 @@ class REACG_Gallery {
           'thumbnail' => $thumbnail,
           'medium_large' => $medium_large,
         ];
+      }
+
+      // Remove attachment ID from the gallery if it doesn't exist anymore.
+      if ( $is_deleted_attachment ) {
+        update_post_meta($gallery_id, 'images_ids', json_encode(array_values($images_ids_arr)));
       }
 
       // Filter the data by title and description.
@@ -440,9 +460,16 @@ class REACG_Gallery {
         <div class="reacg_item_image"></div>
       </div><?php
       if ( !empty($images_ids) ) {
-        foreach (json_decode($images_ids) as $image_id) {
-          $title = get_the_title($image_id);
+        $images_ids_arr = json_decode($images_ids, true);
+        foreach ($images_ids_arr as $image_id) {
           $url = wp_get_attachment_thumb_url($image_id);
+
+          // The attachment doesn't exist.
+          if ( !$url ) {
+            continue;
+          }
+
+          $title = get_the_title($image_id);
           $basename = basename($url);
           $url = str_replace($basename, urlencode($basename), $url);
           $data = [
