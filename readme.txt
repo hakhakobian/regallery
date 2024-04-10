@@ -140,6 +140,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * Improved: Use respective size of image based on the dimensions.
 * Improved: Ability to load images in the lightbox partially, rather than all at once.
 * Fixed: Remove image from the galleries on attachment delete.
+* Fixed: Include necessary js/css files only in the custom post pages.
 * Fixed: Autosave for newly created galleries.
 * Fixed: The selection of already added images in the Media uploader.
 * Fixed: Validation for options.

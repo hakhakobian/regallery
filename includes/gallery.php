@@ -8,10 +8,6 @@ class REACG_Gallery {
 
   public function __construct($that) {
     $this->obj = $that;
-    wp_enqueue_media();
-    wp_enqueue_script($this->obj->prefix . '_admin');
-    wp_enqueue_style($this->obj->prefix . '_admin');
-    REACGLibrary::enqueue_scripts($this->obj);
     $this->register_post_type();
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'thumbnail_column' ]);
@@ -111,6 +107,8 @@ class REACG_Gallery {
    * @return array
    */
   public function thumbnail_column($columns) {
+    wp_enqueue_style($this->obj->prefix . '_admin');
+
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
     $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
 
@@ -427,6 +425,11 @@ class REACG_Gallery {
     if ( 'reacg' !== $post->post_type ) {
       return;
     }
+
+    wp_enqueue_media();
+    wp_enqueue_script($this->obj->prefix . '_admin');
+    wp_enqueue_style($this->obj->prefix . '_admin');
+    REACGLibrary::enqueue_scripts($this->obj);
 
     // Remove all unnecessary metaboxes from the post type screen.
     $this->remove_all_the_metaboxes();
