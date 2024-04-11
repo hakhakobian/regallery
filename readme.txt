@@ -145,6 +145,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * Fixed: The selection of already added images in the Media uploader.
 * Fixed: Validation for options.
 * Fixed: Number input's value changing on scroll.
+* Fixed: Load more button default color.
 
 = 1.0.1 =
 * Added: Translation files for 10 languages.
