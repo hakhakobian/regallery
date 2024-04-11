@@ -353,10 +353,10 @@ class REACG_Options {
     $deleted = delete_option($this->name . $gallery_id);
 
     if ( $deleted === TRUE ) {
-      return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' ), 200), 200 );
+      return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 200 ) ), 200);
+      return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'reacg' ), 200), 200 );
     }
   }
 
