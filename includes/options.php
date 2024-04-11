@@ -356,7 +356,7 @@ class REACG_Options {
       return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' ), 200), 200 );
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 200 ) ), 200);
     }
   }
 
