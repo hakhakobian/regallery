@@ -56,7 +56,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       [
         'label_block' => TRUE,
         'show_label' => FALSE,
-        'description' => sprintf(__('Add/edit galleries %s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">' . __('here', 'reacg') . '</a>'),
+        'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 0,
         'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),

@@ -124,7 +124,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.0.1: Minor fixes. Enjoy free functionality and add your suggestions via WP forum.
+* 1.1.0: Added options to customize the lightbox and improved load time. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
@@ -133,7 +133,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * Added: Lightbox options to disable control buttons.
 * Added: Option to have not full width lightbox.
 * Added: Option to have autoplay in the lightbox.
-* Added: Option to show caption and description in the lightbox
+* Added: Option to show caption and description in the lightbox.
 * Added: Filmstrip to the lightbox.
 * Added: Possibility to reset options.
 * Added: Widget for Elementor.

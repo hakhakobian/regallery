@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reacg\n"
 "POT-Creation-Date: 2024-03-26 15:57+0400\n"
-"PO-Revision-Date: 2024-03-26 16:29+0400\n"
+"PO-Revision-Date: 2024-04-15 02:04+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -14,6 +14,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: assets/js/wp-gallery.js\n"
 
 #: framework/REACGLibrary.php:117
 #| msgid "Reset"
@@ -36,12 +37,12 @@ msgstr ""
 #: gallery.php:131
 #| msgid "More"
 msgid "Load more"
-msgstr "Carica di più"
+msgstr "もっと読み込む"
 
 #: gallery.php:132
 #| msgid "There are no images in this gallery."
 msgid "There is not data."
-msgstr "Non ci sono dati."
+msgstr "データがありません。"
 
 #: gallery.php:156
 msgid "Insert"

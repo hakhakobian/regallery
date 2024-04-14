@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: reacg\n"
-"POT-Creation-Date: 2024-03-26 15:36+0400\n"
-"PO-Revision-Date: 2024-03-26 15:37+0400\n"
+"POT-Creation-Date: 2024-04-15 01:58+0400\n"
+"PO-Revision-Date: 2024-04-15 02:01+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -14,186 +14,218 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: assets/js/wp-gallery.js\n"
 
-#: framework/REACGLibrary.php:117
+#: framework/REACGLibrary.php:128 framework/REACGLibrary.php:146
 msgid "Select gallery"
 msgstr "Seleccionar galería"
 
-#: framework/REACGLibrary.php:129
+#: framework/REACGLibrary.php:138 framework/REACGLibrary.php:149
 msgid "(no title)"
 msgstr "(Sin título)"
 
-#: framework/REACGLibrary.php:148
+#: framework/REACGLibrary.php:168
 msgid "Missing gallery ID."
 msgstr "Falta el ID de la galería."
 
-#: framework/REACGLibrary.php:153
+#: framework/REACGLibrary.php:173
 msgid "There is no such a gallery."
 msgstr "No existe tal galería."
 
-#: gallery.php:131
+#: gallery.php:155
 msgid "Load more"
 msgstr "Carga más"
 
-#: gallery.php:132
+#: gallery.php:156
 msgid "There is not data."
 msgstr "No hay datos."
 
-#: gallery.php:156
+#: gallery.php:180
 msgid "Insert"
 msgstr "Insertar"
 
-#: gallery.php:157
+#: gallery.php:181
 msgid "Update"
 msgstr "Actualizar"
 
-#: gallery.php:158
+#: gallery.php:182
 msgid "Edit image"
 msgstr "Editar imagen"
 
-#: gallery.php:159
+#: gallery.php:183
 msgid "Choose images"
 msgstr "Elige imágenes"
 
-#: includes/gallery.php:114
+#: includes/elementor.php:49
+msgid "Basic"
+msgstr "Básico"
+
+#: includes/elementor.php:59
+#, php-format
+msgid "Add/edit galleries %shere%s."
+msgstr "Agregue/edite galerías %saquí%s."
+
+#: includes/elementor.php:68
+msgid "Enable options section"
+msgstr "Habilitar sección de opciones"
+
+#: includes/elementor.php:71
+msgid "Yes"
+msgstr "Sí"
+
+#: includes/elementor.php:72
+msgid "No"
+msgstr "No"
+
+#: includes/elementor.php:74
+msgid "The options will be visible only in editor mode."
+msgstr "Las opciones serán visibles sólo en el modo editor."
+
+#: includes/gallery.php:112
 msgid "Thumbnail"
 msgstr "Miniatura"
 
-#: includes/gallery.php:115
+#: includes/gallery.php:113
 msgid "Shortcode"
 msgstr "Código corto"
 
-#: includes/gallery.php:115
+#: includes/gallery.php:113
 msgid "Images count"
 msgstr "Las imágenes cuentan"
 
-#: includes/gallery.php:140
+#: includes/gallery.php:145
 msgid "No image"
 msgstr "Sin imágen"
 
-#: includes/gallery.php:353 includes/gallery.php:354
+#: includes/gallery.php:375 includes/gallery.php:376
 msgid "Add New Gallery"
 msgstr "Agregar nueva galería"
 
-#: includes/gallery.php:355
+#: includes/gallery.php:377
 msgid "Edit Gallery"
 msgstr "Editar galería"
 
-#: includes/gallery.php:356
+#: includes/gallery.php:378
 msgid "New Gallery"
 msgstr "Nueva galería"
 
-#: includes/gallery.php:357
+#: includes/gallery.php:379
 msgid "View Gallery"
 msgstr "Ver galería"
 
-#: includes/gallery.php:358
+#: includes/gallery.php:380
 msgid "View Galleries"
 msgstr "Ver galerías"
 
-#: includes/gallery.php:359
+#: includes/gallery.php:381
 msgid "Search Galleries"
 msgstr "Buscar galerías"
 
-#: includes/gallery.php:360
+#: includes/gallery.php:382
 msgid "No galleries found"
 msgstr "No se encontraron galerías"
 
-#: includes/gallery.php:361
+#: includes/gallery.php:383
 msgid "No galleries found in Trash"
 msgstr "No se encontraron galerías en la Papelera"
 
-#: includes/gallery.php:362
+#: includes/gallery.php:384
 msgid "All Galleries"
 msgstr "Todas las galerías"
 
-#: includes/gallery.php:363
+#: includes/gallery.php:385
 msgid "Filter galleries list"
 msgstr "Lista de galerías de filtrado"
 
-#: includes/gallery.php:364
+#: includes/gallery.php:386
 msgid "Galleries list navigation"
 msgstr "Navegación por la lista de galerías"
 
-#: includes/gallery.php:365
+#: includes/gallery.php:387
 msgid "Galleries list"
 msgstr "Lista de galerías"
 
-#: includes/gallery.php:366
+#: includes/gallery.php:388
 msgid "Gallery Archives"
 msgstr "Archivos de la galería"
 
-#: includes/gallery.php:367
+#: includes/gallery.php:389
 msgid "Gallery Attributes"
 msgstr "Atributos de la galería"
 
-#: includes/gallery.php:368
+#: includes/gallery.php:390
 msgid "Insert into gallery"
 msgstr "Insertar en la galería"
 
-#: includes/gallery.php:369
+#: includes/gallery.php:391
 msgid "Uploaded to this gallery"
 msgstr "Subido a esta galería"
 
-#: includes/gallery.php:370
+#: includes/gallery.php:392
 msgid "Gallery published."
 msgstr "Galería publicada."
 
-#: includes/gallery.php:371
+#: includes/gallery.php:393
 msgid "Gallery published privately."
 msgstr "Galería publicada de forma privada."
 
-#: includes/gallery.php:372
+#: includes/gallery.php:394
 msgid "Gallery reverted to draft."
 msgstr "La galería volvió al borrador."
 
-#: includes/gallery.php:373
+#: includes/gallery.php:395
 msgid "Gallery trashed."
 msgstr "Galería destrozada."
 
-#: includes/gallery.php:374
+#: includes/gallery.php:396
 msgid "Gallery scheduled."
 msgstr "Galería programada."
 
-#: includes/gallery.php:375
+#: includes/gallery.php:397
 msgid "Gallery updated."
 msgstr "Galería actualizada."
 
-#: includes/gallery.php:376
+#: includes/gallery.php:398
 msgid "Gallery Link"
 msgstr "Enlace a la galería"
 
-#: includes/gallery.php:377
+#: includes/gallery.php:399
 msgid "A link to a gallery"
 msgstr "Un enlace a una galería"
 
-#: includes/gallery.php:411
+#: includes/gallery.php:438
 msgid "Images"
 msgstr "Imágenes"
 
-#: includes/gallery.php:473
+#: includes/gallery.php:507
 msgid "Edit"
 msgstr "Editar"
 
-#: includes/gallery.php:474
+#: includes/gallery.php:508
 msgid "Remove"
 msgstr "Eliminar"
 
-#: includes/options.php:151
+#: includes/options.php:229
 msgid "Nothing to save."
 msgstr "Nada que salvar."
 
-#: includes/options.php:173
+#: includes/options.php:248
 msgid "Nothing saved."
 msgstr "Nada guardado."
 
-#: includes/options.php:221
-msgid "Successfully deleted."
-msgstr "Eliminada con éxito."
+#: includes/options.php:356
+msgid "Settings successfully reset."
+msgstr "La configuración se restableció correctamente."
 
-#: includes/options.php:224
-msgid "Nothing deleted."
-msgstr "No se eliminó nada."
+#: includes/options.php:359
+msgid "Settings already reset."
+msgstr "La configuración ya se restableció."
+
+#~ msgid "Successfully deleted."
+#~ msgstr "Eliminada con éxito."
+
+#~ msgid "Nothing deleted."
+#~ msgstr "No se eliminó nada."
 
 #~ msgid "Photo Gallery Ecommerce"
 #~ msgstr "Photo Gallery Ecommerce"
@@ -539,11 +571,6 @@ msgstr "No se eliminó nada."
 #~ msgid "Bulk Actions"
 #~ msgstr "Acciones masivas"
 
-#, fuzzy
-#~| msgid "This option is disabled in free version."
-#~ msgid "This option is disabled in demo."
-#~ msgstr "Esta opción está deshabilitada en la versión gratuita."
-
 #~ msgid "Apply"
 #~ msgstr "Aplicar"
 
@@ -571,9 +598,6 @@ msgstr "No se eliminó nada."
 #~ msgid "Toggle panel:"
 #~ msgstr "Panel de alternativas:"
 
-#~ msgid "Basic"
-#~ msgstr "Básico"
-
 #~ msgid "Preview image"
 #~ msgstr "Previsualizar Imagen"
 
@@ -585,12 +609,6 @@ msgstr "No se eliminó nada."
 
 #~ msgid "Published"
 #~ msgstr "Publicado"
-
-#~ msgid "Yes"
-#~ msgstr "Sí"
-
-#~ msgid "No"
-#~ msgstr "No"
 
 #~ msgid "Advanced"
 #~ msgstr "Avanzado"
@@ -2623,9 +2641,6 @@ msgstr "No se eliminó nada."
 #~ msgid "Installation failed, please try again."
 #~ msgstr "La instalación falló, intente de nuevo."
 
-#~ msgid "Directory already exists."
-#~ msgstr "El directorio ya existe."
-
 #~ msgid "File doesn't exist."
 #~ msgstr "El archivo no existe."
 
@@ -2808,9 +2823,6 @@ msgstr "No se eliminó nada."
 
 #~ msgid "Items successfully recreated."
 #~ msgstr "Artículos exitosamente recreados."
-
-#~ msgid "Items successfully resized."
-#~ msgstr "Artículos redimensionados con éxito."
 
 #~ msgid "Items successfully edited."
 #~ msgstr "Artículos editados con éxito."
@@ -3637,9 +3649,6 @@ msgstr "No se eliminó nada."
 
 #~ msgid "Enable image description"
 #~ msgstr "Habilitar descripción de imagen"
-
-#~ msgid "Enable pagination"
-#~ msgstr "Habilitar paginación"
 
 #~ msgid "Image title position on slideshow"
 #~ msgstr "Posición del título de la imagen en la presentación"
