@@ -70,7 +70,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_yes' => __('Yes', 'reacg'),
         'label_no' => __('No', 'reacg'),
-        'default' => 'yes',
+        'default' => 'no',
         'description' => __( 'The options will be visible only in editor mode.', 'reacg' ),
       ]
     );
