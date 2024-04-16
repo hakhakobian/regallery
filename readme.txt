@@ -3,7 +3,7 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.5
+Tested up to: 6.5.2
 Requires PHP: 7.0
 Stable tag: 1.1.0
 License: GPLv2 or later
