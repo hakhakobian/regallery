@@ -22,6 +22,11 @@
   position: absolute !important;
 }
 
-.yarl__portal.yarl__portal_open {
+.react-lightbox__background .yarl__portal.yarl__portal_open {
   z-index: 100000;
+}
+
+.reacg-gallery div,
+.react-lightbox__background div {
+  box-sizing: content-box;
 }
