@@ -129,22 +129,16 @@ class REACG_Gallery {
       case 'reacg_thumbnail': {
         // Get the first existing image.
         if ( !empty($images_ids_arr) ) {
-          $url = "";
+          $url = $this->obj->plugin_url . $this->obj->no_image;
+
           foreach ( $images_ids_arr as $key => $images_id ) {
-            $url = wp_get_attachment_thumb_url($images_id);
+            $item = $this->get_item_data($images_id);
 
             // The attachment doesn't exist.
-            if ( $url ) {
-              unset($images_ids_arr[$key]);
+            if ( $item ) {
+              $url = $item['thumbnail']['url'];
               break;
             }
-          }
-          if ( !$url ) {
-            $url = $this->obj->plugin_url . $this->obj->no_image;
-          }
-          else {
-            $basename = basename($url);
-            $url = str_replace($basename, urlencode($basename), $url);
           }
 
           ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
@@ -156,15 +150,6 @@ class REACG_Gallery {
         break;
       }
       case 'reacg_images_count': {
-        foreach ( $images_ids_arr as $key => $images_id ) {
-          $post = get_post($images_id);
-
-          // The attachment doesn't exist.
-          if ( is_null($post) ) {
-            unset($images_ids_arr[$key]);
-            break;
-          }
-        }
         echo esc_html(count($images_ids_arr));
         break;
       }
@@ -215,16 +200,16 @@ class REACG_Gallery {
       $images_ids_arr = json_decode($images_ids, TRUE);
       $is_deleted_attachment = FALSE;
       foreach ( $images_ids_arr as $key => $images_id ) {
-        $post = get_post($images_id);
+        $item = $this->get_item_data($images_id);
 
         // The attachment doesn't exist.
-        if ( is_null($post) ) {
+        if ( !$item ) {
           unset($images_ids_arr[$key]);
           $is_deleted_attachment = TRUE;
           continue;
         }
 
-        $item = $this->get_item_data($images_id);
+        $post = get_post($images_id);
         $item['title'] = get_the_title($images_id);
         $item['caption'] = wp_get_attachment_caption($images_id);
         $item['description'] = $post->post_content;
@@ -450,11 +435,10 @@ class REACG_Gallery {
    *
    * @param $id
    *
-   * @return array|array[]
+   * @return
    */
   private function get_image_urls($id) {
-    $url = wp_get_attachment_url($id);
-    if ( !$url ) {
+    if ( $id === 0 ) {
       $no_image = [
         'url' => $this->obj->plugin_url . $this->obj->no_image,
         'width' => 700,
@@ -467,7 +451,13 @@ class REACG_Gallery {
       ];
     }
 
+    $url = wp_get_attachment_url($id);
     $meta = wp_get_attachment_metadata($id);
+
+    if ( !$url || !$meta ) {
+      return FALSE;
+    }
+
     $base_name = isset($meta['file']) ? basename($meta['file']) : "";
 
     $thumbnail = [];
@@ -515,7 +505,7 @@ class REACG_Gallery {
    *
    * @param $id
    *
-   * @return array|array[]
+   * @return
    */
   private function get_item_data($id) {
     $meta = wp_get_attachment_metadata($id);
@@ -524,9 +514,19 @@ class REACG_Gallery {
       // Get Video URL as an original URL and selected image URL as a thumbnail URL.
       $thumbnail_id = isset($meta['thumbnail_id']) ? $meta['thumbnail_id'] : 0;
       $data = $this->get_image_urls($thumbnail_id);
-      $url = wp_get_attachment_url($id);
-      $meta = wp_get_attachment_metadata($id);
+      if ( !$data ) {
+        // If the attachment which is selected as a thumbnail doesn't exist, get no image as a thumbnail.
+        $data = $this->get_image_urls(0);
+      }
 
+      $url = wp_get_attachment_url($id);
+
+      // If the attachment doesn't exist.
+      if ( !$url ) {
+        return FALSE;
+      }
+
+      $meta = wp_get_attachment_metadata($id);
       $basename = basename($url);
       $data['original']['url'] = str_replace($basename, urlencode($basename), $url);
       $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
@@ -535,7 +535,10 @@ class REACG_Gallery {
     }
     else {
       $data = $this->get_image_urls($id);
-      $data['type'] = "image";
+      // If the attachment exists.
+      if ( $data ) {
+        $data['type'] = "image";
+      }
     }
 
     return $data;
@@ -561,18 +564,17 @@ class REACG_Gallery {
       if ( !empty($images_ids) ) {
         $images_ids_arr = json_decode($images_ids, true);
         foreach ($images_ids_arr as $image_id) {
-          $title = get_the_title($image_id);
+          $item = $this->get_item_data($image_id);
 
           // The attachment doesn't exist.
-          if ( !$title ) {
+          if ( !$item ) {
             continue;
           }
 
-          $item = $this->get_item_data($image_id);
           $data = [
             "id" => $image_id,
             "type" => $item['type'],
-            "title" => $title,
+            "title" => get_the_title($image_id),
             "url" => $item['thumbnail']['url'],
           ];
           $this->image_item($data);
