@@ -7,10 +7,6 @@ class REACG_Gallery {
 
   public function __construct($that) {
     $this->obj = $that;
-    wp_enqueue_media();
-    wp_enqueue_script($this->obj->prefix . '_admin');
-    wp_enqueue_style($this->obj->prefix . '_admin');
-    REACGLibrary::enqueue_scripts($this->obj);
     $this->register_post_type();
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'thumbnail_column' ]);
@@ -110,6 +106,8 @@ class REACG_Gallery {
    * @return array
    */
   public function thumbnail_column($columns) {
+    wp_enqueue_style($this->obj->prefix . '_admin');
+
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
     $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
 
@@ -125,13 +123,31 @@ class REACG_Gallery {
    * @return void
    */
   public function thumbnail_column_content($column_id, $post_id) {
-    $images_ids = get_post_meta( $post_id, 'images_ids', true );
-    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids) : [];
+    $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
+    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
+        // Get the first existing image.
         if ( !empty($images_ids_arr) ) {
-          $item = $this->get_item_data($images_ids_arr[0]);
-          ?><div style='background-image: url("<?php echo esc_url($item['thumbnail']['url']); ?>")'></div><?php
+          $url = "";
+          foreach ( $images_ids_arr as $key => $images_id ) {
+            $url = wp_get_attachment_thumb_url($images_id);
+
+            // The attachment doesn't exist.
+            if ( $url ) {
+              unset($images_ids_arr[$key]);
+              break;
+            }
+          }
+          if ( !$url ) {
+            $url = $this->obj->plugin_url . $this->obj->no_image;
+          }
+          else {
+            $basename = basename($url);
+            $url = str_replace($basename, urlencode($basename), $url);
+          }
+
+          ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
         }
         else {
           esc_html_e('No image', 'reacg');
@@ -140,6 +156,15 @@ class REACG_Gallery {
         break;
       }
       case 'reacg_images_count': {
+        foreach ( $images_ids_arr as $key => $images_id ) {
+          $post = get_post($images_id);
+
+          // The attachment doesn't exist.
+          if ( is_null($post) ) {
+            unset($images_ids_arr[$key]);
+            break;
+          }
+        }
         echo esc_html(count($images_ids_arr));
         break;
       }
@@ -165,7 +190,7 @@ class REACG_Gallery {
     $data = [];
     $data['images_count'] = 0;
     if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids);
+      $images_ids_arr = json_decode($images_ids, TRUE);
 
       $data['images_count'] = count($images_ids_arr);
     }
@@ -183,19 +208,32 @@ class REACG_Gallery {
   public function get_images( WP_REST_Request $request ) {
     $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
 
-    $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
+    $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
     if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids);
+      $images_ids_arr = json_decode($images_ids, TRUE);
+      $is_deleted_attachment = FALSE;
+      foreach ( $images_ids_arr as $key => $images_id ) {
+        $post = get_post($images_id);
 
-      foreach ( $images_ids_arr as $image_id ) {
-        $post = get_post($image_id);
-        $item = $this->get_item_data($image_id);
-        $item['title'] = get_the_title($image_id);
-        $item['caption'] = wp_get_attachment_caption($image_id);
+        // The attachment doesn't exist.
+        if ( is_null($post) ) {
+          unset($images_ids_arr[$key]);
+          $is_deleted_attachment = TRUE;
+          continue;
+        }
+
+        $item = $this->get_item_data($images_id);
+        $item['title'] = get_the_title($images_id);
+        $item['caption'] = wp_get_attachment_caption($images_id);
         $item['description'] = $post->post_content;
         $data[] = $item;
+      }
+
+      // Remove attachment ID from the gallery if it doesn't exist anymore.
+      if ( $is_deleted_attachment ) {
+        update_post_meta($gallery_id, 'images_ids', json_encode(array_values($images_ids_arr)));
       }
 
       // Filter the data by title and description.
@@ -388,6 +426,11 @@ class REACG_Gallery {
       return;
     }
 
+    wp_enqueue_media();
+    wp_enqueue_script($this->obj->prefix . '_admin');
+    wp_enqueue_style($this->obj->prefix . '_admin');
+    REACGLibrary::enqueue_scripts($this->obj);
+
     // Remove all unnecessary metaboxes from the post type screen.
     $this->remove_all_the_metaboxes();
 
@@ -516,8 +559,15 @@ class REACG_Gallery {
         <div class="reacg_item_image"></div>
       </div><?php
       if ( !empty($images_ids) ) {
-        foreach (json_decode($images_ids) as $image_id) {
+        $images_ids_arr = json_decode($images_ids, true);
+        foreach ($images_ids_arr as $image_id) {
           $title = get_the_title($image_id);
+
+          // The attachment doesn't exist.
+          if ( !$title ) {
+            continue;
+          }
+
           $item = $this->get_item_data($image_id);
           $data = [
             "id" => $image_id,

@@ -46,7 +46,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'reacg_general',
       [
-        'label' => __('General', 'reacg'),
+        'label' => __('Basic', 'reacg'),
       ]
     );
 
@@ -56,10 +56,22 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       [
         'label_block' => TRUE,
         'show_label' => FALSE,
-        'description' => sprintf(__('Add/edit galleries %s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">' . __('here', 'reacg') . '</a>'),
+        'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 0,
         'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
+      ]
+    );
+    $this->add_control(
+      'enable_options',
+      [
+        'label' => __('Enable options section', 'reacg'),
+        'label_block' => FALSE,
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_yes' => __('Yes', 'reacg'),
+        'label_no' => __('No', 'reacg'),
+        'default' => 'no',
+        'description' => __( 'The options will be visible only in editor mode.', 'reacg' ),
       ]
     );
 
@@ -74,10 +86,28 @@ class REACG_Elementor extends \Elementor\Widget_Base {
   protected function render() {
     $settings = $this->get_settings_for_display();
     $post_id = intval($settings["post_id"]);
-    echo '<script type="text/javascript">';
-    echo 'document.getElementById("reacg-loadApp").setAttribute("data-id", "reacg-root' . $post_id . '");';
-    echo 'document.getElementById("reacg-loadApp").click();';
-    echo '</script>';
+
     echo REACGLibrary::get_rest_routs($post_id);
+
+    if ( is_admin() ) {
+      $enable_options = $settings["enable_options"] === "yes" ? 1 : 0;
+      echo '<script type="text/javascript">';
+      // Get inserted widget container by ID.
+      echo 'var widget_cont = document.querySelector(".elementor-element-' . esc_js($this->get_id()) . '");';
+      // Get the gallery container.
+      echo 'var cont = widget_cont.querySelector("#reacg-root' . $post_id . '");';
+      // Enable/disable options section depends on Elementor widget setting.
+      echo 'cont.setAttribute("data-options-section", "' . $enable_options . '");';
+      // Load the gallery.
+      echo 'document.getElementById("reacg-loadApp").setAttribute("data-id", "reacg-root' . $post_id . '");';
+      echo 'document.getElementById("reacg-loadApp").click();';
+      // Open Elementor widget settings after the gallery load.
+      echo 'widget_cont.querySelector(".elementor-editor-widget-settings").click();';
+      echo '</script>';
+      echo '<style>';
+      // Remove empty widget background if the gallery options are hidden.
+      echo '.elementor-widget-reacg-elementor.elementor-widget-empty { background-color: transparent; }';
+      echo '</style>';
+    }
   }
 }

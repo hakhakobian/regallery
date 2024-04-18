@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
   /* Save options on saving the gallery.*/
   jQuery("#publish").on("click", function () {
-    jQuery( ".MuiButton-root" ).trigger("click");
+    jQuery( ".save-settings-button" ).trigger("click");
   });
   /* Bind an event to the add image button.*/
   jQuery(".reacg_item_new").on("click", function (event) {

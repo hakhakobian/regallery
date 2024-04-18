@@ -3,9 +3,9 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.5
+Tested up to: 6.5.2
 Requires PHP: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,10 +124,28 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.0.1: Minor fixes. Enjoy free functionality and add your suggestions via WP forum.
+* 1.1.0: Added options to customize the lightbox and improved load time. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.1.0 =
+* Added: Lightbox options to disable control buttons.
+* Added: Option to have not full width lightbox.
+* Added: Option to have autoplay in the lightbox.
+* Added: Option to show caption and description in the lightbox.
+* Added: Filmstrip to the lightbox.
+* Added: Possibility to reset options.
+* Added: Widget for Elementor.
+* Improved: Use respective size of image based on the dimensions.
+* Improved: Ability to load images in the lightbox partially, rather than all at once.
+* Fixed: Remove image from the galleries on attachment delete.
+* Fixed: Include necessary js/css files only in the custom post pages.
+* Fixed: Autosave for newly created galleries.
+* Fixed: The selection of already added images in the Media uploader.
+* Fixed: Validation for options.
+* Fixed: Number input's value changing on scroll.
+* Fixed: Load more button default color.
 
 = 1.0.1 =
 * Added: Translation files for 10 languages.

@@ -39,7 +39,7 @@ class REACG_Options {
       'padding' => 0, #number
       'canDownload' => FALSE, #boolean
       'canZoom' => TRUE, #boolean
-      'autoplay' => TRUE, #boolean
+      'autoplay' => FALSE, #boolean
       'slideDuration' => 5000, #number
       'isSlideshowAllowed' => TRUE, #boolean
       'isFullscreenAllowed' => TRUE, #boolean
@@ -51,7 +51,7 @@ class REACG_Options {
       'thumbnailBorderRadius' => 0, #number
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
-      'captionsPosition' => 'bottom', #string top | bottom | above | below | none
+      'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Abel', #string
       'captionColor' => '#FFFFFF', #string;
     ),
@@ -353,10 +353,10 @@ class REACG_Options {
     $deleted = delete_option($this->name . $gallery_id);
 
     if ( $deleted === TRUE ) {
-      return new WP_REST_Response( wp_send_json(__( 'Successfully deleted.', 'reacg' ), 200), 200 );
+      return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_deleted', __( 'Nothing deleted.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'reacg' ), 200), 200 );
     }
   }
 
