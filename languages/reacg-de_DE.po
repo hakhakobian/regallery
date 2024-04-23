@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: reacg\n"
-"POT-Creation-Date: 2024-04-15 01:57+0400\n"
-"PO-Revision-Date: 2024-04-15 01:58+0400\n"
+"POT-Creation-Date: 2024-04-24 00:40+0400\n"
+"PO-Revision-Date: 2024-04-24 00:40+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -32,27 +32,35 @@ msgstr "Fehlende Galerie-ID."
 msgid "There is no such a gallery."
 msgstr "Eine solche Galerie gibt es nicht."
 
-#: gallery.php:155
+#: gallery.php:156
 msgid "Load more"
 msgstr "Mehr laden"
 
-#: gallery.php:156
+#: gallery.php:157
 msgid "There is not data."
 msgstr "Es liegen keine Daten vor."
 
-#: gallery.php:180
+#: gallery.php:181
 msgid "Insert"
 msgstr "Einfügen"
 
-#: gallery.php:181
+#: gallery.php:182
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: gallery.php:182
-msgid "Edit image"
-msgstr "Bild bearbeiten"
-
 #: gallery.php:183
+msgid "Update video cover"
+msgstr ""
+
+#: gallery.php:184 includes/gallery.php:621
+msgid "Edit"
+msgstr ""
+
+#: gallery.php:185 includes/gallery.php:620
+msgid "Edit video cover"
+msgstr ""
+
+#: gallery.php:186
 msgid "Choose images"
 msgstr "Wählen Sie Bilder aus"
 
@@ -81,127 +89,123 @@ msgstr "Nein"
 msgid "The options will be visible only in editor mode."
 msgstr ""
 
-#: includes/gallery.php:112
+#: includes/gallery.php:111
 msgid "Thumbnail"
 msgstr "Miniaturansicht"
 
-#: includes/gallery.php:113
+#: includes/gallery.php:112
 msgid "Shortcode"
 msgstr ""
 
-#: includes/gallery.php:113
+#: includes/gallery.php:112
 msgid "Images count"
 msgstr ""
 
-#: includes/gallery.php:145
+#: includes/gallery.php:159
 msgid "No image"
 msgstr ""
 
-#: includes/gallery.php:375 includes/gallery.php:376
+#: includes/gallery.php:372 includes/gallery.php:373
 msgid "Add New Gallery"
 msgstr ""
 
-#: includes/gallery.php:377
+#: includes/gallery.php:374
 msgid "Edit Gallery"
 msgstr ""
 
-#: includes/gallery.php:378
+#: includes/gallery.php:375
 msgid "New Gallery"
 msgstr ""
 
-#: includes/gallery.php:379
+#: includes/gallery.php:376
 msgid "View Gallery"
 msgstr ""
 
-#: includes/gallery.php:380
+#: includes/gallery.php:377
 msgid "View Galleries"
 msgstr ""
 
-#: includes/gallery.php:381
+#: includes/gallery.php:378
 msgid "Search Galleries"
 msgstr ""
 
-#: includes/gallery.php:382
+#: includes/gallery.php:379
 msgid "No galleries found"
 msgstr ""
 
-#: includes/gallery.php:383
+#: includes/gallery.php:380
 msgid "No galleries found in Trash"
 msgstr ""
 
-#: includes/gallery.php:384
+#: includes/gallery.php:381
 msgid "All Galleries"
 msgstr "Alle Galerien"
 
-#: includes/gallery.php:385
+#: includes/gallery.php:382
 msgid "Filter galleries list"
 msgstr ""
 
-#: includes/gallery.php:386
+#: includes/gallery.php:383
 msgid "Galleries list navigation"
 msgstr ""
 
-#: includes/gallery.php:387
+#: includes/gallery.php:384
 msgid "Galleries list"
 msgstr ""
 
-#: includes/gallery.php:388
+#: includes/gallery.php:385
 msgid "Gallery Archives"
 msgstr ""
 
-#: includes/gallery.php:389
+#: includes/gallery.php:386
 msgid "Gallery Attributes"
 msgstr ""
 
-#: includes/gallery.php:390
+#: includes/gallery.php:387
 msgid "Insert into gallery"
 msgstr ""
 
-#: includes/gallery.php:391
+#: includes/gallery.php:388
 msgid "Uploaded to this gallery"
 msgstr ""
 
-#: includes/gallery.php:392
+#: includes/gallery.php:389
 msgid "Gallery published."
 msgstr ""
 
-#: includes/gallery.php:393
+#: includes/gallery.php:390
 msgid "Gallery published privately."
 msgstr ""
 
-#: includes/gallery.php:394
+#: includes/gallery.php:391
 msgid "Gallery reverted to draft."
 msgstr ""
 
-#: includes/gallery.php:395
+#: includes/gallery.php:392
 msgid "Gallery trashed."
 msgstr ""
 
-#: includes/gallery.php:396
+#: includes/gallery.php:393
 msgid "Gallery scheduled."
 msgstr ""
 
-#: includes/gallery.php:397
+#: includes/gallery.php:394
 msgid "Gallery updated."
 msgstr ""
 
-#: includes/gallery.php:398
+#: includes/gallery.php:395
 msgid "Gallery Link"
 msgstr ""
 
-#: includes/gallery.php:399
+#: includes/gallery.php:396
 msgid "A link to a gallery"
 msgstr ""
 
-#: includes/gallery.php:438
+#: includes/gallery.php:435
 msgid "Images"
 msgstr ""
 
-#: includes/gallery.php:507
-msgid "Edit"
-msgstr ""
-
-#: includes/gallery.php:508
+#: includes/gallery.php:622
 msgid "Remove"
 msgstr ""
 
@@ -220,6 +224,9 @@ msgstr ""
 #: includes/options.php:359
 msgid "Settings already reset."
 msgstr ""
+
+#~ msgid "Edit image"
+#~ msgstr "Bild bearbeiten"
 
 #~ msgid "Publish"
 #~ msgstr "Veröffentlichen"

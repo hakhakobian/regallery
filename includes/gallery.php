@@ -617,7 +617,7 @@ class REACG_Gallery {
       </div>
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
-          <span class="reacg-edit-thumbnail dashicons dashicons-screenoptions <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit thumbnail', 'reacg'); ?>"></span>
+          <span class="reacg-edit-thumbnail dashicons dashicons-cover-image <?php echo esc_attr($data['type'] === "image" ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit video cover', 'reacg'); ?>"></span>
           <span class="reacg-edit dashicons dashicons-edit" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
           <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
         </div>
