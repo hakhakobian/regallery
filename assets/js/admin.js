@@ -84,8 +84,6 @@ jQuery(document).ready(function () {
         }
         item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
       }
-      /* Save images on inserting from media library.*/
-      reacg_save_images();
 
       media_uploader.close();
     } );
@@ -305,9 +303,9 @@ function reacg_save_thumbnail(id, thumbnail_id) {
       'thumbnail_id': thumbnail_id
     },
     complete: function (data) {
+      reacg_loading();
       /* Trigger hidden button click to reload the preview.*/
       jQuery("#reacg-reloadData").trigger("click");
-      reacg_loading();
     }
   });
 }

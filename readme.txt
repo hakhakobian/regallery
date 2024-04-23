@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.2
 Requires PHP: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,10 +124,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.1.0: Added options to customize the lightbox and improved load time. Enjoy free functionality and add your suggestions via WP forum.
+* 1.2.0: Added video support and fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.2.0 =
+* Added: Video support.
+* Added: Background color option for lightbox.
+* Fixed: Caption visibility with some themes.
+* Fixed: Images count in galleries list page after attachment delete.
 
 = 1.1.0 =
 * Added: Lightbox options to disable control buttons.
