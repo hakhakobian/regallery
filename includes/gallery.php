@@ -127,18 +127,30 @@ class REACG_Gallery {
     $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
-        // Get the first existing image.
         if ( !empty($images_ids_arr) ) {
-          $url = $this->obj->plugin_url . $this->obj->no_image;
-
+          $url = "";
+          $is_deleted_attachment = FALSE;
           foreach ( $images_ids_arr as $key => $images_id ) {
             $item = $this->get_item_data($images_id);
 
-            // The attachment doesn't exist.
-            if ( $item ) {
-              $url = $item['thumbnail']['url'];
-              break;
+            if ( !$item ) {
+              // The attachment doesn't exist.
+              unset($images_ids_arr[$key]);
+              $is_deleted_attachment = TRUE;
             }
+            elseif ( $url === "" ) {
+              // Get first existing thumbnail.
+              $url = $item['thumbnail']['url'];
+            }
+          }
+
+          if ( $url === "" ) {
+            $url = $this->obj->plugin_url . $this->obj->no_image;
+          }
+
+          // Remove attachment ID from the gallery if it doesn't exist anymore.
+          if ( $is_deleted_attachment ) {
+            update_post_meta($post_id, 'images_ids', json_encode(array_values($images_ids_arr)));
           }
 
           ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
@@ -511,6 +523,13 @@ class REACG_Gallery {
     $meta = wp_get_attachment_metadata($id);
 
     if ( isset($meta['mime_type']) && strpos($meta['mime_type'], "video") !== -1 ) {
+      $url = wp_get_attachment_url($id);
+
+      // If the attachment doesn't exist.
+      if ( !$url ) {
+        return FALSE;
+      }
+
       // Get Video URL as an original URL and selected image URL as a thumbnail URL.
       $thumbnail_id = isset($meta['thumbnail_id']) ? $meta['thumbnail_id'] : 0;
       $data = $this->get_image_urls($thumbnail_id);
@@ -519,14 +538,6 @@ class REACG_Gallery {
         $data = $this->get_image_urls(0);
       }
 
-      $url = wp_get_attachment_url($id);
-
-      // If the attachment doesn't exist.
-      if ( !$url ) {
-        return FALSE;
-      }
-
-      $meta = wp_get_attachment_metadata($id);
       $basename = basename($url);
       $data['original']['url'] = str_replace($basename, urlencode($basename), $url);
       $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
