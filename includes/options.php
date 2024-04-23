@@ -51,13 +51,13 @@ class REACG_Options {
       'thumbnailBorderRadius' => 0, #number
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
+      'backgroundColor' => '#000000', #string;
       'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Abel', #string
       'captionColor' => '#FFFFFF', #string;
     ),
   ];
   private $name = "reacg_options";
-  private $obj;
 
   /**
    * Validate data on allowed values.
