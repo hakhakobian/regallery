@@ -130,34 +130,38 @@ Customize your website easily! Just upload images with the standard WordPress me
 == Changelog ==
 
 = 1.2.0 =
-* Added: Video support.
-* Added: Background color option for lightbox.
-* Fixed: Caption visibility with some themes.
-* Fixed: Images count in galleries list page after attachment delete.
+= Updated: 24.04.2024 =
+* **Added:** Video support.
+* **Added:** Background color option for lightbox.
+* **Fixed:** Caption visibility with some themes.
+* **Fixed:** Images count in galleries list page after attachment delete.
 
 = 1.1.0 =
-* Added: Lightbox options to disable control buttons.
-* Added: Option to have not full width lightbox.
-* Added: Option to have autoplay in the lightbox.
-* Added: Option to show caption and description in the lightbox.
-* Added: Filmstrip to the lightbox.
-* Added: Possibility to reset options.
-* Added: Widget for Elementor.
-* Improved: Use respective size of image based on the dimensions.
-* Improved: Ability to load images in the lightbox partially, rather than all at once.
-* Fixed: Remove image from the galleries on attachment delete.
-* Fixed: Include necessary js/css files only in the custom post pages.
-* Fixed: Autosave for newly created galleries.
-* Fixed: The selection of already added images in the Media uploader.
-* Fixed: Validation for options.
-* Fixed: Number input's value changing on scroll.
-* Fixed: Load more button default color.
+= Updated: 16.04.2024 =
+* **Added:** Lightbox options to disable control buttons.
+* **Added:** Option to have not full width lightbox.
+* **Added:** Option to have autoplay in the lightbox.
+* **Added:** Option to show caption and description in the lightbox.
+* **Added:** Filmstrip to the lightbox.
+* **Added:** Possibility to reset options.
+* **Added:** Widget for Elementor.
+* **Improved:** Use respective size of image based on the dimensions.
+* **Improved:** Ability to load images in the lightbox partially, rather than all at once.
+* **Fixed:** Remove image from the galleries on attachment delete.
+* **Fixed:** Include necessary js/css files only in the custom post pages.
+* **Fixed:** Autosave for newly created galleries.
+* **Fixed:** The selection of already added images in the Media uploader.
+* **Fixed:** Validation for options.
+* **Fixed:** Number input's value changing on scroll.
+* **Fixed:** Load more button default color.
 
 = 1.0.1 =
-* Added: Translation files for 10 languages.
-* Fixed: Compatibility with PHP v7.0.
-* Fixed: Missing content when checking with "Preview Changes" button.
-* Fixed: Save options in the Playground․
+= Updated: 28.03.2024 =
+* **Added:** Translation files for 10 languages.
+* **Fixed:** Compatibility with PHP v7.0.
+* **Fixed:** Missing content when checking with "Preview Changes" button.
+* **Fixed:** Save options in the Playground․
 
 = 1.0.0 =
+= Updated: 14.03.2024 =
 * Initial version.
