@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.2
 Requires PHP: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,10 +124,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.2.0: Added video support and fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
+* 1.2.1: Added hover effects for thumbnail. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.2.1 =
+= Updated: 03.05.2024 =
+* **Added:** Hover effects for thumbnail.
+* **Fixed:** Thumbnail title with Padding.
+* **Fixed:** Thumbnail title with Radius.
 
 = 1.2.0 =
 = Updated: 24.04.2024 =
