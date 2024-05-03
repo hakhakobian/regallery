@@ -131,9 +131,9 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.2.1 =
 = Updated: 03.05.2024 =
-* **Added:** Hover effects for thumbnail.
-* **Fixed:** Thumbnail title with Padding.
-* **Fixed:** Thumbnail title with Radius.
+* **Added:** Multiple hover effects for the thumbnail view.
+* **Fixed:** Thumbnail title alignment with Padding.
+* **Fixed:** Thumbnail title alignment with Radius.
 
 = 1.2.0 =
 = Updated: 24.04.2024 =
