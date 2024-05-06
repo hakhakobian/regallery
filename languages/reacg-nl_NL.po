@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reacg\n"
 "POT-Creation-Date: 2024-04-24 00:38+0400\n"
-"PO-Revision-Date: 2024-04-24 00:38+0400\n"
+"PO-Revision-Date: 2024-05-06 16:17+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -18,19 +18,19 @@ msgstr ""
 
 #: framework/REACGLibrary.php:128 framework/REACGLibrary.php:146
 msgid "Select gallery"
-msgstr ""
+msgstr "Selecteer een galerij"
 
 #: framework/REACGLibrary.php:138 framework/REACGLibrary.php:149
 msgid "(no title)"
-msgstr ""
+msgstr "(geen titel)"
 
 #: framework/REACGLibrary.php:168
 msgid "Missing gallery ID."
-msgstr ""
+msgstr "Ontbrekende galerij ID."
 
 #: framework/REACGLibrary.php:173
 msgid "There is no such a gallery."
-msgstr ""
+msgstr "Er zijn geen gegevens."
 
 #: gallery.php:156
 msgid "Load more"
@@ -42,11 +42,11 @@ msgstr "Er zijn geen gegevens."
 
 #: gallery.php:181
 msgid "Insert"
-msgstr ""
+msgstr "Invoegen"
 
 #: gallery.php:182
 msgid "Update"
-msgstr ""
+msgstr "Updaten"
 
 #: gallery.php:183
 msgid "Update video cover"
@@ -54,7 +54,7 @@ msgstr ""
 
 #: gallery.php:184 includes/gallery.php:621
 msgid "Edit"
-msgstr ""
+msgstr "Bewerken"
 
 #: gallery.php:185 includes/gallery.php:620
 msgid "Edit video cover"
@@ -62,7 +62,7 @@ msgstr ""
 
 #: gallery.php:186
 msgid "Choose images"
-msgstr ""
+msgstr "Kies afbeeldingen"
 
 #: includes/elementor.php:49
 msgid "Basic"
@@ -91,131 +91,131 @@ msgstr ""
 
 #: includes/gallery.php:111
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #: includes/gallery.php:112
 msgid "Shortcode"
-msgstr ""
+msgstr "Shortcode"
 
 #: includes/gallery.php:112
 msgid "Images count"
-msgstr ""
+msgstr "Aantal afbeeldingen"
 
 #: includes/gallery.php:159
 msgid "No image"
-msgstr ""
+msgstr "Geen afbeelding"
 
 #: includes/gallery.php:372 includes/gallery.php:373
 msgid "Add New Gallery"
-msgstr ""
+msgstr "Voeg nieuwe galerij toe"
 
 #: includes/gallery.php:374
 msgid "Edit Gallery"
-msgstr ""
+msgstr "Galerij bewerken"
 
 #: includes/gallery.php:375
 msgid "New Gallery"
-msgstr ""
+msgstr "Nieuwe galerij"
 
 #: includes/gallery.php:376
 msgid "View Gallery"
-msgstr ""
+msgstr "Bekijk galerij"
 
 #: includes/gallery.php:377
 msgid "View Galleries"
-msgstr ""
+msgstr "Bekijk galerijen"
 
 #: includes/gallery.php:378
 msgid "Search Galleries"
-msgstr ""
+msgstr "Zoek in galerijen"
 
 #: includes/gallery.php:379
 msgid "No galleries found"
-msgstr ""
+msgstr "Geen galerijen gevonden"
 
 #: includes/gallery.php:380
 msgid "No galleries found in Trash"
-msgstr ""
+msgstr "Geen galerijen gevonden in prullenbak"
 
 #: includes/gallery.php:381
 msgid "All Galleries"
-msgstr ""
+msgstr "Alle galerijen"
 
 #: includes/gallery.php:382
 msgid "Filter galleries list"
-msgstr ""
+msgstr "Galerijenlijst filteren"
 
 #: includes/gallery.php:383
 msgid "Galleries list navigation"
-msgstr ""
+msgstr "Galerijen lijstnavigatie"
 
 #: includes/gallery.php:384
 msgid "Galleries list"
-msgstr ""
+msgstr "Galerijenlijst"
 
 #: includes/gallery.php:385
 msgid "Gallery Archives"
-msgstr ""
+msgstr "Galerij archieven"
 
 #: includes/gallery.php:386
 msgid "Gallery Attributes"
-msgstr ""
+msgstr "Galerij attributen"
 
 #: includes/gallery.php:387
 msgid "Insert into gallery"
-msgstr ""
+msgstr "Voeg toe aan galerij"
 
 #: includes/gallery.php:388
 msgid "Uploaded to this gallery"
-msgstr ""
+msgstr "Geüpload naar deze galerij"
 
 #: includes/gallery.php:389
 msgid "Gallery published."
-msgstr ""
+msgstr "Galerij gepubliceerd."
 
 #: includes/gallery.php:390
 msgid "Gallery published privately."
-msgstr ""
+msgstr "Galerij privé gepubliceerd."
 
 #: includes/gallery.php:391
 msgid "Gallery reverted to draft."
-msgstr ""
+msgstr "Galerij teruggezet naar concept."
 
 #: includes/gallery.php:392
 msgid "Gallery trashed."
-msgstr ""
+msgstr "Galerij naar prullenbak verplaatst."
 
 #: includes/gallery.php:393
 msgid "Gallery scheduled."
-msgstr ""
+msgstr "Galerij ingepland."
 
 #: includes/gallery.php:394
 msgid "Gallery updated."
-msgstr ""
+msgstr "Galerij geüpdatet."
 
 #: includes/gallery.php:395
 msgid "Gallery Link"
-msgstr ""
+msgstr "Galerijlink"
 
 #: includes/gallery.php:396
 msgid "A link to a gallery"
-msgstr ""
+msgstr "Een link naar een galerij"
 
 #: includes/gallery.php:435
 msgid "Images"
-msgstr ""
+msgstr "Afbeeldingen"
 
 #: includes/gallery.php:622
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: includes/options.php:229
 msgid "Nothing to save."
-msgstr ""
+msgstr "Niets op te slaan."
 
 #: includes/options.php:248
 msgid "Nothing saved."
-msgstr ""
+msgstr "Niets opgeslagen."
 
 #: includes/options.php:356
 msgid "Settings successfully reset."
