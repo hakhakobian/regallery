@@ -5,23 +5,34 @@ class REACG_Options {
   private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
-    'width' => 200, #number
-    'height' => 150, #number
-    'columns' => 4, #number
-    'gap' => 10, #number
-    'backgroundColor' => '', #string
-    'padding' => 0, #number
-    'paddingColor' => '', #number
-    'borderRadius' => 0, #number
-
-    'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-    'titleVisibility' => 'onHover', #string always | onHover | none
-    'titlePosition' => 'bottom', #string; bottom | top | center | above | below
-    'titleAlignment' => 'left', #string left | center | right
-    'titleColor' => '#CCCCCC', #string
-    'titleFontSize' => 12, #number
-    'titleFontFamily' => 'Abel', #string
-
+    'type' => 'thumbnails', #string thumbnails | mosaic
+    'thumbnails' => [
+      'width' => 200, #number
+      'height' => 150, #number
+      'columns' => 4, #number
+      'gap' => 10, #number
+      'backgroundColor' => '', #string
+      'padding' => 0, #number
+      'paddingColor' => '', #string
+      'borderRadius' => 0, #number
+      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'onHover', #string always | onHover | none
+      'titlePosition' => 'bottom', #string; bottom | top | center | above | below
+      'titleAlignment' => 'left', #string left | center | right
+      'titleColor' => '#CCCCCC', #string
+      'titleFontSize' => 12, #number
+      'titleFontFamily' => 'Abel', #string
+    ],
+    'mosaic' => [
+      'width' => 100, #number
+      'direction' => 'vertical', #string horizontal | vertical
+      'gap' => 10, #number
+      'backgroundColor' => '', #string
+      'padding' => 0, #number
+      'paddingColor' => '', #string
+      'rowHeight' => 200, #number
+      'columns' => 4, #number
+    ],
     'paginationType' => 'scroll', #string simple | scroll | loadMore | none
     'itemsPerPage' => 20, #number
     'activeButtonColor' => '#FFFFFF', #string
@@ -29,8 +40,7 @@ class REACG_Options {
     'paginationButtonShape' => 'circular', #string rounded | circular
     'loadMoreButtonColor' => '#00000014', #string
     'paginationTextColor' => '#000000de', #string
-
-    'lightbox' => array(
+    'lightbox' => [
       'showLightbox' => TRUE, #boolean
       'isFullscreen' => TRUE, #boolean
       'width' => 800, #number
@@ -56,7 +66,7 @@ class REACG_Options {
       'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Abel', #string
       'captionColor' => '#FFFFFF', #string;
-    ),
+    ],
   ];
   private $name = "reacg_options";
 
@@ -79,6 +89,7 @@ class REACG_Options {
       'thumbnailHeight',
       'thumbnailGap',
       'slideDuration',
+      'rowHeight',
     ];
     $empty_number = [
       'gap',
@@ -100,6 +111,14 @@ class REACG_Options {
       'isFullscreenAllowed',
     ];
     $specific = [
+      'type' => [
+        'allowed' => [ 'thumbnails', 'mosaic' ],
+        'default' => 'thumbnails',
+      ],
+      'direction' => [
+        'allowed' => [ 'horizontal', 'vertical' ],
+        'default' => 'vertical',
+      ],
       'titleVisibility' => [
         'allowed' => [ 'always', 'onHover', 'none' ],
         'default' => 'onHover',
@@ -128,7 +147,10 @@ class REACG_Options {
         'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
         'default' => 'bottom',
       ],
-
+      'hoverEffect' => [
+        'allowed' => ['zoom_out', 'zoom_in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'flash', 'shine', 'circle', 'none'],
+        'default' => 'none',
+      ]
     ];
     if ( in_array($key, $number) ) {
       return intval(max($value, 1));
