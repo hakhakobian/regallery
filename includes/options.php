@@ -7,8 +7,8 @@ class REACG_Options {
     'template' => false, #boolean
     'type' => 'thumbnails', #string thumbnails | mosaic
     'thumbnails' => [
-      'width' => 200, #number
-      'height' => 150, #number
+      'width' => 250, #number
+      'height' => 170, #number
       'columns' => 4, #number
       'gap' => 10, #number
       'backgroundColor' => '', #string
