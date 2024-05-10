@@ -350,19 +350,46 @@ class REACG_Options {
     // Options to be moved.
     $move = [
       'lightbox' => ['showLightbox'],
+      'thumbnails' => [
+        'width',
+        'height',
+        'columns',
+        'gap',
+        'backgroundColor',
+        'padding',
+        'paddingColor',
+        'borderRadius',
+        'hoverEffect',
+        'titleVisibility',
+        'titlePosition',
+        'titleAlignment',
+        'titleColor',
+        'titleFontSize',
+        'titleFontFamily',
+      ],
+      'general' => [
+        'paginationType',
+        'itemsPerPage',
+        'activeButtonColor',
+        'inactiveButtonColor',
+        'paginationButtonShape',
+        'loadMoreButtonColor',
+        'paginationTextColor',
+      ],
     ];
 
     foreach ( $move as $to => $old_keys ) {
       // If the new group exists.
-      if ( isset($options[$to]) ) {
-        foreach ( $old_keys as $old_key ) {
-          // If the old option exists.
-          if ( isset($options[$old_key]) ) {
-            // Move the option to the new group.
-            $options[$to][$old_key] = $options[$old_key];
-            // Remove the old option.
-            unset($options[$old_key]);
-          }
+      if ( !isset($options[$to]) ) {
+        $options[$to] = [];
+      }
+      foreach ( $old_keys as $old_key ) {
+        // If the old option exists.
+        if ( isset($options[$old_key]) ) {
+          // Move the option to the new group.
+          $options[$to][$old_key] = $options[$old_key];
+          // Remove the old option.
+          unset($options[$old_key]);
         }
       }
     }
