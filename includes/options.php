@@ -33,13 +33,15 @@ class REACG_Options {
       'rowHeight' => 200, #number
       'columns' => 4, #number
     ],
-    'paginationType' => 'scroll', #string simple | scroll | loadMore | none
-    'itemsPerPage' => 20, #number
-    'activeButtonColor' => '#FFFFFF', #string
-    'inactiveButtonColor' => '#00000014', #string
-    'paginationButtonShape' => 'circular', #string rounded | circular
-    'loadMoreButtonColor' => '#00000014', #string
-    'paginationTextColor' => '#000000de', #string
+    'general' => [
+      'paginationType' => 'scroll', #string simple | scroll | loadMore | none
+      'itemsPerPage' => 20, #number
+      'activeButtonColor' => '#FFFFFF', #string
+      'inactiveButtonColor' => '#00000014', #string
+      'paginationButtonShape' => 'circular', #string rounded | circular
+      'loadMoreButtonColor' => '#00000014', #string
+      'paginationTextColor' => '#000000de', #string
+    ],
     'lightbox' => [
       'showLightbox' => TRUE, #boolean
       'isFullscreen' => TRUE, #boolean
