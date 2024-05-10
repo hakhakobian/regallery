@@ -42,6 +42,7 @@ class REACG_Options {
       'canZoom' => TRUE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 5000, #number
+      'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
       'isFullscreenAllowed' => TRUE, #boolean
       'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
@@ -127,6 +128,10 @@ class REACG_Options {
       'captionsPosition' => [
         'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
         'default' => 'bottom',
+      ],
+      'imageAnimation' => [
+        'allowed' => [ 'fade', 'blur', 'slideH', 'slideV', 'zoom', 'flip', 'rotate' ],
+        'default' => 'slideH',
       ],
 
     ];
