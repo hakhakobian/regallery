@@ -131,13 +131,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.2.2 =
 = Updated: 13.05.2024 =
-* **Added:** Multiple animations for changing between images in lightbox.
-* **Added:** Translation in Dutch added by Peter Smits.
-* **Improved:** Translation in Spain approved by Fernando Tellado.
+* **Added:** Multiple animations for transitioning between images in the lightbox.
+* **Added:** Dutch translation contributed by Peter Smits.
+* **Improved:** Spanish translation approved by Fernando Tellado.
+* **Fixed:** Thumbnail ratio issue.
 
 = 1.2.1 =
 = Updated: 03.05.2024 =
-* **Added:** Multiple hover effects for the thumbnail view.
+* **Added:** Multiple hover effects for the Thumbnails view.
 * **Fixed:** Thumbnail title alignment with Padding.
 * **Fixed:** Thumbnail title alignment with Radius.
 
