@@ -250,6 +250,29 @@ class REACG_Options {
   }
 
   /**
+   * Refill the changed data.
+   *
+   * @param $new_data
+   * @param $saved_data
+   *
+   * @return mixed
+   */
+  private function fill($new_data, $saved_data) {
+    foreach ( $new_data as $key => $option ) {
+      if ( is_array($option) ) {
+        // If the option is a group of options.
+        $this->fill($new_data[$key], $saved_data[$key]);
+      }
+      else {
+        // If an option has a new value change the old one with it.
+        $saved_data[$key] = $option;
+      }
+    }
+
+    return $saved_data;
+  }
+
+  /**
    * Set options for the given gallery.
    *
    * @param WP_REST_Request $request
@@ -272,8 +295,15 @@ class REACG_Options {
     // Sanitizing and validating the given data.
     $data = $this->sanitize($data);
 
+    // Get saved options and add the changed once.
+    $old_options = get_option($this->name . $gallery_id, FALSE);
+    if ( !empty($old_options) ) {
+      $old_data = json_decode($old_options, TRUE);
+      $data = $this->fill($data, $old_data);
+    }
+
     $options = json_encode($data);
-    $old_options = get_option($this->name . $gallery_id, $options);
+
     $saved = update_option($this->name . $gallery_id, $options);
     $new_options = get_option($this->name . $gallery_id, $options);
 
@@ -331,15 +361,20 @@ class REACG_Options {
    * @return mixed
    */
   private function defaults($default_options, $options) {
-    foreach ( $default_options as $key => $option ) {
-      if ( is_array($option) ) {
-        // If the option is a group of options (e.g. lightbox)
-        $options[$key] = $this->defaults($default_options[$key], $options[$key]);
+    if ( !empty($options) ) {
+      foreach ( $default_options as $key => $option ) {
+        if ( is_array($option) ) {
+          // If the option is a group of options (e.g. lightbox)
+          $options[$key] = $this->defaults($default_options[$key], $options[$key]);
+        }
+        elseif ( !isset($options[$key]) ) {
+          // If an option is missing add it's default value.
+          $options[$key] = $option;
+        }
       }
-      elseif ( !isset($options[$key]) ) {
-        // If an option is missing add it's default value.
-        $options[$key] = $option;
-      }
+    }
+    else {
+      $options = $default_options;
     }
 
     return $options;
@@ -353,49 +388,50 @@ class REACG_Options {
    * @return mixed
    */
   private function modify($options) {
-    // Options to be moved.
-    $move = [
-      'lightbox' => ['showLightbox'],
-      'thumbnails' => [
-        'width',
-        'height',
-        'columns',
-        'gap',
-        'backgroundColor',
-        'padding',
-        'paddingColor',
-        'borderRadius',
-        'hoverEffect',
-        'titleVisibility',
-        'titlePosition',
-        'titleAlignment',
-        'titleColor',
-        'titleFontSize',
-        'titleFontFamily',
-      ],
-      'general' => [
-        'paginationType',
-        'itemsPerPage',
-        'activeButtonColor',
-        'inactiveButtonColor',
-        'paginationButtonShape',
-        'loadMoreButtonColor',
-        'paginationTextColor',
-      ],
-    ];
-
-    foreach ( $move as $to => $old_keys ) {
-      // If the new group exists.
-      if ( !isset($options[$to]) ) {
-        $options[$to] = [];
-      }
-      foreach ( $old_keys as $old_key ) {
-        // If the old option exists.
-        if ( isset($options[$old_key]) ) {
-          // Move the option to the new group.
-          $options[$to][$old_key] = $options[$old_key];
-          // Remove the old option.
-          unset($options[$old_key]);
+    if ( !empty($options) ) {
+      // Options to be moved.
+      $move = [
+        'lightbox' => [ 'showLightbox' ],
+        'thumbnails' => [
+          'width',
+          'height',
+          'columns',
+          'gap',
+          'backgroundColor',
+          'padding',
+          'paddingColor',
+          'borderRadius',
+          'hoverEffect',
+          'titleVisibility',
+          'titlePosition',
+          'titleAlignment',
+          'titleColor',
+          'titleFontSize',
+          'titleFontFamily',
+        ],
+        'general' => [
+          'paginationType',
+          'itemsPerPage',
+          'activeButtonColor',
+          'inactiveButtonColor',
+          'paginationButtonShape',
+          'loadMoreButtonColor',
+          'paginationTextColor',
+        ],
+      ];
+      foreach ( $move as $to => $old_keys ) {
+        // If the new group exists.
+        if ( !isset($options[$to]) ) {
+          $options[$to] = [];
+        }
+        foreach ( $old_keys as $old_key ) {
+          // If the old option exists.
+          if ( isset($options[$old_key]) ) {
+            // Move the option to the new group.
+            $options[$to][$old_key] = $options[$old_key];
+            // Remove the old option.
+            unset($options[$old_key]);
+          }
         }
       }
     }
