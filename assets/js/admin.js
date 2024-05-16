@@ -54,6 +54,10 @@ jQuery(document).ready(function () {
       selection.add(wp.media.attachment(image_id));
     });
     media_uploader.open();
+    media_uploader.on( 'select', function () {
+      reacg_reload_preview();
+      media_uploader.close();
+    });
   });
 
   /* Bind an edit thumbnail event to the every video item.*/
@@ -265,7 +269,7 @@ function reacg_media_uploader( e ) {
  * Save the images IDs to the gallery.
  */
 function reacg_save_images() {
-  reacg_loading();
+  reacg_toggle_loading();
 
   jQuery.ajax({
     type: 'POST',
@@ -275,9 +279,9 @@ function reacg_save_images() {
       'images_ids': reacg_get_image_ids(false)
     },
     complete: function (data) {
-      reacg_loading();
-      /* Trigger hidden button click to reload the preview.*/
-      jQuery("#reacg-reloadData").trigger("click");
+      reacg_toggle_loading();
+
+      reacg_reload_preview();
 
       /* Run autosave for newly added posts.*/
       if ( jQuery("#original_post_status").val() === "auto-draft" ) {
@@ -287,6 +291,11 @@ function reacg_save_images() {
   });
 }
 
+/* Trigger hidden button click to reload the preview.*/
+function reacg_reload_preview() {
+  jQuery("#reacg-reloadData").trigger("click");
+}
+
 /**
  * Save the thumbnail for the given item.
  *
@@ -294,7 +303,7 @@ function reacg_save_images() {
  * @param thumbnail_id
  */
 function reacg_save_thumbnail(id, thumbnail_id) {
-  reacg_loading();
+  reacg_toggle_loading();
   jQuery.ajax({
     type: 'POST',
     url: jQuery(".reacg_items").data("ajax-url"),
@@ -303,9 +312,9 @@ function reacg_save_thumbnail(id, thumbnail_id) {
       'thumbnail_id': thumbnail_id
     },
     complete: function (data) {
-      reacg_loading();
-      /* Trigger hidden button click to reload the preview.*/
-      jQuery("#reacg-reloadData").trigger("click");
+      reacg_toggle_loading();
+
+      reacg_reload_preview();
     }
   });
 }
@@ -313,7 +322,7 @@ function reacg_save_thumbnail(id, thumbnail_id) {
 /**
  * Add/remove loading.
  */
-function reacg_loading() {
+function reacg_toggle_loading() {
   jQuery("#publishing-action .spinner").toggleClass("is-active");
   jQuery("#publishing-action #publish").toggleClass("disabled");
 }
