@@ -261,7 +261,7 @@ class REACG_Options {
     foreach ( $new_data as $key => $option ) {
       if ( is_array($option) ) {
         // If the option is a group of options.
-        $this->fill($new_data[$key], $saved_data[$key]);
+        $saved_data[$key] = $this->fill($new_data[$key], $saved_data[$key]);
       }
       else {
         // If an option has a new value change the old one with it.
