@@ -16,7 +16,9 @@ class REACG_Gallery {
     add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
 
     // Register an ajax action to save images to the gallery.
-    add_action('wp_ajax_reacg_save', [ $this, 'save' ]);
+    add_action('wp_ajax_reacg_save_images', [ $this, 'save_images' ]);
+    add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
+    add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
 
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
@@ -280,18 +282,15 @@ class REACG_Gallery {
   }
 
   /**
-   * Ajax call.
+   * Save images.
    *
    * @return void
    */
-  public function save() {
+  public function save_images() {
     if ( isset( $_GET[$this->obj->nonce] )
       && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
       if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
-        $this->save_images();
-      }
-      elseif ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
-        $this->save_attachment((int) $_POST['id'], (int) $_POST['thumbnail_id']);
+        update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
       }
     }
 
@@ -299,23 +298,42 @@ class REACG_Gallery {
   }
 
   /**
-   * Save the gallery metadata.
+   * Save thumbnail.
    *
    * @return void
    */
-  private function save_images() {
-    update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
+  public function save_thumbnail() {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      if ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
+        $id = (int) $_POST['id'];
+        $thumbnail_id = (int) $_POST['thumbnail_id'];
+        $metadata = wp_get_attachment_metadata($id);
+        $metadata['thumbnail_id'] = $thumbnail_id;
+        wp_update_attachment_metadata( $id, $metadata );
+      }
+    }
+
+    wp_die();
   }
 
   /**
-   * Save the attachment metadata.
+   * Delete thumbnail.
    *
    * @return void
    */
-  private function save_attachment( $id, $thumbnail_id ) {
-    $metadata = wp_get_attachment_metadata($id);
-    $metadata['thumbnail_id'] = $thumbnail_id;
-    wp_update_attachment_metadata( $id, $metadata );
+  public function delete_thumbnail() {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      if ( isset($_POST['id']) ) {
+        $id = (int) $_POST['id'];
+        $metadata = wp_get_attachment_metadata($id);
+        unset($metadata['thumbnail_id']);
+        wp_update_attachment_metadata( $id, $metadata );
+      }
+    }
+
+    wp_die();
   }
 
   /**
@@ -564,7 +582,7 @@ class REACG_Gallery {
    */
   public function meta_box_images($post) {
     $images_ids = get_post_meta( $post->ID, 'images_ids', true );
-    $ajax_url = add_query_arg(array('action' => 'reacg_save'), admin_url('admin-ajax.php'));
+    $ajax_url = admin_url('admin-ajax.php');
     $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post->ID); ?>"

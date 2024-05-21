@@ -27,6 +27,9 @@ jQuery(document).ready(function () {
     let item = jQuery(this).closest(".reacg_item");
     /* The image id to be deleted.*/
     let image_id = item.data("id");
+    if ( item.data("type") === "video" ) {
+      reacg_remove_thumbnail(image_id);
+    }
     item.remove();
 
     let images_ids = reacg_get_image_ids(true);
@@ -270,13 +273,13 @@ function reacg_media_uploader( e ) {
  */
 function reacg_save_images() {
   reacg_toggle_loading();
-
   jQuery.ajax({
-    type: 'POST',
+    type: "POST",
     url: jQuery(".reacg_items").data("ajax-url"),
     data: {
-      'post_id': jQuery(".reacg_items").data("post-id"),
-      'images_ids': reacg_get_image_ids(false)
+      "action": "reacg_save_images",
+      "post_id": jQuery(".reacg_items").data("post-id"),
+      "images_ids": reacg_get_image_ids(false)
     },
     complete: function (data) {
       reacg_toggle_loading();
@@ -305,16 +308,37 @@ function reacg_reload_preview() {
 function reacg_save_thumbnail(id, thumbnail_id) {
   reacg_toggle_loading();
   jQuery.ajax({
-    type: 'POST',
+    type: "POST",
     url: jQuery(".reacg_items").data("ajax-url"),
     data: {
-      'id': id,
-      'thumbnail_id': thumbnail_id
+      "action": "reacg_save_thumbnail",
+      "id": id,
+      "thumbnail_id": thumbnail_id
     },
     complete: function (data) {
       reacg_toggle_loading();
 
       reacg_reload_preview();
+    }
+  });
+}
+
+/**
+ * Remove the item thumbnail.
+ *
+ * @param id
+ */
+function reacg_remove_thumbnail(id) {
+  reacg_toggle_loading();
+  jQuery.ajax({
+    type: "POST",
+    url: jQuery(".reacg_items").data("ajax-url"),
+    data: {
+      "action": "reacg_delete_thumbnail",
+      "id": id,
+    },
+    complete: function (data) {
+      reacg_toggle_loading();
     }
   });
 }
