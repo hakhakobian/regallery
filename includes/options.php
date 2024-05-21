@@ -32,6 +32,8 @@ class REACG_Options {
       'paddingColor' => '', #string
       'rowHeight' => 200, #number
       'columns' => 4, #number
+      'borderRadius' => 0, #number
+      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'onHover', #string always | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
