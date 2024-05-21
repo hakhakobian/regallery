@@ -224,6 +224,7 @@ class REACG_Gallery {
         }
 
         $post = get_post($images_id);
+        $item['id'] = $gallery_id . $images_id;
         $item['title'] = get_the_title($images_id);
         $item['caption'] = wp_get_attachment_caption($images_id);
         $item['description'] = $post->post_content;
