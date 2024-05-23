@@ -222,7 +222,7 @@ class REACG_Options {
           break;
         }
         case "DELETE": {
-          $this->delete($request);
+          $this->reset($request);
           break;
         }
       }
@@ -442,23 +442,40 @@ class REACG_Options {
   }
 
   /**
-   * Delete the options fot the given gallery.
+   * Reset the options fot the given gallery.
    *
    * @param $request
    *
    * @return WP_REST_Response
    */
-  private function delete($request) {
+  private function reset($request) {
     $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
 
-    $deleted = delete_option($this->name . $gallery_id);
+    // Get saved options to reset only the current type options.
+    $options = get_option($this->name . $gallery_id, FALSE);
+    if ( !empty($options) ) {
+      $data = json_decode($options, TRUE);
+      if ( !empty($data[$data['type']]) ) {
+        // Remove the current type options.
+        unset($data[$data['type']]);
+      }
+      if ( !empty($data['general']) ) {
+        // Remove general options.
+        unset($data['general']);
+      }
+      if ( !empty($data['lightbox']) ) {
+        // Remove lightbox options.
+        unset($data['lightbox']);
+      }
 
-    if ( $deleted === TRUE ) {
-      return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
+      $options = json_encode($data);
+      $saved = update_option($this->name . $gallery_id, $options);
+      if ( $saved === TRUE ) {
+        return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
+      }
     }
-    else {
-      return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'reacg' ), 200), 200 );
-    }
+
+    return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'reacg' ), 200), 200 );
   }
 
   /**
