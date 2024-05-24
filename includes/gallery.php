@@ -492,9 +492,9 @@ class REACG_Gallery {
     $base_name = isset($meta['file']) ? basename($meta['file']) : "";
 
     $thumbnail = [];
-    $thumbnail['url'] = !empty($meta['sizes']['thumbnail']['file']) ? str_replace($base_name, urlencode($meta['sizes']['thumbnail']['file']), $url) : '';
-    $thumbnail['width'] = !empty($meta['sizes']['thumbnail']['width']) ? $meta['sizes']['thumbnail']['width'] : 0;
-    $thumbnail['height'] = !empty($meta['sizes']['thumbnail']['height']) ? $meta['sizes']['thumbnail']['height'] : 0;
+    $thumbnail['url'] = !empty($meta['sizes']['medium']['file']) ? str_replace($base_name, urlencode($meta['sizes']['medium']['file']), $url) : '';
+    $thumbnail['width'] = !empty($meta['sizes']['medium']['width']) ? $meta['sizes']['medium']['width'] : 0;
+    $thumbnail['height'] = !empty($meta['sizes']['medium']['height']) ? $meta['sizes']['medium']['height'] : 0;
 
     $medium_large = [];
     $medium_large['url'] = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, urlencode($meta['sizes']['medium_large']['file']), $url) : '';
@@ -515,6 +515,7 @@ class REACG_Gallery {
     if ( !$medium_large['url'] ) {
       if ( !$large['url'] ) {
         $medium_large = $original;
+        $large = $original;
       }
       else {
         $medium_large = $large;
@@ -528,6 +529,7 @@ class REACG_Gallery {
       'original' => $original,
       'thumbnail' => $thumbnail,
       'medium_large' => $medium_large,
+      'large' => $large,
     ];
   }
 
