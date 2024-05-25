@@ -42,7 +42,7 @@ class REACG_Options {
       'titleFontFamily' => 'Abel', #string
     ],
     'general' => [
-      'paginationType' => 'scroll', #string simple | scroll | loadMore | none
+      'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
       'inactiveButtonColor' => '#00000014', #string
@@ -144,7 +144,7 @@ class REACG_Options {
       ],
       'paginationType' => [
         'allowed' => [ 'simple', 'scroll', 'loadMore', 'none' ],
-        'default' => 'scroll',
+        'default' => 'simple',
       ],
       'paginationButtonShape' => [
         'allowed' => [ 'rounded', 'circular' ],
