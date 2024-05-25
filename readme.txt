@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.3
 Requires PHP: 7.0
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,10 +124,20 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.2.3: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
+* 1.3.0: Added Mosaic view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.3.0 =
+= Updated: 27.05.2024 =
+* **Added:** Horizontal and Vertical Mosaic views.
+* **Added:** Options to configure Mosaic view.
+* **Added:** One more size for images to make the views more lightweight.
+* **Fixed:** Lightbox control buttons with Title position top/above.
+* **Fixed:** Lightbox control buttons with Title position top/above.
+* **Fixed:** Reload preview on Title update.
+* **Fixed:** Remove added thumbnail for videos on deleting the video from the gallery.
 
 = 1.2.3 =
 = Updated: 21.05.2024 =
