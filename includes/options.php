@@ -176,7 +176,7 @@ class REACG_Options {
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
-    elseif ( in_array($key, $specific) ) {
+    elseif ( array_key_exists($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
     }
 
