@@ -479,6 +479,7 @@ class REACG_Gallery {
         'original' => $no_image,
         'thumbnail' => $no_image,
         'medium_large' => $no_image,
+        'large' => $no_image,
       ];
     }
 
