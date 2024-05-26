@@ -367,16 +367,17 @@ class REACG_Options {
     if ( !empty($options) ) {
       foreach ( $default_options as $key => $option ) {
         if ( is_array($option) ) {
-          // If the option is a group of options (e.g. lightbox)
-          $options[$key] = $this->defaults($default_options[$key], $options[$key]);
+          // If the option is a group of options (e.g. lightbox).
+          $options[$key] = $this->defaults($default_options[$key], isset($options[$key]) ? $options[$key] : null);
         }
         elseif ( !isset($options[$key]) ) {
-          // If an option is missing add it's default value.
+          // If an option is missing add its default value.
           $options[$key] = $option;
         }
       }
     }
     else {
+      // If a group of options is missing add its default value.
       $options = $default_options;
     }
 
