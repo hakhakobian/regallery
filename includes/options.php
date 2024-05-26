@@ -22,6 +22,7 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Abel', #string
+      'paginationType' => 'simple', #string simple | scroll | loadMore | none
     ],
     'mosaic' => [
       'width' => 100, #number
@@ -40,9 +41,9 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Abel', #string
+      'paginationType' => 'simple', #string simple | none
     ],
     'general' => [
-      'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
       'inactiveButtonColor' => '#00000014', #string
@@ -410,9 +411,9 @@ class REACG_Options {
           'titleColor',
           'titleFontSize',
           'titleFontFamily',
+          'paginationType',
         ],
         'general' => [
-          'paginationType',
           'itemsPerPage',
           'activeButtonColor',
           'inactiveButtonColor',
