@@ -135,13 +135,12 @@ Customize your website easily! Just upload images with the standard WordPress me
 * **Added:** Options to configure Mosaic view.
 * **Added:** One more size for images to make the views more lightweight.
 * **Fixed:** Lightbox control buttons with Title position top/above.
-* **Fixed:** Lightbox control buttons with Title position top/above.
 * **Fixed:** Reload preview on Title update.
 * **Fixed:** Remove added thumbnail for videos on deleting the video from the gallery.
 
 = 1.2.3 =
 = Updated: 21.05.2024 =
-* **Fixed:** Do not show pagination for one page galleries.
+* **Fixed:** Do not show pagination for one-page galleries.
 * **Fixed:** Video thumbnails alignment in lightbox.
 
 = 1.2.2 =
