@@ -513,14 +513,11 @@ class REACG_Gallery {
     $original['width'] = !empty($meta['width']) ? $meta['width'] : 0;
     $original['height'] = !empty($meta['height']) ? $meta['height'] : 0;
 
+    if ( !$large['url'] ) {
+      $large = $original;
+    }
     if ( !$medium_large['url'] ) {
-      if ( !$large['url'] ) {
-        $medium_large = $original;
-        $large = $original;
-      }
-      else {
-        $medium_large = $large;
-      }
+      $medium_large = $large;
     }
     if ( !$thumbnail['url'] ) {
       $thumbnail = $medium_large;
