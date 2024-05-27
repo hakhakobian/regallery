@@ -137,6 +137,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * **Fixed:** Lightbox control buttons with Title position top/above.
 * **Fixed:** Reload preview on Title update.
 * **Fixed:** Remove added thumbnail for videos on deleting the video from the gallery.
+* **Fixed:** Image duplication while scroll load.
 
 = 1.2.3 =
 = Updated: 21.05.2024 =
