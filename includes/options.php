@@ -141,7 +141,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
