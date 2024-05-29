@@ -5,7 +5,7 @@ class REACG_Options {
   private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
-    'type' => 'thumbnails', #string thumbnails | mosaic
+    'type' => 'thumbnails', #string thumbnails | mosaic | masonry
     'thumbnails' => [
       'width' => 250, #number
       'height' => 170, #number
@@ -42,6 +42,23 @@ class REACG_Options {
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Abel', #string
       'paginationType' => 'simple', #string simple | none
+    ],
+    'masonry' => [
+      'width' => 100, #number
+      'gap' => 10, #number
+      'backgroundColor' => '', #string
+      'padding' => 0, #number
+      'paddingColor' => '', #string
+      'columns' => 4, #number
+      'borderRadius' => 0, #number
+      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'onHover', #string always | onHover | none
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
+      'titleAlignment' => 'left', #string left | center | right
+      'titleColor' => '#CCCCCC', #string
+      'titleFontSize' => 12, #number
+      'titleFontFamily' => 'Abel', #string
+      'paginationType' => 'scroll', #string scroll | loadMore | none
     ],
     'general' => [
       'itemsPerPage' => 20, #number
@@ -124,7 +141,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
