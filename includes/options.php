@@ -16,7 +16,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
       'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string always | onHover | none
+      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -35,7 +35,7 @@ class REACG_Options {
       'columns' => 4, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string always | onHover | none
+      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -52,7 +52,7 @@ class REACG_Options {
       'columns' => 4, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string always | onHover | none
+      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -149,7 +149,7 @@ class REACG_Options {
         'default' => 'vertical',
       ],
       'titleVisibility' => [
-        'allowed' => [ 'always', 'onHover', 'none' ],
+        'allowed' => [ 'alwaysShown', 'onHover', 'none' ],
         'default' => 'onHover',
       ],
       'titlePosition' => [
