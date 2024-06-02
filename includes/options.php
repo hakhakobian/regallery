@@ -319,6 +319,7 @@ class REACG_Options {
     $old_options = get_option($this->name . $gallery_id, FALSE);
     if ( !empty($old_options) ) {
       $old_data = json_decode($old_options, TRUE);
+      $old_data = $this->modify($old_data);
       $data = $this->fill($data, $old_data);
     }
 
