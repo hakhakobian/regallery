@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.3
 Requires PHP: 7.0
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,8 +13,11 @@ ReGallery, the responsive gallery plugin, is your ideal solution for easily buil
 
 == Description ==
 
-Get ready to dive into a world of visual wonder on WordPress! We are thrilled to present ReGallery, a game-change photo gallery plugin designed to transform your website into a captivating visual journey.
-ReGallery plugin stands out as an excellent option for photography websites, blogs, and any platform aiming to showcase dynamic image galleries with user-friendly navigation.
+ReGallery is a FREE, SEO-friendly plugin enhanced with stunning Mosaic and Masonry views, designed to make your WordPress gallery more beautiful and engaging. Get ready to dive into a world of visual wonder on WordPress!
+
+ReGallery is the perfect choice for photography websites, blogs, and any platform looking to showcase dynamic image galleries with user-friendly navigation. Our mission is to make WordPress websites visually stunning, accessible, and optimized for search engines.
+
+Transform your website into a captivating visual journey with ReGallery. Enhance your site's SEO and user experience with this powerful and easy-to-use photo gallery plugin. Make your WordPress site stand out today!
 
 
 == Benefits ==
@@ -54,11 +57,13 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 == Screenshots ==
 
 1. Add/edit gallery overview screen.
-2. Modal box for choosing images from your Media Library.
-3. Live preview of gallery for option changes.
+2. Live preview of gallery for option changes.
+3. Modal box for choosing images from your Media Library.
 4. Widget for inserting created galleries into the Gutenberg editor.
-5. Gallery with Thumbnail Preview.
-6. Lightbox View of the Gallery.
+5. Gallery with Thumbnails view.
+6. Gallery with Mosaic view.
+7. Gallery with Masonry view.
+8. Lightbox View of the Gallery.
 
 == Frequently Asked Questions ==
 
@@ -83,9 +88,13 @@ Our plugin is perfect for everyone, providing the elegance and adaptability requ
 
 Yes, our plugin is fully responsive, ensuring your galleries look amazing on all devices.
 
-= 6. Will there be support for video content? =
+= 6. What Views Are Available in the ReGallery plugin? =
 
-While currently focused on images, we are exploring future updates that may include video support.
+ReGallery offers a variety of stunning views to enhance your photo galleries. Our plugin includes the following views:
+
+* Thumbnail view: Present your gallery with clickable thumbnails that open larger versions of the images.
+* Mosaic view: Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
+* Masonry view: Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
 
 = 7. How does the live demo feature work? =
 
@@ -124,10 +133,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.3.0: Added Mosaic view. Enjoy free functionality and add your suggestions via WP forum.
+* 1.4.0: Added Masonry view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.4.0 =
+= Updated: 03.06.2024 =
+* **Added:** Masonry view.
+* **Improved:** Mosaic view responsiveness.
+* **Fixed:** Preview alignment in editors.
+* **Fixed:** Saving Title position.
+* **Fixed:** Saving options on gallery update.
 
 = 1.3.0 =
 = Updated: 27.05.2024 =
