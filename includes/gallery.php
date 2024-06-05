@@ -358,6 +358,7 @@ class REACG_Gallery {
     // Save the shortcode as the post content.
     wp_update_post([
                      'ID' => $post_id,
+                     'post_title' => sanitize_text_field($post->post_title),
                      'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
                    ]);
     add_action( 'save_post', [ $this, 'save_post' ], 10, 2 );
