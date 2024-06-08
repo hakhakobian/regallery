@@ -33,3 +33,31 @@
 .react-lightbox__background div {
   box-sizing: content-box;
 }
+
+.elementor-container .button-primary {
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+}
+
+.elementor-container .button-primary:hover {
+  background: #135e96;
+  border-color: #135e96;
+  color: #fff;
+}
+
+.elementor-container .button-secondary {
+  background: #f6f7f7;
+  border-color: #2271b1;
+  color: #2271b1;
+  text-decoration: none;
+  text-shadow: none;
+}
+
+.elementor-container .button-secondary:hover {
+  background: #f0f0f1;
+  border-color: #0a4b78;
+  color: #0a4b78;
+}
