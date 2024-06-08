@@ -16,7 +16,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
    * @return string
    */
   public function get_title() {
-    return 'ReGallery';
+    return REACG_NICENAME;
   }
 
   /**
