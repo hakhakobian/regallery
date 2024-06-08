@@ -34,7 +34,9 @@
   box-sizing: content-box;
 }
 
-.elementor-container .button-primary {
+/* For Elementor and Divi builder. */
+.elementor-container .button-primary,
+.reacg_module .button-primary {
   background: #2271b1;
   border-color: #2271b1;
   color: #fff;
@@ -42,13 +44,15 @@
   text-shadow: none;
 }
 
-.elementor-container .button-primary:hover {
+.elementor-container .button-primary:hover,
+.reacg_module .button-primary:hover {
   background: #135e96;
   border-color: #135e96;
   color: #fff;
 }
 
-.elementor-container .button-secondary {
+.elementor-container .button-secondary,
+.reacg_module .button-secondary {
   background: #f6f7f7;
   border-color: #2271b1;
   color: #2271b1;
@@ -56,8 +60,15 @@
   text-shadow: none;
 }
 
-.elementor-container .button-secondary:hover {
+.elementor-container .button-secondary:hover,
+.reacg_module .button-secondary:hover {
   background: #f0f0f1;
   border-color: #0a4b78;
   color: #0a4b78;
+}
+
+/* Divi builder module. */
+.et-db #et-boc .et-l .et-fb-modules-list li[class^="reacg"] svg {
+  padding-bottom: 6px;
+  margin-top: 5px;
 }
