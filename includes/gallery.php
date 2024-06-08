@@ -446,7 +446,6 @@ class REACG_Gallery {
     wp_enqueue_media();
     wp_enqueue_script($this->obj->prefix . '_admin');
     wp_enqueue_style($this->obj->prefix . '_admin');
-    REACGLibrary::enqueue_scripts($this->obj);
 
     // Remove all unnecessary metaboxes from the post type screen.
     $this->remove_all_the_metaboxes();
