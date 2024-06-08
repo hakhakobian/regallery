@@ -26,6 +26,8 @@ final class REACG {
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
+  public $author = 'ReGallery Team';
+  public $public_url = 'https://wordpress.org/plugins/regallery/';
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
@@ -58,6 +60,14 @@ final class REACG {
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
+
+    define('REACG_PLUGIN_DIR', $this->plugin_dir );
+    define('REACG_PLUGIN_URL', $this->plugin_url );
+    define('REACG_PREFIX', $this->prefix );
+    define('REACG_NICENAME', $this->nicename );
+    define('REACG_AUTHOR', $this->author );
+    define('REACG_PUBLIC_URL', $this->public_url );
+    define('REACG_VERSION', $this->version );
   }
 
   /**
@@ -77,6 +87,9 @@ final class REACG {
     add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
     // Fires after elementor editor styles are enqueued.
     add_action('elementor/editor/after_enqueue_styles', array($this, 'enqueue_elementor_styles'), 11);
+
+    // Register Divi module.
+    add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
 
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
@@ -98,7 +111,7 @@ final class REACG {
    */
   public function register_elementor_widget() {
     if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
-      require_once ($this->plugin_dir . '/includes/elementor.php');
+      require_once ($this->plugin_dir . '/builders/elementor/elementor.php');
       \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
     }
   }
@@ -109,7 +122,14 @@ final class REACG {
    * @return void
    */
   public function enqueue_elementor_styles() {
-    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/assets/css/elementor.css', [], $this->version);
+    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/styles/elementor.css', [], $this->version);
+  }
+
+  public function initialize_divi_extension() {
+    if ( ! class_exists( 'ET_Builder_Element' ) ) {
+      return;
+    }
+    require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
   }
 
   /**
@@ -205,13 +225,13 @@ final class REACG {
    * @return void
    */
   public function enqueue_block_editor_assets() {
-    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/assets/js/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
+    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
       'title' => $this->nicename,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
     ));
-    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/assets/css/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
+    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
   }
 
   /**

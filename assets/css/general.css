@@ -8,6 +8,10 @@
   padding: 0;
 }
 
+.reacg-gallery li::marker {
+  content: "";
+}
+
 .editor-styles-wrapper .reacg-gallery .reacg-settings input,
 .reacg-gallery .reacg-settings input {
   border: none;
