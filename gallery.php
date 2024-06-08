@@ -225,13 +225,23 @@ final class REACG {
    * @return void
    */
   public function enqueue_block_editor_assets() {
-    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', array( 'wp-blocks', 'wp-element' ), $this->version);
+    $required_scripts = [
+      $this->prefix . '_thumbnails',
+      'wp-blocks',
+      'wp-element',
+    ];
+    $required_styles = [
+      $this->prefix . '_general',
+      'wp-edit-blocks',
+    ];
+
+    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
       'title' => $this->nicename,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
     ));
-    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', array( 'wp-edit-blocks' ), $this->version);
+    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
 
   /**
