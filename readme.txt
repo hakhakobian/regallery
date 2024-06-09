@@ -140,10 +140,10 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.4.1 =
 = Updated: 10.06.2024 =
-* **Added:** Added module for Divi builder.
-* **Improved:** Include necessary js/css files only in the gallery pages.
-* **Fixed:** Cross-Site Scripting vulnerability on edit gallery page.
-* **Fixed:** Fix hover effect Shine for large images.
+* **Added:** Module for Divi Builder.
+* **Improved:** Include necessary JS/CSS files only on the gallery pages.
+* **Fixed:** Cross-Site Scripting vulnerability on the edit gallery page.
+* **Fixed:** Hover effect "Shine" for large images.
 
 = 1.4.0 =
 = Updated: 03.06.2024 =

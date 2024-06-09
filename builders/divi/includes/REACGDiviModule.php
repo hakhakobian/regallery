@@ -51,7 +51,7 @@ class REACG_DiviModule extends ET_Builder_Module {
           'off' => esc_html__( 'No', 'reacg' ),
           'on'  => esc_html__( 'Yes', 'reacg' ),
         ),
-        'default'         => 'on',
+        'default'         => 'off',
         'tab_slug'        => 'general',
         'toggle_slug'     => 'main_content',
         'description'     => esc_html__( 'The options will be visible only in editor mode.', 'reacg' ),
