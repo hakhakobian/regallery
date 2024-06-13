@@ -104,6 +104,12 @@
   width: 90px;
 }
 
+@media screen and (max-width: 782px) {
+  .column-reacg_thumbnail {
+    display: none;
+  }
+}
+
 .reacg_thumbnail.column-reacg_thumbnail>div {
   background-repeat: no-repeat;
   background-position: center;
