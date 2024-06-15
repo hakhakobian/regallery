@@ -271,9 +271,9 @@ class REACG_Gallery {
 
         $post = get_post($images_id);
         $item['id'] = $gallery_id . $images_id;
-        $item['title'] = get_the_title($images_id);
-        $item['caption'] = wp_get_attachment_caption($images_id);
-        $item['description'] = $post->post_content;
+        $item['title'] = html_entity_decode(get_the_title($images_id));
+        $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
+        $item['description'] = html_entity_decode($post->post_content);
         $data[] = $item;
       }
 
