@@ -6,7 +6,6 @@ class REACG_Shortcode {
 
   public function __construct($that) {
     $this->obj = $that;
-    REACGLibrary::enqueue_scripts($this->obj);
 
     add_shortcode($that->shortcode, array($this, 'content'));
   }

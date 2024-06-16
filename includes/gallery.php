@@ -9,8 +9,10 @@ class REACG_Gallery {
     $this->obj = $that;
     $this->register_post_type();
     // Add columns to the custom post list.
-    add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'thumbnail_column' ]);
-    add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'thumbnail_column_content' ], 10, 2);
+    add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'custom_columns' ]);
+    add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
+    add_filter('manage_edit-' . $this->post_type . '_sortable_columns', [ $this, 'make_images_count_column_sortable' ]);
+    add_action('pre_get_posts', [ $this, 'images_count_column_orderby' ]);
 
     add_action('save_post', [ $this, 'save_post' ], 10, 2);
     add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
@@ -107,13 +109,43 @@ class REACG_Gallery {
    *
    * @return array
    */
-  public function thumbnail_column($columns) {
+  public function custom_columns($columns) {
     wp_enqueue_style($this->obj->prefix . '_admin');
 
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
     $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
 
     return $columns;
+  }
+
+  /**
+   * Maker the Images count columns sortable.
+   *
+   * @param $columns
+   *
+   * @return mixed
+   */
+  public function make_images_count_column_sortable($columns) {
+    $columns['reacg_images_count'] = 'reacg_images_count';
+    return $columns;
+  }
+
+  /**
+   * Images count column ordering.
+   *
+   * @param $query
+   *
+   * @return void
+   */
+  public function images_count_column_orderby($query) {
+    if ( !is_admin() ) {
+      return;
+    }
+
+    if ( 'reacg_images_count' === $query->get('orderby') ) {
+      $query->set('meta_key', 'images_count');
+      $query->set('orderby', 'meta_value_num');
+    }
   }
 
   /**
@@ -124,11 +156,11 @@ class REACG_Gallery {
    *
    * @return void
    */
-  public function thumbnail_column_content($column_id, $post_id) {
-    $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
-    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+  public function custom_columns_content($column_id, $post_id) {
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
+        $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
+        $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
         if ( !empty($images_ids_arr) ) {
           $url = "";
           $is_deleted_attachment = FALSE;
@@ -160,11 +192,18 @@ class REACG_Gallery {
         else {
           esc_html_e('No image', 'reacg');
         }
-
         break;
       }
       case 'reacg_images_count': {
-        echo esc_html(count($images_ids_arr));
+        $images_count = get_post_meta( $post_id, 'images_count', TRUE );
+        // Count the images ids in case of empty meta.
+        if ( empty($images_count) ) {
+          $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
+          $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+          $images_count = count($images_ids_arr);
+          update_post_meta($post_id, 'images_count', $images_count);
+        }
+        echo esc_html($images_count);
         break;
       }
       case 'reacg_shortcode': {
@@ -184,14 +223,21 @@ class REACG_Gallery {
   public function get_gallery( WP_REST_Request $request ) {
     $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
 
-    $images_ids = get_post_meta( $gallery_id, 'images_ids', true );
+    $images_count = get_post_meta( $gallery_id, 'images_count', TRUE );
 
     $data = [];
     $data['images_count'] = 0;
-    if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids, TRUE);
 
-      $data['images_count'] = count($images_ids_arr);
+    if ( !empty($images_count) ) {
+      $data['images_count'] = (int) $images_count;
+    }
+    else {
+      // Count the images ids in case of empty meta.
+      $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
+      if ( !empty($images_ids) ) {
+        $images_ids_arr = json_decode($images_ids, TRUE);
+        $data['images_count'] = count($images_ids_arr);
+      }
     }
 
     return new WP_REST_Response( wp_send_json($data, 200), 200 );
@@ -225,9 +271,9 @@ class REACG_Gallery {
 
         $post = get_post($images_id);
         $item['id'] = $gallery_id . $images_id;
-        $item['title'] = get_the_title($images_id);
-        $item['caption'] = wp_get_attachment_caption($images_id);
-        $item['description'] = $post->post_content;
+        $item['title'] = html_entity_decode(get_the_title($images_id));
+        $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
+        $item['description'] = html_entity_decode($post->post_content);
         $data[] = $item;
       }
 
@@ -291,7 +337,12 @@ class REACG_Gallery {
     if ( isset( $_GET[$this->obj->nonce] )
       && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
       if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
-        update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
+        $post_id = (int) $_POST['post_id'];
+        $images_ids = sanitize_text_field($_POST['images_ids']);
+        update_post_meta($post_id, 'images_ids', $images_ids);
+        $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+        $images_count = count($images_ids_arr);
+        update_post_meta($post_id, 'images_count', $images_count);
       }
     }
 
@@ -351,7 +402,13 @@ class REACG_Gallery {
     }
 
     if ( isset($_POST['images_ids']) ) {
-      update_post_meta($post_id, 'images_ids', sanitize_text_field($_POST['images_ids']));
+      $images_ids = sanitize_text_field($_POST['images_ids']);
+      update_post_meta($post_id, 'images_ids', $images_ids);
+
+      // Save images count as a separate meta to make it possible to order galleries by images count.
+      $images_ids_arr = json_decode($images_ids, TRUE);
+      $images_count = is_array($images_ids_arr) ? count($images_ids_arr) : 0;
+      update_post_meta($post_id, 'images_count', $images_count);
     }
 
     remove_action( 'save_post', [ $this, 'save_post' ] );
@@ -378,6 +435,7 @@ class REACG_Gallery {
     }
 
     delete_post_meta($post_id, 'images_ids');
+    delete_post_meta($post_id, 'images_count');
   }
 
   /**
@@ -446,7 +504,6 @@ class REACG_Gallery {
     wp_enqueue_media();
     wp_enqueue_script($this->obj->prefix . '_admin');
     wp_enqueue_style($this->obj->prefix . '_admin');
-    REACGLibrary::enqueue_scripts($this->obj);
 
     // Remove all unnecessary metaboxes from the post type screen.
     $this->remove_all_the_metaboxes();

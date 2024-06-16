@@ -99,9 +99,18 @@
   width: 130px;
 }
 
-.column-reacg_thumbnail,
-.column-reacg_images_count {
+.column-reacg_thumbnail {
   width: 90px;
+}
+
+.column-reacg_images_count {
+  width: 120px;
+}
+
+@media screen and (max-width: 782px) {
+  .column-reacg_thumbnail {
+    display: none;
+  }
 }
 
 .reacg_thumbnail.column-reacg_thumbnail>div {

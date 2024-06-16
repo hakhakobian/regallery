@@ -79,15 +79,19 @@ class REACGLibrary {
    * @return void
    */
   public static function get_rest_routs($gallery_id) {
+    REACGLibrary::enqueue_scripts();
     ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview alignfull"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
          data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
   }
 
-  public static function enqueue_scripts($obj) {
-    wp_enqueue_style($obj->prefix . '_general');
-    wp_enqueue_script($obj->prefix . '_thumbnails');
+  /**
+   * @return void
+   */
+  public static function enqueue_scripts() {
+    wp_enqueue_style(REACG_PREFIX . '_general');
+    wp_enqueue_script(REACG_PREFIX . '_thumbnails');
   }
 
   /**
