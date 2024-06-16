@@ -337,7 +337,12 @@ class REACG_Gallery {
     if ( isset( $_GET[$this->obj->nonce] )
       && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
       if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
-        update_post_meta((int) $_POST['post_id'], 'images_ids', sanitize_text_field($_POST['images_ids']));
+        $post_id = (int) $_POST['post_id'];
+        $images_ids = sanitize_text_field($_POST['images_ids']);
+        update_post_meta($post_id, 'images_ids', $images_ids);
+        $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+        $images_count = count($images_ids_arr);
+        update_post_meta($post_id, 'images_count', $images_count);
       }
     }
 
@@ -430,6 +435,7 @@ class REACG_Gallery {
     }
 
     delete_post_meta($post_id, 'images_ids');
+    delete_post_meta($post_id, 'images_count');
   }
 
   /**
