@@ -133,16 +133,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.4.2: Made images count column sortable. Enjoy free functionality and add your suggestions via WP forum.
+* 1.4.2: Added the ability to sort galleries by image count on the galleries list page․ Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
 = 1.4.2 =
 = Updated: 17.06.2024 =
-* **Improved:** Sortable images count column in the galleries list view.
+* **Added:** The ability to sort galleries by image count on the galleries list page.
 * **Fixed:** Special characters in the title and description.
-* **Fixed:** Galleries list responsiveness.
+* **Fixed:** Galleries list pages responsiveness.
 
 = 1.4.1 =
 = Updated: 10.06.2024 =
