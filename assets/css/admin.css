@@ -108,8 +108,9 @@
 }
 
 @media screen and (max-width: 782px) {
-  .column-reacg_thumbnail {
-    display: none;
+  .column-reacg_thumbnail,
+  .column-reacg_thumbnail:before {
+    display: none !important;
   }
 }
 
