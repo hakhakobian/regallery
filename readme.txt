@@ -142,7 +142,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 = Updated: 17.06.2024 =
 * **Added:** The ability to sort galleries by image count on the galleries list page.
 * **Fixed:** Special characters in the title and description.
-* **Fixed:** Galleries list pages responsiveness.
+* **Fixed:** Galleries list page responsiveness.
 
 = 1.4.1 =
 = Updated: 10.06.2024 =
