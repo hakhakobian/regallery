@@ -5,7 +5,7 @@ class REACG_Options {
   private $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
-    'type' => 'thumbnails', #string thumbnails | mosaic | masonry
+    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
     'thumbnails' => [
       'width' => 250, #number
       'height' => 170, #number
@@ -59,6 +59,30 @@ class REACG_Options {
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Abel', #string
       'paginationType' => 'scroll', #string scroll | loadMore | none
+    ],
+    'slideshow' => [
+      'showLightbox' => TRUE, #boolean
+      'width' => 800, #number
+      'height' => 600, #number
+      'isInfinite' => TRUE, #boolean
+      'padding' => 0, #number
+      'autoplay' => FALSE, #boolean
+      'slideDuration' => 5000, #number
+      'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
+      'isSlideshowAllowed' => TRUE, #boolean
+      'isFullscreenAllowed' => TRUE, #boolean
+      'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
+      'thumbnailWidth' => 120, #number
+      'thumbnailHeight' => 90, #number
+      'thumbnailBorder' => 0, #number
+      'thumbnailBorderColor' => '', #string
+      'thumbnailBorderRadius' => 0, #number
+      'thumbnailPadding' => 0, #number
+      'thumbnailGap' => 5, #number
+      'backgroundColor' => '#000000', #string;
+      'captionsPosition' => 'none', #string top | bottom | above | below | none
+      'captionFontFamily' => 'Abel', #string
+      'captionColor' => '#FFFFFF', #string;
     ],
     'general' => [
       'itemsPerPage' => 20, #number
@@ -141,7 +165,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
