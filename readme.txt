@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.4
 Requires PHP: 7.0
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,7 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 6. Gallery with Mosaic view.
 7. Gallery with Masonry view.
 8. Lightbox View of the Gallery.
+8. Slideshow gallery view.
 
 == Frequently Asked Questions ==
 
@@ -95,6 +96,7 @@ ReGallery offers a variety of stunning views to enhance your photo galleries. Ou
 * Thumbnail view: Present your gallery with clickable thumbnails that open larger versions of the images.
 * Mosaic view: Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
 * Masonry view: Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
+* Slideshow view: Display your images beautifully with smooth transitions, customizable settings, and full-screen mode..
 
 = 7. How does the live demo feature work? =
 
@@ -133,10 +135,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.4.2: Added the ability to sort galleries by image count on the galleries list page․ Enjoy free functionality and add your suggestions via WP forum.
+* 1.5.0: Added Slideshow gallery view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.5.0 =
+= Updated: 24.06.2024 =
+* **Added:** Slideshow gallery view.
+* **Improved:** Responsiveness of the gallery type section.
 
 = 1.4.2 =
 = Updated: 17.06.2024 =
