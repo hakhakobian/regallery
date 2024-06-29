@@ -30,7 +30,8 @@
   z-index: 100000;
 }
 
-.react-lightbox__background div {
+.react-lightbox__background div,
+.reacg-slideshow div {
   box-sizing: content-box;
 }
 
