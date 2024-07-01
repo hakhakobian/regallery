@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.5.4
 Requires PHP: 7.0
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,10 +135,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.5.0: Added Slideshow gallery view. Enjoy free functionality and add your suggestions via WP forum.
+* 1.5.1: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.5.1 =
+= Updated: 01.07.2024 =
+* **Fixed:** Caption container height issue in the slideshow.
+* **Fixed:** Ellipsis color for long titles in thumbnails, mosaic and masonry views.
 
 = 1.5.0 =
 = Updated: 24.06.2024 =
