@@ -81,7 +81,7 @@
        * @returns {*}
        */
       function showPreview() {
-        let shortcode_id = props.attributes.shortcode_id;
+        let shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
         let cont = el( 'div', {
           'data-options-section': 1,
           'data-gallery-id': shortcode_id,
@@ -90,7 +90,7 @@
         } );
         if ( document.getElementsByClassName("reacg-gallery").length > 0
           && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() == '' ) {
-          document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + props.attributes.shortcode_id);
+          document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + shortcode_id);
           document.getElementById('reacg-loadApp').click();
         }
 
