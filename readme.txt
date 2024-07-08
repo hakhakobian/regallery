@@ -3,9 +3,9 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.5.4
+Tested up to: 6.5.5
 Requires PHP: 7.0
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,10 +135,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.5.1: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
+* 1.5.2: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.5.2 =
+= Updated: 08.07.2024 =
+* **Fixed:** JavaScript error when inserting the gallery with Gutenberg initially.
+* **Fixed:** Slideshow navigation buttons' background in some themes.
 
 = 1.5.1 =
 = Updated: 01.07.2024 =
