@@ -5,7 +5,7 @@ class REACG_Options {
   protected $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
-    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
+    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube
     'thumbnails' => [
       'width' => 250, #number
       'height' => 170, #number
@@ -61,7 +61,6 @@ class REACG_Options {
       'paginationType' => 'scroll', #string scroll | loadMore | none
     ],
     'slideshow' => [
-      'showLightbox' => TRUE, #boolean
       'width' => 800, #number
       'height' => 600, #number
       'isInfinite' => TRUE, #boolean
@@ -83,6 +82,15 @@ class REACG_Options {
       'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Abel', #string
       'captionColor' => '#FFFFFF', #string;
+    ],
+    'cube' => [
+      'width' => 300, #number
+      'height' => 300, #number
+      'isInfinite' => TRUE, #boolean
+      'autoplay' => FALSE, #boolean
+      'slideDuration' => 5000, #number
+      'backgroundColor' => '', #string;
+      'shadow' => TRUE, #boolean
     ],
     'general' => [
       'itemsPerPage' => 20, #number
@@ -165,7 +173,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
