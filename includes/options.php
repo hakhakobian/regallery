@@ -2,7 +2,7 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Options {
-  private $options = [
+  protected $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
@@ -121,7 +121,7 @@ class REACG_Options {
       'captionColor' => '#FFFFFF', #string;
     ],
   ];
-  private $name = "reacg_options";
+  protected $name = "reacg_options";
 
   /**
    * Validate data on allowed values.
@@ -131,7 +131,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function validate($key, $value) {
+  protected function validate($key, $value) {
     $number = [
       'width',
       'height',
@@ -278,7 +278,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function sanitize($data) {
+  protected function sanitize($data) {
     foreach ( $data as $key => $item ) {
       if ( is_array($item) ) {
         $data[$key] = $this->sanitize($item);
@@ -301,7 +301,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function fill($new_data, $saved_data) {
+  protected function fill($new_data, $saved_data) {
     foreach ( $new_data as $key => $option ) {
       if ( is_array($option) ) {
         // If the option is a group of options.
@@ -405,7 +405,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function defaults($default_options, $options) {
+  protected function defaults($default_options, $options) {
     if ( !empty($options) ) {
       foreach ( $default_options as $key => $option ) {
         if ( is_array($option) ) {
@@ -433,7 +433,7 @@ class REACG_Options {
    *
    * @return mixed
    */
-  private function modify($options) {
+  protected function modify($options) {
     if ( !empty($options) ) {
       // Options to be moved.
       $move = [
