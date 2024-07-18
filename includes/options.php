@@ -170,6 +170,7 @@ class REACG_Options {
       'autoplay',
       'isSlideshowAllowed',
       'isFullscreenAllowed',
+      'shadow',
     ];
     $specific = [
       'type' => [
