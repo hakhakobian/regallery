@@ -5,6 +5,7 @@ class REACG_Options {
   protected $options = [
     'title' => 'Default', #string
     'template' => false, #boolean
+    'template_id' => 0, #number
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
     'thumbnails' => [
       'width' => 250, #number
@@ -145,6 +146,7 @@ class REACG_Options {
       'rowHeight',
     ];
     $empty_number = [
+      'template_id',
       'gap',
       'padding',
       'borderRadius',
