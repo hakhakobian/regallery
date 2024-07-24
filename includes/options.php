@@ -87,8 +87,8 @@ class REACG_Options {
       'width' => 300, #number
       'height' => 300, #number
       'isInfinite' => TRUE, #boolean
-      'autoplay' => FALSE, #boolean
-      'slideDuration' => 5000, #number
+      'autoplay' => TRUE, #boolean
+      'slideDuration' => 3000, #number
       'backgroundColor' => '', #string;
       'shadow' => TRUE, #boolean
     ],
