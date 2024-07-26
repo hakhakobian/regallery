@@ -89,7 +89,7 @@ class REACG_Options {
       'isInfinite' => TRUE, #boolean
       'autoplay' => TRUE, #boolean
       'slideDuration' => 3000, #number
-      'backgroundColor' => '', #string;
+      'backgroundColor' => '#FFFFFF', #string;
       'shadow' => TRUE, #boolean
     ],
     'general' => [
