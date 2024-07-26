@@ -88,9 +88,9 @@ class REACG_Options {
       'width' => 300, #number
       'height' => 300, #number
       'isInfinite' => TRUE, #boolean
-      'autoplay' => FALSE, #boolean
-      'slideDuration' => 5000, #number
-      'backgroundColor' => '', #string;
+      'autoplay' => TRUE, #boolean
+      'slideDuration' => 3000, #number
+      'backgroundColor' => '#FFFFFF', #string;
       'shadow' => TRUE, #boolean
     ],
     'general' => [
@@ -172,6 +172,7 @@ class REACG_Options {
       'autoplay',
       'isSlideshowAllowed',
       'isFullscreenAllowed',
+      'shadow',
     ];
     $specific = [
       'type' => [
