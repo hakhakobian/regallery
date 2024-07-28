@@ -281,6 +281,13 @@ final class REACG {
    * Activate.
    */
   public function activate($activate = TRUE) {
+    // Register the custom post type on activate also to affect recreation of rewrite rules.
+    $this->post_type_gallery();
+    // Recreate rewrite rules after registering the new custom post type to ensure the new post permalinks work.
+    global $wp_rewrite;
+    $wp_rewrite->init();
+    $wp_rewrite->flush_rules();
+
     require_once REACG()->plugin_dir . "/includes/options.php";
     new REACG_Options($activate);
   }
