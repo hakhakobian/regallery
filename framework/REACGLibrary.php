@@ -81,7 +81,7 @@ class REACGLibrary {
   public static function get_rest_routs($gallery_id) {
     REACGLibrary::enqueue_scripts();
     ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
-         class="reacg-gallery reacg-preview alignfull"
+         class="reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
          data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
   }
