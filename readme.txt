@@ -145,6 +145,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 = 1.6.0 =
 = Updated: 29.07.2024 =
 * **Added:** Cube view.
+* **Fixed:** Permalinks for the gallery custom post type after a fresh installation.
 
 = 1.5.3 =
 = Updated: 19.07.2024 =
