@@ -163,6 +163,7 @@ class REACG_Options {
       'thumbnailPadding',
     ];
     $boolean = [
+      'template',
       'showLightbox',
       'isFullscreen',
       'areControlButtonsShown',
@@ -521,6 +522,15 @@ class REACG_Options {
       if ( !empty($data['lightbox']) ) {
         // Remove lightbox options.
         unset($data['lightbox']);
+      }
+      if ( !empty($data['template']) ) {
+        unset($data['template']);
+      }
+      if ( !empty($data['template_id']) ) {
+        unset($data['template_id']);
+      }
+      if ( !empty($data['title']) ) {
+        unset($data['title']);
       }
 
       $options = json_encode($data);
