@@ -19,6 +19,7 @@ ReGallery is the perfect choice for photography websites, blogs, and any platfor
 
 Transform your website into a captivating visual journey with ReGallery. Enhance your site's SEO and user experience with this powerful and easy-to-use photo gallery plugin. Make your WordPress site stand out today!
 
+For more information and updates, please visit our website: [ReGallery.team](https://regallery.team/?utm_source=wordpress&utm_medium=social)
 
 == Benefits ==
 
