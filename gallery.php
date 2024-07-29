@@ -6,6 +6,8 @@
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
+ * Plugin URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
+ * Author URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
  * Text Domain: reacg
  * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
