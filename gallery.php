@@ -29,7 +29,7 @@ final class REACG {
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
   public $author = 'ReGallery Team';
-  public $public_url = 'https://wordpress.org/plugins/regallery/';
+  public $public_url = 'https://regallery.team';
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
