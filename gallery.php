@@ -6,6 +6,8 @@
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
+ * Plugin URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
+ * Author URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
  * Text Domain: reacg
  * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -27,7 +29,7 @@ final class REACG {
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
   public $author = 'ReGallery Team';
-  public $public_url = 'https://wordpress.org/plugins/regallery/';
+  public $public_url = 'https://regallery.team';
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";

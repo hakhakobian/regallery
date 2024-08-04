@@ -225,7 +225,7 @@ class REACG_Options {
       return intval(max($value, 1));
     }
     elseif ( in_array($key, $empty_number) ) {
-      return intval($value) < 0 ? '' : intval($value);
+      return $value === '' || intval($value) < 0 ? '' : intval($value);
     }
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
