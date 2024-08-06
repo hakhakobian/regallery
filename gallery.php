@@ -269,6 +269,10 @@ final class REACG {
       }
     }
     $this->activate();
+    if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
+      require_once REACG_PLUGIN_DIR . '/includes/demo.php';
+      reacg_create_demo_content();
+    }
   }
 
   public function new_blog_added( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
@@ -329,7 +333,3 @@ function REACG() {
 }
 
 REACG();
-
-if ( defined("REACG_PLUGIN_DIR") ) {
-  require_once REACG_PLUGIN_DIR . '/includes/demo.php';
-}
