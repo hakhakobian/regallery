@@ -2,15 +2,8 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Demo {
-  private $url = "https://regallery.team/core/wp-content/uploads/2024/08/";
-  private $images = [
-    '1983.06.jpg',
-    '1983.08.jpg',
-    '1983.09.jpg',
-    '1985.05.jpg',
-    '1985.07.jpg',
-    '1985.08.jpg',
-  ];
+  private $url = "";
+  private $images = [];
   public function import_data() {
     $attachments = $this->import_attachments();
 
