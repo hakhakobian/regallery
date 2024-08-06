@@ -330,4 +330,6 @@ function REACG() {
 
 REACG();
 
-require_once REACG_PLUGIN_DIR . '/includes/demo.php';
+if ( defined("REACG_PLUGIN_DIR") ) {
+  require_once REACG_PLUGIN_DIR . '/includes/demo.php';
+}
