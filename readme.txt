@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.2
 Requires PHP: 7.0
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,10 +138,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.7.0: Added Pre-Built templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.7.1: Fixed compatibility with Elementor Basic Gallery widget.. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.7.1 =
+= Updated: 06.08.2024 =
+* **Fixed:** Compatibility with Elementor Basic Gallery widget.
 
 = 1.7.0 =
 = Updated: 06.08.2024 =
