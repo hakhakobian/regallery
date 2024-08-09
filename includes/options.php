@@ -511,25 +511,25 @@ class REACG_Options {
     $options = get_option($this->name . $gallery_id, FALSE);
     if ( !empty($options) ) {
       $data = json_decode($options, TRUE);
-      if ( !empty($data[$data['type']]) ) {
+      if ( isset($data[$data['type']]) ) {
         // Remove the current type options.
         unset($data[$data['type']]);
       }
-      if ( !empty($data['general']) ) {
+      if ( isset($data['general']) ) {
         // Remove general options.
         unset($data['general']);
       }
-      if ( !empty($data['lightbox']) ) {
+      if ( isset($data['lightbox']) ) {
         // Remove lightbox options.
         unset($data['lightbox']);
       }
-      if ( !empty($data['template']) ) {
+      if ( isset($data['template']) ) {
         unset($data['template']);
       }
-      if ( !empty($data['template_id']) ) {
+      if ( isset($data['template_id']) ) {
         unset($data['template_id']);
       }
-      if ( !empty($data['title']) ) {
+      if ( isset($data['title']) ) {
         unset($data['title']);
       }
 
