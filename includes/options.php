@@ -93,6 +93,18 @@ class REACG_Options {
       'backgroundColor' => '#FFFFFF', #string;
       'shadow' => TRUE, #boolean
     ],
+    'carousel' => [
+      'width' => 200, #number
+      'height' => 250, #number
+      'backgroundColor' => '', #string;
+      'padding' => 0, #number
+      'autoplay' => FALSE, #boolean
+      'slideDuration' => 3000, #number
+      'isSlideshowAllowed' => TRUE, #boolean
+      'scale' => 0.1, #float
+      'imagesCount' => 3, #number
+      'spaceBetween' => -10, #number
+    ],
     'general' => [
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
@@ -152,6 +164,7 @@ class REACG_Options {
       'thumbnailGap',
       'slideDuration',
       'rowHeight',
+      'imagesCount',
     ];
     $empty_number = [
       'template_id',
@@ -161,6 +174,9 @@ class REACG_Options {
       'thumbnailBorder',
       'thumbnailBorderRadius',
       'thumbnailPadding',
+    ];
+    $negative_number = [
+      'spaceBetween',
     ];
     $boolean = [
       'template',
@@ -175,9 +191,12 @@ class REACG_Options {
       'isFullscreenAllowed',
       'shadow',
     ];
+    $float = [
+      'scale',
+    ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
@@ -226,6 +245,12 @@ class REACG_Options {
     }
     elseif ( in_array($key, $empty_number) ) {
       return $value === '' || intval($value) < 0 ? '' : intval($value);
+    }
+    elseif ( in_array($key, $negative_number) ) {
+      return intval($value);
+    }
+    elseif ( in_array($key, $float) ) {
+      return floatval($value);
     }
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
