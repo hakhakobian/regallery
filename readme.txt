@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.2
 Requires PHP: 7.0
-Stable tag: 1.7.2
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,10 +138,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.7.2: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
+* 1.7.4: Do not change type on Reset. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.7.4 =
+= Updated: 28.08.2024 =
+* **Fixed:** Do not change type on Reset.
+
+= 1.7.3 =
+= Updated: 19.08.2024 =
+* **Added:** Padding option to the Cube view․
 
 = 1.7.2 =
 = Updated: 12.08.2024 =

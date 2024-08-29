@@ -91,6 +91,7 @@ class REACG_Options {
       'autoplay' => TRUE, #boolean
       'slideDuration' => 3000, #number
       'backgroundColor' => '#FFFFFF', #string;
+      'padding' => 0, #number;
       'shadow' => TRUE, #boolean
     ],
     'carousel' => [
