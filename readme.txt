@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.2
 Requires PHP: 7.0
-Stable tag: 1.7.4
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,7 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 8. Lightbox View of the Gallery.
 9. Slideshow gallery view.
 10. Cube view.
+11. Carousel view.
 
 == Frequently Asked Questions ==
 
@@ -100,6 +101,7 @@ ReGallery offers a variety of stunning views to enhance your photo galleries. Ou
 * Masonry view: Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
 * Slideshow view: Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
 * Cube view: A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
+* Carousel view: Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
 
 = 7. How does the live demo feature work? =
 
@@ -138,10 +140,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.7.4: Do not change type on Reset. Enjoy free functionality and add your suggestions via WP forum.
+* 1.8.0: Added Carousel view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.8.0 =
+= Updated: 04.09.2024 =
+* **Added:** Carousel view.
 
 = 1.7.4 =
 = Updated: 28.08.2024 =
