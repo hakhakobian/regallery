@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.2
 Requires PHP: 7.0
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,10 +140,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.8.0: Added Carousel view. Enjoy free functionality and add your suggestions via WP forum.
+* 1.8.1: Performance improvements. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.8.1 =
+= Updated: 11.09.2024 =
+* **Improved:** Minimized requests.
+* **Improved:** The first load in the Carousel view.
+* **Fixed:** Play/pause in the Carousel view.
 
 = 1.8.0 =
 = Updated: 04.09.2024 =
