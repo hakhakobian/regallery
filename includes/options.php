@@ -101,7 +101,7 @@ class REACG_Options {
       'padding' => 0, #number
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
-      'isSlideshowAllowed' => TRUE, #boolean
+      'playAndPauseAllowed' => TRUE, #boolean
       'scale' => 0.1, #float
       'imagesCount' => 3, #number
       'spaceBetween' => -10, #number
