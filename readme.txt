@@ -3,9 +3,9 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.6.2
+Tested up to: 6.6.3
 Requires PHP: 7.0
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,10 +140,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.8.2: Improved image responsiveness in the Carousel and Cube views. Enjoy free functionality and add your suggestions via WP forum.
+* 1.8.3: Fixed Carousel templates. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.8.3 =
+= Updated: 25.09.2024 =
+* **Fixed:** Carousel templates.
 
 = 1.8.2 =
 = Updated: 17.09.2024 =
