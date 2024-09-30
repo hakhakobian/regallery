@@ -107,6 +107,8 @@ class REACG_Options {
       'spaceBetween' => -10, #number
     ],
     'general' => [
+      'orderBy' => 'default', #string
+      'orderDirection' => 'asc', #string
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
       'inactiveButtonColor' => '#00000014', #string
@@ -240,7 +242,15 @@ class REACG_Options {
       'hoverEffect' => [
         'allowed' => ['zoom_out', 'zoom_in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
-      ]
+      ],
+      'orderBy' => [
+        'allowed' => [ 'default', 'title', 'caption', 'description', 'date' ],
+        'default' => 'default',
+      ],
+      'orderDirection' => [
+        'allowed' => [ 'asc', 'desc' ],
+        'default' => 'asc',
+      ],
     ];
     if ( in_array($key, $number) ) {
       return intval(max($value, 1));
@@ -496,6 +506,8 @@ class REACG_Options {
           'paginationType',
         ],
         'general' => [
+          'orderBy',
+          'orderDirection',
           'itemsPerPage',
           'activeButtonColor',
           'inactiveButtonColor',
