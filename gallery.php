@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: ReGallery, the responsive gallery plugin, is your ideal solution for easily building stunning, mobile-friendly galleries in just minutes.
- * Version: 1.8.3
+ * Version: 1.8.4
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.8.3';
+  public $version = '1.8.4';
 
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
