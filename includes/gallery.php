@@ -274,6 +274,7 @@ class REACG_Gallery {
         $item['title'] = html_entity_decode(get_the_title($images_id));
         $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
         $item['description'] = html_entity_decode($post->post_content);
+        $item['date'] = $post->post_date;
         $data[] = $item;
       }
 
@@ -296,20 +297,18 @@ class REACG_Gallery {
 
       // Order the data by title or caption or description.
       $order_by = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '';
-      if ( in_array($order_by, array('title', 'caption', 'description')) ) {
-        if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
-          // For descending order.
-          usort($data, function($a, $b) use ($order_by) {
-            return strtolower($b[$order_by]) <=> strtolower($a[$order_by]);
-          });
-        }
-        else {
+      if ( in_array($order_by, array('title', 'caption', 'description', 'date')) ) {
           // For ascending order.
           usort($data, function($a, $b) use ($order_by) {
             return strtolower($a[$order_by]) <=> strtolower($b[$order_by]);
           });
-        }
       }
+
+      // For descending order.
+      if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
+        $data = array_reverse($data);
+      }
+
       // Run pagination on the data.
       if ( !empty($_GET['per_page']) ) {
         $per_page = (int) $_GET['per_page'];
