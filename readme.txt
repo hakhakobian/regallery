@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.3
 Requires PHP: 7.0
-Stable tag: 1.8.4
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,17 +57,18 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 
 == Screenshots ==
 
-1. Add/edit gallery overview screen.
-2. Live preview of gallery for option changes.
-3. Modal box for choosing images from your Media Library.
-4. Widget for inserting created galleries into the Gutenberg editor.
-5. Gallery with Thumbnails view.
-6. Gallery with Mosaic view.
-7. Gallery with Masonry view.
-8. Lightbox View of the Gallery.
-9. Slideshow gallery view.
-10. Cube view.
-11. Carousel view.
+1. Add/edit gallery overview screen
+2. Live preview of gallery for option changes
+3. Modal box for choosing images from your Media Library
+4. Widget for inserting created galleries into the Gutenberg editor
+5. Thumbnails view
+6. Mosaic view
+7. Masonry view
+8. Lightbox View of the Gallery
+9. Slideshow view
+10. Cube view
+11. Carousel view
+12. Cards view
 
 == Frequently Asked Questions ==
 
@@ -102,6 +103,7 @@ ReGallery offers a variety of stunning views to enhance your photo galleries. Ou
 * Slideshow view: Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
 * Cube view: A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
 * Carousel view: Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
+* Cards view: Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 
 = 7. How does the live demo feature work? =
 
@@ -140,10 +142,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.8.4: Added gallery sorting options. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.0: Added Cards view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.0 =
+= Updated: 07.10.2024 =
+* **Added:** Cards view.
+* **Fixed:** Template reset in the Carousel view.
 
 = 1.8.4 =
 = Updated: 01.10.2024 =
