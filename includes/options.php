@@ -106,6 +106,15 @@ class REACG_Options {
       'imagesCount' => 3, #number
       'spaceBetween' => -10, #number
     ],
+    'cards' => [
+      'width' => 300, #number
+      'height' => 300, #number
+      'perSlideOffset' => 10, #number
+      'navigationButton' => TRUE, #boolean
+      'playAndPauseAllowed' => FALSE, #boolean
+      'autoplay' => FALSE, #boolean
+      'slideDuration' => 3000, #number
+    ],
     'general' => [
       'orderBy' => 'default', #string
       'orderDirection' => 'asc', #string
@@ -168,6 +177,7 @@ class REACG_Options {
       'slideDuration',
       'rowHeight',
       'imagesCount',
+      'perSlideOffset',
     ];
     $empty_number = [
       'template_id',
@@ -193,6 +203,7 @@ class REACG_Options {
       'isSlideshowAllowed',
       'isFullscreenAllowed',
       'shadow',
+      'navigationButton',
       'playAndPauseAllowed',
     ];
     $float = [
@@ -200,7 +211,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
