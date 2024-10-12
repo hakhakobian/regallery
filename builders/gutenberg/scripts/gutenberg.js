@@ -89,7 +89,7 @@
           id: "reacg-root" + shortcode_id,
         } );
         if ( document.getElementsByClassName("reacg-gallery").length > 0
-          && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() == '' ) {
+          && document.getElementsByClassName("reacg-gallery")[0].innerHTML == '' ) {
           document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + shortcode_id);
           document.getElementById('reacg-loadApp').click();
         }
