@@ -13,6 +13,7 @@ class REACG_Options {
       'columns' => 4, #number
       'gap' => 10, #number
       'backgroundColor' => '', #string
+      'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
@@ -30,6 +31,7 @@ class REACG_Options {
       'direction' => 'vertical', #string horizontal | vertical
       'gap' => 10, #number
       'backgroundColor' => '', #string
+      'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
       'rowHeight' => 200, #number
@@ -48,6 +50,7 @@ class REACG_Options {
       'width' => 100, #number
       'gap' => 10, #number
       'backgroundColor' => '', #string
+      'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
       'columns' => 4, #number
@@ -182,6 +185,7 @@ class REACG_Options {
     $empty_number = [
       'template_id',
       'gap',
+      'containerPadding',
       'padding',
       'borderRadius',
       'thumbnailBorder',
