@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.3
 Requires PHP: 7.0
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,10 +142,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.2: Fixed an issue where the plugin unintentionally changed the website's font. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.3: Added Container padding option. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.3 =
+= Updated: 30.10.2024 =
+* **Added:** Container padding option for Thumbnails, Mosaic and Masonry views.
 
 = 1.9.2 =
 = Updated: 22.10.2024 =
