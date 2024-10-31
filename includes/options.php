@@ -367,7 +367,7 @@ class REACG_Options {
    */
   protected function fill($new_data, $saved_data) {
     foreach ( $new_data as $key => $option ) {
-      if ( is_array($option) ) {
+      if ( is_array($option) && isset($saved_data[$key]) ) {
         // If the option is a group of options.
         $saved_data[$key] = $this->fill($new_data[$key], $saved_data[$key]);
       }
