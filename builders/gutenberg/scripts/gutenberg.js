@@ -9,6 +9,10 @@
       src: pluginData.icon
     } ),
     category: 'common',
+    // Disable support for Additional CSS Class(es) in the block sidebar.
+    supports: {
+      customClassName: false
+    },
     attributes: {
       shortcode: {
         type: "string",
