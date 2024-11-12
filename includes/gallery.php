@@ -421,7 +421,7 @@ class REACG_Gallery {
   }
 
   /**
-   * Delete the post metas on the post delete.
+   * Delete the post metas and options on the post delete.
    *
    * @param $post_id
    * @param $post
@@ -433,8 +433,13 @@ class REACG_Gallery {
       return;
     }
 
+    // Delete the post metas.
     delete_post_meta($post_id, 'images_ids');
     delete_post_meta($post_id, 'images_count');
+
+    // Delete all options connected with the gallery.
+    require_once REACG()->plugin_dir . "/includes/options.php";
+    new REACG_Options(FALSE, $post_id);
   }
 
   /**
