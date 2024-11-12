@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.6.3
 Requires PHP: 7.0
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,10 +142,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.4: Fixed error occurring when saving gallery. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.5: Added option to use the theme's default font family for titles and descriptions. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.5 =
+= Updated: 13.11.2024 =
+* **Added:** Option to use the theme's default font family for titles and descriptions.
+* **Fixed:** Automatically delete all options associated with the gallery when the gallery is removed.
 
 = 1.9.4 =
 = Updated: 07.11.2024 =
