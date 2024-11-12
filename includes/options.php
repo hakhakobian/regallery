@@ -23,7 +23,7 @@ class REACG_Options {
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
-      'titleFontFamily' => 'Abel', #string
+      'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
     ],
     'mosaic' => [
@@ -43,7 +43,7 @@ class REACG_Options {
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
-      'titleFontFamily' => 'Abel', #string
+      'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
     ],
     'masonry' => [
@@ -61,7 +61,7 @@ class REACG_Options {
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
-      'titleFontFamily' => 'Abel', #string
+      'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'scroll', #string scroll | loadMore | none
     ],
     'slideshow' => [
@@ -84,7 +84,7 @@ class REACG_Options {
       'thumbnailGap' => 5, #number
       'backgroundColor' => '#000000', #string;
       'captionsPosition' => 'none', #string top | bottom | above | below | none
-      'captionFontFamily' => 'Abel', #string
+      'captionFontFamily' => 'Inherit', #string
       'captionColor' => '#FFFFFF', #string;
     ],
     'cube' => [
@@ -153,7 +153,7 @@ class REACG_Options {
       'thumbnailGap' => 5, #number
       'backgroundColor' => '#000000', #string;
       'captionsPosition' => 'none', #string top | bottom | above | below | none
-      'captionFontFamily' => 'Abel', #string
+      'captionFontFamily' => 'Inherit', #string
       'captionColor' => '#FFFFFF', #string;
     ],
   ];
