@@ -294,8 +294,10 @@ final class REACG {
     $wp_rewrite->init();
     $wp_rewrite->flush_rules();
 
-    require_once REACG()->plugin_dir . "/includes/options.php";
-    new REACG_Options($activate);
+    if ( $activate ) {
+      require_once REACG()->plugin_dir . "/includes/options.php";
+      new REACG_Options(TRUE);
+    }
   }
 
   /**

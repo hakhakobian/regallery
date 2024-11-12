@@ -289,12 +289,12 @@ class REACG_Options {
     return $value;
   }
 
-  public function __construct($activate) {
+  public function __construct($activate, $gallery_id = 0) {
     if ( $activate ) {
       $this->add_option();
     }
-    else {
-      $this->remove_options();
+    elseif ( $gallery_id ) {
+      $this->remove_option($gallery_id);
     }
   }
 
@@ -598,11 +598,13 @@ class REACG_Options {
   }
 
   /**
-   * Remove the options.
+   * Remove the options by gallery ID.
+   *
+   * @param $gallery_id
    *
    * @return void
    */
-  private function remove_options() {
-    delete_option($this->name);
+  private function remove_option($gallery_id) {
+    delete_option($this->name . $gallery_id);
   }
 }
