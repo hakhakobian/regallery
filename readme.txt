@@ -3,7 +3,7 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.6.3
+Tested up to: 6.7
 Requires PHP: 7.0
 Stable tag: 1.9.5
 License: GPLv2 or later
@@ -14,6 +14,8 @@ ReGallery, the responsive gallery plugin, is your ideal solution for easily buil
 == Description ==
 
 ReGallery is a FREE, SEO-friendly plugin enhanced with stunning Mosaic and Masonry views, designed to make your WordPress gallery more beautiful and engaging. Get ready to dive into a world of visual wonder on WordPress!
+
+https://www.youtube.com/watch?v=_xn7GOOTp5A
 
 ReGallery is the perfect choice for photography websites, blogs, and any platform looking to showcase dynamic image galleries with user-friendly navigation. Our mission is to make WordPress websites visually stunning, accessible, and optimized for search engines.
 
