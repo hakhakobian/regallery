@@ -6,6 +6,7 @@ class REACG_Options {
     'title' => 'Default', #string
     'template' => false, #boolean
     'template_id' => 0, #number
+    'css' => '', #string
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
     'thumbnails' => [
       'width' => 250, #number
@@ -440,6 +441,7 @@ class REACG_Options {
     // Get options for the gallery.
     $options = get_option($this->name . $gallery_id, FALSE);
 
+
     // Get default options if the gallery options do not exist.
     if ( $options === FALSE ) {
       $options = get_option($this->name, FALSE);
@@ -448,7 +450,6 @@ class REACG_Options {
     if ( !empty($options) ) {
       $options = json_decode($options, TRUE);
     }
-
     // Modify the data structure based on the new structure.
     $options = $this->modify($options);
 

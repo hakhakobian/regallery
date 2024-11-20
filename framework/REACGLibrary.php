@@ -81,6 +81,14 @@ class REACGLibrary {
    */
   public static function get_rest_routs($gallery_id) {
     REACGLibrary::enqueue_scripts();
+    $options = get_option("reacg_options" . $gallery_id, FALSE);
+    if ( !empty($options) ) {
+      $options = json_decode($options, TRUE);
+      if ( !empty($options["css"]) ) {
+        wp_add_inline_style(REACG_PREFIX . '_general', wp_strip_all_tags("#reacg-root" . $gallery_id . " { " . $options["css"] . " }"));
+      }
+    }
+
     ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
