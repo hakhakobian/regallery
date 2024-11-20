@@ -214,6 +214,9 @@ class REACG_Options {
     $float = [
       'scale',
     ];
+    $style = [
+      'css',
+    ];
     $specific = [
       'type' => [
         'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards' ],
@@ -282,6 +285,9 @@ class REACG_Options {
     }
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+    elseif ( in_array($key, $style) ) {
+      return wp_strip_all_tags($value);
     }
     elseif ( array_key_exists($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
