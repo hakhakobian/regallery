@@ -593,6 +593,9 @@ class REACG_Options {
       if ( isset($data['title']) ) {
         unset($data['title']);
       }
+      if ( isset($data['css']) ) {
+        unset($data['css']);
+      }
 
       $options = json_encode($data);
       $saved = update_option($this->name . $gallery_id, $options);
