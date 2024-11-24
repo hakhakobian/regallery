@@ -1,0 +1,75 @@
+.reacg-deactivate-popup-overlay,
+.reacg-deactivate-popup {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.reacg-deactivate-popup-overlay {
+  z-index: 9999;
+  background: #000;
+  opacity: 0.5;
+}
+
+.reacg-deactivate-popup {
+  background: #FFF;
+  z-index: 999999;
+  max-width: 600px;
+  max-height: 313px;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 450px) {
+  .reacg-deactivate-popup {
+    max-height: 100%;
+  }
+}
+
+.reacg-deactivate-popup>div {
+  padding: 18px 40px;
+  border-top: 1px solid #CCC;
+}
+
+.reacg-deactivate-popup-header {
+  font-size: 16px;
+  background: #f0f6fc;
+}
+
+.reacg-deactivate-popup-body textarea {
+  width: 100%;
+  font-size: 14px;
+}
+
+.reacg-deactivate-popup-footer {
+  text-align: right;
+}
+
+.reacg-deactivate-popup-close {
+  position: absolute;
+  top: 26px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.reacg-deactivate-popup .spinner {
+  float: none;
+}
+
+.reacg-deactivate-popup label {
+  cursor: pointer;
+}
+
+.reacg-rating {
+  vertical-align: middle;
+  display: inline-flex;
+}
+
+.reacg-rating span {
+  color: #ffb900;
+  width: 13px;
+  height: 13px;
+  font-size: 13px;
+}
