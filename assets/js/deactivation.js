@@ -13,7 +13,8 @@ jQuery(document).ready(function () {
     jQuery(".spinner").addClass("is-active");
     jQuery(this).addClass("button-primary");
     let reason = "";
-    if ( jQuery(".reacg-reasonType:checked").val() === "other" ) {
+    if ( jQuery(".reacg-reasonType:checked").val() === "other"
+      && jQuery(".reacg-reason").val() !== "" ) {
       reason = jQuery(".reacg-reason").val();
     }
     else {
