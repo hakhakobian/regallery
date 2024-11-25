@@ -19,33 +19,65 @@ class REACG_Deactivate {
   }
 
   public function content() {
+    $reasons = [
+      "hard_to" => __("It is hard to use", "reacg"),
+      "no_feature" => __("I didn't find the features I needed", "reacg"),
+      "temporary" => __("It's a temporary deactivation", "reacg"),
+      "other" => __("Other", "reacg"),
+    ];
+    $current_user = wp_get_current_user();
+    $email = $current_user->exists() ? $current_user->user_email : "";
     ?>
-    <div class="reacg-deactivate-popup-overlay" style="display: none;"></div>
-    <div class="reacg-deactivate-popup" style="display: none;">
-      <div class="reacg-deactivate-popup-header">
-        <?php esc_html_e("Please let us know why you are deactivating. Your answer will help us to improve the plugin!", 'reacg'); ?>
-        <span class="reacg-deactivate-popup-close dashicons dashicons-no"></span>
-      </div>
-      <div class="reacg-deactivate-popup-body">
-        <div>
-          <label>
-            <strong><?php esc_html_e("Please describe the deactivation reason:", 'reacg'); ?></strong>
-            <textarea class="reacg-reason" rows="4" data-version="<?php echo esc_attr($this->obj->version); ?>"></textarea>
-          </label>
+    <div class="reacg-deactivate-popup-overlay" style="display: none;">
+      <div class="reacg-deactivate-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
+        <div class="reacg-deactivate-popup-header">
+          <?php esc_html_e("Quick feedback", 'reacg'); ?>
+          <span class="reacg-deactivate-popup-close dashicons dashicons-no"></span>
         </div>
-        <label>
-          <input type="checkbox" class="reacg-agreement" />
-          <?php esc_html_e("By submitting this form your website URL will be collected!", 'reacg'); ?>
-        </label>
-      </div>
-      <div class="reacg-deactivate-popup-footer">
-        <span class="spinner"></span>
-        <a class="button button-secondary reacg-skip">
-          <?php esc_html_e("Skip and Deactivate", 'reacg'); ?>
-        </a>
-        <a class="button button-primary button-primary-disabled reacg-submit">
-          <?php esc_html_e("Submit and Deactivate", 'reacg'); ?>
-        </a>
+        <div class="reacg-deactivate-popup-body">
+          <div class="reacg-note-wrapper">
+            <?php esc_html_e("We are sorry to see you go!", 'reacg'); ?>😔
+            <?php esc_html_e("If you have a moment, please share your thoughts: it helps us improve and make things better for everyone.", 'reacg'); ?>
+          </div>
+          <div class="reacg-reasonType-wrapper">
+            <?php
+            foreach ( $reasons as $key => $reason ) {
+              ?>
+              <div>
+                <label>
+                  <input type="radio" class="reacg-reasonType" name="reacg-reasonType" value="<?php echo esc_attr($key); ?>" alt="<?php echo esc_attr($reason); ?>" />
+                  <?php echo esc_attr($reason); ?>
+                </label>
+              </div>
+              <?php
+            }
+            ?>
+          </div>
+          <div class="reacg-reason-wrapper" style="display: none;">
+            <label>
+              <strong><?php esc_html_e("Please describe the deactivation reason:", 'reacg'); ?></strong>
+              <textarea class="reacg-reason" rows="4"></textarea>
+            </label>
+          </div>
+        </div>
+        <div class="reacg-deactivate-popup-footer">
+          <div class="reacg-agreement-wrapper">
+            <label>
+              <input type="hidden" name="reacg-email" value="<?php echo sanitize_email($email); ?>" />
+              <input type="checkbox" class="reacg-agreement" />
+              <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'reacg'); ?>
+            </label>
+          </div>
+          <div class="reacg-buttons-wrapper">
+            <a class="button button-secondary reacg-submit">
+              <?php esc_html_e("Submit and Deactivate", 'reacg'); ?>
+            </a>
+            <span class="spinner"></span>
+            <a class="button reacg-skip">
+              <?php esc_html_e("Skip and Deactivate", 'reacg'); ?>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <?php
@@ -85,6 +117,10 @@ class REACG_Deactivate {
    * @return array
    */
   function action_links( $links ) {
-    return array_merge( $links, ["<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>"] );
+    $additional_links = [
+      "<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
+      "<a href='" . esc_url('https://regallery.team/#faq') . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
+    ];
+    return array_merge( $links, $additional_links );
   }
 }
