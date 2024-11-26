@@ -78,6 +78,7 @@ final class REACG {
   private function add_actions() {
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
+    add_action('init', array($this, 'deactivation'));
 
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
@@ -151,6 +152,14 @@ final class REACG {
   public function shortcode() {
     require_once($this->plugin_dir . '/includes/shortcode.php');
     new REACG_Shortcode( $this );
+  }
+
+  /**
+   * Add a functional to the deactivation.
+   */
+  public function deactivation() {
+    require_once($this->plugin_dir . '/includes/deactivate.php');
+    new REACG_Deactivate( $this );
   }
 
   /**
