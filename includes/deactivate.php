@@ -118,8 +118,8 @@ class REACG_Deactivate {
    */
   function action_links( $links ) {
     $additional_links = [
-      "<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
       "<a href='" . esc_url('https://regallery.team/#faq') . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
+      "<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
     ];
     return array_merge( $links, $additional_links );
   }
