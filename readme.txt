@@ -153,6 +153,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 = Updated: 27.11.2024 =
 * **Added:** A popup to specify the reason for deactivation.
 * **Added:** Support and Rate links on the plugins page.
+* **Fixed:** Issue with saving the Zoom In/Out hover effect option.
 
 = 1.9.6 =
 = Updated: 21.11.2024 =
