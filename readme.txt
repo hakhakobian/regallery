@@ -59,18 +59,20 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 
 == Screenshots ==
 
-1. Add/edit gallery overview screen
-2. Live preview of gallery for option changes
-3. Modal box for choosing images from your Media Library
-4. Widget for inserting created galleries into the Gutenberg editor
-5. Thumbnails view
-6. Mosaic view
-7. Masonry view
-8. Lightbox View of the Gallery
-9. Slideshow view
-10. Cube view
-11. Carousel view
-12. Cards view
+1. ReGallery view
+2. ReGallery view
+3. ReGallery view
+4. ReGallery view
+5. ReGallery view
+6. ReGallery view
+7. ReGallery view
+8. Image lightbox
+9. ReGallery template
+10. ReGallery template
+11. ReGallery template
+12. Gallery edit page
+13. Gallery options
+14. Insert gallery
 
 == Frequently Asked Questions ==
 
@@ -153,6 +155,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 = Updated: 27.11.2024 =
 * **Added:** A popup to specify the reason for deactivation.
 * **Added:** Support and Rate links on the plugins page.
+* **Fixed:** Issue with saving the Zoom In/Out hover effect option.
 
 = 1.9.6 =
 = Updated: 21.11.2024 =

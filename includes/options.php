@@ -18,7 +18,7 @@ class REACG_Options {
       'padding' => 0, #number
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -38,7 +38,7 @@ class REACG_Options {
       'rowHeight' => 200, #number
       'columns' => 4, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -56,7 +56,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'columns' => 4, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom_out | zoom_in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -259,7 +259,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom_out', 'zoom_in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
