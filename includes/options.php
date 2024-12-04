@@ -6,6 +6,7 @@ class REACG_Options {
     'title' => 'Default', #string
     'template' => false, #boolean
     'template_id' => 0, #number
+    'css' => '', #string
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
     'thumbnails' => [
       'width' => 250, #number
@@ -213,6 +214,9 @@ class REACG_Options {
     $float = [
       'scale',
     ];
+    $style = [
+      'css',
+    ];
     $specific = [
       'type' => [
         'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards' ],
@@ -281,6 +285,9 @@ class REACG_Options {
     }
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+    elseif ( in_array($key, $style) ) {
+      return wp_strip_all_tags($value);
     }
     elseif ( array_key_exists($key, $specific) ) {
       return in_array($value, $specific[$key]['allowed']) ? $value : $specific[$key]['default'];
@@ -440,6 +447,7 @@ class REACG_Options {
     // Get options for the gallery.
     $options = get_option($this->name . $gallery_id, FALSE);
 
+
     // Get default options if the gallery options do not exist.
     if ( $options === FALSE ) {
       $options = get_option($this->name, FALSE);
@@ -448,7 +456,6 @@ class REACG_Options {
     if ( !empty($options) ) {
       $options = json_decode($options, TRUE);
     }
-
     // Modify the data structure based on the new structure.
     $options = $this->modify($options);
 
@@ -585,6 +592,9 @@ class REACG_Options {
       }
       if ( isset($data['title']) ) {
         unset($data['title']);
+      }
+      if ( isset($data['css']) ) {
+        unset($data['css']);
       }
 
       $options = json_encode($data);
