@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.8
+Stable tag: 1.9.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,22 +115,22 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 
 == Frequently Asked Questions ==
 
-= 1. Can I add galleries using Gutenberg? =
+= Can I add galleries using Gutenberg? =
 Absolutely! Our plugin smoothly works with the Gutenberg editor, making gallery addition and management a breeze for a user-friendly experience. Additionally, Option changes can be saved both from the live demo feature and working in the Gutenberg editor, ensuring a consistent experience.
 
-= 2. How can I change the title of an image in my gallery? =
+= How can I change the title of an image in my gallery? =
 To change the title of an image, simply edit the image and modify the title from the media uploader screen.
 
-= 3. Can images within a gallery be reordered? =
+= Can images within a gallery be reordered? =
 Our plugin supports drag-and-drop functionality, enabling you to easily reorder and restructure images within your galleries.
 
-= 4. Can I use this plugin for a professional photography website? =
+= Can I use this plugin for a professional photography website? =
 Our plugin is perfect for everyone, providing the elegance and adaptability required for top-notch galleries.
 
-= 5. Is the plugin optimized for mobile devices? =
+= Is the plugin optimized for mobile devices? =
 Yes, our plugin is fully responsive, ensuring your galleries look amazing on all devices.
 
-= 6. What Views Are Available in the ReGallery plugin? =
+= What Views Are Available in the ReGallery plugin? =
 ReGallery offers a variety of stunning views to enhance your photo galleries. Our plugin includes the following views:
 
 * **Thumbnail view:** Present your gallery with clickable thumbnails that open larger versions of the images.
@@ -141,20 +141,20 @@ ReGallery offers a variety of stunning views to enhance your photo galleries. Ou
 * **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 
-= 7. How does the live demo feature work? =
+= How does the live demo feature work? =
 The live demo allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your gallery.
 
-= 8. Are there any limitations on the number of galleries I can create? =
+= Are there any limitations on the number of galleries I can create? =
 No limits! Create as many galleries as you need, each with its unique flair.
 
-= 9. What are PRO Pre-Built Templates? =
-Pro Templates are designed to help you quickly and easily create beautiful, professional-looking galleries without starting from scratch. These templates save you time by offering ready-made layouts that can be customized to suit your style and needs.
+= What are PRO Pre-Built Templates? =
+Pro Pre-Built Templates are designed to help you quickly and easily create beautiful, professional-looking galleries without starting from scratch. These templates save you time by offering ready-made layouts that can be customized to suit your style and needs.
 
-= 10. What happens with my galleries when my plan expires? =
-When your plan expires, you will still have access to the galleries where you have applied PRO Pre-Built templates. However, we regularly add new templates, and if you do not renew your plan, you will not be able to access PRO Pre-Built templates.
-
-= 11. Can I switch between plans later? =
+= Can I switch between plans later? =
 Sure, you can! Please send us an inquiry at regalleryteam@gmail.com, and we'll get back to you as soon as possible.
+
+= What happens with my galleries when my plan expires? =
+When your plan expires, you will still have access to the galleries where you have applied PRO Pre-Built templates. However, we regularly add new templates, and if you do not renew your plan, you will not be able to access PRO Pre-Built templates.
 
 
 == Installation ==
@@ -172,10 +172,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.8: Added new pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.9: Removed unnecessary space at the bottom of the gallery. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.9 =
+= Updated: 11.12.2024 =
+* **Fixed:** Removed unnecessary space at the bottom of the gallery.
 
 = 1.9.8 =
 = Updated: 05.12.2024 =
