@@ -11,6 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ReGallery, the responsive gallery plugin, is your ideal solution for easily building stunning, mobile-friendly galleries in just minutes.
 
+
 == Description ==
 
 ReGallery is a FREE, SEO-friendly plugin enhanced with stunning Mosaic and Masonry views, designed to make your WordPress gallery more beautiful and engaging. Get ready to dive into a world of visual wonder on WordPress!
@@ -23,6 +24,7 @@ Transform your website into a captivating visual journey with ReGallery. Enhance
 
 For more information and updates, please visit our website: [ReGallery.team](https://regallery.team/?utm_source=wordpress&utm_medium=social)
 
+
 == Benefits ==
 
 *   **Ultra-Lightweight Design:** Engineered for lightning-fast performance, reducing load times to a minimum and boosting overall user experience.
@@ -32,6 +34,14 @@ For more information and updates, please visit our website: [ReGallery.team](htt
 *   **A user-friendly interface:** An intuitive interface that makes creating galleries easy and quickly.
 *   **Powered by React.js:** A cutting-edge frontend framework ensuring rapid, responsive updates and a smooth user journey.
 *   **Support:** Our responsive support team is always ready to assist you in overcoming any obstacles. We are currently in the active development phase, introducing new and valuable features. Your feedback holds great significance for us. We welcome new suggestions, and your ideas are highly valued.
+
+
+== Demo ==
+
+**ReGallery** gives you the tools to create **professional, responsive galleries** in minutes — no coding skills needed. Explore real examples of our **stunning gallery views** and **customizable pre-built templates** to see how easily you can update your website design.
+
+[Click here to see the ReGallery Demo page now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=social)
+
 
 == Why Choose the ReGallery plugin? ==
 
@@ -50,12 +60,40 @@ Experience a more dynamic and interactive gallery management with our ReGallery 
 *   **Spacing and Padding:** These options in our ReGallery plugin provide you with the flexibility to control the arrangement and visual presentation of your images, offering a customizable and user-friendly experience. Adjusting spacing allows you to create a well-balanced layout, while fine-tuning padding ensures a seamless and aesthetically pleasing display. 
 *   **Radius:** By adjusting the radius, you can round the corners of your images, providing a modern and polished aesthetic. This customizable feature enhances the visual appeal of your photo gallery, contributing to a more engaging and contemporary user experience.
 *   **Title Customization:** ReGallery plugin provides you with the flexibility to personalize how image titles appear on your website, enhancing your SEO efforts. You can choose the style that aligns with your site's design, whether it's bold and attention-grabbing or a more understated look. This customizable feature ensures that your photo gallery complements your website's unique style, contributing to a more engaging user experience and improved search engine visibility.
-*   **Image Upload:** Leverage the ease of the WordPress media uploader for uploading images, benefitting from its comprehensive features such as bulk upload, file management, and image editing tools.
+*   **Image Upload:** Leverage the ease of the WordPress media uploader for uploading images, benefiting from its comprehensive features such as bulk upload, file management, and image editing tools.
 *   **Dynamic Loading:** Additionally, the plugin supports 'scroll load' as a pagination type, offering a smooth and continuous browsing experience.
 *   **Enhanced Viewing with Lightbox:** Activating the  lightbox' feature transforms how images are viewed, enabling users to click on any gallery image to see it in full screen, providing a detailed and enhanced visual experience.
 
+
+== Popular ReGallery Tutorials ==
+
+Below are some of the most popular ReGallery tutorials:
+*   [View changes direct in the live preview](https://www.youtube.com/watch?v=YyWXLWcG7k4)
+*   [Drag&drop images to change ordering](https://www.youtube.com/watch?v=X7cvfWWo-UU)
+*   [How to change pagination type](https://www.youtube.com/watch?v=SQawgaxwm1c)
+*   [How to edit image title](https://www.youtube.com/watch?v=p2LDwCibQhs)
+*   [How to edit video cover](https://www.youtube.com/watch?v=EsfVm63EnBE)
+*   [Add ReGallery with Gutenberg](https://www.youtube.com/watch?v=Ep5L3xKdDH8)
+*   [Add ReGallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
+*   [Add ReGallery with Divi builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
+*   [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
+
+
+== PRO Pre-Built Templates ==
+
+Save time with our pre-built templates! For a small fee, you get not just a ready-made design but a creative idea to update your website. Perfect for building beautiful galleries or presenting your products - quick, easy, and professional!
+
+[Click here to see Pro Pre-Built templates now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=social)
+
 == Important ==
 In case you have any questions, suggestions, or if you've found a bug, please check out our [Support Forum](https://wordpress.org/support/plugin/regallery).
+
+
+== Find the source code ==
+
+The plugin contains wp-gallery.js minified JavaScript file which is a build result of the [following React application](https://github.com/GarikHarutyunyan/wp-gallery)
+This repository contains the unpacked JavaScript portion of the plugin. You can use this open-source React application to modify the plugin's JS component. After running the "npm run build" command, the wp-gallery.js minified file will be generated.
+
 
 == Screenshots ==
 
@@ -74,61 +112,49 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 13. Gallery options
 14. Insert gallery
 
+
 == Frequently Asked Questions ==
 
 = 1. Can I add galleries using Gutenberg? =
-
 Absolutely! Our plugin smoothly works with the Gutenberg editor, making gallery addition and management a breeze for a user-friendly experience. Additionally, Option changes can be saved both from the live demo feature and working in the Gutenberg editor, ensuring a consistent experience.
 
-
 = 2. How can I change the title of an image in my gallery? =
-
 To change the title of an image, simply edit the image and modify the title from the media uploader screen.
 
 = 3. Can images within a gallery be reordered? =
-
 Our plugin supports drag-and-drop functionality, enabling you to easily reorder and restructure images within your galleries.
 
 = 4. Can I use this plugin for a professional photography website? =
-
 Our plugin is perfect for everyone, providing the elegance and adaptability required for top-notch galleries.
 
 = 5. Is the plugin optimized for mobile devices? =
-
 Yes, our plugin is fully responsive, ensuring your galleries look amazing on all devices.
 
 = 6. What Views Are Available in the ReGallery plugin? =
-
 ReGallery offers a variety of stunning views to enhance your photo galleries. Our plugin includes the following views:
 
-* Thumbnail view: Present your gallery with clickable thumbnails that open larger versions of the images.
-* Mosaic view: Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
-* Masonry view: Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
-* Slideshow view: Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
-* Cube view: A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
-* Carousel view: Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
-* Cards view: Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
+* **Thumbnail view:** Present your gallery with clickable thumbnails that open larger versions of the images.
+* **Mosaic view:** Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
+* **Masonry view:** Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
+* **Slideshow view:** Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
+* **Cube view:** A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
+* **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
+* **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 
 = 7. How does the live demo feature work? =
-
 The live demo allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your gallery.
 
 = 8. Are there any limitations on the number of galleries I can create? =
-
 No limits! Create as many galleries as you need, each with its unique flair.
 
+= 9. What are PRO Pre-Built Templates? =
+Pro Templates are designed to help you quickly and easily create beautiful, professional-looking galleries without starting from scratch. These templates save you time by offering ready-made layouts that can be customized to suit your style and needs.
 
-== Find the source code ==
+= 10. What happens with my galleries when my plan expires? =
+When your plan expires, you will still have access to the galleries where you have applied PRO Pre-Built templates. However, we regularly add new templates, and if you do not renew your plan, you will not be able to access PRO Pre-Built templates.
 
-The plugin contains wp-gallery.js minified JavaScript file which is a build result of the following React application:
-https://github.com/GarikHarutyunyan/wp-gallery
-
-This repository contains the unpacked JavaScript portion of the plugin.
-You can use this open-source React application to modify the plugin's JS component.
-Simply clone the repository, execute the necessary npm commands to initialize the project, and proceed to modify
-the React app. After running the "npm run build" command, the wp-gallery.js minified file will be generated.
-Replace the existing file in the plugin to view the changes you've made.
-
+= 11. Can I switch between plans later? =
+Sure, you can! Please send us an inquiry at regalleryteam@gmail.com, and we'll get back to you as soon as possible.
 
 
 == Installation ==
