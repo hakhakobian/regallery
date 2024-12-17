@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.9
+Stable tag: 1.9.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,15 +68,15 @@ Experience a more dynamic and interactive gallery management with our ReGallery 
 == Popular ReGallery Tutorials ==
 
 Below are some of the most popular ReGallery tutorials:
-*   [View changes direct in the live preview](https://www.youtube.com/watch?v=YyWXLWcG7k4)
-*   [Drag&drop images to change ordering](https://www.youtube.com/watch?v=X7cvfWWo-UU)
-*   [How to change pagination type](https://www.youtube.com/watch?v=SQawgaxwm1c)
-*   [How to edit image title](https://www.youtube.com/watch?v=p2LDwCibQhs)
-*   [How to edit video cover](https://www.youtube.com/watch?v=EsfVm63EnBE)
-*   [Add ReGallery with Gutenberg](https://www.youtube.com/watch?v=Ep5L3xKdDH8)
-*   [Add ReGallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
-*   [Add ReGallery with Divi builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
-*   [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
+[View changes direct in the live preview](https://www.youtube.com/watch?v=YyWXLWcG7k4)
+[Drag&drop images to change ordering](https://www.youtube.com/watch?v=X7cvfWWo-UU)
+[How to change pagination type](https://www.youtube.com/watch?v=SQawgaxwm1c)
+[How to edit image title](https://www.youtube.com/watch?v=p2LDwCibQhs)
+[How to edit video cover](https://www.youtube.com/watch?v=EsfVm63EnBE)
+[Add ReGallery with Gutenberg](https://www.youtube.com/watch?v=Ep5L3xKdDH8)
+[Add ReGallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
+[Add ReGallery with Divi builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
+[How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
 
 
 == PRO Pre-Built Templates ==
@@ -91,7 +91,7 @@ In case you have any questions, suggestions, or if you've found a bug, please ch
 
 == Find the source code ==
 
-The plugin contains wp-gallery.js minified JavaScript file which is a build result of the [following React application](https://github.com/GarikHarutyunyan/wp-gallery)
+The plugin contains wp-gallery.js minified JavaScript file which is a build result of the [following React application](https://github.com/GarikHarutyunyan/wp-gallery).
 This repository contains the unpacked JavaScript portion of the plugin. You can use this open-source React application to modify the plugin's JS component. After running the "npm run build" command, the wp-gallery.js minified file will be generated.
 
 
@@ -172,10 +172,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.9: Removed unnecessary space at the bottom of the gallery. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.10: Added more modern pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.10 =
+= Updated: 18.12.2024 =
+* **Added:** New pre-built templates.
 
 = 1.9.9 =
 = Updated: 11.12.2024 =
