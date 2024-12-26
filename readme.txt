@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.10
+Stable tag: 1.9.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,14 +172,19 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.10: Added more modern pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.11: Fixed minor bug. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
+= 1.9.11 =
+= Updated: 26.12.2024 =
+* **Added:** Tide Frame pre-built template.
+* **Fixed:** Bug when switching between templates.
+
 = 1.9.10 =
 = Updated: 18.12.2024 =
-* **Added:** New pre-built templates.
+* **Added:** Prism Pattern, PolyGrid, Hive Lens, Dynamic Slant pre-built templates.
 
 = 1.9.9 =
 = Updated: 11.12.2024 =
@@ -187,7 +192,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.9.8 =
 = Updated: 05.12.2024 =
-* **Added:** New pre-built templates.
+* **Added:** Harmonic Chaos, Collage, Circle Grid, Display Collection, Modern Pattern, Photo Album pre-built templates.
 
 = 1.9.7 =
 = Updated: 27.11.2024 =
@@ -234,7 +239,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.8.3 =
 = Updated: 25.09.2024 =
-* **Fixed:** Carousel templates.
+* **Fixed:** Carousel pre-built templates.
 
 = 1.8.2 =
 = Updated: 17.09.2024 =
