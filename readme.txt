@@ -179,8 +179,8 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 = 1.9.12 =
 = Updated: 04.01.2025 =
-* Fixed: Gallery loading issue in the admin panel.
-* Fixed: Loading for Carousel, Cards and Cube views.
+* **Fixed:** Gallery loading issue in the admin panel.
+* **Fixed:** Loading for Carousel, Cards and Cube views.
 
 = 1.9.11 =
 = Updated: 26.12.2024 =
