@@ -108,9 +108,12 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 9. ReGallery template
 10. ReGallery template
 11. ReGallery template
-12. Gallery edit page
-13. Gallery options
-14. Insert gallery
+12. ReGallery template
+13. ReGallery template
+14. ReGallery template
+15. Gallery edit page
+16. Gallery options
+17. Insert gallery
 
 
 == Frequently Asked Questions ==
