@@ -288,7 +288,8 @@ function reacg_save_images() {
 
       /* Run autosave for newly added posts.*/
       if ( jQuery("#original_post_status").val() === "auto-draft" ) {
-        jQuery("#publish").trigger("click");
+        const event = new Event('highlight-template-select');
+        window.dispatchEvent(event);
       }
     }
   });
