@@ -1,4 +1,6 @@
 jQuery(document).ready(function () {
+  reacg_track_unsaved_changes();
+
   /* Save options on saving the gallery.*/
   jQuery("#publish").on("click", function () {
     jQuery( ".save-settings-button" ).trigger("click");
@@ -97,6 +99,31 @@ jQuery(document).ready(function () {
   });
 });
 
+function reacg_track_unsaved_changes() {
+  /* Track only the newly added not yet saved galleries.*/
+  if ( document.getElementById('original_post_status').value === "auto-draft" ) {
+    let isEmpty = false;
+    const hiddenInput = document.getElementById('images_ids');
+
+    if ( hiddenInput ) {
+      /* Monitor changes.*/
+      hiddenInput.addEventListener('added-images', function () {
+        isEmpty = true;
+      });
+      /* Trigger warning if changes are unsaved.*/
+      window.onbeforeunload = function () {
+        if (isEmpty) {
+          return "Changes you made may not be saved.";
+        }
+      };
+      /* Reset isEmpty when the form is submitted.*/
+      jQuery('form').on('submit', function () {
+        isEmpty = false;
+      });
+    }
+  }
+}
+
 /**
  * Get images IDs array.
  *
@@ -119,7 +146,14 @@ function reacg_get_image_ids(parsed) {
  * @param arr
  */
 function reacg_set_image_ids(arr) {
-  jQuery("#images_ids").val(JSON.stringify(arr));
+  const images_ids = document.getElementById('images_ids');
+  images_ids.value = JSON.stringify(arr);
+
+  /* Dispatch event for newly added and not yet saved posts.*/
+  if ( document.getElementById('original_post_status').value === "auto-draft" ) {
+    const event = new Event('added-images');
+    images_ids.dispatchEvent(event);
+  }
 }
 
 /**
@@ -286,7 +320,7 @@ function reacg_save_images() {
 
       reacg_reload_preview();
 
-      /* Highligh templates list for newly added posts.*/
+      /* Highlight templates list for newly added and not yet saved posts.*/
       if ( jQuery("#original_post_status").val() === "auto-draft" ) {
         const event = new Event('highlight-template-select');
         window.dispatchEvent(event);
