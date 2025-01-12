@@ -286,7 +286,7 @@ function reacg_save_images() {
 
       reacg_reload_preview();
 
-      /* Run autosave for newly added posts.*/
+      /* Highligh templates list for newly added posts.*/
       if ( jQuery("#original_post_status").val() === "auto-draft" ) {
         const event = new Event('highlight-template-select');
         window.dispatchEvent(event);
