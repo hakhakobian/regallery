@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.13
+Stable tag: 1.9.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.13: Load gallery despite any JavaScript errors on the page. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.14: Added notification for users attempting to leave an unsaved gallery. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.14 =
+= Updated: 15.01.2025 =
+* **Added:** Tooltip to the templates list for newly added galleries.
+* **Added:** Notification for users attempting to leave an unsaved gallery.
+* **Improved:** Prevented the new gallery page from reloading after adding images.
+* **Fixed:** Thumbnails view container width issue in certain cases.
+* **Fixed:** Position of slideshow control buttons in some cases.
 
 = 1.9.13 =
 = Updated: 09.01.2025 =
