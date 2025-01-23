@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.14
+Stable tag: 1.9.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,7 @@ Below are some of the most popular ReGallery tutorials:
 [Add ReGallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
 [Add ReGallery with Divi builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
+[How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 
 
 == PRO Pre-Built Templates ==
@@ -175,10 +176,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.14: Added notification for users attempting to leave an unsaved gallery. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.15: Added Media Catalog pre-built template. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.15 =
+= Updated: 24.01.2025 =
+* **Added:** Media Catalog pre-built template.
+* **Fixed:** Gallery type remains unchanged on Reset.
 
 = 1.9.14 =
 = Updated: 15.01.2025 =
