@@ -130,3 +130,8 @@ to avoid a bug connected with preview.
 .post-type-reacg #postdivrich {
   display: none;
 }
+
+/* Remove all notices except plugin's.*/
+.notice:not(#message) {
+  display: none;
+}
