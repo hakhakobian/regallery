@@ -424,6 +424,8 @@ class REACG_Options {
     $new_options = get_option($this->name . $gallery_id, $options);
 
     if ( $saved === TRUE || $old_options === $new_options ) {
+      /* Update the options timestamp on options save to prevent data from being read from the cache.*/
+      update_post_meta($gallery_id, 'options_timestamp', time());
       return $this->get(NULL, $gallery_id);
     }
     else {
@@ -600,6 +602,8 @@ class REACG_Options {
       $options = json_encode($data);
       $saved = update_option($this->name . $gallery_id, $options);
       if ( $saved === TRUE ) {
+        /* Update the options timestamp on options reset to prevent data from being read from the cache.*/
+        update_post_meta($gallery_id, 'options_timestamp', time());
         return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
       }
     }
