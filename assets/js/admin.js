@@ -333,7 +333,7 @@ function reacg_save_images() {
 /* Trigger hidden button click to reload the preview.*/
 function reacg_reload_preview() {
   /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
-  jQuery(".reacg-preview").data("gallery-timestamp", Date.now());
+  document.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
 
   jQuery("#reacg-reloadData").trigger("click");
 }
