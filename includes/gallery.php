@@ -339,6 +339,13 @@ class REACG_Gallery {
         $post_id = (int) $_POST['post_id'];
         $images_ids = sanitize_text_field($_POST['images_ids']);
         update_post_meta($post_id, 'images_ids', $images_ids);
+
+        /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
+        if ( isset($_POST['gallery_timestamp']) ) {
+          $timestamp = sanitize_text_field($_POST['gallery_timestamp']);
+          update_post_meta($post_id, 'gallery_timestamp', $timestamp);
+        }
+
         $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
         $images_count = count($images_ids_arr);
         update_post_meta($post_id, 'images_count', $images_count);
@@ -435,6 +442,8 @@ class REACG_Gallery {
 
     // Delete the post metas.
     delete_post_meta($post_id, 'images_ids');
+    delete_post_meta($post_id, 'gallery_timestamp');
+    delete_post_meta($post_id, 'options_timestamp');
     delete_post_meta($post_id, 'images_count');
 
     // Delete all options connected with the gallery.

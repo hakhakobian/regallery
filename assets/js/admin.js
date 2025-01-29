@@ -313,7 +313,8 @@ function reacg_save_images() {
     data: {
       "action": "reacg_save_images",
       "post_id": jQuery(".reacg_items").data("post-id"),
-      "images_ids": reacg_get_image_ids(false)
+      "images_ids": reacg_get_image_ids(false),
+      "gallery_timestamp": Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
     },
     complete: function (data) {
       reacg_toggle_loading();
@@ -331,6 +332,9 @@ function reacg_save_images() {
 
 /* Trigger hidden button click to reload the preview.*/
 function reacg_reload_preview() {
+  /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
+  document.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
+
   jQuery("#reacg-reloadData").trigger("click");
 }
 
