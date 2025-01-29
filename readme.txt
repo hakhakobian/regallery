@@ -9,7 +9,7 @@ Stable tag: 1.9.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Photo gallery is a responsive image gallery plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
+Photo gallery plugin is a responsive image gallery WordPress plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
 
 
 == Description ==
@@ -184,6 +184,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 = 1.9.16 =
 = Updated: 29.01.2025 =
 * **Added:** Overlay Slideshow pre-built template.
+* **Fixed:** Conflicts with cache plugins.
 * **Fixed:** Prevented third-party plugin/theme notices from displaying on the plugin's admin pages.
 
 = 1.9.15 =
