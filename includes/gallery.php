@@ -22,6 +22,12 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
 
+    // Add custom field to the media uploader.
+    add_filter('attachment_fields_to_edit', [ $this, 'attachment_field' ], 10, 2);
+
+    // Save custom field when an image is updated.
+    add_filter('attachment_fields_to_save', [ $this, 'save_attachment_field' ], 10, 2);
+
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
@@ -80,6 +86,45 @@ class REACG_Gallery {
         'permission_callback' => [$this, 'restricted_permission'],
       ) );
     } );
+  }
+
+  /**
+   * Add custom field to the media uploader.
+   *
+   * @param $form_fields
+   * @param $post
+   *
+   * @return mixed
+   */
+  public function attachment_field($form_fields, $post) {
+    $action_url = get_post_meta($post->ID, '_action_url', true);
+
+    $form_fields['action_url'] = [
+      'label' => __('Action URL', 'reacg'),
+      'input' => 'text',
+      'value' => $action_url,
+    ];
+
+    return $form_fields;
+  }
+
+  /**
+   * Save custom field when an image is updated.
+   *
+   * @param $post
+   * @param $attachment
+   *
+   * @return mixed
+   */
+  public function save_attachment_field($post, $attachment) {
+    if ( isset($attachment['action_url']) ) {
+      update_post_meta($post['ID'], 'action_url', sanitize_url($attachment['action_url']));
+    }
+    else {
+      delete_post_meta($post['ID'], 'action_url');
+    }
+
+    return $post;
   }
 
   /**
@@ -275,6 +320,7 @@ class REACG_Gallery {
         $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
         $item['description'] = html_entity_decode($post->post_content);
         $item['date'] = $post->post_date;
+        $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', true));
         $data[] = $item;
       }
 
