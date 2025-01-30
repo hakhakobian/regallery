@@ -97,7 +97,7 @@ class REACG_Gallery {
    * @return mixed
    */
   public function attachment_field($form_fields, $post) {
-    $action_url = get_post_meta($post->ID, '_action_url', true);
+    $action_url = get_post_meta($post->ID, 'action_url', true);
 
     $form_fields['action_url'] = [
       'label' => __('Action URL', 'reacg'),
@@ -119,9 +119,6 @@ class REACG_Gallery {
   public function save_attachment_field($post, $attachment) {
     if ( isset($attachment['action_url']) ) {
       update_post_meta($post['ID'], 'action_url', sanitize_url($attachment['action_url']));
-    }
-    else {
-      delete_post_meta($post['ID'], 'action_url');
     }
 
     return $post;
