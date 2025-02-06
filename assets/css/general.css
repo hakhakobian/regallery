@@ -35,15 +35,6 @@
   box-sizing: content-box;
 }
 
-.reacg-gallery-wrapper .MuiImageListItemBar-root,
-.reacg-gallery-wrapper .MuiButtonBase-root {
-  font-family: inherit !important;
-}
-
-.reacg-gallery-wrapper .MuiGrid-container:has(> div:empty) {
-  margin: 0 !important;
-}
-
 /* For Elementor and Divi builder. */
 .elementor-container .button-primary,
 .reacg_module .button-primary {
