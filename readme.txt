@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 1.9.17
+Stable tag: 1.9.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.17: Added Blinds Slider pre-built template. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.18: Added Digital Shop, Spotlight Ad, Infinite Scroll pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.18 =
+= Updated: 10.02.2025 =
+* **Added:** Digital Shop, Spotlight Ad, Infinite Scroll pre-built templates.
+* **Fixed:** Issue with Divi Builder.
+* **Fixed:** Cards view overlapping issue in some cases.
 
 = 1.9.17 =
 = Updated: 03.02.2025 =
