@@ -68,7 +68,7 @@ class REACG_DiviModule extends ET_Builder_Module {
    *
    * @return bool|string|null
    */
-  public function render( $attrs, $content = null, $render_slug ) {
+  public function render( $attrs, $content, $render_slug ) {
     $post_id = intval($this->props["post_id"]);
 
     return REACGLibrary::get_rest_routs($post_id);
