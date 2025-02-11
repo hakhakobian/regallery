@@ -95,19 +95,18 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       // Get inserted widget container by ID.
       echo 'var widget_cont = document.querySelector(".elementor-element-' . esc_js($this->get_id()) . '");';
       // Get the gallery container.
-      echo 'var cont = widget_cont.querySelector("#reacg-root' . $post_id . '");';
+      echo 'var cont = widget_cont ? widget_cont.querySelector("#reacg-root' . $post_id . '") : null;';
       // Enable/disable options section depends on Elementor widget setting.
-      echo 'cont.setAttribute("data-options-section", "' . $enable_options . '");';
+      echo 'if (cont) { cont.setAttribute("data-options-section", "' . $enable_options . '"); }';
       // Load the gallery.
-      echo 'document.getElementById("reacg-loadApp").setAttribute("data-id", "reacg-root' . $post_id . '");';
-      echo 'document.getElementById("reacg-loadApp").click();';
+      echo 'var reacgLoadApp = document.getElementById("reacg-loadApp");';
+      echo 'if (reacgLoadApp) {';
+      echo 'reacgLoadApp.setAttribute("data-id", "reacg-root' . $post_id . '");';
+      echo 'reacgLoadApp.click();';
+      echo '}';
       // Open Elementor widget settings after the gallery load.
-      echo 'widget_cont.querySelector(".elementor-editor-widget-settings").click();';
+      echo 'if (widget_cont) { widget_cont.querySelector(".elementor-editor-widget-settings").click(); }';
       echo '</script>';
-      echo '<style>';
-      // Remove empty widget background if the gallery options are hidden.
-      echo '.elementor-widget-reacg-elementor.elementor-widget-empty { background-color: transparent; }';
-      echo '</style>';
     }
   }
 }
