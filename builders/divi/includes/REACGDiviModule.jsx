@@ -14,9 +14,9 @@ class REACG_DiviModule extends Component {
     if ( document.getElementsByClassName("reacg-gallery")
       && document.getElementsByClassName("reacg-gallery").length > 0
       && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() === '' ) {
-      document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + this.props.post_id);
       let button = document.getElementById("reacg-loadApp");
       if ( button ) {
+        button.setAttribute('data-id', 'reacg-root' + this.props.post_id);
         button.click();
       }
     }

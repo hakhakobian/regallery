@@ -114,7 +114,10 @@ final class REACG {
   public function register_elementor_widget() {
     if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
       require_once ($this->plugin_dir . '/builders/elementor/elementor.php');
-      REACGLibrary::enqueue_scripts();
+      if ( \Elementor\Plugin::instance()->preview->is_preview_mode() ) {
+        // Enqueue scripts only in preview mode.
+        REACGLibrary::enqueue_scripts();
+      }
       \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
     }
   }
