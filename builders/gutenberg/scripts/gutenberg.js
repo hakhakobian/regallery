@@ -71,10 +71,15 @@
         } );
 
         let cont = event.target.parentElement.querySelector(".reacg-gallery");
-        cont.setAttribute('data-gallery-id', selected.value);
-        cont.setAttribute('id', 'reacg-root' + selected.value);
-        document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + selected.value);
-        document.getElementById('reacg-loadApp').click();
+        if ( cont ) {
+          cont.setAttribute('data-gallery-id', selected.value);
+          cont.setAttribute('id', 'reacg-root' + selected.value);
+        }
+        let button = document.getElementById("reacg-loadApp");
+        if ( button ) {
+          button.setAttribute('data-id', 'reacg-root' + selected.value);
+          button.click();
+        }
 
         event.preventDefault();
       }
@@ -92,10 +97,14 @@
           class: "reacg-gallery reacg-preview",
           id: "reacg-root" + shortcode_id,
         } );
-        if ( document.getElementsByClassName("reacg-gallery").length > 0
-          && document.getElementsByClassName("reacg-gallery")[0].innerHTML == '' ) {
-          document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + shortcode_id);
-          document.getElementById('reacg-loadApp').click();
+        if ( document.getElementsByClassName("reacg-gallery")
+          && document.getElementsByClassName("reacg-gallery").length > 0
+          && document.getElementsByClassName("reacg-gallery")[0].innerHTML === '' ) {
+          let button = document.getElementById("reacg-loadApp");
+          if ( button ) {
+            button.setAttribute('data-id', 'reacg-root' + shortcode_id);
+            button.click();
+          }
         }
 
         return cont;
