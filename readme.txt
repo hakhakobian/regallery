@@ -3,9 +3,9 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.7.1
+Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.9.18
+Stable tag: 1.9.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,20 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.18: Added Digital Shop, Spotlight Ad, Infinite Scroll pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.19: Added Testimonial Gallery pre-built template. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.19 =
+= Updated: 14.02.2025 =
+* **Added:** Testimonial Gallery pre-built template.
+* **Fixed:** JavaScript error in the Gutenberg editor.
+* **Fixed:** PHP notice and JavaScript error in the Divi builder.
+* **Fixed:** JavaScript error when no gallery is selected in the Elementor widget.
+* **Fixed:** Script inclusion issue on the page after removing the gallery widget from the Elementor.
+* **Fixed:** Extra space appearing when there is no data to display.
+* **Fixed:** Close button for the Preview template video popup.
 
 = 1.9.18 =
 = Updated: 10.02.2025 =
