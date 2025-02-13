@@ -8,6 +8,8 @@ class REACG_Gallery {
   public function __construct($that) {
     $this->obj = $that;
     $this->register_post_type();
+    add_action('admin_menu', [ $this, 'add_submenu' ]);
+    add_action('admin_menu', [ $this, 'modify_external_submenu_url'], 999);
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'custom_columns' ]);
     add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
@@ -80,6 +82,35 @@ class REACG_Gallery {
         'permission_callback' => [$this, 'restricted_permission'],
       ) );
     } );
+  }
+
+  /**
+   * Add submenu.
+   *
+   * @return void
+   */
+  public function add_submenu() {
+    add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
+  }
+
+  /**
+   * Modify external submenu URL.
+   *
+   * @return void
+   */
+  public function modify_external_submenu_url() {
+    global $submenu;
+    $parent_slug = 'edit.php?post_type=reacg';
+
+    if ( isset( $submenu[$parent_slug] ) ) {
+      foreach ( $submenu[$parent_slug] as $index => $menu_item ) {
+        // Check for the temporary menu slug.
+        if ( $menu_item[2] === 'reacg-external-link' ) {
+          // Replace with the external URL.
+          $submenu[$parent_slug][$index][2] = $this->obj->public_url;
+        }
+      }
+    }
   }
 
   /**
