@@ -3,3 +3,7 @@
   margin-bottom: 20px;
   font-size: 20px;
 }
+.reacg-block-preview img {
+  height: auto;
+  width: 100%;
+}

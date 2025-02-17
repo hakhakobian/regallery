@@ -3,6 +3,7 @@
   let pluginData = reacg;
   blocks.registerBlockType( "reacg/gallery", {
     title: pluginData.title,
+    description: pluginData.description,
     icon: el( 'img', {
       width: 24,
       height: 24,
@@ -21,10 +22,21 @@
       shortcode_id: {
         type: "int",
         value: 0
+      },
+      hidePreview: {
+        type: "boolean",
+        value: false
       }
     },
 
     edit: function ( props ) {
+      // Display block preview only on the block hover.
+      if ( !props.attributes.hidePreview && !props.isSelected ) {
+        return el( "div", {class: "reacg-block-preview"}, el( "img", {
+          src: pluginData.plugin_url + "/builders/gutenberg/images/preview.png"
+        }));
+      }
+
       // Create the shortcodes list and the container for preview.
       let cont = el( "div", {}, shortcodeList(), showPreview());
 
@@ -90,6 +102,9 @@
        * @returns {*}
        */
       function showPreview() {
+        props.setAttributes( {
+          hidePreview: true,
+        } );
         let shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
         let cont = el( 'div', {
           'data-options-section': 1,
