@@ -14,6 +14,7 @@
     supports: {
       customClassName: false
     },
+    example: {},
     attributes: {
       shortcode: {
         type: "string",
@@ -33,7 +34,8 @@
       // Display block preview only on the block hover.
       if ( !props.attributes.hidePreview && !props.isSelected ) {
         return el( "div", {class: "reacg-block-preview"}, el( "img", {
-          src: pluginData.plugin_url + "/builders/gutenberg/images/preview.png"
+          src: pluginData.plugin_url + "/builders/gutenberg/images/preview.png",
+          style: { height: "auto", width: "100%" }
         }));
       }
 
