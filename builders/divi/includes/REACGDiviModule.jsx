@@ -11,14 +11,18 @@ class REACG_DiviModule extends Component {
   static slug = 'reacg_module';
 
   componentDidUpdate() {
-    if ( document.getElementsByClassName("reacg-gallery")
-      && document.getElementsByClassName("reacg-gallery").length > 0
-      && document.getElementsByClassName("reacg-gallery")[0].getInnerHTML() === '' ) {
-      let button = document.getElementById("reacg-loadApp");
-      if ( button ) {
-        button.setAttribute('data-id', 'reacg-root' + this.props.post_id);
-        button.click();
-      }
+    const galleries = document.getElementsByClassName("reacg-gallery");
+    if ( galleries && galleries.length > 0 ) {
+      Array.from(galleries).forEach((gallery) => {
+        // Check if the gallery container is empty.
+        if ( gallery.innerHTML.trim() === "" ) {
+          const button = document.getElementById("reacg-loadApp");
+          if ( button ) {
+            button.setAttribute("data-id", "reacg-root" + this.props.post_id);
+            button.click();
+          }
+        }
+      });
     }
   }
 
