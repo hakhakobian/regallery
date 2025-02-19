@@ -23,6 +23,7 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_images', [ $this, 'save_images' ]);
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
+    add_action('wp_ajax_reacg_images', [ $this, 'meta_box_images' ]);
 
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
@@ -530,6 +531,7 @@ class REACG_Gallery {
       'supports' => array('title', 'editor'),
     );
     register_post_type( 'reacg', $args );
+
     add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );
   }
 
@@ -684,11 +686,18 @@ class REACG_Gallery {
    * @return void
    */
   public function meta_box_images($post) {
-    $images_ids = get_post_meta( $post->ID, 'images_ids', true );
+    if ( isset($_GET['id']) ) {
+      $post_id = (int) $_GET['id'];
+    }
+    else {
+      $post_id = $post->ID;
+    }
+    ob_start();
+    $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $ajax_url = admin_url('admin-ajax.php');
     $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
     ?><div class="reacg_items"
-         data-post-id="<?php echo esc_attr($post->ID); ?>"
+         data-post-id="<?php echo esc_attr($post_id); ?>"
          data-ajax-url="<?php echo esc_url($ajax_url); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
@@ -715,6 +724,10 @@ class REACG_Gallery {
       $this->image_item();
       ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
     </div><?php
+    if ( isset($_GET['action']) && $_GET['action'] === 'reacg_images' ) {
+      echo json_encode(ob_get_clean());
+      wp_die();
+    }
   }
 
   private function image_item($data = FALSE) {

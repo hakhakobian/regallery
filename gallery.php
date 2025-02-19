@@ -243,10 +243,12 @@ final class REACG {
       $this->prefix . '_thumbnails',
       'wp-blocks',
       'wp-element',
+      $this->prefix . '_admin'
     ];
     $required_styles = [
       $this->prefix . '_general',
       'wp-edit-blocks',
+      $this->prefix . '_admin'
     ];
 
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);

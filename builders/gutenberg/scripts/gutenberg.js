@@ -39,8 +39,9 @@
         }));
       }
 
+
       // Create the shortcodes list and the container for preview.
-      let cont = el( "div", {}, shortcodeList(), showPreview());
+      let cont = el( "div", {}, shortcodeList(), el("div", { id: "reacg-gallery-images" }), showPreview());
 
       return cont;
 
@@ -108,6 +109,19 @@
           hidePreview: true,
         } );
         let shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
+
+        fetch('http://localhost/wordpress/wp-admin/admin-ajax.php?action=reacg_images&id=' + shortcode_id)
+          .then(response => response.json())
+          .then(data => {
+            let container = document.querySelector("#reacg-gallery-images");
+            if (container) {
+              container.innerHTML = data;
+            }
+            /* Make the image items sortable.*/
+            reacg_make_items_sortable(container);
+          })
+          .catch(error => console.error("Error fetching data:", error));
+
         let cont = el( 'div', {
           'data-options-section': 1,
           'data-gallery-id': shortcode_id,

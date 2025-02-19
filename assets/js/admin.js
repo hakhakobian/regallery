@@ -2,27 +2,16 @@ jQuery(document).ready(function () {
   reacg_track_unsaved_changes();
 
   /* Save options on saving the gallery.*/
-  jQuery("#publish").on("click", function () {
+  jQuery(document).on("click", "#publish", function () {
     jQuery( ".save-settings-button" ).trigger("click");
   });
   /* Bind an event to the add image button.*/
-  jQuery(".reacg_item_new").on("click", function (event) {
+  jQuery(document).on("click", ".reacg_item_new", function (event) {
     reacg_media_uploader( event );
   });
 
   /* Make the image items sortable.*/
-  jQuery( ".reacg_items" ).sortable( {
-    items: ".reacg-sortable",
-    update: function ( event, tr ) {
-      let images_ids = [];
-      jQuery( ".reacg_items > .reacg-sortable" ).each( function () {
-        images_ids.push(jQuery( this ).data( 'id' ));
-      } );
-      reacg_set_image_ids( images_ids );
-      /* Save images on reorder.*/
-      reacg_save_images();
-    }
-  } );
+  reacg_make_items_sortable(document);
 
   /* Bind a delete event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-delete", function () {
@@ -98,6 +87,24 @@ jQuery(document).ready(function () {
     } );
   });
 });
+
+/**
+ * Make the image items sortable.
+ */
+function reacg_make_items_sortable(container) {
+  jQuery(container).find(".reacg_items").sortable({
+    items: ".reacg-sortable",
+    update: function (event, tr) {
+      let images_ids = [];
+      jQuery(".reacg_items > .reacg-sortable").each(function () {
+        images_ids.push(jQuery(this).data('id'));
+      });
+      reacg_set_image_ids(images_ids);
+      /* Save images on reorder.*/
+      reacg_save_images();
+    }
+  });
+}
 
 function reacg_track_unsaved_changes() {
   /* Track only the newly added not yet saved galleries.*/
@@ -213,7 +220,6 @@ function reacg_check_image(images_ids) {
  * Open Media uploader and set the event to the Insert button.
  *
  * @param e
- * @param multiple
  */
 function reacg_media_uploader( e ) {
   e.preventDefault();
