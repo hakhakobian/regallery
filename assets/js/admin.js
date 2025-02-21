@@ -7,7 +7,7 @@ jQuery(document).ready(function () {
   });
   /* Bind an event to the add image button.*/
   jQuery(document).on("click", ".reacg_item_new", function (event) {
-    reacg_media_uploader( event );
+    reacg_media_uploader( event, this );
   });
 
   /* Make the image items sortable.*/
@@ -23,12 +23,12 @@ jQuery(document).ready(function () {
     }
     item.remove();
 
-    let images_ids = reacg_get_image_ids(true);
+    let images_ids = reacg_get_image_ids(jQuery(this).closest(".reacg_items"), true);
     let index = images_ids.indexOf(image_id);
     images_ids.splice(index, 1);
-    reacg_set_image_ids(images_ids);
+    reacg_set_image_ids(jQuery(this).closest(".reacg_items"), images_ids);
     /* Save images on delete.*/
-    reacg_save_images();
+    reacg_save_images(jQuery(this).closest(".reacg_items"));
   });
 
   /* Bind an edit event to the every image item.*/
@@ -99,9 +99,9 @@ function reacg_make_items_sortable(container) {
       jQuery(".reacg_items > .reacg-sortable").each(function () {
         images_ids.push(jQuery(this).data('id'));
       });
-      reacg_set_image_ids(images_ids);
+      reacg_set_image_ids(jQuery(this), images_ids);
       /* Save images on reorder.*/
-      reacg_save_images();
+      reacg_save_images(jQuery(this));
     }
   });
 }
@@ -137,8 +137,8 @@ function reacg_track_unsaved_changes() {
  * @param parsed
  * @returns {any|*[]}
  */
-function reacg_get_image_ids(parsed) {
-  let data = jQuery("#images_ids").val();
+function reacg_get_image_ids(gallery_items, parsed) {
+  let data = gallery_items.find(".images_ids").val();
   if ( parsed === true ) {
     return data !== "" ? JSON.parse(data) : [];
   }
@@ -150,16 +150,17 @@ function reacg_get_image_ids(parsed) {
 /**
  * Update images IDs passing an array.
  *
+ * @param gallery_items
  * @param arr
  */
-function reacg_set_image_ids(arr) {
-  const images_ids = document.getElementById('images_ids');
-  images_ids.value = JSON.stringify(arr);
+function reacg_set_image_ids(gallery_items, arr) {
+  const images_ids = gallery_items.find(".images_ids");
+  images_ids.val(JSON.stringify(arr));
 
   /* Dispatch event for newly added and not yet saved posts.*/
-  if ( document.getElementById('original_post_status').value === "auto-draft" ) {
+  if (jQuery('#original_post_status').val() === "auto-draft") {
     const event = new Event('added-images');
-    images_ids.dispatchEvent(event);
+    images_ids[0].dispatchEvent(event); // Use [0] to get the raw DOM element
   }
 }
 
@@ -221,8 +222,10 @@ function reacg_check_image(images_ids) {
  *
  * @param e
  */
-function reacg_media_uploader( e ) {
+function reacg_media_uploader( e, that ) {
   e.preventDefault();
+
+  const gallery_items = jQuery(that).closest(".reacg_items");
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
     title: reacg.choose_images,
@@ -233,7 +236,7 @@ function reacg_media_uploader( e ) {
   // Disable the images which are already added to the gallery.
   media_uploader.on('open', function () {
     // Get the added images.
-    let images_ids = reacg_get_image_ids(true);
+    let images_ids = reacg_get_image_ids(gallery_items, true);
 
     // On clicking Media library tab inside the uploader.
     jQuery(document).on("click", "#menu-item-browse", function () {
@@ -255,7 +258,7 @@ function reacg_media_uploader( e ) {
 
   media_uploader.on( 'select', function () {
     /* Get images ids already added.*/
-    let images_ids = reacg_get_image_ids(true);
+    let images_ids = reacg_get_image_ids(gallery_items, true);
 
     /* Get selected images.*/
     let selected_images = media_uploader.state().get( 'selection' ).toJSON();
@@ -283,7 +286,7 @@ function reacg_media_uploader( e ) {
       /* Add an image to the gallery, if it doesn't already exist.*/
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
         /* Add selected image to the existing list of visual items.*/
-        let clone = jQuery(".reacg-template").clone();
+        let clone = gallery_items.find(".reacg-template").clone();
         if ( type === "video" ) {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
           clone.find(".reacg-cover").removeClass("reacg-hidden");
@@ -292,17 +295,17 @@ function reacg_media_uploader( e ) {
         clone.attr("data-type", type);
         clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
-        clone.insertAfter(".reacg_item_new");
+        clone.insertAfter(gallery_items.find(".reacg_item_new"));
         /* Add selected image id to the existing list.*/
         images_ids.unshift(image_id);
       }
     }
 
     /* Update the images data.*/
-    reacg_set_image_ids(images_ids);
+    reacg_set_image_ids(gallery_items, images_ids);
 
     /* Save the images.*/
-    reacg_save_images();
+    reacg_save_images(gallery_items);
 
     media_uploader.close();
   } );
@@ -311,15 +314,15 @@ function reacg_media_uploader( e ) {
 /**
  * Save the images IDs to the gallery.
  */
-function reacg_save_images() {
+function reacg_save_images(gallery_items) {
   reacg_toggle_loading();
   jQuery.ajax({
     type: "POST",
-    url: jQuery(".reacg_items").data("ajax-url"),
+    url: gallery_items.data("ajax-url"),
     data: {
       "action": "reacg_save_images",
-      "post_id": jQuery(".reacg_items").data("post-id"),
-      "images_ids": reacg_get_image_ids(false),
+      "post_id": gallery_items.data("post-id"),
+      "images_ids": reacg_get_image_ids(gallery_items, false),
       "gallery_timestamp": Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
     },
     complete: function (data) {
@@ -340,7 +343,12 @@ function reacg_save_images() {
 function reacg_reload_preview() {
   /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
   document.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
-
+  let containers = document.querySelectorAll("#reacg-reloadData");
+  if (containers.length > 1) {
+    for (let i = 0; i < containers.length - 1; i++) {
+      containers[i].remove(); // Remove all except the last one
+    }
+  }
   jQuery("#reacg-reloadData").trigger("click");
 }
 

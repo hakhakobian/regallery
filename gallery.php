@@ -258,6 +258,7 @@ final class REACG {
       'plugin_url' => $this->plugin_url,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }

@@ -20,6 +20,7 @@ class REACG_Gallery {
     add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
 
     // Register an ajax action to save images to the gallery.
+    add_action('wp_ajax_reacg_save_gallery', [ $this, 'save_gallery' ]);
     add_action('wp_ajax_reacg_save_images', [ $this, 'save_images' ]);
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
@@ -426,6 +427,24 @@ class REACG_Gallery {
     wp_die();
   }
 
+  public function save_gallery() {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      $new_post = [
+        'post_title' => '(no title)',
+        'post_status' => 'publish',
+        'post_type' => 'reacg',
+      ];
+      $post_id = wp_insert_post($new_post, TRUE);
+      wp_update_post([
+                       'ID' => $post_id,
+                       'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
+                     ]);
+      echo json_encode($post_id);
+    }
+    wp_die();
+  }
+
   /**
    * Save the metadata on saving the custom post and insert the shortcode as a content.
    *
@@ -722,9 +741,12 @@ class REACG_Gallery {
         }
       }
       $this->image_item();
-      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
+      ?><input class="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
     </div><?php
-    if ( isset($_GET['action']) && $_GET['action'] === 'reacg_images' ) {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce])
+      && isset($_GET['action'])
+      && $_GET['action'] === 'reacg_images' ) {
       echo json_encode(ob_get_clean());
       wp_die();
     }
