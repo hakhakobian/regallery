@@ -120,6 +120,8 @@ class REACG_Options {
       'slideDuration' => 3000, #number
     ],
     'general' => [
+      'clickAction' => 'lightbox', #string none | lightbox | url
+      'openUrlInNewTab' => TRUE, #boolean
       'orderBy' => 'default', #string
       'orderDirection' => 'asc', #string
       'itemsPerPage' => 20, #number
@@ -130,7 +132,6 @@ class REACG_Options {
       'paginationTextColor' => '#000000de', #string
     ],
     'lightbox' => [
-      'showLightbox' => TRUE, #boolean
       'isFullscreen' => TRUE, #boolean
       'width' => 800, #number
       'height' => 600, #number
@@ -210,6 +211,7 @@ class REACG_Options {
       'shadow',
       'navigationButton',
       'playAndPauseAllowed',
+      'openUrlInNewTab',
     ];
     $float = [
       'scale',
@@ -269,6 +271,10 @@ class REACG_Options {
       'orderDirection' => [
         'allowed' => [ 'asc', 'desc' ],
         'default' => 'asc',
+      ],
+      'clickAction' => [
+        'allowed' => [ 'none', 'lightbox', 'url' ],
+        'default' => 'lightbox',
       ],
     ];
     if ( in_array($key, $number) ) {
@@ -458,10 +464,11 @@ class REACG_Options {
     if ( !empty($options) ) {
       $options = json_decode($options, TRUE);
     }
+
     // Modify the data structure based on the new structure.
     $options = $this->modify($options);
 
-    // If an option is missing add it's default value.
+    // If an option is missing add its default value.
     $options = $this->defaults($this->options, $options);
 
     // Sanitizing and validating the given data.
@@ -554,6 +561,11 @@ class REACG_Options {
             unset($options[$old_key]);
           }
         }
+      }
+
+      if ( isset($options['lightbox']['showLightbox']) ) {
+        $options['general']['clickAction'] = $options['lightbox']['showLightbox'] ? 'lightbox' : 'none';
+        unset($options['lightbox']['showLightbox']);
       }
     }
 
