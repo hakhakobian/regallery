@@ -36,36 +36,49 @@
 }
 
 /* For Elementor and Divi builder. */
-.elementor-container .button-primary,
+.elementor-widget-container .button-primary,
 .reacg_module .button-primary {
   background: #2271b1;
   border-color: #2271b1;
   color: #fff;
   text-decoration: none;
   text-shadow: none;
+  border-radius: 3px;
 }
 
-.elementor-container .button-primary:hover,
+
+.elementor-widget-container .button-primary:hover,
 .reacg_module .button-primary:hover {
   background: #135e96;
   border-color: #135e96;
   color: #fff;
+  border-radius: 3px;
 }
 
-.elementor-container .button-secondary,
+.elementor-widget-container .button-secondary,
 .reacg_module .button-secondary {
   background: #f6f7f7;
   border-color: #2271b1;
   color: #2271b1;
   text-decoration: none;
   text-shadow: none;
+  border-radius: 3px;
 }
 
-.elementor-container .button-secondary:hover,
+.elementor-widget-container .button-secondary:hover,
 .reacg_module .button-secondary:hover {
   background: #f0f0f1;
   border-color: #0a4b78;
   color: #0a4b78;
+  border-radius: 3px;
+}
+/* Remove unnecessary empty are from the bottom when there is no data to show.*/
+.reacg-elementor-icon.elementor-widget-empty-icon {
+  display: none !important;
+}
+/* Remove empty widget background if the gallery options are hidden.*/
+.elementor-widget-reacg-elementor.elementor-widget-empty {
+  background-color: transparent !important;
 }
 
 /* Divi builder module. */

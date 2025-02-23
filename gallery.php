@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: Photo gallery plugin is a responsive image gallery WordPress plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
- * Version: 1.9.16
+ * Version: 1.9.20
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.9.16';
+  public $version = '1.9.20';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
@@ -114,7 +114,10 @@ final class REACG {
   public function register_elementor_widget() {
     if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
       require_once ($this->plugin_dir . '/builders/elementor/elementor.php');
-      REACGLibrary::enqueue_scripts();
+      if ( \Elementor\Plugin::instance()->preview->is_preview_mode() ) {
+        // Enqueue scripts only in preview mode.
+        REACGLibrary::enqueue_scripts();
+      }
       \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
     }
   }
@@ -249,6 +252,8 @@ final class REACG {
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
       'title' => $this->nicename,
+      'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
+      'plugin_url' => $this->plugin_url,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
     ));

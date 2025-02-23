@@ -3,9 +3,9 @@ Contributors: hakhakob, regallery, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.7.1
+Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.9.16
+Stable tag: 1.9.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,55 +14,54 @@ Photo gallery plugin is a responsive image gallery WordPress plugin for easily c
 
 == Description ==
 
-ReGallery is a FREE, SEO-friendly plugin enhanced with stunning Mosaic and Masonry views, designed to make your WordPress gallery more beautiful and engaging. Get ready to dive into a world of visual wonder on WordPress!
+ReGallery is a FREE, SEO-friendly plugin equipped with advanced features like Mosaic and Masonry views, designed to make your WordPress galleries beautiful and engaging.
 
 https://www.youtube.com/watch?v=_xn7GOOTp5A
 
-ReGallery is the perfect choice for photography websites, blogs, and any platform looking to showcase dynamic image galleries with user-friendly navigation. Our mission is to make WordPress websites visually stunning, accessible, and optimized for search engines.
+Whether you're a photographer, blogger, or business owner, this photo gallery provides the tools to create a professional, mobile-optimized gallery that enhances user experience and boosts SEO performance. With features like lightbox viewing, responsive design, and drag-and-drop customization, this plugin redefines ease of use and functionality.
 
-Transform your website into a captivating visual journey with ReGallery. Enhance your site's SEO and user experience with this powerful and easy-to-use photo gallery plugin. Make your WordPress site stand out today!
+Transform your website into a captivating visual journey with ReGallery. Improve SEO, increase user engagement, and stand out with this powerful, easy-to-use photo gallery plugin.
 
-For more information and updates, please visit our website: [ReGallery.team](https://regallery.team/?utm_source=wordpress&utm_medium=social)
+For more details, updates, and inspiration, please visit our website: [ReGallery.team](https://regallery.team/?utm_source=wordpress&utm_medium=social)
 
 
 == Benefits ==
 
-*   **Ultra-Lightweight Design:** Engineered for lightning-fast performance, reducing load times to a minimum and boosting overall user experience.
-*   **Increased user engagement:** Style, optimize, and display visual content on your website. Using images can make websites more engaging and increase user engagement with your content, thus leveling up your pageviews.
-*   **Interactive Live Demo:** One of the most important and useful features is the ability to see changes immediately. This interactive experience allows you to play with different settings and configurations, optimizing your gallery for the best visual impact. The changes appear in the live demo. Moreover, the UX/UI design of the plugin closely aligns with WordPress, making it even easier and more intuitive to work with its features.
-*   **Enhanced SEO:** Optimizing image tags enhances your website's visibility on Google searches, boosting SEO performance.
-*   **A user-friendly interface:** An intuitive interface that makes creating galleries easy and quickly.
-*   **Powered by React.js:** A cutting-edge frontend framework ensuring rapid, responsive updates and a smooth user journey.
-*   **Support:** Our responsive support team is always ready to assist you in overcoming any obstacles. We are currently in the active development phase, introducing new and valuable features. Your feedback holds great significance for us. We welcome new suggestions, and your ideas are highly valued.
+*   **Ultra-Lightweight Design:** ReGallery Photo Gallery WordPress plugin is engineered for lightning-fast performance, reducing load times and ensuring a smooth browsing experience, even for mobile-friendly responsive galleries.
+*   **Increased User Engagement:** Style and optimize your image gallery and album with features like slideshow, thumbnails and masonry layouts. Engaging visual content increases interaction, improving pageviews and user retention.
+*   **Interactive Live Demo:** Preview changes instantly with our live demo feature. This interactive experience allows you to experiment with gallery settings such as carousel, cards, cube, or mosaic designs to achieve the perfect visual. The changes appear in the live demo. Moreover, the UX/UI design of the photo gallery plugin closely aligns with WordPress, making it even easier and more intuitive to work with its features.
+*   **Enhanced SEO:** Optimizing images, titles, and descriptions enhances visibility on Google. ReGallery ensures your image browser, lightbox, and other gallery features are fully SEO-friendly, boosting your site's search engine performance.
+*   **A User-Friendly Interface:** Create and manage the photo gallery with ease using our intuitive dashboard. Whether you're working with albums and video support, or platforms like YouTube, Vimeo, Instagram, Flickr, or Dailymotion, ReGallery image gallery plugin simplifies the process for all levels of users.
+*   **Powered by React.js:** Our plugin leverages cutting-edge technology for responsive updates and a seamless user journey, whether you're managing widgets or customizing gallery views.
+*   **Responsive Support:** Our dedicated support team is here to help you make the most of ReGallery's capabilities. As we continue active development, we're committed to adding new features like lightbox enhancements and more. We value your feedback and encourage you to share ideas for future updates. ReGallery makes your WordPress site visually stunning with a mobile-friendly design, easy customization, and SEO optimization for great results.
 
 
 == Demo ==
 
-**ReGallery** gives you the tools to create **professional, responsive galleries** in minutes — no coding skills needed. Explore real examples of our **stunning gallery views** and **customizable pre-built templates** to see how easily you can update your website design.
-
+**ReGallery** gives you the tools to create **professional, responsive photo galleries** in minutes — no coding skills needed. Explore real examples of our stunning gallery views, customizable pre-built templates, and modern layouts to see how easily you can update your WordPress website design.
 [Click here to see the ReGallery Demo page now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=social)
 
 
-== Why Choose the ReGallery plugin? ==
+== Why Choose the ReGallery photo gallery plugin? ==
 
 Tired of the repetitive task of publishing photos every time you make changes and want a more efficient solution? 
-Well, we have exciting news for you! 
-Introducing the ReGallery plugin, offering a live demo feature. Now, you can actively engage with functionalities, witnessing immediate results. Isn't that fantastic?
-Experience a more dynamic and interactive gallery management with our ReGallery free plugin!
+Well, we have exciting news for you!
+Introducing the ReGallery WordPress photo gallery plugin, offering a live demo feature. Now, you can actively engage with functionalities like image sliders, masonry layouts, and more, seeing immediate results. Isn't that fantastic?
+Experience a more dynamic and interactive gallery management process with our free photo gallery plugin! 
+Key Features of the ReGallery Plugin
 
-*   **User-Friendly Dashboard:** Access your plugin through a user-friendly dashboard within the WordPress admin interface, carefully designed for maximum efficiency and easy use.
-*   **SEO Friendly:** Optimized for search engine ranking to help improve your website's visibility and make your content more discoverable.
-*   **Mobile Optimization:** Fully responsive design ensures your galleries look perfect on all devices, offering a seamless mobile experience.
-*   **Modern Website Design:** Adding ReGallery plugin makes your website look modern and professional, improving how users experience and interact with it.
-*   **Cost-Effective Solution:** ReGallery plugin is free to download and use for displaying images on your website.  
-*   **Advanced Customization Options:** Our features  allow you to personalize your website's image display at no extra cost. Customize padding, radius, and titles to achieve a unique and visually appealing look, enhancing your site's aesthetics and user experience.
-*   **Layout Customization:** Options to adjust the height, width, and the number of images per row.
-*   **Spacing and Padding:** These options in our ReGallery plugin provide you with the flexibility to control the arrangement and visual presentation of your images, offering a customizable and user-friendly experience. Adjusting spacing allows you to create a well-balanced layout, while fine-tuning padding ensures a seamless and aesthetically pleasing display. 
-*   **Radius:** By adjusting the radius, you can round the corners of your images, providing a modern and polished aesthetic. This customizable feature enhances the visual appeal of your photo gallery, contributing to a more engaging and contemporary user experience.
-*   **Title Customization:** ReGallery plugin provides you with the flexibility to personalize how image titles appear on your website, enhancing your SEO efforts. You can choose the style that aligns with your site's design, whether it's bold and attention-grabbing or a more understated look. This customizable feature ensures that your photo gallery complements your website's unique style, contributing to a more engaging user experience and improved search engine visibility.
-*   **Image Upload:** Leverage the ease of the WordPress media uploader for uploading images, benefiting from its comprehensive features such as bulk upload, file management, and image editing tools.
-*   **Dynamic Loading:** Additionally, the plugin supports 'scroll load' as a pagination type, offering a smooth and continuous browsing experience.
-*   **Enhanced Viewing with Lightbox:** Activating the  lightbox' feature transforms how images are viewed, enabling users to click on any gallery image to see it in full screen, providing a detailed and enhanced visual experience.
+*   **User-Friendly Dashboard:** Access your plugin through a user-friendly dashboard within the WordPress admin interface, carefully designed for easy navigation and maximum efficiency.
+*   **SEO-Friendly Optimization:** Our photo gallery plugin is designed to improve your website's search engine visibility. With features like image title customization, alt tags, and fast-loading galleries, you'll rank higher and attract more traffic.
+*   **Mobile Optimization:** Our fully responsive photo gallery design ensures that your galleries look stunning on all devices, providing a seamless mobile experience.
+*   **Modern Website Design:** ReGallery improves your website's look with mosaic galleries, lightbox effects, and sleek thumbnail views, creating a professional and contemporary design.
+*   **Cost-Effective Solution:** ReGallery is a free WordPress image gallery plugin offering powerful features for displaying images without additional costs.
+*   **Advanced Customization Options:** Easily adjust padding, radius, and titles to design a unique and attractive image gallery. These customization options enhance your website's look and user experience, making your galleries more engaging and visually appealing.
+*   **Layout Customization:** Enjoy flexibility with options to adjust the height, width, and number of images per row. Create a photo gallery that suits your website's specific design needs.
+*   **Spacing and Padding:** ReGallery's customizable spacing and padding features offer you control over the visual presentation of your image galleries. Adjusting the spacing ensures a stable, beautiful layout, while optimizing padding contributes to a polished, modern design that enhances the user experience. Moreover, you can add a modern touch to your photo gallery by adjusting the radius to round the corners of your images.
+*   **Title Customization:** Personalize how image titles appear in your photo gallery to align with your site's design and SEO strategy. Whether you prefer bold, attention-grabbing titles or a more subtle design, this feature enhances user engagement and improves search engine visibility, contributing to a better ranking and more discoverable content.
+*   **Image Upload:** Easily upload images using the WordPress media uploader, taking advantage of its features like bulk upload, file management, and image editing tools. 
+*   **Dynamic Loading:** ReGallery supports 'scroll load' pagination, offering a smooth, continuous browsing experience. This dynamic loading feature ensures your users enjoy seamless navigation through your galleries, further enhancing user interaction and engagement.
+*   **Enhanced Viewing with Lightbox:** Activate the lightbox feature to provide an immersive viewing experience. Users can click on gallery images to view them in full screen, enhancing engagement and the overall user experience.
 
 
 == Popular ReGallery Tutorials ==
@@ -82,7 +81,7 @@ Below are some of the most popular ReGallery tutorials:
 
 == PRO Pre-Built Templates ==
 
-Save time with our pre-built templates! For a small fee, you get not just a ready-made design but a creative idea to update your website. Perfect for building beautiful galleries or presenting your products - quick, easy, and professional!
+Save time with our customizable pre-built templates! For less than $1.3/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional – get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
 
 [Click here to see Pro Pre-Built templates now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=social)
 
@@ -120,33 +119,33 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 == Frequently Asked Questions ==
 
 = Can I add galleries using Gutenberg? =
-Absolutely! Our plugin smoothly works with the Gutenberg editor, making gallery addition and management a breeze for a user-friendly experience. Additionally, Option changes can be saved both from the live demo feature and working in the Gutenberg editor, ensuring a consistent experience.
+Absolutely! Our photo gallery plugin smoothly works with the Gutenberg editor, making gallery addition and management a breeze for a user-friendly experience. Additionally, Option changes can be saved both from the live demo feature and working in the Gutenberg editor, ensuring a consistent experience.
 
-= How can I change the title of an image in my gallery? =
+= How can I change the title of an image in my photo gallery? =
 To change the title of an image, simply edit the image and modify the title from the media uploader screen.
 
 = Can images within a gallery be reordered? =
-Our plugin supports drag-and-drop functionality, enabling you to easily reorder and restructure images within your galleries.
+Our photo gallery plugin supports drag-and-drop functionality, enabling you to easily reorder and restructure images within your gallery.
 
-= Can I use this plugin for a professional photography website? =
-Our plugin is perfect for everyone, providing the elegance and adaptability required for top-notch galleries.
+= Can I use this image gallery plugin for a professional photography website? =
+Our photo gallery plugin is perfect for everyone, providing the elegance and adaptability required for top-notch galleries.
 
 = Is the plugin optimized for mobile devices? =
-Yes, our plugin is fully responsive, ensuring your galleries look amazing on all devices.
+Yes, our photo gallery plugin is fully responsive, ensuring your galleries look amazing on all devices.
 
 = What Views Are Available in the ReGallery plugin? =
-ReGallery offers a variety of stunning views to enhance your photo galleries. Our plugin includes the following views:
+ReGallery offers a variety of stunning views to enhance your photo gallery. Our image gallery plugin includes the following views:
 
-* **Thumbnail view:** Present your gallery with clickable thumbnails that open larger versions of the images.
+* **Thumbnail view:** Present your photo gallery with clickable thumbnails that open larger versions of the images.
 * **Mosaic view:** Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
-* **Masonry view:** Showcase your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
+* **Masonry view:** Show your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
 * **Slideshow view:** Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
 * **Cube view:** A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
 * **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 
 = How does the live demo feature work? =
-The live demo allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your gallery.
+The live demo allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your photo gallery.
 
 = Are there any limitations on the number of galleries I can create? =
 No limits! Create as many galleries as you need, each with its unique flair.
@@ -176,10 +175,37 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.16: Added Overlay Slideshow pre-built template. Enjoy free functionality and add your suggestions via WP forum.
+* 1.9.20: Added Flicker Frame pre-built template. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.9.20 =
+= Updated: 19.02.2025 =
+* **Added:** Flicker Frame pre-built template.
+* **Improved:** Overall load time for better performance.
+* **Fixed:** Issues with multiple galleries in Divi builder.
+* **Fixed:** Block preview in Gutenberg.
+
+= 1.9.19 =
+= Updated: 14.02.2025 =
+* **Added:** Testimonial Gallery pre-built template.
+* **Fixed:** JavaScript error in the Gutenberg editor.
+* **Fixed:** PHP notice and JavaScript error in the Divi builder.
+* **Fixed:** JavaScript error when no gallery is selected in the Elementor widget.
+* **Fixed:** Script inclusion issue on the page after removing the gallery widget from the Elementor.
+* **Fixed:** Extra space appearing when there is no data to display.
+* **Fixed:** Close button for the Preview template video popup.
+
+= 1.9.18 =
+= Updated: 10.02.2025 =
+* **Added:** Digital Shop, Spotlight Ad, Infinite Scroll pre-built templates.
+* **Fixed:** Issue with Divi Builder.
+* **Fixed:** Cards view overlapping issue in some cases.
+
+= 1.9.17 =
+= Updated: 03.02.2025 =
+* **Added:** Blinds Slider pre-built template.
 
 = 1.9.16 =
 = Updated: 29.01.2025 =

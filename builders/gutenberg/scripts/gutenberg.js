@@ -3,6 +3,7 @@
   let pluginData = reacg;
   blocks.registerBlockType( "reacg/gallery", {
     title: pluginData.title,
+    description: pluginData.description,
     icon: el( 'img', {
       width: 24,
       height: 24,
@@ -13,6 +14,7 @@
     supports: {
       customClassName: false
     },
+    example: {},
     attributes: {
       shortcode: {
         type: "string",
@@ -21,10 +23,22 @@
       shortcode_id: {
         type: "int",
         value: 0
+      },
+      hidePreview: {
+        type: "boolean",
+        value: false
       }
     },
 
     edit: function ( props ) {
+      // Display block preview only on the block hover.
+      if ( !props.attributes.hidePreview && !props.isSelected ) {
+        return el( "div", {class: "reacg-block-preview"}, el( "img", {
+          src: pluginData.plugin_url + "/builders/gutenberg/images/preview.png",
+          style: { height: "auto", width: "100%" }
+        }));
+      }
+
       // Create the shortcodes list and the container for preview.
       let cont = el( "div", {}, shortcodeList(), showPreview());
 
@@ -71,10 +85,15 @@
         } );
 
         let cont = event.target.parentElement.querySelector(".reacg-gallery");
-        cont.setAttribute('data-gallery-id', selected.value);
-        cont.setAttribute('id', 'reacg-root' + selected.value);
-        document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + selected.value);
-        document.getElementById('reacg-loadApp').click();
+        if ( cont ) {
+          cont.setAttribute('data-gallery-id', selected.value);
+          cont.setAttribute('id', 'reacg-root' + selected.value);
+        }
+        let button = document.getElementById("reacg-loadApp");
+        if ( button ) {
+          button.setAttribute('data-id', 'reacg-root' + selected.value);
+          button.click();
+        }
 
         event.preventDefault();
       }
@@ -85,6 +104,9 @@
        * @returns {*}
        */
       function showPreview() {
+        props.setAttributes( {
+          hidePreview: true,
+        } );
         let shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
         let cont = el( 'div', {
           'data-options-section': 1,
@@ -92,10 +114,14 @@
           class: "reacg-gallery reacg-preview",
           id: "reacg-root" + shortcode_id,
         } );
-        if ( document.getElementsByClassName("reacg-gallery").length > 0
-          && document.getElementsByClassName("reacg-gallery")[0].innerHTML == '' ) {
-          document.getElementById('reacg-loadApp').setAttribute('data-id', 'reacg-root' + shortcode_id);
-          document.getElementById('reacg-loadApp').click();
+        if ( document.getElementsByClassName("reacg-gallery")
+          && document.getElementsByClassName("reacg-gallery").length > 0
+          && document.getElementsByClassName("reacg-gallery")[0].innerHTML === '' ) {
+          let button = document.getElementById("reacg-loadApp");
+          if ( button ) {
+            button.setAttribute('data-id', 'reacg-root' + shortcode_id);
+            button.click();
+          }
         }
 
         return cont;

@@ -1,7 +1,9 @@
 <?php
 
 class REACG_DiviModule extends ET_Builder_Module {
+  public $icon_path = REACG_PLUGIN_DIR . '/assets/images/icon.svg';
   public $slug = 'reacg_module';
+  public $name = REACG_NICENAME;
   /**
    * Visual Builder support status.
    *
@@ -22,8 +24,6 @@ class REACG_DiviModule extends ET_Builder_Module {
 
   public function init() {
     REACGLibrary::enqueue_scripts();
-    $this->name = REACG_NICENAME;
-    $this->icon_path = REACG_PLUGIN_DIR . '/assets/images/icon.svg';
   }
 
   /**
@@ -68,7 +68,7 @@ class REACG_DiviModule extends ET_Builder_Module {
    *
    * @return bool|string|null
    */
-  public function render( $attrs, $content = null, $render_slug ) {
+  public function render( $attrs, $content, $render_slug ) {
     $post_id = intval($this->props["post_id"]);
 
     return REACGLibrary::get_rest_routs($post_id);
