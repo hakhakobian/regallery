@@ -82,6 +82,11 @@
     const loader = el('div', {class: "reacg-spinner__wrapper reacg-hidden"}, el('span', {
       class: "spinner is-active",
     }));
+    const instruction = props.attributes.shortcode_id ? "" : el('div', {class: "reacg-instruction"}, el( 'img', {
+      width: 50,
+      height: 50,
+      src: reacg.icon
+    } ), el( 'p', {}, "Create new gallery or select the existing one." ));
 
     return el(
       "div",
@@ -89,6 +94,7 @@
         class: "reacg-gutenberg"
       },
       loader,
+      instruction,
       create_button,
       separator_cont,
       gallery_list,
@@ -114,7 +120,7 @@
       },
       el('button' , {
         onClick: (event) => showPreview(event, 0, props),
-      }, 'Create gallery'),
+      }, 'Create new gallery'),
     );
   }
 
@@ -128,15 +134,11 @@
   }
 
   function reload_gallery(shortcode_id) {
-    //if ( document.getElementsByClassName("reacg-gallery")
-    //  && document.getElementsByClassName("reacg-gallery").length > 0
-    //  && document.getElementsByClassName("reacg-gallery")[0].innerHTML === '' ) {
-      let button = document.getElementById("reacg-loadApp");
-      if (button) {
-        button.setAttribute('data-id', 'reacg-root' + shortcode_id);
-        button.click();
-      }
-    //}
+    let button = document.getElementById("reacg-loadApp");
+    if (button) {
+      button.setAttribute('data-id', 'reacg-root' + shortcode_id);
+      button.click();
+    }
   }
 
   function images_cont(baseCont, shortcode_id) {
@@ -155,6 +157,7 @@
       })
       .catch(error => console.error("Error fetching data:", error));
   }
+
   /**
    * Create the container for preview.
    *
