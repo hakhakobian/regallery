@@ -588,10 +588,71 @@ class REACG_Gallery {
 
     // Metabox for live preview.
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
+
+    // Metabox to display the available publishing methods.
+    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'default' );
   }
 
   public function meta_box_preview($post) {
     REACGLibrary::get_rest_routs($post->ID);
+  }
+
+  /**
+   * Display the available publishing methods.
+   *
+   * @param $post
+   *
+   * @return void
+   */
+  public function meta_box_help( $post ) {
+    $available_builders = [];
+    if ( function_exists( 'register_block_type' ) ) {
+      $available_builders['gutenberg'] = [
+        'title' => __('Gutenberg block', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=Ep5L3xKdDH8',
+      ];
+    }
+    if ( class_exists( '\Elementor\Plugin' ) ) {
+      $available_builders['elementor'] = [
+        'title' => __('Elementor widget', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
+      ];
+    }
+    if ( class_exists( 'ET_Builder_Module' ) ) {
+      $available_builders['divi'] = [
+        'title' => __('Divi builder module', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
+      ];
+    }
+    if ( !empty($available_builders) ) {
+      ?>
+    <p>
+      <?php esc_html_e( 'You can insert the gallery into a post or page using:', 'reacg' ); ?>
+    </p>
+    <ul>
+      <?php
+      foreach ( $available_builders as $builder ) {
+        ?>
+      <li>
+        <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'reacg' ); ?>">
+          <strong><?php esc_html_e($builder['title']); ?></strong>
+        </a>
+      </li>
+        <?php
+      }
+      ?>
+    </ul>
+    <?php esc_html_e( 'Or just paste the shortcode into any builder:', 'reacg' ); ?>
+      <?php
+    }
+    else {
+      esc_html_e( 'Paste the shortcode into a post or page to show the gallery:', 'reacg' );
+    }
+    ?>
+    <p class="reacg_shortcode">
+      <code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post->ID)); ?></code>
+    </p>
+    <?php
   }
 
   /**
