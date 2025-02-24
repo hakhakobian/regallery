@@ -100,9 +100,14 @@
       },
       loader,
       instruction,
-      create_button,
-      separator_cont,
-      galleries_list,
+      el( "div",
+        {
+          class: "reacg-gutenberg-controls"
+        },
+        create_button,
+        separator_cont,
+        galleries_list
+      ),
       images_cont,
       preview,
     );
@@ -159,9 +164,9 @@
         container.classList.remove("reacg-hidden");
         if (container) {
           container.innerHTML = data;
+          /* Make the image items sortable.*/
+          reacg_make_items_sortable(container);
         }
-        /* Make the image items sortable.*/
-        reacg_make_items_sortable(container);
         baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
       })
       .catch(error => console.error("Error fetching data:", error));
@@ -206,6 +211,7 @@
     shortcodes.forEach( function ( shortcode_data ) {
       shortcode_list.push(
         el( 'option', {
+          disabled: shortcode_data.id ? "" : "disabled",
           value: shortcode_data.id,
           "data-shortcode": shortcode_data.shortcode,
         }, shortcode_data.title )

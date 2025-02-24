@@ -49,6 +49,12 @@
   text-align: center;
 }
 
-.reacg-gutenberg {
-  text-align: center;
+.reacg-gutenberg-controls {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.reacg-createButton {
+  margin: 0 auto;
 }
