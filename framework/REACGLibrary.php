@@ -84,6 +84,7 @@ class REACGLibrary {
     ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
+         data-plugin-version="<?php echo esc_attr(REACG_VERSION); ?>"
          data-gallery-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'gallery_timestamp', TRUE )); ?>"
          data-options-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'options_timestamp', TRUE )); ?>"
          data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
