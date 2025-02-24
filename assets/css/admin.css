@@ -136,3 +136,29 @@ to avoid a bug connected with preview.
 .error {
   display: none;
 }
+
+.reacg_shortcode code {
+  text-align: center;
+  padding: 10px 0;
+  display: block;
+  max-width: 350px;
+}
+#gallery-help ul li {
+  list-style-type: disc;
+  list-style-position: inside;
+  list-style-image: none;
+  font-size: 14px;
+}
+#gallery-help ul li::marker {
+  color: green;
+}
+#gallery-help ul li a,
+#gallery-help ul li a:hover,
+#gallery-help ul li a:active,
+#gallery-help ul li a:focus {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: none;
+  outline: none;
+}
