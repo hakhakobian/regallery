@@ -35,7 +35,7 @@
         return block_preview();
       }
 
-      // Create the shortcodes list and the container for preview.
+      // Create the gallery block.
       return regallery(props);
     },
 
@@ -57,25 +57,30 @@
   }
 
   /**
+   * Gallery block.
    *
    * @param props
    * @returns {*}
    */
   function regallery(props) {
-    const shortcodes = JSON.parse( reacg.data );
     props.setAttributes( {
       hidePreview: true,
     } );
 
+    const shortcodes = JSON.parse( reacg.data );
     const shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
 
     const create_button = props.attributes.shortcode_id ? "" : create_gallery(props);
     const separator_cont = props.attributes.shortcode_id || shortcodes.length === 1  ? "" : separator();
-    const gallery_list = shortcodes.length > 1 ? shortcodeList(props) : "";
+    const galleries_list = shortcodes.length > 1 ? shortcodesList(props) : "";
     const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id ? "" : "reacg-hidden")});
-    const create_preview = el('div', {
+    const timestamp = Date.now();
+    const preview = el('div', {
       'data-options-section': 1,
       'data-gallery-id': shortcode_id,
+      'data-plugin-version': reacg.plugin_version,
+      'data-gallery-timestamp': timestamp,
+      'data-options-timestamp': timestamp,
       class: "reacg-gallery reacg-preview" + (shortcode_id ? "" : " reacg-hidden"),
       id: "reacg-root" + shortcode_id,
     });
@@ -86,7 +91,7 @@
       width: 50,
       height: 50,
       src: reacg.icon
-    } ), el( 'p', {}, "Create new gallery or select the existing one." ));
+    } ), shortcodes.length > 1 ? el( 'p', {}, "Create new gallery or select the existing one." ) : "");
 
     return el(
       "div",
@@ -97,9 +102,9 @@
       instruction,
       create_button,
       separator_cont,
-      gallery_list,
+      galleries_list,
       images_cont,
-      create_preview,
+      preview,
     );
   }
 
@@ -127,15 +132,19 @@
   function set_data(event, shortcode_id) {
     let baseCont = event.target.closest(".reacg-gutenberg");
     let galleryCont = baseCont.querySelector(".reacg-gallery");
+    const timestamp = Date.now();
     galleryCont.classList.remove("reacg-hidden");
     galleryCont.setAttribute('data-options-section', 1);
     galleryCont.setAttribute('data-gallery-id', shortcode_id);
+    galleryCont.setAttribute('data-plugin-version', reacg.plugin_version);
+    galleryCont.setAttribute('data-gallery-timestamp', timestamp);
+    galleryCont.setAttribute('data-options-timestamp', timestamp);
     galleryCont.setAttribute('id', "reacg-root" + shortcode_id);
   }
 
   function reload_gallery(shortcode_id) {
     let button = document.getElementById("reacg-loadApp");
-    if (button) {
+    if ( button ) {
       button.setAttribute('data-id', 'reacg-root' + shortcode_id);
       button.click();
     }
@@ -143,7 +152,7 @@
 
   function images_cont(baseCont, shortcode_id) {
     baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
-    fetch(reacg.ajax_url + '&action=reacg_images&id=' + shortcode_id)
+    fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
         const container = baseCont.querySelector("#reacg-gallery-images");
@@ -158,13 +167,6 @@
       .catch(error => console.error("Error fetching data:", error));
   }
 
-  /**
-   * Create the container for preview.
-   *
-   * @param event
-   * @param shortcode_id
-   * @param props
-   */
   function showPreview(event, shortcode_id, props) {
     const baseCont = event.target.closest(".reacg-gutenberg");
     baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
@@ -180,9 +182,7 @@
             shortcode_id: shortcode_id,
           } );
 
-
           baseCont.querySelector(".reacg-list").classList.add("reacg-hidden");
-
           baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
 
           images_cont(baseCont, shortcode_id);
@@ -198,12 +198,7 @@
     }
   }
 
-  /**
-   * Create the shortcodes list html element.
-   *
-   * @returns {*}
-   */
-  function shortcodeList(props) {
+  function shortcodesList(props) {
     let shortcodes = JSON.parse( reacg.data );
 
     // Add shortcodes to the html elements.
@@ -217,7 +212,6 @@
       );
     } );
 
-    // Return the complete html list of items.
     return el(
       "span",
       {

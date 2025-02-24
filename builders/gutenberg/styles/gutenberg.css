@@ -34,10 +34,6 @@
   margin: 0 5px 20px 5px;
 }
 
-.reacg-hidden {
-  display: none;
-}
-
 .reacg-spinner__wrapper {
   width: 100%;
   height: 100%;
@@ -50,5 +46,9 @@
 }
 
 .reacg-instruction {
+  text-align: center;
+}
+
+.reacg-gutenberg {
   text-align: center;
 }

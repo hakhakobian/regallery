@@ -256,6 +256,7 @@ final class REACG {
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
       'plugin_url' => $this->plugin_url,
+      'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
       'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
