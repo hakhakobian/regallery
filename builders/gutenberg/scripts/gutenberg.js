@@ -71,8 +71,14 @@
     const shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
 
     const create_button = props.attributes.shortcode_id ? "" : create_gallery(props);
-    const separator_cont = props.attributes.shortcode_id || shortcodes.length === 1  ? "" : separator();
-    const galleries_list = shortcodes.length > 1 ? shortcodesList(props) : "";
+    const galleries_list = props.attributes.shortcode_id || shortcodes.length > 1 ? shortcodesList(props) : "";
+    const separator_cont = create_button && galleries_list ? separator() : "";
+
+    if ( !props.attributes.shortcode_id && document.querySelector(".reacg-gutenberg-controls") ) {
+      /* In case of undo after creating gallery.*/
+      document.querySelector(".reacg-gutenberg-controls").classList.remove("reacg-hidden");
+    }
+
     const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id ? "" : "reacg-hidden")});
     const timestamp = Date.now();
     const preview = el('div', {
@@ -134,21 +140,22 @@
     );
   }
 
-  function set_data(event, shortcode_id) {
-    let baseCont = event.target.closest(".reacg-gutenberg");
-    let galleryCont = baseCont.querySelector(".reacg-gallery");
-    const timestamp = Date.now();
-    galleryCont.classList.remove("reacg-hidden");
-    galleryCont.setAttribute('data-options-section', 1);
-    galleryCont.setAttribute('data-gallery-id', shortcode_id);
-    galleryCont.setAttribute('data-plugin-version', reacg.plugin_version);
-    galleryCont.setAttribute('data-gallery-timestamp', timestamp);
-    galleryCont.setAttribute('data-options-timestamp', timestamp);
-    galleryCont.setAttribute('id', "reacg-root" + shortcode_id);
+  function set_data(baseCont, shortcode_id) {
+    const galleryCont = baseCont.querySelector(".reacg-gallery");
+    if ( galleryCont ) {
+      const timestamp = Date.now();
+      galleryCont.classList.remove("reacg-hidden");
+      galleryCont.setAttribute('data-options-section', 1);
+      galleryCont.setAttribute('data-gallery-id', shortcode_id);
+      galleryCont.setAttribute('data-plugin-version', reacg.plugin_version);
+      galleryCont.setAttribute('data-gallery-timestamp', timestamp);
+      galleryCont.setAttribute('data-options-timestamp', timestamp);
+      galleryCont.setAttribute('id', "reacg-root" + shortcode_id);
+    }
   }
 
   function reload_gallery(shortcode_id) {
-    let button = document.getElementById("reacg-loadApp");
+    const button = document.getElementById("reacg-loadApp");
     if ( button ) {
       button.setAttribute('data-id', 'reacg-root' + shortcode_id);
       button.click();
@@ -156,16 +163,17 @@
   }
 
   function images_cont(baseCont, shortcode_id) {
-    baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
     fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
         const container = baseCont.querySelector("#reacg-gallery-images");
-        container.classList.remove("reacg-hidden");
-        if (container) {
+        if ( container ) {
+          container.classList.remove("reacg-hidden");
           container.innerHTML = data;
           /* Make the image items sortable.*/
           reacg_make_items_sortable(container);
+          set_data(baseCont, shortcode_id);
+          reload_gallery(shortcode_id);
         }
         baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
       })
@@ -174,32 +182,26 @@
 
   function showPreview(event, shortcode_id, props) {
     const baseCont = event.target.closest(".reacg-gutenberg");
-    baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
-    if ( shortcode_id === 0 ) {
-      fetch(reacg.ajax_url + '&action=reacg_save_gallery')
-        .then(response => response.json())
-        .then(data => {
 
-          shortcode_id = data;
-
-          props.setAttributes( {
-            shortcode: '[REACG id="' + shortcode_id + '"]',
-            shortcode_id: shortcode_id,
-          } );
-
-          baseCont.querySelector(".reacg-list").classList.add("reacg-hidden");
-          baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
-
-          images_cont(baseCont, shortcode_id);
-          set_data(event, shortcode_id);
-          reload_gallery(shortcode_id);
-        })
-        .catch(error => console.error("Error fetching data:", error));
-    }
-    else {
-      images_cont(baseCont, shortcode_id);
-      set_data(event, shortcode_id);
-      reload_gallery(shortcode_id);
+    if ( baseCont ) {
+      baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
+      if ( shortcode_id === 0 ) {
+        fetch(reacg.ajax_url + '&action=reacg_save_gallery')
+          .then(response => response.json())
+          .then(data => {
+            shortcode_id = data;
+            props.setAttributes({
+              shortcode: '[REACG id="' + shortcode_id + '"]',
+              shortcode_id: shortcode_id,
+            });
+            baseCont.querySelector(".reacg-gutenberg-controls").classList.add("reacg-hidden");
+            images_cont(baseCont, shortcode_id);
+          })
+          .catch(error => console.error("Error fetching data:", error));
+      }
+      else {
+        images_cont(baseCont, shortcode_id);
+      }
     }
   }
 
@@ -211,7 +213,6 @@
     shortcodes.forEach( function ( shortcode_data ) {
       shortcode_list.push(
         el( 'option', {
-          disabled: shortcode_data.id ? "" : "disabled",
           value: shortcode_data.id,
           "data-shortcode": shortcode_data.shortcode,
         }, shortcode_data.title )
