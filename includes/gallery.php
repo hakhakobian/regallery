@@ -26,9 +26,13 @@ class REACG_Gallery {
 
     // Add custom field to the media uploader.
     add_filter('attachment_fields_to_edit', [ $this, 'attachment_field' ], 10, 2);
-
     // Save custom field when an image is updated.
     add_filter('attachment_fields_to_save', [ $this, 'save_attachment_field' ], 10, 2);
+
+    // Register an ajax action to save a gallery (need for builders).
+    add_action('wp_ajax_reacg_save_gallery', [ $this, 'save_gallery' ]);
+    // Register an ajax action to get the gallery images (need for builders).
+    add_action('wp_ajax_reacg_get_images', [ $this, 'meta_box_images' ]);
 
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
@@ -469,6 +473,32 @@ class REACG_Gallery {
   }
 
   /**
+   * Register an ajax action to save a gallery (need for builders).
+   *
+   * @return void
+   */
+  public function save_gallery() {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      $new_post = [
+        'post_title' => '(no title)',
+        'post_status' => 'publish',
+        'post_type' => 'reacg',
+      ];
+      $post_id = wp_insert_post($new_post, TRUE);
+      if ( $post_id ) {
+        wp_update_post([
+                         'ID' => $post_id,
+                         'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
+                       ]);
+      }
+
+      echo json_encode($post_id);
+    }
+    wp_die();
+  }
+
+  /**
    * Save the metadata on saving the custom post and insert the shortcode as a content.
    *
    * @param $post_id
@@ -600,10 +630,71 @@ class REACG_Gallery {
 
     // Metabox for live preview.
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
+
+    // Metabox to display the available publishing methods.
+    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'default' );
   }
 
   public function meta_box_preview($post) {
     REACGLibrary::get_rest_routs($post->ID);
+  }
+
+  /**
+   * Display the available publishing methods.
+   *
+   * @param $post
+   *
+   * @return void
+   */
+  public function meta_box_help( $post ) {
+    $available_builders = [];
+    if ( function_exists( 'register_block_type' ) ) {
+      $available_builders['gutenberg'] = [
+        'title' => __('Gutenberg block', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=Ep5L3xKdDH8',
+      ];
+    }
+    if ( class_exists( '\Elementor\Plugin' ) ) {
+      $available_builders['elementor'] = [
+        'title' => __('Elementor widget', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
+      ];
+    }
+    if ( class_exists( 'ET_Builder_Module' ) ) {
+      $available_builders['divi'] = [
+        'title' => __('Divi builder module', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
+      ];
+    }
+    if ( !empty($available_builders) ) {
+      ?>
+    <p>
+      <?php esc_html_e( 'You can insert the gallery into a post or page using:', 'reacg' ); ?>
+    </p>
+    <ul>
+      <?php
+      foreach ( $available_builders as $builder ) {
+        ?>
+      <li>
+        <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'reacg' ); ?>">
+          <strong><?php esc_html_e($builder['title']); ?></strong>
+        </a>
+      </li>
+        <?php
+      }
+      ?>
+    </ul>
+    <?php esc_html_e( 'Or just paste the shortcode into any builder:', 'reacg' ); ?>
+      <?php
+    }
+    else {
+      esc_html_e( 'Paste the shortcode into a post or page to show the gallery:', 'reacg' );
+    }
+    ?>
+    <p class="reacg_shortcode">
+      <code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post->ID)); ?></code>
+    </p>
+    <?php
   }
 
   /**
@@ -727,12 +818,23 @@ class REACG_Gallery {
    * @return void
    */
   public function meta_box_images($post) {
-    $images_ids = get_post_meta( $post->ID, 'images_ids', true );
-    $ajax_url = admin_url('admin-ajax.php');
-    $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
+    // Verify if the request is an AJAX call and ensure its validity.
+    $valid_ajax_call = isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce])
+      && isset($_GET['id'])
+      && isset($_GET['action'])
+      && $_GET['action'] === 'reacg_get_images';
+
+    // Get the ID depending on whether it is called from builders or the custom post.
+    $post_id = isset($_GET['id']) ? (int) $_GET['id'] : $post->ID;
+    $images_ids = get_post_meta( $post_id, 'images_ids', true );
+
+    if ( $valid_ajax_call ) {
+      ob_start();
+    }
     ?><div class="reacg_items"
-         data-post-id="<?php echo esc_attr($post->ID); ?>"
-         data-ajax-url="<?php echo esc_url($ajax_url); ?>">
+         data-post-id="<?php echo esc_attr($post_id); ?>"
+         data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->obj->nonce)); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
       </div><?php
@@ -756,8 +858,13 @@ class REACG_Gallery {
         }
       }
       $this->image_item();
-      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
+      ?><input class="images_ids" id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
     </div><?php
+
+    if ( $valid_ajax_call ) {
+      echo json_encode(ob_get_clean());
+      wp_die();
+    }
   }
 
   private function image_item($data = FALSE) {

@@ -1,13 +1,12 @@
 ( function ( blocks, element ) {
   let el = element.createElement;
-  let pluginData = reacg;
   blocks.registerBlockType( "reacg/gallery", {
-    title: pluginData.title,
-    description: pluginData.description,
+    title: reacg.title,
+    description: reacg.description,
     icon: el( 'img', {
       width: 24,
       height: 24,
-      src: pluginData.icon
+      src: reacg.icon
     } ),
     category: 'common',
     // Disable support for Additional CSS Class(es) in the block sidebar.
@@ -33,105 +32,224 @@
     edit: function ( props ) {
       // Display block preview only on the block hover.
       if ( !props.attributes.hidePreview && !props.isSelected ) {
-        return el( "div", {class: "reacg-block-preview"}, el( "img", {
-          src: pluginData.plugin_url + "/builders/gutenberg/images/preview.png",
-          style: { height: "auto", width: "100%" }
-        }));
+        return block_preview();
       }
 
-      // Create the shortcodes list and the container for preview.
-      let cont = el( "div", {}, shortcodeList(), showPreview());
-
-      return cont;
-
-      /**
-       * Create the shortcodes list html element.
-       *
-       * @returns {*}
-       */
-      function shortcodeList() {
-        let shortcodes = JSON.parse( pluginData.data );
-
-        // Add shortcodes to the html elements.
-        let shortcode_list = [];
-        shortcodes.forEach( function ( shortcode_data ) {
-          shortcode_list.push(
-            el( 'option', {
-              value: shortcode_data.id,
-              "data-shortcode": shortcode_data.shortcode,
-            }, shortcode_data.title )
-          );
-        } );
-
-        // Return the complete html list of items.
-        return el( 'select', {
-          value: props.attributes.shortcode_id,
-          onChange: itemSelect,
-          class: 'reacg-gbShortcodesList'
-        }, shortcode_list );
-      }
-
-      /**
-       * Bind an event on the item select.
-       *
-       * @param event
-       */
-      function itemSelect( event ) {
-        let selected = event.target.querySelector( "option:checked" );
-        // Get selected item's data.
-        props.setAttributes( {
-          shortcode: selected.dataset.shortcode,
-          shortcode_id: selected.value,
-        } );
-
-        let cont = event.target.parentElement.querySelector(".reacg-gallery");
-        if ( cont ) {
-          cont.setAttribute('data-gallery-id', selected.value);
-          cont.setAttribute('id', 'reacg-root' + selected.value);
-        }
-        let button = document.getElementById("reacg-loadApp");
-        if ( button ) {
-          button.setAttribute('data-id', 'reacg-root' + selected.value);
-          button.click();
-        }
-
-        event.preventDefault();
-      }
-
-      /**
-       *  Create the container for preview.
-       *
-       * @returns {*}
-       */
-      function showPreview() {
-        props.setAttributes( {
-          hidePreview: true,
-        } );
-        let shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
-        let cont = el( 'div', {
-          'data-options-section': 1,
-          'data-gallery-id': shortcode_id,
-          class: "reacg-gallery reacg-preview",
-          id: "reacg-root" + shortcode_id,
-        } );
-        if ( document.getElementsByClassName("reacg-gallery")
-          && document.getElementsByClassName("reacg-gallery").length > 0
-          && document.getElementsByClassName("reacg-gallery")[0].innerHTML === '' ) {
-          let button = document.getElementById("reacg-loadApp");
-          if ( button ) {
-            button.setAttribute('data-id', 'reacg-root' + shortcode_id);
-            button.click();
-          }
-        }
-
-        return cont;
-      }
+      // Create the gallery block.
+      return regallery(props);
     },
 
     save: function ( props ) {
       return props.attributes.shortcode;
     }
   } );
+
+  /**
+   * Display block preview.
+   *
+   * @returns {*}
+   */
+  function block_preview() {
+    return el( "div", {class: "reacg-block-preview"}, el( "img", {
+      src: reacg.plugin_url + "/builders/gutenberg/images/preview.png",
+      style: { height: "auto", width: "100%" }
+    }))
+  }
+
+  /**
+   * Gallery block.
+   *
+   * @param props
+   * @returns {*}
+   */
+  function regallery(props) {
+    props.setAttributes( {
+      hidePreview: true,
+    } );
+
+    const shortcodes = JSON.parse( reacg.data );
+    const shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
+
+    const create_button = props.attributes.shortcode_id ? "" : create_gallery(props);
+    const galleries_list = props.attributes.shortcode_id || shortcodes.length > 1 ? shortcodesList(props) : "";
+    const separator_cont = create_button && galleries_list ? separator() : "";
+
+    if ( !props.attributes.shortcode_id && document.querySelector(".reacg-gutenberg-controls") ) {
+      /* In case of undo after creating gallery.*/
+      document.querySelector(".reacg-gutenberg-controls").classList.remove("reacg-hidden");
+    }
+
+    const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id ? "" : "reacg-hidden")});
+    const timestamp = Date.now();
+    const preview = el('div', {
+      'data-options-section': 1,
+      'data-gallery-id': shortcode_id,
+      'data-plugin-version': reacg.plugin_version,
+      'data-gallery-timestamp': timestamp,
+      'data-options-timestamp': timestamp,
+      class: "reacg-gallery reacg-preview" + (shortcode_id ? "" : " reacg-hidden"),
+      id: "reacg-root" + shortcode_id,
+    });
+    const loader = el('div', {class: "reacg-spinner__wrapper reacg-hidden"}, el('span', {
+      class: "spinner is-active",
+    }));
+    const instruction = props.attributes.shortcode_id ? "" : el('div', {class: "reacg-instruction"}, el( 'img', {
+      width: 50,
+      height: 50,
+      src: reacg.icon
+    } ), shortcodes.length > 1 ? el( 'p', {}, "Create new gallery or select the existing one." ) : "");
+
+    return el(
+      "div",
+      {
+        class: "reacg-gutenberg"
+      },
+      loader,
+      instruction,
+      el( "div",
+        {
+          class: "reacg-gutenberg-controls"
+        },
+        create_button,
+        separator_cont,
+        galleries_list
+      ),
+      images_cont,
+      preview,
+    );
+  }
+
+  function separator() {
+    return el(
+      "span", {
+        class: "reacg-separator"
+      },
+      "or",
+    );
+  }
+
+  function create_gallery(props) {
+    return el(
+      "span",
+      {
+        class: "reacg-createButton"
+      },
+      el('button' , {
+        onClick: (event) => showPreview(event, 0, props),
+      }, 'Create new gallery'),
+    );
+  }
+
+  function set_data(baseCont, shortcode_id) {
+    const galleryCont = baseCont.querySelector(".reacg-gallery");
+    if ( galleryCont ) {
+      const timestamp = Date.now();
+      galleryCont.classList.remove("reacg-hidden");
+      galleryCont.setAttribute('data-options-section', 1);
+      galleryCont.setAttribute('data-gallery-id', shortcode_id);
+      galleryCont.setAttribute('data-plugin-version', reacg.plugin_version);
+      galleryCont.setAttribute('data-gallery-timestamp', timestamp);
+      galleryCont.setAttribute('data-options-timestamp', timestamp);
+      galleryCont.setAttribute('id', "reacg-root" + shortcode_id);
+    }
+  }
+
+  function reload_gallery(shortcode_id) {
+    const button = document.getElementById("reacg-loadApp");
+    if ( button ) {
+      button.setAttribute('data-id', 'reacg-root' + shortcode_id);
+      button.click();
+    }
+  }
+
+  function images_cont(baseCont, shortcode_id) {
+    fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
+      .then(response => response.json())
+      .then(data => {
+        const container = baseCont.querySelector("#reacg-gallery-images");
+        if ( container ) {
+          container.classList.remove("reacg-hidden");
+          container.innerHTML = data;
+          /* Make the image items sortable.*/
+          reacg_make_items_sortable(container);
+          set_data(baseCont, shortcode_id);
+          reload_gallery(shortcode_id);
+        }
+        baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }
+
+  function showPreview(event, shortcode_id, props) {
+    const baseCont = event.target.closest(".reacg-gutenberg");
+
+    if ( baseCont ) {
+      baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
+      if ( shortcode_id === 0 ) {
+        fetch(reacg.ajax_url + '&action=reacg_save_gallery')
+          .then(response => response.json())
+          .then(data => {
+            shortcode_id = data;
+            props.setAttributes({
+              shortcode: '[REACG id="' + shortcode_id + '"]',
+              shortcode_id: shortcode_id,
+            });
+            baseCont.querySelector(".reacg-gutenberg-controls").classList.add("reacg-hidden");
+            images_cont(baseCont, shortcode_id);
+          })
+          .catch(error => console.error("Error fetching data:", error));
+      }
+      else {
+        images_cont(baseCont, shortcode_id);
+      }
+    }
+  }
+
+  function shortcodesList(props) {
+    let shortcodes = JSON.parse( reacg.data );
+
+    // Add shortcodes to the html elements.
+    let shortcode_list = [];
+    shortcodes.forEach( function ( shortcode_data ) {
+      shortcode_list.push(
+        el( 'option', {
+          value: shortcode_data.id,
+          "data-shortcode": shortcode_data.shortcode,
+        }, shortcode_data.title )
+      );
+    } );
+
+    return el(
+      "span",
+      {
+        class: "reacg-list"
+      },
+      el('select', {
+        value: props.attributes.shortcode_id,
+        onChange: (event) => itemSelect(event, props),
+        class: 'reacg-gbShortcodesList'
+      }, shortcode_list)
+    );
+  }
+
+  /**
+   * Bind an event on the item select.
+   *
+   * @param event
+   * @param props
+   */
+  function itemSelect( event, props ) {
+    let selected = event.target.querySelector( "option:checked" );
+    // Get selected item's data.
+    props.setAttributes( {
+      shortcode: selected.dataset.shortcode,
+      shortcode_id: selected.value,
+    } );
+
+    showPreview(event, selected.value, props);
+
+    event.preventDefault();
+  }
 } )(
   window.wp.blocks,
   window.wp.element

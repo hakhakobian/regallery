@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: Photo gallery plugin is a responsive image gallery WordPress plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
- * Version: 1.9.20
+ * Version: 1.10.0
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.9.20';
+  public $version = '1.10.0';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
@@ -243,10 +243,12 @@ final class REACG {
       $this->prefix . '_thumbnails',
       'wp-blocks',
       'wp-element',
+      $this->prefix . '_admin'
     ];
     $required_styles = [
       $this->prefix . '_general',
       'wp-edit-blocks',
+      $this->prefix . '_admin'
     ];
 
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
@@ -254,8 +256,10 @@ final class REACG {
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
       'plugin_url' => $this->plugin_url,
+      'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
