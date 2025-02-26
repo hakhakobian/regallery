@@ -30,7 +30,10 @@ class REACG_DiviModule extends Component {
     return (<div className= {'reacg-gallery reacg-preview'}
                  key={this.props.post_id + this.props.enable_options}
                  data-options-section={this.props.enable_options === "on" ? 1 : 0}
-                 data-gallery-id= {this.props.post_id}
+                 data-plugin-version={Date.now()}
+                 data-gallery-timestamp={Date.now()}
+                 data-options-timestamp={Date.now()}
+                 data-gallery-id={this.props.post_id}
                  id={"reacg-root" + this.props.post_id}
                 ></div>);
 
