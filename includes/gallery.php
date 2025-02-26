@@ -24,6 +24,11 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
 
+    // Register an ajax action to save a gallery (need for builders).
+    add_action('wp_ajax_reacg_save_gallery', [ $this, 'save_gallery' ]);
+    // Register an ajax action to get the gallery images (need for builders).
+    add_action('wp_ajax_reacg_get_images', [ $this, 'meta_box_images' ]);
+
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
@@ -426,6 +431,32 @@ class REACG_Gallery {
   }
 
   /**
+   * Register an ajax action to save a gallery (need for builders).
+   *
+   * @return void
+   */
+  public function save_gallery() {
+    if ( isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      $new_post = [
+        'post_title' => '(no title)',
+        'post_status' => 'publish',
+        'post_type' => 'reacg',
+      ];
+      $post_id = wp_insert_post($new_post, TRUE);
+      if ( $post_id ) {
+        wp_update_post([
+                         'ID' => $post_id,
+                         'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
+                       ]);
+      }
+
+      echo json_encode($post_id);
+    }
+    wp_die();
+  }
+
+  /**
    * Save the metadata on saving the custom post and insert the shortcode as a content.
    *
    * @param $post_id
@@ -745,12 +776,23 @@ class REACG_Gallery {
    * @return void
    */
   public function meta_box_images($post) {
-    $images_ids = get_post_meta( $post->ID, 'images_ids', true );
-    $ajax_url = admin_url('admin-ajax.php');
-    $ajax_url = wp_nonce_url($ajax_url, -1, $this->obj->nonce);
+    // Verify if the request is an AJAX call and ensure its validity.
+    $valid_ajax_call = isset( $_GET[$this->obj->nonce] )
+      && wp_verify_nonce( $_GET[$this->obj->nonce])
+      && isset($_GET['id'])
+      && isset($_GET['action'])
+      && $_GET['action'] === 'reacg_get_images';
+
+    // Get the ID depending on whether it is called from builders or the custom post.
+    $post_id = isset($_GET['id']) ? (int) $_GET['id'] : $post->ID;
+    $images_ids = get_post_meta( $post_id, 'images_ids', true );
+
+    if ( $valid_ajax_call ) {
+      ob_start();
+    }
     ?><div class="reacg_items"
-         data-post-id="<?php echo esc_attr($post->ID); ?>"
-         data-ajax-url="<?php echo esc_url($ajax_url); ?>">
+         data-post-id="<?php echo esc_attr($post_id); ?>"
+         data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->obj->nonce)); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
       </div><?php
@@ -774,8 +816,13 @@ class REACG_Gallery {
         }
       }
       $this->image_item();
-      ?><input id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
+      ?><input class="images_ids" id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
     </div><?php
+
+    if ( $valid_ajax_call ) {
+      echo json_encode(ob_get_clean());
+      wp_die();
+    }
   }
 
   private function image_item($data = FALSE) {

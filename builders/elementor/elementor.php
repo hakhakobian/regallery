@@ -97,7 +97,12 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       // Get the gallery container.
       echo 'var cont = widget_cont ? widget_cont.querySelector("#reacg-root' . $post_id . '") : null;';
       // Enable/disable options section depends on Elementor widget setting.
-      echo 'if (cont) { cont.setAttribute("data-options-section", "' . $enable_options . '"); }';
+      echo 'if (cont) {';
+      echo 'cont.setAttribute("data-options-section", "' . $enable_options . '");';
+      echo 'cont.setAttribute("data-plugin-version", "' . REACG_VERSION . '");';
+      echo 'cont.setAttribute("data-gallery-timestamp", Date.now());';
+      echo 'cont.setAttribute("data-options-timestamp", Date.now());';
+      echo '}';
       // Load the gallery.
       echo 'var reacgLoadApp = document.getElementById("reacg-loadApp");';
       echo 'if (reacgLoadApp) {';
