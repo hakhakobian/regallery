@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.9.20
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.9.20: Added Flicker Frame pre-built template. Enjoy free functionality and add your suggestions via WP forum.
+* 1.10.0: Added ability to create galleries and add images directly from the Gutenberg editor. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.10.0 =
+= Updated: 26.02.2025 =
+* **Added:** Focus Frame pre-built template.
+* **Added:** Ability to create galleries and add images directly from the Gutenberg editor.
+* **Added:** Help section in the gallery edit page to guide users on publishing the gallery.
 
 = 1.9.20 =
 = Updated: 19.02.2025 =
