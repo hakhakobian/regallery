@@ -468,6 +468,9 @@ class REACG_Options {
     // Modify the data structure based on the new structure.
     $options = $this->modify($options);
 
+    // In case of types that previously had no lightbox functionality change their default value to none.
+    $this->options['general']['clickAction'] = in_array($options['type'], ['thumbnails', 'mosaic', 'masonry']) ? 'lightbox' : 'none';
+
     // If an option is missing add its default value.
     $options = $this->defaults($this->options, $options);
 
