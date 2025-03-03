@@ -23,10 +23,9 @@
 }
 
 .reacg_item_new .reacg_item_image {
-  background-image: url(../images/add_new_image.png);
+  background-image: url(../images/add_new_image.svg);
   cursor: pointer;
-  background-size: 130px;
-  background-position-y: -14px;
+  background-size: 90px;
 }
 
 .reacg_item_image {
