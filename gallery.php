@@ -185,7 +185,6 @@ final class REACG {
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
-      'rest_nonce' => $this->rest_nonce,
       'plugin_url' => $this->plugin_url,
       'text' => [
         'load_more' => __('Load more', 'reacg'),
@@ -220,6 +219,7 @@ final class REACG {
       'edit_thumbnail' => __('Edit video cover', 'reacg'),
       'choose_images' => __('Choose images', 'reacg'),
       'no_image' => $this->plugin_url . $this->no_image,
+      'rest_nonce' => $this->rest_nonce,
     ));
 
     // Register general styles/scripts.
