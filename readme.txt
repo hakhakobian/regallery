@@ -1,11 +1,11 @@
 === ReGallery - Responsive Photo Gallery Plugin ===
-Contributors: hakhakob, regallery, garikharutyunyan
+Contributors: regallery, hakhakob, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.10.1: Fixed options reset issue when selecting the "Default template". Enjoy free functionality and add your suggestions via WP forum.
+* 1.10.2: Added option to set an action URL for image clicks. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.10.2 =
+= Updated: 09.03.2025 =
+* **Added:** Option to set an action URL for image clicks.
+* **Added:** Ability to enable Lightbox for Slideshow, Cube, Carousel, and Cards views.
+* **Improved:** Faster loading time.
+* **Fixed:** Issue with multiple Cube, Carousel, and Cards galleries on the same page.
+* **Fixed:** Edit images section now appears in Gutenberg for already selected galleries.
 
 = 1.10.1 =
 = Updated: 04.03.2025 =
