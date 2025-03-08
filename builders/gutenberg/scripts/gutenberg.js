@@ -102,7 +102,8 @@
     return el(
       "div",
       {
-        class: "reacg-gutenberg"
+        class: "reacg-gutenberg",
+        id: `reacg-gutenberg${shortcode_id}`
       },
       loader,
       instruction,
@@ -218,6 +219,14 @@
         }, shortcode_data.title )
       );
     } );
+
+    if ( props.attributes.shortcode_id ) {
+      // Show images container on page load for the selected gallery.
+      const baseCont = document.getElementById(`reacg-gutenberg${props.attributes.shortcode_id}`);
+      if ( baseCont && !baseCont.querySelector("#reacg-gallery-images").innerHTML) {
+        images_cont(baseCont, props.attributes.shortcode_id);
+      }
+    }
 
     return el(
       "span",
