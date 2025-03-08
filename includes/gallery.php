@@ -50,22 +50,6 @@ class REACG_Gallery {
       ) );
     } );
 
-    // Register a route to make the gallery data available with the API.
-    add_action( 'rest_api_init', function () {
-      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)', array(
-        'methods' => WP_REST_Server::READABLE,
-        'callback' => [ $this, 'get_gallery'],
-        'args' => array(
-          'id' => array(
-            'validate_callback' => function($param, $request, $key) {
-              return is_numeric( $param );
-            }
-          ),
-        ),
-        'permission_callback' => [$this, 'privileged_permission'],
-      ) );
-    } );
-
     // Register a route to get/set/delete options for the gallery with the API.
     add_action( 'rest_api_init', function () {
       require_once REACG()->plugin_dir . "/includes/options.php";
@@ -291,41 +275,11 @@ class REACG_Gallery {
   }
 
   /**
-   * Get gallery data.
-   *
-   * @param WP_REST_Request $request
-   *
-   * @return WP_REST_Response
-   */
-  public function get_gallery( WP_REST_Request $request ) {
-    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
-
-    $images_count = get_post_meta( $gallery_id, 'images_count', TRUE );
-
-    $data = [];
-    $data['images_count'] = 0;
-
-    if ( !empty($images_count) ) {
-      $data['images_count'] = (int) $images_count;
-    }
-    else {
-      // Count the images ids in case of empty meta.
-      $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
-      if ( !empty($images_ids) ) {
-        $images_ids_arr = json_decode($images_ids, TRUE);
-        $data['images_count'] = count($images_ids_arr);
-      }
-    }
-
-    return new WP_REST_Response( wp_send_json($data, 200), 200 );
-  }
-
-  /**
    * Get images data for the specific gallery.
    *
    * @param WP_REST_Request $request
    *
-   * @return void
+   * @return WP_REST_Response
    */
   public function get_images( WP_REST_Request $request ) {
     $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
@@ -333,6 +287,7 @@ class REACG_Gallery {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
+    $images_ids_arr = [];
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids, TRUE);
       $is_deleted_attachment = FALSE;
@@ -402,7 +357,10 @@ class REACG_Gallery {
       }
     }
 
-    return new WP_REST_Response( wp_send_json($data, 200), 200 );
+    $response = new WP_REST_Response($data, 200);
+    $response->header('X-Images-Count', count($images_ids_arr));
+
+    return $response;
   }
 
   /**
