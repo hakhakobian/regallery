@@ -252,7 +252,7 @@ final class REACG {
     ];
 
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
-    wp_localize_script($this->prefix . '_gutenberg', 'reacg', array(
+    wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
       'plugin_url' => $this->plugin_url,

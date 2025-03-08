@@ -1,12 +1,12 @@
 ( function ( blocks, element ) {
   let el = element.createElement;
   blocks.registerBlockType( "reacg/gallery", {
-    title: reacg.title,
-    description: reacg.description,
+    title: reacg_gutenberg.title,
+    description: reacg_gutenberg.description,
     icon: el( 'img', {
       width: 24,
       height: 24,
-      src: reacg.icon
+      src: reacg_gutenberg.icon
     } ),
     category: 'common',
     // Disable support for Additional CSS Class(es) in the block sidebar.
@@ -51,7 +51,7 @@
    */
   function block_preview() {
     return el( "div", {class: "reacg-block-preview"}, el( "img", {
-      src: reacg.plugin_url + "/builders/gutenberg/images/preview.png",
+      src: reacg_gutenberg.plugin_url + "/builders/gutenberg/images/preview.png",
       style: { height: "auto", width: "100%" }
     }))
   }
@@ -67,7 +67,7 @@
       hidePreview: true,
     } );
 
-    const shortcodes = JSON.parse( reacg.data );
+    const shortcodes = JSON.parse( reacg_gutenberg.data );
     const shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
 
     const create_button = props.attributes.shortcode_id ? "" : create_gallery(props);
@@ -84,7 +84,7 @@
     const preview = el('div', {
       'data-options-section': 1,
       'data-gallery-id': shortcode_id,
-      'data-plugin-version': reacg.plugin_version,
+      'data-plugin-version': reacg_gutenberg.plugin_version,
       'data-gallery-timestamp': timestamp,
       'data-options-timestamp': timestamp,
       class: "reacg-gallery reacg-preview" + (shortcode_id ? "" : " reacg-hidden"),
@@ -96,7 +96,7 @@
     const instruction = props.attributes.shortcode_id ? "" : el('div', {class: "reacg-instruction"}, el( 'img', {
       width: 50,
       height: 50,
-      src: reacg.icon
+      src: reacg_gutenberg.icon
     } ), shortcodes.length > 1 ? el( 'p', {}, "Create new gallery or select the existing one." ) : "");
 
     return el(
@@ -147,7 +147,7 @@
       galleryCont.classList.remove("reacg-hidden");
       galleryCont.setAttribute('data-options-section', 1);
       galleryCont.setAttribute('data-gallery-id', shortcode_id);
-      galleryCont.setAttribute('data-plugin-version', reacg.plugin_version);
+      galleryCont.setAttribute('data-plugin-version', reacg_gutenberg.plugin_version);
       galleryCont.setAttribute('data-gallery-timestamp', timestamp);
       galleryCont.setAttribute('data-options-timestamp', timestamp);
       galleryCont.setAttribute('id', "reacg-root" + shortcode_id);
@@ -163,7 +163,7 @@
   }
 
   function images_cont(baseCont, shortcode_id) {
-    fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
+    fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
         const container = baseCont.querySelector("#reacg-gallery-images");
@@ -186,7 +186,7 @@
     if ( baseCont ) {
       baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
       if ( shortcode_id === 0 ) {
-        fetch(reacg.ajax_url + '&action=reacg_save_gallery')
+        fetch(reacg_gutenberg.ajax_url + '&action=reacg_save_gallery')
           .then(response => response.json())
           .then(data => {
             shortcode_id = data;
@@ -206,7 +206,7 @@
   }
 
   function shortcodesList(props) {
-    let shortcodes = JSON.parse( reacg.data );
+    let shortcodes = JSON.parse( reacg_gutenberg.data );
 
     // Add shortcodes to the html elements.
     let shortcode_list = [];
