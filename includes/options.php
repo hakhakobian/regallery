@@ -121,7 +121,7 @@ class REACG_Options {
     ],
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
-      'openUrlInNewTab' => TRUE, #boolean
+      'openUrlInNewTab' => FALSE, #boolean
       'orderBy' => 'default', #string
       'orderDirection' => 'asc', #string
       'itemsPerPage' => 20, #number
