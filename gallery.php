@@ -82,6 +82,9 @@ final class REACG {
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
+    // Add data attributes to avoid conflicts with caching plugins.
+    add_filter('script_loader_tag', array($this, 'script_loader_tag'), 10 ,2 );
+
     // Enqueue block editor assets for Gutenberg.
     add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
 
@@ -191,6 +194,22 @@ final class REACG {
         'no_data' => __('There is not data.', 'reacg'),
       ]
     ) );
+  }
+
+  /**
+   * Add data attributes to avoid conflicts with caching plugins.
+   *
+   * @param $tag
+   * @param $handle
+   *
+   * @return array|mixed|string|string[]
+   */
+  public function script_loader_tag( $tag, $handle ){
+    if ( $handle == $this->prefix . '_thumbnails' ) {
+      return str_replace( '<script', '<script data-no-optimize="1" data-no-defer="1"', $tag );
+    }
+
+    return $tag;
   }
 
   /**
