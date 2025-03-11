@@ -1,14 +1,14 @@
 .editor-styles-wrapper .reacg-gallery img,
-.reacg-gallery img,
+.reacg-preview.reacg-gallery img,
 .editor-styles-wrapper .reacg-gallery ul,
-.reacg-gallery ul,
+.reacg-preview.reacg-gallery ul,
 .editor-styles-wrapper .reacg-gallery li,
-.reacg-gallery li {
+.reacg-preview.reacg-gallery li {
   margin: 0;
   padding: 0;
 }
 
-.reacg-gallery li::marker {
+.reacg-preview.reacg-gallery li::marker {
   content: "";
 }
 
