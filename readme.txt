@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.10.2
+Stable tag: 1.10.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.10.2: Added option to set an action URL for image clicks. Enjoy free functionality and add your suggestions via WP forum.
+* 1.10.3: Fixed compatibility issue with the LiteSpeed Cache plugin. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.10.3 =
+= Updated: 12.03.2025 =
+* **Fixed:** Compatibility issue with the LiteSpeed Cache plugin.
+* **Fixed:** CSS conflicts with the Divi builder.
 
 = 1.10.2 =
 = Updated: 09.03.2025 =
