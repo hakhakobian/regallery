@@ -114,12 +114,21 @@ class REACGLibrary {
     return '[' . $obj->shortcode . ' id="' . $id . '"]';
   }
 
+  public static function get_galleries() {
+    $gallery_ids = get_posts(array(
+                               'posts_per_page' => -1,
+                               'post_type'      => 'reacg',
+                               'fields'         => 'ids',
+                             ));
+    return $gallery_ids;
+  }
+
   /**
    * Get shortcodes list.
    *
    * @param      $obj
    * @param bool $include_empty
-   * @param      $associative
+   * @param bool $associative
    *
    * @return array|false|string
    */

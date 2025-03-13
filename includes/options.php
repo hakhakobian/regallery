@@ -442,16 +442,11 @@ class REACG_Options {
   /**
    * Get the default options or the options for the given gallery.
    *
-   * @param WP_REST_Request|NULL $request
-   * @param int                  $gallery_id
+   * @param $gallery_id
    *
-   * @return WP_REST_Response
+   * @return mixed
    */
-  private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
-    if ( $gallery_id === 0 ) {
-      $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
-    }
-
+  public function get_options($gallery_id) {
     // Get options for the gallery.
     $options = get_option($this->name . $gallery_id, FALSE);
 
@@ -476,6 +471,24 @@ class REACG_Options {
 
     // Sanitizing and validating the given data.
     $options = $this->sanitize($options);
+
+    return $options;
+  }
+
+  /**
+   * Get options rout.
+   *
+   * @param WP_REST_Request|NULL $request
+   * @param int                  $gallery_id
+   *
+   * @return WP_REST_Response
+   */
+  private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
+    if ( $gallery_id === 0 ) {
+      $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
+    }
+
+    $options = $this->get_options($gallery_id);
 
     return new WP_REST_Response( wp_send_json($options, 200), 200 );
   }

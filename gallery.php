@@ -186,13 +186,27 @@ final class REACG {
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
+
+    $gallery_ids = REACGLibrary::get_galleries();
+    $data = [];
+    require_once REACG()->plugin_dir . "/includes/gallery.php";
+    $gallery = new REACG_Gallery(REACG());
+    require_once REACG()->plugin_dir . "/includes/options.php";
+    $options = new REACG_Options(true);
+    foreach ( $gallery_ids as $galleryId ) {
+      $data[$galleryId] = [
+        'images' => $gallery->get_images( $galleryId )['images'],
+        'options' => $options->get_options( $galleryId ),
+        ];
+    }
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
       'text' => [
         'load_more' => __('Load more', 'reacg'),
         'no_data' => __('There is not data.', 'reacg'),
-      ]
+      ],
+      'data' => $data,
     ) );
   }
 

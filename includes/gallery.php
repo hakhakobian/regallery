@@ -38,7 +38,7 @@ class REACG_Gallery {
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
         'methods' => WP_REST_Server::READABLE,
-        'callback' => [ $this, 'get_images'],
+        'callback' => [ $this, 'get_images_rout'],
         'args' => array(
           'id' => array(
             'validate_callback' => function($param, $request, $key) {
@@ -275,15 +275,28 @@ class REACG_Gallery {
   }
 
   /**
-   * Get images data for the specific gallery.
+   * Get images rout.
    *
    * @param WP_REST_Request $request
    *
    * @return WP_REST_Response
    */
-  public function get_images( WP_REST_Request $request ) {
-    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
+  public function get_images_rout( WP_REST_Request $request ) {
+    $data = $this->get_images(REACGLibrary::get_gallery_id($request, 'id'));
+    $response = new WP_REST_Response($data['images'], 200);
+    $response->header('X-Images-Count', $data['count']);
 
+    return $response;
+  }
+
+  /**
+   * Get images data for the specific gallery.
+   *
+   * @param $gallery_id
+   *
+   * @return array
+   */
+  public function get_images( $gallery_id ) {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
@@ -357,10 +370,7 @@ class REACG_Gallery {
       }
     }
 
-    $response = new WP_REST_Response($data, 200);
-    $response->header('X-Images-Count', count($images_ids_arr));
-
-    return $response;
+    return ['images' => $data, 'count' => count($images_ids_arr)];
   }
 
   /**
