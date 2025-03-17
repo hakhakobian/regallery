@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.10.3
+Stable tag: 1.10.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Photo gallery plugin is a responsive image gallery WordPress plugin for easily c
 
 ReGallery is a FREE, SEO-friendly plugin equipped with advanced features like Mosaic and Masonry views, designed to make your WordPress galleries beautiful and engaging.
 
-https://www.youtube.com/watch?v=_xn7GOOTp5A
+https://www.youtube.com/watch?v=RldoAkceHTQ
 
 Whether you're a photographer, blogger, or business owner, this photo gallery provides the tools to create a professional, mobile-optimized gallery that enhances user experience and boosts SEO performance. With features like lightbox viewing, responsive design, and drag-and-drop customization, this plugin redefines ease of use and functionality.
 
@@ -175,10 +175,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.10.3: Fixed compatibility issue with the LiteSpeed Cache plugin. Enjoy free functionality and add your suggestions via WP forum.
+* 1.10.4: Added logic for displaying admin notices in the dashboard. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.10.4 =
+= Updated: 18.03.2025 =
+* **Added:** Logic for displaying admin notices in the dashboard.
 
 = 1.10.3 =
 = Updated: 12.03.2025 =
