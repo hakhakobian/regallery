@@ -183,4 +183,21 @@ class REACGLibrary {
 
     return $gallery_id;
   }
+
+  /**
+   * Get/set the plugin installed time.
+   *
+   * @return false|int|mixed|null
+   */
+  public static function installed_time() {
+    $installed_time = get_option( 'reacg_installed_time' );
+
+    if ( ! $installed_time ) {
+      $installed_time = time();
+
+      update_option( 'reacg_installed_time', $installed_time );
+    }
+
+    return $installed_time;
+  }
 }

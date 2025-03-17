@@ -29,6 +29,7 @@ final class REACG {
   public $nicename = 'ReGallery';
   public $author = 'ReGallery Team';
   public $public_url = 'https://regallery.team';
+  public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
@@ -69,6 +70,10 @@ final class REACG {
     define('REACG_AUTHOR', $this->author );
     define('REACG_PUBLIC_URL', $this->public_url );
     define('REACG_VERSION', $this->version );
+    define('REACG_NONCE', $this->nonce );
+    define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
+    define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
+    define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
   }
 
   /**
@@ -102,6 +107,9 @@ final class REACG {
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
 
     add_action('init', array($this, 'load_string'), 8);
+
+    require_once ($this->plugin_dir . '/includes/admin-notices.php');
+    new REACG_Admin_Notices();
   }
 
   /**
@@ -321,6 +329,10 @@ final class REACG {
 
   /**
    * Activate.
+   *
+   * @param $activate
+   *
+   * @return void
    */
   public function activate($activate = TRUE) {
     // Register the custom post type on activate also to affect recreation of rewrite rules.
@@ -331,6 +343,10 @@ final class REACG {
     $wp_rewrite->flush_rules();
 
     if ( $activate ) {
+      // Set installation time.
+      REACGLibrary::installed_time();
+
+      // Add default options.
       require_once REACG()->plugin_dir . "/includes/options.php";
       new REACG_Options(TRUE);
     }
