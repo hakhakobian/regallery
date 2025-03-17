@@ -131,7 +131,7 @@ to avoid a bug connected with preview.
 }
 
 /* Remove all notices except plugin's.*/
-.notice:not(#message),
+.notice:not(.reacg-keep-notice):not(#message),
 .error {
   display: none;
 }

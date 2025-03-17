@@ -3,7 +3,6 @@ defined('ABSPATH') || die('Access Denied');
 
 class REACG_Deactivate {
   private $obj;
-  private $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
 
   public function __construct($that) {
     $this->obj = $that;
@@ -85,7 +84,7 @@ class REACG_Deactivate {
 
   public function enqueue_scripts() {
     wp_enqueue_style($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/css/deactivation.css', [], $this->obj->version);
-    wp_enqueue_script($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/js/deactivation.js', [], $this->obj->version);
+    wp_enqueue_script($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/js/deactivation.js', ['jquery'], $this->obj->version);
   }
 
   /**
@@ -98,9 +97,9 @@ class REACG_Deactivate {
    */
   public function meta_links($meta_fields, $file) {
     if ( $this->obj->main_file === $file ) {
-      $meta_fields[] = "<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Ask a question', 'reacg') . "</a>";
+      $meta_fields[] = "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Ask a question', 'reacg') . "</a>";
 
-      $rating = "<a class='reacg-rating' href='" . esc_url($this->wp_plugin_url . '/reviews#new-post') . "' target='_blank' title='" . esc_html__('Rate', 'reacg') . "'>";
+      $rating = "<a class='reacg-rating' href='" . esc_url(REACG_WP_PLUGIN_REVIEW_URL) . "' target='_blank' title='" . esc_html__('Rate', 'reacg') . "'>";
       $rating .= str_repeat("<span class='dashicons dashicons-star-filled'></span>", 5);
       $rating .= "</a>";
       $meta_fields[] = $rating;
@@ -119,7 +118,7 @@ class REACG_Deactivate {
   function action_links( $links ) {
     $additional_links = [
       "<a href='" . esc_url('https://regallery.team/#faq') . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
-      "<a href='" . esc_url($this->wp_plugin_url . '/#new-post') . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
+      "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
     ];
     return array_merge( $links, $additional_links );
   }
