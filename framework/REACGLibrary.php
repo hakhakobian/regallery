@@ -94,7 +94,7 @@ class REACGLibrary {
         'imagesCount' => $gallery_data['count'],
       ];
     ?>
-    <script>if (typeof reacg_global !== "undefined" && reacg_global["data"]) { reacg_global["data"][<?php echo $gallery_id; ?>] = <?php echo json_encode($data);  ?>; }</script>
+    <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
