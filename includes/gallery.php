@@ -293,10 +293,11 @@ class REACG_Gallery {
    * Get images data for the specific gallery.
    *
    * @param $gallery_id
+   * @param $gallery_options
    *
    * @return array
    */
-  public function get_images( $gallery_id ) {
+  public function get_images( $gallery_id, $gallery_options = FALSE ) {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
@@ -330,7 +331,7 @@ class REACG_Gallery {
       }
 
       // Filter the data by title and description.
-      $filter = isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '';
+      $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '');
       if ( $filter ) {
         $data = array_filter($data, function( $item ) use ( $filter ) {
           if ( stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE ) {
@@ -342,7 +343,7 @@ class REACG_Gallery {
       }
 
       // Order the data by title or caption or description.
-      $order_by = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '';
+      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
       if ( in_array($order_by, array('title', 'caption', 'description', 'date')) ) {
           // For ascending order.
           usort($data, function($a, $b) use ($order_by) {
@@ -350,18 +351,20 @@ class REACG_Gallery {
           });
       }
 
+      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
       // For descending order.
-      if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
+      if ( $order == 'desc' ) {
         $data = array_reverse($data);
       }
 
+      $per_page = !empty($gallery_options['general']['itemsPerPage']) ? sanitize_text_field($gallery_options['general']['itemsPerPage']) : (isset($_GET['per_page']) ? sanitize_text_field($_GET['per_page']) : '');
       // Run pagination on the data.
-      if ( !empty($_GET['per_page']) ) {
-        $per_page = (int) $_GET['per_page'];
+      if ( !empty($per_page) ) {
+        $per_page = (int) $per_page;
         // We need one of these two parameters (page or offset, where offset is at which element to start).
         if ( isset($_GET['page']) ) {
           $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
-          $offset = ($page - 1) * $per_page;
+          $offset = ($page - 1) * (int) $per_page;
         }
         else {
           $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;

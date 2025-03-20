@@ -194,9 +194,12 @@ final class REACG {
     require_once REACG()->plugin_dir . "/includes/options.php";
     $options = new REACG_Options(true);
     foreach ( $gallery_ids as $galleryId ) {
+      $gallery_options = $options->get_options( $galleryId );
+      $gallery_data = $gallery->get_images( $galleryId, $gallery_options );
       $data[$galleryId] = [
-        'images' => $gallery->get_images( $galleryId )['images'],
-        'options' => $options->get_options( $galleryId ),
+        'images' => $gallery_data['images'],
+        'options' => $gallery_options,
+        'imagesCount' => $gallery_data['count'],
         ];
     }
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
