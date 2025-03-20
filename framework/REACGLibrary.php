@@ -81,7 +81,21 @@ class REACGLibrary {
    */
   public static function get_rest_routs($gallery_id) {
     REACGLibrary::enqueue_scripts();
-    ?><div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
+
+    require_once REACG()->plugin_dir . "/includes/gallery.php";
+    $gallery = new REACG_Gallery(REACG());
+    require_once REACG()->plugin_dir . "/includes/options.php";
+    $options = new REACG_Options(true);
+      $gallery_options = $options->get_options( $gallery_id );
+      $gallery_data = $gallery->get_images( $gallery_id, $gallery_options );
+      $data = [
+        'images' => $gallery_data['images'],
+        'options' => $gallery_options,
+        'imagesCount' => $gallery_data['count'],
+      ];
+    ?>
+    <script>if (typeof reacg_global !== "undefined" && reacg_global["data"]) { reacg_global["data"][<?php echo $gallery_id; ?>] = <?php echo json_encode($data);  ?>; }</script>
+    <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
          class="reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr((int) is_admin()); ?>"
          data-plugin-version="<?php echo esc_attr(REACG_VERSION); ?>"
