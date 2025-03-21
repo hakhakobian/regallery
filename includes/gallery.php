@@ -357,14 +357,15 @@ class REACG_Gallery {
         $data = array_reverse($data);
       }
 
-      $per_page = !empty($gallery_options['general']['itemsPerPage']) ? sanitize_text_field($gallery_options['general']['itemsPerPage']) : (isset($_GET['per_page']) ? sanitize_text_field($_GET['per_page']) : '');
+      $views_with_pagination = ['thumbnails', 'mosaic', 'masonry'];
+      $per_page = !empty($gallery_options['general']['itemsPerPage']) && !empty($gallery_options['type']) && in_array($gallery_options['type'], $views_with_pagination) ? sanitize_text_field($gallery_options['general']['itemsPerPage']) : (isset($_GET['per_page']) ? sanitize_text_field($_GET['per_page']) : '');
       // Run pagination on the data.
       if ( !empty($per_page) ) {
         $per_page = (int) $per_page;
         // We need one of these two parameters (page or offset, where offset is at which element to start).
         if ( isset($_GET['page']) ) {
           $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
-          $offset = ($page - 1) * (int) $per_page;
+          $offset = ($page - 1) * $per_page;
         }
         else {
           $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;

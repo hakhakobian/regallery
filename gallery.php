@@ -194,7 +194,7 @@ final class REACG {
         'load_more' => __('Load more', 'reacg'),
         'no_data' => __('There is not data.', 'reacg'),
       ],
-    ) );
+   ) );
   }
 
   /**
