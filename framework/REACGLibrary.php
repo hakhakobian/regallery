@@ -85,14 +85,14 @@ class REACGLibrary {
     require_once REACG()->plugin_dir . "/includes/gallery.php";
     $gallery = new REACG_Gallery(REACG());
     require_once REACG()->plugin_dir . "/includes/options.php";
-    $options = new REACG_Options(true);
-      $gallery_options = $options->get_options( $gallery_id );
-      $gallery_data = $gallery->get_images( $gallery_id, $gallery_options );
-      $data = [
-        'images' => $gallery_data['images'],
-        'options' => $gallery_options,
-        'imagesCount' => $gallery_data['count'],
-      ];
+    $options = new REACG_Options(TRUE);
+    $gallery_options = $options->get_options( $gallery_id );
+    $gallery_data = $gallery->get_images( $gallery_id, $gallery_options );
+    $data = [
+      'images' => $gallery_data['images'],
+      'options' => $gallery_options,
+      'imagesCount' => $gallery_data['count'],
+    ];
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
@@ -126,15 +126,6 @@ class REACGLibrary {
     }
 
     return '[' . $obj->shortcode . ' id="' . $id . '"]';
-  }
-
-  public static function get_galleries() {
-    $gallery_ids = get_posts(array(
-                               'posts_per_page' => -1,
-                               'post_type'      => 'reacg',
-                               'fields'         => 'ids',
-                             ));
-    return $gallery_ids;
   }
 
   /**
