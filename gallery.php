@@ -194,14 +194,15 @@ final class REACG {
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
+
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
       'text' => [
         'load_more' => __('Load more', 'reacg'),
         'no_data' => __('There is not data.', 'reacg'),
-      ]
-    ) );
+      ],
+   ) );
   }
 
   /**
@@ -288,6 +289,12 @@ final class REACG {
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
       'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));
+    $gallery_ids = REACGLibrary::get_galleries();
+    $data = [];
+    foreach ( $gallery_ids as $galleryId ) {
+      $data[$galleryId] = REACGLibrary::get_data($galleryId);
+    }
+    wp_localize_script(REACG_PREFIX . '_gutenberg', 'reacg_data', $data);
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
 

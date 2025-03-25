@@ -5,8 +5,11 @@ class REACG_Gallery {
   private $post_type = "reacg";
   private $obj;
 
-  public function __construct($that) {
+  public function __construct($that, $register = TRUE) {
     $this->obj = $that;
+    if ( !$register ) {
+      return;
+    }
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_menu', [ $this, 'modify_external_submenu_url'], 999);
@@ -38,7 +41,7 @@ class REACG_Gallery {
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
         'methods' => WP_REST_Server::READABLE,
-        'callback' => [ $this, 'get_images'],
+        'callback' => [ $this, 'get_images_rout'],
         'args' => array(
           'id' => array(
             'validate_callback' => function($param, $request, $key) {
@@ -275,15 +278,29 @@ class REACG_Gallery {
   }
 
   /**
-   * Get images data for the specific gallery.
+   * Get images rout.
    *
    * @param WP_REST_Request $request
    *
    * @return WP_REST_Response
    */
-  public function get_images( WP_REST_Request $request ) {
-    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
+  public function get_images_rout( WP_REST_Request $request ) {
+    $data = $this->get_images(REACGLibrary::get_gallery_id($request, 'id'));
+    $response = new WP_REST_Response($data['images'], 200);
+    $response->header('X-Images-Count', $data['count']);
 
+    return $response;
+  }
+
+  /**
+   * Get images data for the specific gallery.
+   *
+   * @param $gallery_id
+   * @param $gallery_options
+   *
+   * @return array
+   */
+  public function get_images( $gallery_id, $gallery_options = FALSE ) {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
     $data = [];
@@ -317,7 +334,7 @@ class REACG_Gallery {
       }
 
       // Filter the data by title and description.
-      $filter = isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '';
+      $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '');
       if ( $filter ) {
         $data = array_filter($data, function( $item ) use ( $filter ) {
           if ( stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE ) {
@@ -329,7 +346,7 @@ class REACG_Gallery {
       }
 
       // Order the data by title or caption or description.
-      $order_by = isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '';
+      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
       if ( in_array($order_by, array('title', 'caption', 'description', 'date')) ) {
           // For ascending order.
           usort($data, function($a, $b) use ($order_by) {
@@ -337,14 +354,17 @@ class REACG_Gallery {
           });
       }
 
+      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
       // For descending order.
-      if ( isset($_GET['order']) && $_GET['order'] == 'desc' ) {
+      if ( $order == 'desc' ) {
         $data = array_reverse($data);
       }
 
+      $views_with_pagination = ['thumbnails', 'mosaic', 'masonry'];
+      $per_page = !empty($gallery_options['general']['itemsPerPage']) && !empty($gallery_options['type']) && in_array($gallery_options['type'], $views_with_pagination) ? sanitize_text_field($gallery_options['general']['itemsPerPage']) : (isset($_GET['per_page']) ? sanitize_text_field($_GET['per_page']) : '');
       // Run pagination on the data.
-      if ( !empty($_GET['per_page']) ) {
-        $per_page = (int) $_GET['per_page'];
+      if ( !empty($per_page) ) {
+        $per_page = (int) $per_page;
         // We need one of these two parameters (page or offset, where offset is at which element to start).
         if ( isset($_GET['page']) ) {
           $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
@@ -357,10 +377,7 @@ class REACG_Gallery {
       }
     }
 
-    $response = new WP_REST_Response($data, 200);
-    $response->header('X-Images-Count', count($images_ids_arr));
-
-    return $response;
+    return ['images' => $data, 'count' => count($images_ids_arr)];
   }
 
   /**
