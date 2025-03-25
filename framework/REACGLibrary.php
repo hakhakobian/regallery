@@ -82,17 +82,7 @@ class REACGLibrary {
   public static function get_rest_routs($gallery_id) {
     REACGLibrary::enqueue_scripts();
 
-    require_once REACG()->plugin_dir . "/includes/gallery.php";
-    $gallery = new REACG_Gallery(REACG());
-    require_once REACG()->plugin_dir . "/includes/options.php";
-    $options = new REACG_Options(TRUE);
-    $gallery_options = $options->get_options( $gallery_id );
-    $gallery_data = $gallery->get_images( $gallery_id, $gallery_options );
-    $data = [
-      'images' => $gallery_data['images'],
-      'options' => $gallery_options,
-      'imagesCount' => $gallery_data['count'],
-    ];
+    $data = REACGLibrary::get_data($gallery_id);
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
@@ -110,6 +100,33 @@ class REACGLibrary {
   public static function enqueue_scripts() {
     wp_enqueue_style(REACG_PREFIX . '_general');
     wp_enqueue_script(REACG_PREFIX . '_thumbnails');
+  }
+
+  public static function get_data($gallery_id) {
+    require_once REACG()->plugin_dir . "/includes/gallery.php";
+    $gallery = new REACG_Gallery(REACG(), FALSE);
+    require_once REACG()->plugin_dir . "/includes/options.php";
+    $options = new REACG_Options(TRUE);
+    $gallery_options = $options->get_options( $gallery_id );
+    $gallery_data = $gallery->get_images( $gallery_id, $gallery_options );
+    return [
+      'images' => $gallery_data['images'],
+      'options' => $gallery_options,
+      'imagesCount' => $gallery_data['count'],
+    ];
+  }
+
+  /**
+   * Get all galleries ids.
+   *
+   * @return int[]|WP_Post[]
+   */
+  public static function get_galleries() {
+    return get_posts(array(
+                               'posts_per_page' => -1,
+                               'post_type' => 'reacg',
+                               'fields' => 'ids',
+                             ));
   }
 
   /**

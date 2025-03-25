@@ -281,6 +281,12 @@ final class REACG {
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
       'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));
+    $gallery_ids = REACGLibrary::get_galleries();
+    $data = [];
+    foreach ( $gallery_ids as $galleryId ) {
+      $data[$galleryId] = REACGLibrary::get_data($galleryId);
+    }
+    wp_localize_script(REACG_PREFIX . '_gutenberg', 'reacg_data', $data);
     wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
 

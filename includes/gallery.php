@@ -5,8 +5,11 @@ class REACG_Gallery {
   private $post_type = "reacg";
   private $obj;
 
-  public function __construct($that) {
+  public function __construct($that, $register = TRUE) {
     $this->obj = $that;
+    if ( !$register ) {
+      return;
+    }
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_menu', [ $this, 'modify_external_submenu_url'], 999);
