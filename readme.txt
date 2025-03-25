@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.10.4
+Stable tag: 1.10.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,10 +175,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.10.4: Added logic for displaying admin notices in the dashboard. Enjoy free functionality and add your suggestions via WP forum.
+* 1.10.5: Improved gallery loading performance for faster page load times. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.10.5 =
+= Updated: 26.03.2025 =
+* **Improved:** Gallery loading performance for faster page load times.
+* **Fixed:** Style conflicts affecting Lightbox and slideshow control buttons when used with third-party plugins and themes.
 
 = 1.10.4 =
 = Updated: 18.03.2025 =
