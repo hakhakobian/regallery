@@ -111,6 +111,8 @@ function reacg_add_posts_tab(images_ids) {
 
   jQuery(document).off("click", ".media-menu-item").on("click", ".media-menu-item", function () {
     if ( post_types.some(item => jQuery(this).data("type") === item.type ) ) {
+      /* Reset images selection on tab change.*/
+      wp.media.frames.file_frame.state().get("selection").reset();
       let media_modal = jQuery(this).closest(".media-modal-content");
       media_modal.find(".media-menu-item").removeClass("active").attr({"aria-selected": false, "tabindex": -1});
       jQuery(this).addClass("active").attr("aria-selected", true).removeAttr("tabindex");
