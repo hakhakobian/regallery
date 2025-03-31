@@ -246,8 +246,10 @@ function reacg_media_uploader( e, that ) {
     // Get the added images.
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
 
+    reacg_add_posts_tab(images_ids);
+
     // On clicking Media library tab inside the uploader.
-    jQuery(document).on("click", "#menu-item-browse", function () {
+    jQuery(document).on("click", ".media-menu-item", function () {
       // When images are already loaded (e.g. opening after closing the uploader).
       reacg_check_images(images_ids);
       // When images are not loaded (e.g. opening first time).
@@ -273,7 +275,7 @@ function reacg_media_uploader( e, that ) {
     for ( let key in selected_images ) {
       let title = selected_images[key].title;
       let sizes = selected_images[key].sizes;
-      let type = "image";
+      let type = selected_images[key].type;
       let thumbnail_url = reacg.no_image;
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
         // If there is thumbnail for the video and it is not a default image (video.png/video.svg)
@@ -293,11 +295,17 @@ function reacg_media_uploader( e, that ) {
 
       /* Add an image to the gallery, if it doesn't already exist.*/
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
+        let post_type = reacg.allowed_post_types.find(item => item.type === selected_images[key].type);
         /* Add selected image to the existing list of visual items.*/
         let clone = galleryItemsContainer.find(".reacg-template").clone();
         if ( type === "video" ) {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
-          clone.find(".reacg-cover").removeClass("reacg-hidden");
+          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons dashicons-controls-play");
+        }
+        else if ( post_type ) {
+          /* Any of the allowed post types.*/
+          clone.find(".reacg-edit").addClass("reacg-hidden");
+          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + post_type.class);
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
