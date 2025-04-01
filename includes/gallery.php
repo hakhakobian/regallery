@@ -333,7 +333,7 @@ class REACG_Gallery {
           $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', true));
         }
         $item['title'] = html_entity_decode(get_the_title($images_id));
-        $item['description'] = html_entity_decode($post->post_content);
+        $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
         $item['date'] = $post->post_date;
 
         $data[] = $item;
@@ -764,6 +764,9 @@ class REACG_Gallery {
     $allowed_post_types = array_column(REACG_ALLOWED_POST_TYPES, 'type');
     if ( preg_match('/^(' . implode('|', $allowed_post_types) . ')(\d+)$/', $id, $matches) ) {
       $id = $matches[2];
+      if ( 'publish' !== get_post_status( $id ) ) {
+        return FALSE;
+      }
       $data = $this->get_image_urls(get_post_thumbnail_id($id));
       $data['type'] = $matches[1];
       $data['title'] = html_entity_decode(get_the_title($id));
