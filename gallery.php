@@ -65,8 +65,8 @@ final class REACG {
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
     $this->allowed_post_types = [
-      ['type' => 'post', 'title' => __('Post', 'reacg'), 'class' => 'dashicons-admin-post'],
-      ['type' => 'page', 'title' => __('Page', 'reacg'), 'class' => 'dashicons-admin-page'],
+      ['type' => 'post', 'title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
+      ['type' => 'page', 'title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
     ];
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
