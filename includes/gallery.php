@@ -323,17 +323,19 @@ class REACG_Gallery {
         if ( preg_match('/^(' . implode('|', $allowed_post_types) . ')(\d+)$/', $images_id, $matches) ) {
           $images_id = $matches[2];
           $post = get_post($images_id);
-          $item['caption'] = html_entity_decode($post->post_excerpt);
+          $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
+          $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 5, '...'));
           $item['action_url'] = esc_url(get_permalink($images_id));
           $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
         }
         else {
           $post = get_post($images_id);
           $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
+          $description = $post->post_content;
           $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', true));
         }
         $item['title'] = html_entity_decode(get_the_title($images_id));
-        $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
+        $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 30, '...'));
         $item['date'] = $post->post_date;
 
         $data[] = $item;
