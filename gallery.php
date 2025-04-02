@@ -37,6 +37,8 @@ final class REACG {
   /* $abspath variable is using as defined APSPATH doesn't work in wordpress.com */
   public $abspath = '';
 
+  public $allowed_post_types = [];
+
   /**
    * Ensures only one instance is loaded or can be loaded.
    *
@@ -62,6 +64,10 @@ final class REACG {
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
+    $this->allowed_post_types = [
+      ['type' => 'post', 'title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
+      ['type' => 'page', 'title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
+    ];
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
@@ -74,6 +80,7 @@ final class REACG {
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
+    define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
   }
 
   /**
@@ -157,6 +164,8 @@ final class REACG {
     $this->rest_nonce = wp_create_nonce( 'wp_rest' );
     require_once($this->plugin_dir . '/includes/gallery.php');
     new REACG_Gallery( $this );
+    require_once($this->plugin_dir . '/includes/posts.php');
+    new REACG_Posts( $this );
   }
 
   /**
@@ -236,8 +245,12 @@ final class REACG {
       'wp-auth-check', // check all
     );
 
+    wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [], $this->version);
+    $required_styles[] = $this->prefix . '_posts';
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
 
+    wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [], $this->version);
+    $required_scripts[] = $this->prefix . '_posts';
     wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_admin', 'reacg', array(
       'insert' => __('Insert', 'reacg'),
@@ -248,6 +261,8 @@ final class REACG {
       'choose_images' => __('Choose images', 'reacg'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
+      'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));
 
     // Register general styles/scripts.

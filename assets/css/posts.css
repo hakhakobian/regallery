@@ -1,0 +1,17 @@
+.reacg-posts-wrapper {
+  .spinner {
+    float: none;
+    margin: 10px 0 0 10px;
+  }
+
+  .posts-filters {
+    margin-top: 32px;
+    margin-right: 2%;
+    width: 40%;
+  }
+
+  .media-toolbar,
+  .attachments-wrapper .attachments {
+    right: 0;
+  }
+}
