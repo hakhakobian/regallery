@@ -319,8 +319,65 @@ class REACG_Gallery {
         }
 
         $item['id'] = $gallery_id . $images_id;
-        $allowed_post_types = array_column(REACG_ALLOWED_POST_TYPES, 'type');
-        if ( preg_match('/^(' . implode('|', $allowed_post_types) . ')(\d+)$/', $images_id, $matches) ) {
+
+        if ( strpos($images_id, "dynamic") !== FALSE ) {
+          $post_type = str_replace('dynamic', '', $images_id);
+          $args = [
+            'post_type' => $post_type,
+            'posts_per_page' => -1,
+          ];
+
+          $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
+          if ( !empty($additional_data) ) {
+            $additional_data_arr = json_decode($additional_data, TRUE);
+            $taxonomies = [];
+            foreach ( $additional_data_arr['taxonomies'] as $taxonomy ) {
+              $term = explode(":", $taxonomy);
+              $term_taxonomy = $term[0];
+              $term_id = $term[1];
+              $taxonomies[] = [
+                'taxonomy' => $term_taxonomy,
+                'field' => 'term_id',
+                'terms' => $term_id,
+                'operator' => $additional_data_arr['relation'],
+              ];
+            }
+            if ( !empty($taxonomies) ) {
+              $args['tax_query'] = [
+                'relation' => $additional_data_arr['relation'],
+                $taxonomies,
+              ];
+            }
+            if ( !empty($additional_data_arr['exclude']) ) {
+              $args['post__not_in'] = $additional_data_arr['exclude'];
+            }
+            if ( !empty($additional_data_arr['exclude_without_image']) ) {
+              $args['meta_query'] = [
+                [
+                  'key' => '_thumbnail_id',
+                  'compare' => 'EXISTS',
+                ],
+              ];
+            }
+          }
+
+          $posts = get_posts( $args );
+          if ( !empty($posts) ) {
+            foreach ( $posts as $post ) {
+              $item = $this->get_item_data($post_type . $post->ID);
+              $item['id'] = $gallery_id . $images_id . $post->ID;
+              $item['caption'] = html_entity_decode($post->post_excerpt);
+              $item['action_url'] = esc_url(get_permalink($post->ID));
+              $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
+              $item['title'] = html_entity_decode(get_the_title($post->ID));
+              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
+              $item['date'] = $post->post_date;
+              $data[] = $item;
+            }
+          }
+        }
+        else {
+        if ( preg_match('/^(' . implode('|', array_keys(REACG_ALLOWED_POST_TYPES)) . ')(\d+)$/', $images_id, $matches) ) {
           $images_id = $matches[2];
           $post = get_post($images_id);
           $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
@@ -332,13 +389,14 @@ class REACG_Gallery {
           $post = get_post($images_id);
           $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
           $description = $post->post_content;
-          $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', true));
+            $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', TRUE));
         }
         $item['title'] = html_entity_decode(get_the_title($images_id));
         $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 30, '...'));
         $item['date'] = $post->post_date;
 
         $data[] = $item;
+        }
       }
 
       // Remove attachment ID from the gallery if it doesn't exist anymore.
@@ -405,6 +463,11 @@ class REACG_Gallery {
         $post_id = (int) $_POST['post_id'];
         $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
         update_post_meta($post_id, 'images_ids', $images_ids);
+
+        if ( isset($_POST['additional_data']) ) {
+          $additional_data = sanitize_text_field(wp_unslash($_POST['additional_data']));
+          update_post_meta($post_id, 'additional_data', $additional_data);
+        }
 
         /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
         if ( isset($_POST['gallery_timestamp']) ) {
@@ -509,6 +572,11 @@ class REACG_Gallery {
       update_post_meta($post_id, 'images_count', $images_count);
     }
 
+    if ( isset($_POST['additional_data']) ) {
+      $additional_data = sanitize_text_field(wp_unslash($_POST['additional_data']));
+      update_post_meta($post_id, 'additional_data', $additional_data);
+    }
+
     remove_action( 'save_post', [ $this, 'save_post' ] );
     // Save the shortcode as the post content.
     wp_update_post([
@@ -534,6 +602,7 @@ class REACG_Gallery {
 
     // Delete the post metas.
     delete_post_meta($post_id, 'images_ids');
+    delete_post_meta($post_id, 'additional_data');
     delete_post_meta($post_id, 'gallery_timestamp');
     delete_post_meta($post_id, 'options_timestamp');
     delete_post_meta($post_id, 'images_count');
@@ -763,8 +832,16 @@ class REACG_Gallery {
    * @return
    */
   private function get_item_data($id) {
-    $allowed_post_types = array_column(REACG_ALLOWED_POST_TYPES, 'type');
-    if ( preg_match('/^(' . implode('|', $allowed_post_types) . ')(\d+)$/', $id, $matches) ) {
+    if ( strpos($id, "dynamic") !== FALSE ) {
+      $data = [
+        "type" => $id,
+        "title" => REACG_ALLOWED_POST_TYPES[$id]['title'],
+        'thumbnail' => ['url' => ''],
+      ];
+      return $data;
+    }
+
+    if ( preg_match('/^(' . implode('|', array_keys(REACG_ALLOWED_POST_TYPES)) . ')(\d+)$/', $id, $matches) ) {
       $id = $matches[2];
       if ( 'publish' !== get_post_status( $id ) ) {
         return FALSE;
@@ -829,6 +906,7 @@ class REACG_Gallery {
     // Get the ID depending on whether it is called from builders or the custom post.
     $post_id = isset($_GET['id']) ? (int) $_GET['id'] : $post->ID;
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
+    $additional_data = get_post_meta( $post_id, 'additional_data', true );
 
     if ( $valid_ajax_call ) {
       ob_start();
@@ -860,6 +938,7 @@ class REACG_Gallery {
       }
       $this->image_item();
       ?><input class="images_ids" id="images_ids" name="images_ids" type="hidden" value="<?php echo esc_attr($images_ids); ?>" />
+      <input class="additional_data" id="additional_data" name="additional_data" type="hidden" value="<?php echo esc_attr($additional_data); ?>" />
     </div><?php
 
     if ( $valid_ajax_call ) {
@@ -879,19 +958,34 @@ class REACG_Gallery {
       ];
       $template = TRUE;
     }
-    $allowed_post_types = array_column(REACG_ALLOWED_POST_TYPES, 'class', 'type');
+
+    $edit_btn = ""; // Available for images and dynamic posts.
+    $thumbnail_edit_btn = "reacg-hidden"; // Available for videos.
+    $cover_icon = "reacg-hidden"; // Available for all types except for images.
+
+    if ( $data['type'] === "video" ) {
+      $thumbnail_edit_btn = "";
+      $cover_icon = "dashicons dashicons-controls-play";
+    }
+    elseif ( array_key_exists($data['type'], REACG_ALLOWED_POST_TYPES) ) {
+      $cover_icon = "dashicons " . REACG_ALLOWED_POST_TYPES[$data['type']]['class'];
+      if ( strpos($data['type'], 'dynamic') === FALSE ) {
+        $edit_btn = "reacg-hidden";
+      }
+    }
+
     ?><div data-id="<?php echo esc_attr($data['id']); ?>"
            data-type="<?php echo esc_attr($data['type']); ?>"
            class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
     <div class="reacg_item_image"
          title="<?php echo esc_attr($data['title']); ?>"
          style="background-image: url('<?php echo esc_url($data['url']); ?>')">
-      <div class="reacg-cover <?php echo esc_attr($data['type'] === "video" ? "dashicons dashicons-controls-play" : (array_key_exists($data['type'], $allowed_post_types) ? "dashicons " . $allowed_post_types[$data['type']] : "reacg-hidden")); ?>">
+      <div class="reacg-cover <?php echo esc_attr($cover_icon); ?>">
       </div>
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
-          <span class="reacg-edit-thumbnail dashicons dashicons-cover-image <?php echo esc_attr($data['type'] === "video" ? "" : "reacg-hidden"); ?>" title="<?php esc_html_e('Edit video cover', 'reacg'); ?>"></span>
-          <span class="reacg-edit dashicons dashicons-edit <?php echo esc_attr(array_key_exists($data['type'], $allowed_post_types) ? "reacg-hidden" : ""); ?>" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
+          <span class="reacg-edit-thumbnail dashicons dashicons-cover-image <?php echo esc_attr($thumbnail_edit_btn); ?>" title="<?php esc_html_e('Edit video cover', 'reacg'); ?>"></span>
+          <span class="reacg-edit dashicons dashicons-edit <?php echo esc_attr($edit_btn); ?>" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
           <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
         </div>
       </div>

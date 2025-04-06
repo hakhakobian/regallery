@@ -19,8 +19,12 @@ jQuery(document).ready(function () {
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be deleted.*/
     let image_id = item.data("id");
-    if ( item.data("type") === "video" ) {
+    let type = item.data("type");
+    if ( type === "video" ) {
       reacg_remove_thumbnail(galleryItemsContainer, image_id);
+    }
+    else if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+      galleryItemsContainer.find(".additional_data").val("");
     }
     item.remove();
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
@@ -34,6 +38,7 @@ jQuery(document).ready(function () {
   /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
     let item = jQuery(this).closest(".reacg_item");
+    const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
     let image_id = item.data("id");
     let type = item.data("type");
@@ -44,13 +49,25 @@ jQuery(document).ready(function () {
       multiple: false
     } );
     media_uploader.on('open', function() {
-      let selection = media_uploader.state().get('selection');
-      selection.add(wp.media.attachment(image_id));
+      if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+        reacg_add_posts_tab(media_uploader, type.replace("dynamic", ""), galleryItemsContainer.data("post-id"));
+      }
+      else {
+        let selection = media_uploader.state().get('selection');
+        selection.add(wp.media.attachment(image_id));
+      }
     });
     media_uploader.open();
     media_uploader.on( 'select', function () {
-      reacg_reload_preview();
-      media_uploader.close();
+      if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+        let selected_images = media_uploader.state().get( 'selection' ).toJSON();
+        galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[0].additional_data));
+        reacg_save_images(galleryItemsContainer);
+      }
+      else {
+        reacg_reload_preview();
+        media_uploader.close();
+      }
     });
   });
 
@@ -245,8 +262,7 @@ function reacg_media_uploader( e, that ) {
   media_uploader.on('open', function () {
     // Get the added images.
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
-
-    reacg_add_posts_tab(images_ids);
+    reacg_add_posts(media_uploader, images_ids, galleryItemsContainer.data("post-id"));
 
     // On clicking Media library tab inside the uploader.
     jQuery(document).on("click", ".media-menu-item", function () {
@@ -282,30 +298,36 @@ function reacg_media_uploader( e, that ) {
         if ( selected_images[key].thumb.src.search("media/video.") === -1 )  {
           thumbnail_url = selected_images[key].thumb.src;
         }
-        type = "video";
       }
-      else if ( typeof sizes.thumbnail !== 'undefined' ) {
-        thumbnail_url = sizes.thumbnail.url;
-      }
-      else if ( typeof sizes.full.url !== 'undefined' ) {
-        thumbnail_url = sizes.full.url;
+      else if ( sizes ) {
+        if (typeof sizes.thumbnail !== 'undefined') {
+          thumbnail_url = sizes.thumbnail.url;
+        }
+        else if (sizes.full && typeof sizes.full.url !== 'undefined') {
+          thumbnail_url = sizes.full.url;
+        }
       }
 
       let image_id = selected_images[key].id;
 
       /* Add an image to the gallery, if it doesn't already exist.*/
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
-        let post_type = reacg.allowed_post_types.find(item => item.type === selected_images[key].type);
         /* Add selected image to the existing list of visual items.*/
         let clone = galleryItemsContainer.find(".reacg-template").clone();
         if ( type === "video" ) {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
           clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons dashicons-controls-play");
         }
-        else if ( post_type ) {
+        else if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
           /* Any of the allowed post types.*/
-          clone.find(".reacg-edit").addClass("reacg-hidden");
-          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + post_type.class);
+          if ( String(image_id).includes("dynamic") ) {
+            thumbnail_url = "";
+            galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[key].additional_data));
+          }
+          else {
+            clone.find(".reacg-edit").addClass("reacg-hidden");
+          }
+          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + reacg.allowed_post_types[type]['class']);
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
@@ -341,6 +363,7 @@ function reacg_save_images(galleryItemsContainer) {
       "action": "reacg_save_images",
       "post_id": galleryItemsContainer.data("post-id"),
       "images_ids": reacg_get_image_ids(galleryItemsContainer, false),
+      "additional_data": galleryItemsContainer.find(".additional_data").val(),
       "gallery_timestamp": Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
     },
     complete: function (data) {

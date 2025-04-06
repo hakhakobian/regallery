@@ -73,7 +73,26 @@
 .reacg-cover.dashicons.dashicons-admin-page:before {
   font-size: 35px;
 }
-.reacg-cover.dashicons:before {
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after {
+  content: "\f109";
+}
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after {
+  content: "\f105";
+}
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after,
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after {
+  left: 30%;
+  top: 40%;
+  font-size: 35px;
+  transform: translate(-30%, -40%);
+  color: #9b9b9b;
+}
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:before,
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:before {
+  transform: translate(-35%, -40%);
+}
+.reacg-cover.dashicons:before,
+.reacg-cover.reacg-dynamic.dashicons:after {
   font-size: 45px;
   width: 40px;
   color: #cacccb;

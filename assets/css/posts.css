@@ -15,3 +15,6 @@
     right: 0;
   }
 }
+.select2-container {
+  z-index: 1000000;
+}
