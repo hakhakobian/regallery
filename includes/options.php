@@ -18,8 +18,8 @@ class REACG_Options {
       'padding' => 0, #number
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -38,8 +38,8 @@ class REACG_Options {
       'rowHeight' => 200, #number
       'columns' => 4, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -56,8 +56,8 @@ class REACG_Options {
       'paddingColor' => '', #string
       'columns' => 4, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
-      'titleVisibility' => 'onHover', #string alwaysShown | onHover | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
