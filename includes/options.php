@@ -216,6 +216,8 @@ class REACG_Options {
       'descriptionFontSize',
       'descriptionMaxRowsCount',
       'buttonFontSize',
+      'imageWidth',
+      'imageHeight',
     ];
     $empty_number = [
       'template_id',
