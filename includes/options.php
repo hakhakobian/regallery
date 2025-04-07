@@ -7,7 +7,7 @@ class REACG_Options {
     'template' => false, #boolean
     'template_id' => 0, #number
     'css' => '', #string
-    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow
+    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | staggered
     'thumbnails' => [
       'width' => 250, #number
       'height' => 170, #number
@@ -119,6 +119,36 @@ class REACG_Options {
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
     ],
+    'staggered' => [
+      'imageWidth' => 50, #number
+      'imageWidthType' => '%', #string % | px | vw | rem | em
+      'imageHeight' => 400, #number
+      'imageHeightType' => 'px', #string px | vh | rem | em
+      'spacing' => 0, #number
+      'backgroundColor' => '', #string;
+      'containerPadding' => 0, #number
+      'imageRadius' => 0, #number
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'showTitle' => TRUE, #boolean
+      'titleFontSize' => 36, #number
+      'titleColor' => '#000000', #string
+      'titleAlignment' => 'left', #string left | center | right
+      'showDescription' => TRUE, #boolean
+      'descriptionFontSize' => 16, #number
+      'descriptionColor' => '#333333', #string
+      'descriptionMaxRowsCount' => 4, #number
+      'showButton' => TRUE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'textFontFamily' => 'Inherit', #string
+      'textVerticalAlignment' => 'center', #string bottom | top | center
+      'textHorizontalSpacing' => 35, #number
+      'textVerticalSpacing' => 35, #number
+    ],
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
       'openUrlInNewTab' => FALSE, #boolean
@@ -183,6 +213,9 @@ class REACG_Options {
       'rowHeight',
       'imagesCount',
       'perSlideOffset',
+      'descriptionFontSize',
+      'descriptionMaxRowsCount',
+      'buttonFontSize',
     ];
     $empty_number = [
       'template_id',
@@ -193,6 +226,10 @@ class REACG_Options {
       'thumbnailBorder',
       'thumbnailBorderRadius',
       'thumbnailPadding',
+      'spacing',
+      'imageRadius',
+      'textHorizontalSpacing',
+      'textVerticalSpacing',
     ];
     $negative_number = [
       'spaceBetween',
@@ -212,6 +249,10 @@ class REACG_Options {
       'navigationButton',
       'playAndPauseAllowed',
       'openUrlInNewTab',
+      'showTitle',
+      'showDescription',
+      'showButton',
+      'openInNewTab',
     ];
     $float = [
       'scale',
@@ -221,7 +262,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'staggered' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
@@ -236,7 +277,15 @@ class REACG_Options {
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
       ],
+      'textVerticalAlignment' => [
+        'allowed' => [ 'bottom', 'top', 'center' ],
+        'default' => 'center',
+      ],
       'titleAlignment' => [
+        'allowed' => [ 'left', 'center', 'right' ],
+        'default' => 'left',
+      ],
+      'buttonAlignment' => [
         'allowed' => [ 'left', 'center', 'right' ],
         'default' => 'left',
       ],
@@ -275,6 +324,14 @@ class REACG_Options {
       'clickAction' => [
         'allowed' => [ 'none', 'lightbox', 'url' ],
         'default' => 'lightbox',
+      ],
+      'sizeTypeWidth' => [
+        'allowed' => [ '%', 'px', 'vw', 'rem', 'em' ],
+        'default' => '%',
+      ],
+      'sizeTypeHeight' => [
+        'allowed' => [ 'px', 'vh', 'rem', 'em' ],
+        'default' => 'px',
       ],
     ];
     if ( in_array($key, $number) ) {
