@@ -54,7 +54,6 @@ class REACG_Posts {
 
     $gallery_id = !empty($_POST['gallery_id']) ? intval($_POST['gallery_id']) : 0;
 
-    $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0];
     $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
 
     if ( empty($select_type) ) {
@@ -62,14 +61,14 @@ class REACG_Posts {
       ob_start();
       ?>
       <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "reacg"); ?></button>
-      <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? sprintf(__('Dynamic %s already added', 'reacg'), $type_title) : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
+      <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'reacg') : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
       <?php
       echo ob_get_clean();
     }
     elseif ( $select_type === "dynamic" ) {
-
       $relation = ["or" => __("OR", "reacg"), "and" => __("AND", "reacg")];
 
+      $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0];
       if ( !empty($additional_data) ) {
         $additional_data_arr = json_decode($additional_data, TRUE);
       }

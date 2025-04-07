@@ -305,9 +305,11 @@ class REACG_Gallery {
 
     $data = [];
     $images_ids_arr = [];
+    $all_images_count = 0;
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids, TRUE);
       $is_deleted_attachment = FALSE;
+      $dynamic_exists = FALSE;
       foreach ( $images_ids_arr as $key => $images_id ) {
         $item = $this->get_item_data($images_id);
 
@@ -321,82 +323,54 @@ class REACG_Gallery {
         $item['id'] = $gallery_id . $images_id;
 
         if ( strpos($images_id, "dynamic") !== FALSE ) {
+          $dynamic_exists = TRUE;
           $post_type = str_replace('dynamic', '', $images_id);
-          $args = [
-            'post_type' => $post_type,
-            'posts_per_page' => -1,
-          ];
 
-          $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
-          if ( !empty($additional_data) ) {
-            $additional_data_arr = json_decode($additional_data, TRUE);
-            $taxonomies = [];
-            foreach ( $additional_data_arr['taxonomies'] as $taxonomy ) {
-              $term = explode(":", $taxonomy);
-              $term_taxonomy = $term[0];
-              $term_id = $term[1];
-              $taxonomies[] = [
-                'taxonomy' => $term_taxonomy,
-                'field' => 'term_id',
-                'terms' => $term_id,
-                'operator' => $additional_data_arr['relation'],
-              ];
-            }
-            if ( !empty($taxonomies) ) {
-              $args['tax_query'] = [
-                'relation' => $additional_data_arr['relation'],
-                $taxonomies,
-              ];
-            }
-            if ( !empty($additional_data_arr['exclude']) ) {
-              $args['post__not_in'] = $additional_data_arr['exclude'];
-            }
-            if ( !empty($additional_data_arr['exclude_without_image']) ) {
-              $args['meta_query'] = [
-                [
-                  'key' => '_thumbnail_id',
-                  'compare' => 'EXISTS',
-                ],
-              ];
-            }
-          }
-
-          $posts = get_posts( $args );
+          $posts = $this->get_posts( $gallery_id, $post_type );
           if ( !empty($posts) ) {
             foreach ( $posts as $post ) {
               $item = $this->get_item_data($post_type . $post->ID);
-              $item['id'] = $gallery_id . $images_id . $post->ID;
-              $item['caption'] = html_entity_decode($post->post_excerpt);
-              $item['action_url'] = esc_url(get_permalink($post->ID));
-              $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
-              $item['title'] = html_entity_decode(get_the_title($post->ID));
-              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
-              $item['date'] = $post->post_date;
-              $data[] = $item;
+              if ( $item ) {
+                $item['id'] = $gallery_id . $images_id . $post->ID;
+                $item['caption'] = html_entity_decode($post->post_excerpt);
+                $item['action_url'] = esc_url(get_permalink($post->ID));
+                $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
+                $item['title'] = html_entity_decode(get_the_title($post->ID));
+                $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
+                $item['date'] = $post->post_date;
+                $data[] = $item;
+              }
             }
           }
         }
         else {
-        if ( preg_match('/^(' . implode('|', array_keys(REACG_ALLOWED_POST_TYPES)) . ')(\d+)$/', $images_id, $matches) ) {
-          $images_id = $matches[2];
-          $post = get_post($images_id);
-          $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
-          $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 5, '...'));
-          $item['action_url'] = esc_url(get_permalink($images_id));
-          $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
-        }
-        else {
-          $post = get_post($images_id);
-          $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
-          $description = $post->post_content;
+          if ( preg_match('/^(' . implode('|', array_keys(REACG_ALLOWED_POST_TYPES)) . ')(\d+)$/', $images_id, $matches) ) {
+            $images_id = $matches[2];
+            $post = get_post($images_id);
+            $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
+            $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 5, '...'));
+            $item['action_url'] = esc_url(get_permalink($images_id));
+            $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
+          }
+          else {
+            $post = get_post($images_id);
+            $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
+            $description = $post->post_content;
             $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', TRUE));
+          }
+          $item['title'] = html_entity_decode(get_the_title($images_id));
+          $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 30, '...'));
+          $item['date'] = $post->post_date;
+          $data[] = $item;
         }
-        $item['title'] = html_entity_decode(get_the_title($images_id));
-        $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 30, '...'));
-        $item['date'] = $post->post_date;
+      }
 
-        $data[] = $item;
-        }
+      $all_images_count = count($data);
+
+      // Update images count if there is selected dynamic posts.
+      if ( $dynamic_exists &&
+        get_post_meta( $gallery_id, 'images_count', TRUE ) != $all_images_count ) {
+        update_post_meta($gallery_id, 'images_count', $all_images_count);
       }
 
       // Remove attachment ID from the gallery if it doesn't exist anymore.
@@ -448,7 +422,56 @@ class REACG_Gallery {
       }
     }
 
-    return ['images' => $data, 'count' => count($images_ids_arr)];
+    return ['images' => $data, 'count' => $all_images_count];
+  }
+
+  private function get_posts($gallery_id, $post_type) {
+    $args = [
+      'post_type' => $post_type,
+      'posts_per_page' => -1,
+    ];
+
+    $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
+    if ( !empty($additional_data) ) {
+      $additional_data_arr = json_decode($additional_data, TRUE);
+      $taxonomies = [];
+      foreach ( $additional_data_arr['taxonomies'] as $taxonomy ) {
+        $term = explode(":", $taxonomy);
+        $term_taxonomy = $term[0];
+        $term_id = $term[1];
+        $taxonomies[] = [
+          'taxonomy' => $term_taxonomy,
+          'field' => 'term_id',
+          'terms' => $term_id,
+          'operator' => $additional_data_arr['relation'],
+        ];
+      }
+      if ( !empty($taxonomies) ) {
+        $args['tax_query'] = [
+          'relation' => $additional_data_arr['relation'],
+          $taxonomies,
+        ];
+      }
+      if ( !empty($additional_data_arr['exclude']) ) {
+        $args['post__not_in'] = $additional_data_arr['exclude'];
+      }
+      if ( !empty($additional_data_arr['exclude_without_image']) ) {
+        $args['meta_query'] = [
+          'relation' => 'AND',
+          [
+            'key'     => '_thumbnail_id',
+            'value'   => '',
+            'compare' => '!=',
+          ],
+          [
+            'key' => '_thumbnail_id',
+            'compare' => 'EXISTS',
+          ],
+        ];
+      }
+    }
+
+    return get_posts( $args );
   }
 
   /**
@@ -838,6 +861,7 @@ class REACG_Gallery {
         "title" => REACG_ALLOWED_POST_TYPES[$id]['title'],
         'thumbnail' => ['url' => ''],
       ];
+
       return $data;
     }
 
@@ -846,7 +870,12 @@ class REACG_Gallery {
       if ( 'publish' !== get_post_status( $id ) ) {
         return FALSE;
       }
-      $data = $this->get_image_urls(get_post_thumbnail_id($id));
+      $post_thumbnail_id = get_post_thumbnail_id($id);
+      if ( empty($post_thumbnail_id) ) {
+        // When some posts have invalid or orphaned _thumbnail_id values.
+        return FALSE;
+      }
+      $data = $this->get_image_urls($post_thumbnail_id);
       $data['type'] = $matches[1];
       $data['title'] = html_entity_decode(get_the_title($id));
 
