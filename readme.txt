@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -176,10 +176,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.11.0: Added ability to include posts and pages in the gallery. Enjoy free functionality and add your suggestions via WP forum.
+* 1.11.1: Improved images load time in Masonry and Mosaic views. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.11.1 =
+= Updated: 08.04.2025 =
+* **Improved:** Lightbox loading performance.
+* **Improved:** Images load time in Masonry and Mosaic views.
+* **Changed:** Default values for Hover effect and Title visibility options.
+* **Fixed:** The wrong image opens in the lightbox when the selected image is not on the first page.
 
 = 1.11.0 =
 = Updated: 03.04.2025 =
