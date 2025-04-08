@@ -326,20 +326,23 @@ class REACG_Gallery {
           $dynamic_exists = TRUE;
           $post_type = str_replace('dynamic', '', $images_id);
 
-          $posts = $this->get_posts( $gallery_id, $post_type );
-          if ( !empty($posts) ) {
-            foreach ( $posts as $post ) {
-              $item = $this->get_item_data($post_type . $post->ID);
-              if ( $item ) {
-                $item['id'] = $gallery_id . $images_id . $post->ID;
-                $item['caption'] = html_entity_decode($post->post_excerpt);
-                $item['action_url'] = esc_url(get_permalink($post->ID));
-                $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
-                $item['title'] = html_entity_decode(get_the_title($post->ID));
-                $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
-                $item['date'] = $post->post_date;
-                $data[] = $item;
+          $gallery_data = $this->get_posts( $gallery_id, $post_type );
+          if ( !empty($gallery_data['posts']) ) {
+            $exclude_without_image = !empty($gallery_data['additional_data']['exclude_without_image']);
+            foreach ( $gallery_data['posts'] as $post ) {
+              if ( $exclude_without_image && empty(get_post_thumbnail_id($post->ID)) ) {
+                // When some posts have invalid or orphaned _thumbnail_id values.
+                continue;
               }
+              $item = $this->get_item_data($post_type . $post->ID);
+              $item['id'] = $gallery_id . $images_id . $post->ID;
+              $item['caption'] = html_entity_decode($post->post_excerpt);
+              $item['action_url'] = esc_url(get_permalink($post->ID));
+              $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
+              $item['title'] = html_entity_decode(get_the_title($post->ID));
+              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 30, '...'));
+              $item['date'] = $post->post_date;
+              $data[] = $item;
             }
           }
         }
@@ -432,25 +435,25 @@ class REACG_Gallery {
     ];
 
     $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
+    $additional_data_arr = [];
     if ( !empty($additional_data) ) {
       $additional_data_arr = json_decode($additional_data, TRUE);
-      $taxonomies = [];
-      foreach ( $additional_data_arr['taxonomies'] as $taxonomy ) {
-        $term = explode(":", $taxonomy);
-        $term_taxonomy = $term[0];
-        $term_id = $term[1];
-        $taxonomies[] = [
-          'taxonomy' => $term_taxonomy,
-          'field' => 'term_id',
-          'terms' => $term_id,
-          'operator' => $additional_data_arr['relation'],
-        ];
+      $tax_query = [
+        'relation' => !empty($additional_data_arr['relation']) && $additional_data_arr['relation'] == "and" ? 'AND' : 'OR',
+      ];
+      foreach ( $additional_data_arr['taxonomies'] as $taxonomy_string ) {
+        $term = explode(':', $taxonomy_string);
+        if ( count($term) === 2 ) {
+          $tax_query[] = [
+            'taxonomy' => $term[0],
+            'field' => 'term_id',
+            'terms' => [ (int) $term[1] ],
+          ];
+        }
       }
-      if ( !empty($taxonomies) ) {
-        $args['tax_query'] = [
-          'relation' => $additional_data_arr['relation'],
-          $taxonomies,
-        ];
+      if ( count($tax_query) > 1 ) {
+        // Make sure at least one condition exists.
+        $args['tax_query'] = $tax_query;
       }
       if ( !empty($additional_data_arr['exclude']) ) {
         $args['post__not_in'] = $additional_data_arr['exclude'];
@@ -471,7 +474,7 @@ class REACG_Gallery {
       }
     }
 
-    return get_posts( $args );
+    return ['posts' => get_posts( $args ), 'additional_data' => $additional_data_arr];
   }
 
   /**
@@ -871,10 +874,6 @@ class REACG_Gallery {
         return FALSE;
       }
       $post_thumbnail_id = get_post_thumbnail_id($id);
-      if ( empty($post_thumbnail_id) ) {
-        // When some posts have invalid or orphaned _thumbnail_id values.
-        return FALSE;
-      }
       $data = $this->get_image_urls($post_thumbnail_id);
       $data['type'] = $matches[1];
       $data['title'] = html_entity_decode(get_the_title($id));

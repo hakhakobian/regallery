@@ -23,7 +23,7 @@ jQuery(document).ready(function () {
     if ( type === "video" ) {
       reacg_remove_thumbnail(galleryItemsContainer, image_id);
     }
-    else if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+    else if ( reacg.allowed_post_types.hasOwnProperty(type) && String(image_id).includes("dynamic") ) {
       galleryItemsContainer.find(".additional_data").val("");
     }
     item.remove();
@@ -34,7 +34,6 @@ jQuery(document).ready(function () {
     /* Save images on delete.*/
     reacg_save_images(galleryItemsContainer);
   });
-
   /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
     let item = jQuery(this).closest(".reacg_item");
@@ -66,8 +65,8 @@ jQuery(document).ready(function () {
       }
       else {
         reacg_reload_preview();
-        media_uploader.close();
       }
+      media_uploader.remove();
     });
   });
 
@@ -101,7 +100,7 @@ jQuery(document).ready(function () {
         item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
       }
 
-      media_uploader.close();
+      media_uploader.remove();
     } );
   });
 });
@@ -345,7 +344,7 @@ function reacg_media_uploader( e, that ) {
     /* Save the images.*/
     reacg_save_images(galleryItemsContainer);
 
-    media_uploader.close();
+    media_uploader.remove();
   } );
 }
 
