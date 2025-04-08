@@ -15,6 +15,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
     },
     success: function (response) {
       wrapper.html(response);
+      wrapper.find(".spinner").removeClass("is-active");
       if ( select_type === "" ) {
         wrapper.find(".reacg_select_type").off("click").on("click", function () {
           reacg_get_posts(media_uploader, that, jQuery(this).data("select-type"), images_ids, gallery_id);

@@ -56,6 +56,9 @@ jQuery(document).ready(function () {
         selection.add(wp.media.attachment(image_id));
       }
     });
+    media_uploader.on("close", function () {
+      media_uploader.remove();
+    });
     media_uploader.open();
     media_uploader.on( 'select', function () {
       if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
@@ -68,6 +71,7 @@ jQuery(document).ready(function () {
       }
       media_uploader.remove();
     });
+
   });
 
   /* Bind an edit thumbnail event to the every video item.*/
@@ -83,6 +87,9 @@ jQuery(document).ready(function () {
       button: { text: reacg.update_thumbnail },
       multiple: false
     } );
+    media_uploader.on("close", function () {
+      media_uploader.remove();
+    });
     media_uploader.open();
     media_uploader.on( 'select', function () {
       let selected_image = media_uploader.state().get('selection').toJSON();
@@ -279,6 +286,11 @@ function reacg_media_uploader( e, that ) {
     // On opening Media library tab when images are not loaded.
     reacg_check_image(images_ids);
   });
+
+  media_uploader.on("close", function () {
+    media_uploader.remove();
+  });
+
   media_uploader.open();
 
   media_uploader.on( 'select', function () {

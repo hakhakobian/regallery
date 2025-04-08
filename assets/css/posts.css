@@ -14,7 +14,46 @@
   .attachments-wrapper .attachments {
     right: 0;
   }
+  .reacg_select_type_wrapper .reacg_select_type {
+    margin: 0 10px;
+  }
+  .reacg_select_type_wrapper,
+  .reacg_dynamic_wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .reacg_dynamic_wrapper>div {
+    width: 700px;
+  }
+  .reacg_dynamic_wrapper>div>div {
+    margin: 5px 0;
+  }
+  .reacg_dynamic_wrapper select {
+    width: 100%;
+    max-width: 100%;
+  }
+  .reacg_dynamic_wrapper label {
+    cursor: pointer;
+    display: block;
+  }
+  .reacg_dynamic_wrapper .reacg_inline_label {
+    display: inline;
+  }
+  .reacg_dynamic_wrapper input[type=checkbox] {
+    margin-top: 3px;
+  }
+  .select2-container--default .select2-selection--multiple {
+    padding: 0;
+  }
 }
 .select2-container {
   z-index: 1000000;
+}
+.media-router .media-menu-item[disabled][aria-selected=false]:active,
+.media-router .media-menu-item[disabled][aria-selected=false]:hover {
+  color: rgba(16, 16, 16, 0.3);
 }

@@ -60,8 +60,13 @@ class REACG_Posts {
       ob_end_clean();
       ob_start();
       ?>
-      <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "reacg"); ?></button>
-      <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'reacg') : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
+      <div class="reacg_select_type_wrapper">
+        <span class="spinner is-active"></span>
+        <div>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "reacg"); ?></button>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'reacg') : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
+        </div>
+      </div>
       <?php
       echo ob_get_clean();
     }
@@ -85,59 +90,71 @@ class REACG_Posts {
       ob_end_clean();
       ob_start();
       ?>
-      <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'reacg'); ?></label>
-      <select multiple="multiple" name="reacg_taxanomies[]" id="reacg_taxanomies" class="reacg_searchable_select reacg_change_listener"  style="width: 100%">
-        <?php
-        foreach ( $taxonomies as $taxonomy => $terms ) {
-          ?>
-          <optgroup label="<?php echo esc_html(ucfirst(str_replace("_", "", $taxonomy))); ?>">
-            <?php
-            foreach ( $terms as $term ) {
-              $value = $taxonomy . ":" . $term['id'];
-              $title = $term['name'];
-              ?>
-              <option
-                value="<?php echo esc_attr($value); ?>" <?php selected(TRUE, $term['selected']); ?>><?php echo esc_html($title); ?></option>
+      <div class="reacg_dynamic_wrapper">
+        <div>
+          <div>
+            <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'reacg'); ?></label>
+            <select multiple="multiple" name="reacg_taxanomies[]" id="reacg_taxanomies" class="reacg_searchable_select reacg_change_listener"  style="width: 100%">
               <?php
-            }
-            ?>
-          </optgroup>
-          <?php
-        }
-        ?>
-      </select>
-      <label for="reacg_relation"><?php esc_html_e('Relation', 'reacg'); ?></label>
-      <select name="reacg_relation" id="reacg_relation" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
-        <?php
-        foreach ( $relation as $value => $name ) {
-          ?>
-          <option
-            value="<?php echo esc_attr($value); ?>" <?php selected($value, $additional_data_arr['relation']); ?>><?php echo esc_html($name); ?></option>
-          <?php
-        }
-        ?>
-      </select>
-      <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'reacg'), $type_title); ?></label>
-      <select multiple="multiple" name="reacg_exclude" id="reacg_exclude" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
-        <?php
-        foreach ( $posts as $post ) {
-          $title = get_the_title($post->ID);
-          if ( empty($title) ) {
-            $title = __('(no title)', 'reacg');
-          }
-          ?>
-          <option
-            value="<?php echo intval($post->ID); ?>" <?php selected(TRUE, in_array($post->ID, $additional_data_arr['exclude'])); ?>><?php echo esc_html($title); ?></option>
-          <?php
-        }
-        ?>
-      </select>
-      <label for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'reacg'), $type_title); ?></label>
-      <input type="checkbox"
-             name="reacg_exclude_without_image"
-             id="reacg_exclude_without_image"
-             class="reacg_change_listener"
-        <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?>/>
+              foreach ( $taxonomies as $taxonomy => $terms ) {
+                ?>
+                <optgroup label="<?php echo esc_html(ucfirst(str_replace("_", "", $taxonomy))); ?>">
+                  <?php
+                  foreach ( $terms as $term ) {
+                    $value = $taxonomy . ":" . $term['id'];
+                    $title = $term['name'];
+                    ?>
+                    <option
+                      value="<?php echo esc_attr($value); ?>" <?php selected(TRUE, $term['selected']); ?>><?php echo esc_html($title); ?></option>
+                    <?php
+                  }
+                  ?>
+                </optgroup>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <label for="reacg_relation"><?php esc_html_e('Relation', 'reacg'); ?></label>
+            <select name="reacg_relation" id="reacg_relation" class="reacg_change_listener">
+              <?php
+              foreach ( $relation as $value => $name ) {
+                ?>
+                <option
+                  value="<?php echo esc_attr($value); ?>" <?php selected($value, $additional_data_arr['relation']); ?>><?php echo esc_html($name); ?></option>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'reacg'), $type_title); ?></label>
+            <select multiple="multiple" name="reacg_exclude" id="reacg_exclude" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
+              <?php
+              foreach ( $posts as $post ) {
+                $title = get_the_title($post->ID);
+                if ( empty($title) ) {
+                  $title = __('(no title)', 'reacg');
+                }
+                ?>
+                <option
+                  value="<?php echo intval($post->ID); ?>" <?php selected(TRUE, in_array($post->ID, $additional_data_arr['exclude'])); ?>><?php echo esc_html($title); ?></option>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <input type="checkbox"
+                   name="reacg_exclude_without_image"
+                   id="reacg_exclude_without_image"
+                   class="reacg_change_listener"
+              <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?> />
+            <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'reacg'), $type_title); ?></label>
+          </div>
+        </div>
+      </div>
       <?php
       echo ob_get_clean();
     }
