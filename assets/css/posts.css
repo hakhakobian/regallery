@@ -1,4 +1,5 @@
 .reacg-posts-wrapper {
+  overflow-y: auto !important;
   .spinner {
     float: none;
     margin: 10px 0 0 10px;
@@ -20,17 +21,20 @@
   .reacg_select_type_wrapper,
   .reacg_dynamic_wrapper {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: start;
+    margin-top: 150px;
+  }
+  .reacg_dynamic_wrapper {
+    margin-top: 50px;
   }
   .reacg_dynamic_wrapper>div {
     width: 700px;
   }
   .reacg_dynamic_wrapper>div>div {
-    margin: 5px 0;
+    margin: 15px 0;
   }
   .reacg_dynamic_wrapper select {
     width: 100%;
@@ -39,6 +43,9 @@
   .reacg_dynamic_wrapper label {
     cursor: pointer;
     display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 7px;
   }
   .reacg_dynamic_wrapper .reacg_inline_label {
     display: inline;

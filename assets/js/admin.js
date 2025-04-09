@@ -23,7 +23,9 @@ jQuery(document).ready(function () {
     if ( type === "video" ) {
       reacg_remove_thumbnail(galleryItemsContainer, image_id);
     }
-    else if ( reacg.allowed_post_types.hasOwnProperty(type) && String(image_id).includes("dynamic") ) {
+    else if ( reacg.allowed_post_types.hasOwnProperty(type)
+      && String(image_id).includes("dynamic") ) {
+      /* Reset additional data on dynamic gallery delete.*/
       galleryItemsContainer.find(".additional_data").val("");
     }
     item.remove();
@@ -48,7 +50,8 @@ jQuery(document).ready(function () {
       multiple: false
     } );
     media_uploader.on('open', function() {
-      if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+      if ( reacg.allowed_post_types.hasOwnProperty(type)
+        && String(image_id).includes("dynamic") ) {
         reacg_add_posts_tab(media_uploader, type.replace("dynamic", ""), galleryItemsContainer.data("post-id"));
       }
       else {
@@ -216,17 +219,17 @@ function reacg_check_images(images_ids) {
  * @param images_ids
  */
 function reacg_check_image(images_ids) {
-  // Select the container for images inside the media modal for the current uploader.
+  /* Select the container for images inside the media modal for the current uploader.*/
   let container = jQuery('.media-frame-content .attachments:visible');
   if ( container.length > 0 ) {
-    // Create a MutationObserver to watch for changes in the container.
+    /* Create a MutationObserver to watch for changes in the container.*/
     let observer = new MutationObserver(function (mutationsList) {
-      // Check if the .attachment container is added to the DOM.
+      /* Check if the .attachment container is added to the DOM.*/
       let attachmentContainer = container.find('.attachment');
       if ( attachmentContainer.length > 0 ) {
-        // Attach load event listener to its images.
+        /* Attach load event listener to its images.*/
         attachmentContainer.find('img').one('load', function () {
-          // Disable the image if it is already inserted into the gallery.
+          /* Disable the image if it is already inserted into the gallery.*/
           if ( jQuery.inArray(jQuery(this).closest("li").data("id"), images_ids) !== -1 ) {
             jQuery(this).closest("li").attr("title", "Already added").addClass("reacg-already-added");
             jQuery(this).closest("li").find(".thumbnail").on("click", function (e) {
@@ -238,11 +241,11 @@ function reacg_check_image(images_ids) {
             jQuery(this).trigger('load');
           }
         });
-        // Stop observing mutations once the container is found.
+        /* Stop observing mutations once the container is found.*/
         observer.disconnect();
       }
     });
-    // Start observing mutations in the container
+    /* Start observing mutations in the container.*/
     observer.observe(container[0], {childList: true, subtree: true});
   }
 }
@@ -264,26 +267,27 @@ function reacg_media_uploader( e, that ) {
     multiple: true
   } );
 
-  // Disable the images which are already added to the gallery.
+  /* Disable the images which are already added to the gallery.*/
   media_uploader.on('open', function () {
-    // Get the added images.
+    /* Get the added images.*/
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
+
     reacg_add_posts(media_uploader, images_ids, galleryItemsContainer.data("post-id"));
 
-    // On clicking Media library tab inside the uploader.
+    /* On clicking Media library tab inside the uploader.*/
     jQuery(document).on("click", ".media-menu-item", function () {
-      // When images are already loaded (e.g. opening after closing the uploader).
+      /* When images are already loaded (e.g. opening after closing the uploader).*/
       reacg_check_images(images_ids);
-      // When images are not loaded (e.g. opening first time).
+      /* When images are not loaded (e.g. opening first time).*/
       reacg_check_image(images_ids);
     });
 
-    // On clicking load more button in the uploader.
+    /* On clicking load more button in the uploader.*/
     jQuery(document).on("click", ".load-more-wrapper .load-more", function () {
       reacg_check_image(images_ids);
     });
 
-    // On opening Media library tab when images are not loaded.
+    /* On opening Media library tab when images are not loaded.*/
     reacg_check_image(images_ids);
   });
 
@@ -305,7 +309,7 @@ function reacg_media_uploader( e, that ) {
       let type = selected_images[key].type;
       let thumbnail_url = reacg.no_image;
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
-        // If there is thumbnail for the video and it is not a default image (video.png/video.svg)
+        /* If there is thumbnail for the video and it is not a default image (video.png/video.svg)*/
         if ( selected_images[key].thumb.src.search("media/video.") === -1 )  {
           thumbnail_url = selected_images[key].thumb.src;
         }

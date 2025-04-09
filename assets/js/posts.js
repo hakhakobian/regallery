@@ -17,6 +17,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
       wrapper.html(response);
       wrapper.find(".spinner").removeClass("is-active");
       if ( select_type === "" ) {
+        /* Bind events to the buttons.*/
         wrapper.find(".reacg_select_type").off("click").on("click", function () {
           reacg_get_posts(media_uploader, that, jQuery(this).data("select-type"), images_ids, gallery_id);
         });
@@ -41,9 +42,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
           }),
         ]);
         if ( wrapper.find(".reacg_searchable_select").length ) {
-          wrapper.find(".reacg_searchable_select").select2({
-            //closeOnSelect: false,
-          });
+          wrapper.find(".reacg_searchable_select").select2({});
         }
         wrapper.find(".reacg_change_listener").on("change", function () {
           selection.reset();
@@ -77,7 +76,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
         });
         let lastSelected = null;
         wrapper.find(".attachment").off("click").on("click", function (e) {
-          let selection = media_uploader.state().get('selection');//wp.media.frames.file_frame.state().get("selection");
+          let selection = media_uploader.state().get('selection');
           let itemId = jQuery(this).data("id");
           if (jQuery(this).hasClass("selected") && !e.shiftKey) {
             /* If the clicked item is already selected and no key is pressed, deselect it.*/
@@ -125,7 +124,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
             wrapper.find(".attachment").removeClass("selected");
             jQuery(this).addClass("selected");
           }
-          lastSelected = this; // Update last selected item
+          lastSelected = this; /* Update last selected item.*/
           if (wrapper.find(".attachment.selected").length) {
             jQuery(that).find(".media-button-select").removeAttr("disabled");
           }
@@ -170,14 +169,13 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
   jQuery(document).off("click", ".media-menu-item").on("click", ".media-menu-item", function () {
     if ( reacg.allowed_post_types.hasOwnProperty(jQuery(this).data("type")) ) {
       /* Reset images selection on tab change.*/
-      //wp.media.frames.file_frame.state().get("selection").reset();
       media_uploader.state().get('selection').reset();
       let media_modal = jQuery(this).closest(".media-modal-content");
       media_modal.find(".media-menu-item").removeClass("active").attr({"aria-selected": false, "tabindex": -1});
       jQuery(this).addClass("active").attr("aria-selected", true).removeAttr("tabindex");
       media_modal.find(".media-frame-content").html('<div class="reacg-posts-wrapper attachments-browser" data-type="' + jQuery(this).data("type") + '"><span class="spinner is-active"></span></div>');
 
-      reacg_get_posts(media_uploader, media_modal, '', images_ids, gallery_id);
+      reacg_get_posts(media_uploader, media_modal, "", images_ids, gallery_id);
     }
     else {
       /* Re-render the media frame content.*/
