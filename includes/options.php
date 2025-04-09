@@ -7,7 +7,7 @@ class REACG_Options {
     'template' => false, #boolean
     'template_id' => 0, #number
     'css' => '', #string
-    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | staggered
+    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
     'thumbnails' => [
       'width' => 250, #number
       'height' => 170, #number
@@ -119,12 +119,13 @@ class REACG_Options {
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
     ],
-    'staggered' => [
+    'blog' => [
       'imageWidth' => 50, #number
       'imageWidthType' => '%', #string % | px | vw | rem | em
       'imageHeight' => 400, #number
       'imageHeightType' => 'px', #string px | vh | rem | em
-      'spacing' => 0, #number
+      'imagePosition' => 'staggered', #string left | right | staggered
+      'spacing' => 10, #number
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
       'imageRadius' => 0, #number
@@ -264,7 +265,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'staggered' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'blog' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
@@ -334,6 +335,10 @@ class REACG_Options {
       'sizeTypeHeight' => [
         'allowed' => [ 'px', 'vh', 'rem', 'em' ],
         'default' => 'px',
+      ],
+      'imagePosition' => [
+        'allowed' => [ 'left', 'right', 'staggered' ],
+        'default' => 'staggered',
       ],
     ];
     if ( in_array($key, $number) ) {
