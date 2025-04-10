@@ -124,7 +124,7 @@ class REACG_Options {
       'imageWidthType' => '%', #string % | px | vw | rem | em
       'imageHeight' => 400, #number
       'imageHeightType' => 'px', #string px | vh | rem | em
-      'imagePosition' => 'staggered', #string left | right | staggered
+      'imagePosition' => 'staggered', #string left | right | staggered | listed
       'spacing' => 10, #number
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
@@ -337,7 +337,7 @@ class REACG_Options {
         'default' => 'px',
       ],
       'imagePosition' => [
-        'allowed' => [ 'left', 'right', 'staggered' ],
+        'allowed' => [ 'left', 'right', 'staggered', 'listed' ],
         'default' => 'staggered',
       ],
     ];
