@@ -3,9 +3,9 @@ Contributors: regallery, hakhakob, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.11.1
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -105,16 +105,17 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 5. Gallery view
 6. Gallery view
 7. Gallery view
-8. Image lightbox
-9. Gallery template
+8. Gallery view
+9. Image lightbox
 10. Gallery template
 11. Gallery template
 12. Gallery template
 13. Gallery template
 14. Gallery template
-15. Gallery edit page
-16. Gallery options
-17. Insert gallery
+15. Gallery template
+16. Gallery edit page
+17. Gallery options
+18. Insert gallery
 
 
 == Frequently Asked Questions ==
@@ -176,10 +177,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.11.1: Improved images load time in Masonry and Mosaic views. Enjoy free functionality and add your suggestions via WP forum.
+* 1.12.0: Added Blog view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.12.0 =
+= Updated: 11.04.2025 =
+* **Added:** Blog view.
+* **Added:** About Us, Travel Blog pre-built templates.
 
 = 1.11.1 =
 = Updated: 08.04.2025 =
