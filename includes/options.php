@@ -149,6 +149,7 @@ class REACG_Options {
       'textVerticalAlignment' => 'center', #string bottom | top | center
       'textHorizontalSpacing' => 35, #number
       'textVerticalSpacing' => 35, #number
+      'paginationType' => 'simple', #string simple | scroll | loadMore | none
     ],
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
