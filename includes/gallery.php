@@ -303,6 +303,9 @@ class REACG_Gallery {
   public function get_images( $gallery_id, $gallery_options = FALSE ) {
     $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
 
+    $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
+    $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
+
     $data = [];
     $images_ids_arr = [];
     $all_images_count = 0;
@@ -326,7 +329,7 @@ class REACG_Gallery {
           $dynamic_exists = TRUE;
           $post_type = str_replace('dynamic', '', $images_id);
 
-          $gallery_data = $this->get_posts( $gallery_id, $post_type );
+          $gallery_data = $this->get_posts( $gallery_id, $post_type, $order_by, $order );
           if ( !empty($gallery_data['posts']) ) {
             $exclude_without_image = !empty($gallery_data['additional_data']['exclude_without_image']);
             foreach ( $gallery_data['posts'] as $post ) {
@@ -393,8 +396,7 @@ class REACG_Gallery {
         });
       }
 
-      // Order the data by title or caption or description.
-      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
+      // Order the data.
       if ( in_array($order_by, array('title', 'caption', 'description', 'date')) ) {
           // For ascending order.
           usort($data, function($a, $b) use ($order_by) {
@@ -402,7 +404,6 @@ class REACG_Gallery {
           });
       }
 
-      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
       // For descending order.
       if ( $order == 'desc' ) {
         $data = array_reverse($data);
@@ -428,11 +429,25 @@ class REACG_Gallery {
     return ['images' => $data, 'count' => $all_images_count];
   }
 
-  private function get_posts($gallery_id, $post_type) {
+  /**
+   * Get posts.
+   *
+   * @param $gallery_id
+   * @param $post_type
+   * @param $order_by
+   * @param $order
+   *
+   * @return array
+   */
+  private function get_posts($gallery_id, $post_type, $order_by, $order) {
     $args = [
       'post_type' => $post_type,
       'posts_per_page' => -1,
     ];
+
+    // To match gallery order by values to posts order by values.
+    $args['orderby'] = str_replace(['default', 'caption', 'description'], ['ID', 'name', 'ID'], $order_by);
+    $args['order'] = $order;
 
     $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
     $additional_data_arr = [];
@@ -471,6 +486,9 @@ class REACG_Gallery {
             'compare' => 'EXISTS',
           ],
         ];
+      }
+      if ( !empty($additional_data_arr['count']) ) {
+        $args['posts_per_page'] = intval($additional_data_arr['count']);
       }
     }
 

@@ -73,7 +73,7 @@ class REACG_Posts {
     elseif ( $select_type === "dynamic" ) {
       $relation = ["or" => __("OR", "reacg"), "and" => __("AND", "reacg")];
 
-      $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0];
+      $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0, 'count' => 6];
       if ( !empty($additional_data) ) {
         $additional_data_arr = json_decode($additional_data, TRUE);
       }
@@ -117,7 +117,7 @@ class REACG_Posts {
           </div>
           <div>
             <label for="reacg_relation"><?php esc_html_e('Relation', 'reacg'); ?></label>
-            <select name="reacg_relation" id="reacg_relation" class="reacg_change_listener">
+            <select name="reacg_relation" id="reacg_relation" class="reacg_change_listener reacg_auto_width">
               <?php
               foreach ( $relation as $value => $name ) {
                 ?>
@@ -152,6 +152,29 @@ class REACG_Posts {
                    class="reacg_change_listener"
               <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?> />
             <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'reacg'), $type_title); ?></label>
+          </div>
+          <div>
+            <label><?php echo sprintf(__('%s count', 'reacg'), $type_title); ?></label>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('All', 'reacg'); ?>
+              <input type="radio"
+                     name="reacg_count_option"
+                     id="reacg_count_all"
+                     class="reacg_change_listener"
+                <?php checked(TRUE, empty($additional_data_arr['count'])); ?> />
+            </label>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('Custom', 'reacg'); ?>
+              <input type="radio"
+                     name="reacg_count_option"
+                     id="reacg_count_custom"
+                     class="reacg_change_listener"
+                <?php checked(TRUE, !empty($additional_data_arr['count'])); ?> />
+            </label>
+            <input type="number"
+                   name="reacg_count"
+                   id="reacg_count"
+                   min="1"
+                   class="reacg_change_listener <?php echo esc_html(empty($additional_data_arr['count']) ? 'reacg-invisible' : ''); ?>"
+                   value="<?php echo intval($additional_data_arr['count']); ?>" />
           </div>
         </div>
       </div>

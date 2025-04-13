@@ -161,6 +161,10 @@
   background-size: cover;
 }
 
+.reacg-invisible {
+  visibility: hidden;
+}
+
 /* Editor in the custom post type edit screen is not used, but added during post registration and hiding with CSS
 to avoid a bug connected with preview.
  */

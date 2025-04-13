@@ -23,6 +23,15 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
         });
       }
       else if ( select_type === "dynamic" ) {
+        wrapper.find("input[name='reacg_count_option']").off("change").on("change", function () {
+          if (jQuery('#reacg_count_custom').is(':checked')) {
+            jQuery('#reacg_count').removeClass('reacg-invisible').val(6);
+          }
+          else {
+            jQuery('#reacg_count').addClass('reacg-invisible').val(0);
+          }
+        });
+
         let selection = media_uploader.state().get('selection');
         /* Reset images selection on tab change.*/
         selection.reset();
@@ -38,6 +47,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
               taxonomies: wrapper.find("#reacg_taxanomies").val(),
               exclude: wrapper.find("#reacg_exclude").val(),
               exclude_without_image: wrapper.find("#reacg_exclude_without_image").is(':checked'),
+              count: wrapper.find("#reacg_count").val(),
             }
           }),
         ]);
@@ -57,6 +67,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
                 taxonomies: wrapper.find("#reacg_taxanomies").val(),
                 exclude: wrapper.find("#reacg_exclude").val(),
                 exclude_without_image: wrapper.find("#reacg_exclude_without_image").is(':checked'),
+                count: wrapper.find("#reacg_count").val(),
               }
             }),
           ]);

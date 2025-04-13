@@ -34,11 +34,14 @@
     width: 700px;
   }
   .reacg_dynamic_wrapper>div>div {
-    margin: 15px 0;
+    margin: 25px 0;
   }
   .reacg_dynamic_wrapper select {
     width: 100%;
     max-width: 100%;
+  }
+  .reacg_dynamic_wrapper .reacg_auto_width {
+    width: auto;
   }
   .reacg_dynamic_wrapper label {
     cursor: pointer;
@@ -50,8 +53,14 @@
   .reacg_dynamic_wrapper .reacg_inline_label {
     display: inline;
   }
+  .reacg_dynamic_wrapper .reacg_small_label {
+    font-weight: 400;
+  }
   .reacg_dynamic_wrapper input[type=checkbox] {
-    margin-top: 3px;
+    margin-top: 1px;
+  }
+  .reacg_dynamic_wrapper input[type=number] {
+    width: 60px;
   }
   .select2-container--default .select2-selection--multiple {
     padding: 0;
