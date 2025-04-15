@@ -36,45 +36,93 @@ jQuery(document).ready(function () {
     /* Save images on delete.*/
     reacg_save_images(galleryItemsContainer);
   });
+
   /* Bind an edit event to the every image item.*/
-  jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
+  jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
     let image_id = item.data("id");
     let type = item.data("type");
-
-    let media_uploader = wp.media( {
-      title: reacg.edit,
-      button: { text: reacg.update },
-      multiple: false
-    } );
-    media_uploader.on('open', function() {
-      if ( reacg.allowed_post_types.hasOwnProperty(type)
-        && String(image_id).includes("dynamic") ) {
+    
+    if ( reacg.allowed_post_types.hasOwnProperty(type)
+      && String(image_id).includes("dynamic") ) {
+      /* If dynamic is edited.*/
+      let media_uploader = wp.media({
+        title: reacg.edit,
+        button: {text: reacg.update},
+        multiple: false
+      });
+      media_uploader.on('open', function () {
         reacg_add_posts_tab(media_uploader, type.replace("dynamic", ""), galleryItemsContainer.data("post-id"));
-      }
-      else {
-        let selection = media_uploader.state().get('selection');
-        selection.add(wp.media.attachment(image_id));
-      }
-    });
-    media_uploader.on("close", function () {
-      media_uploader.remove();
-    });
-    media_uploader.open();
-    media_uploader.on( 'select', function () {
-      if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
-        let selected_images = media_uploader.state().get( 'selection' ).toJSON();
+      });
+      media_uploader.on('select', function () {
+        const selected_images = media_uploader.state().get('selection').toJSON();
         galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[0].additional_data));
         reacg_save_images(galleryItemsContainer);
+        media_uploader.remove();
+      });
+      media_uploader.on("close", function () {
+        media_uploader.remove();
+      });
+      media_uploader.open();
+    }
+    else {
+      /* If image or video edited.*/
+      if ( jQuery(this).attr('disabled') ) {
+        /* To prevent multiple clicks.*/
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
       }
-      else {
-        reacg_reload_preview();
-      }
-      media_uploader.remove();
-    });
 
+      jQuery(this).attr("disabled", true);
+      const that = this;
+      /* Fetch the attachment.*/
+      const attachment = wp.media.attachment(image_id);
+      attachment.fetch().then(function () {
+        jQuery(that).removeAttr("disabled");
+        /* Create a custom Attachments collection containing only the given image.*/
+        const attachments = new wp.media.model.Attachments([attachment], {
+          query: false
+        });
+        /* Create a custom state with that one image.*/
+        const LibraryState = wp.media.controller.Library.extend({
+          defaults: _.defaults({
+            id: 'custom-library',
+            title: reacg.edit,
+            toolbar: 'select',
+            filterable: false,
+            multiple: false,
+            library: attachments
+          }, wp.media.controller.Library.prototype.defaults)
+        });
+        /* Create the media frame with custom state.*/
+        const media_uploader = wp.media({
+          frame: 'select',
+          button: {text: reacg.update},
+          state: 'custom-library',
+          states: [
+            new LibraryState()
+          ]
+        });
+        media_uploader.on('open', function () {
+          /* Change the active tab to the Media Library.*/
+          jQuery('#menu-item-browse').trigger('click');
+
+          let selection = media_uploader.state().get('selection');
+          selection.add(wp.media.attachment(image_id));
+        });
+        media_uploader.on('select', function () {
+          reacg_reload_preview();
+          media_uploader.remove();
+        });
+        media_uploader.on('close', function () {
+          media_uploader.remove();
+        });
+        media_uploader.open();
+      });
+    }
   });
 
   /* Bind an edit thumbnail event to the every video item.*/

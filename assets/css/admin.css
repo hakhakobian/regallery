@@ -119,6 +119,11 @@
   margin-right: 5px;
 }
 
+.reacg-hover-buttons span[disabled] {
+  cursor: default !important;
+  opacity: 0.6;
+}
+
 .reacg_item_image:hover .reacg-cover {
   display: none;
 }
