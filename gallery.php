@@ -65,8 +65,10 @@ final class REACG {
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
     $this->allowed_post_types = [
-      ['type' => 'post', 'title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
-      ['type' => 'page', 'title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
+      'post' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
+      'page' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
+      'postdynamic' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post reacg-dynamic'],
+      'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
     ];
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
@@ -245,11 +247,13 @@ final class REACG {
       'wp-auth-check', // check all
     );
 
-    wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [], $this->version);
+    wp_register_style($this->prefix . '_select2', $this->plugin_url . '/assets/css/select2.min.css', [], '4.0.3');
+    wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [$this->prefix . '_select2'], $this->version);
     $required_styles[] = $this->prefix . '_posts';
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
 
-    wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [], $this->version);
+    wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3');
+    wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version);
     $required_scripts[] = $this->prefix . '_posts';
     wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_admin', 'reacg', array(

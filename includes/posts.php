@@ -9,37 +9,204 @@ class REACG_Posts {
     add_action('wp_ajax_reacg_get_posts', [$this, 'get_posts'] );
   }
 
+  private function get_taxonomies( $post_type, $saved_data ) {
+    // Organize saved data.
+    $saved_taxonomies = [];
+    foreach ( $saved_data as $data ) {
+      $term = explode(":", $data);
+      $term_taxonomy = isset($term[0]) ? $term[0] : '';
+      $term_id = isset($term[1]) ? $term[1] : 0;
+      $saved_taxonomies[$term_taxonomy][] = $term_id;
+    }
+
+    // Get taxonomy and terms by post type.
+    $taxonomies = get_object_taxonomies($post_type, 'objects');
+    $result = [];
+    foreach ( $taxonomies as $taxonomy ) {
+      $terms = get_terms([
+                           'taxonomy' => $taxonomy->name,
+                           'hide_empty' => TRUE,
+                         ]);
+      if ( !empty($terms) ) {
+        $result[$taxonomy->name] = [];
+        foreach ( $terms as $term ) {
+          $result[$taxonomy->name][] = [
+            'id' => $term->term_id,
+            'name' => $term->name,
+            'selected' => !empty($saved_taxonomies[$taxonomy->name]) && in_array($term->term_id, $saved_taxonomies[$taxonomy->name]),
+          ];
+        }
+      }
+    }
+
+    return $result;
+  }
+
   public function get_posts() {
     if ( !wp_verify_nonce($_GET[REACG_NONCE]) ) {
       wp_die();
     }
-    $s = !empty($_POST['s']) ? esc_sql($_POST['s']) : '';
-    $type_defaults = array_column(REACG_ALLOWED_POST_TYPES, 'type');
-    $type = !empty($_POST['type']) && in_array($_POST['type'], $type_defaults) ? esc_sql($_POST['type']) : 'post';
+    $select_type_defaults = ['manual', 'dynamic'];
+    $select_type = !empty($_POST['select_type']) && in_array($_POST['select_type'], $select_type_defaults) ? esc_sql($_POST['select_type']) : '';
 
-    $orderby_defaults = [
-      'date' => __('Date', 'reacg'),
-      'title' => __('Title', 'reacg'),
-      'comment_count' => __('Comment count', 'reacg'),
-      'menu_order' => __('Menu order', 'reacg'),
-    ];
-    $order_defaults = [
-      'ASC' => __('Ascending', 'reacg'),
-      'DESC' => __('Descending', 'reacg'),
-    ];
-    $orderby = !empty($_POST['orderby']) && array_key_exists($_POST['orderby'], $orderby_defaults) ? esc_sql($_POST['orderby']) : 'date';
-    $order = !empty($_POST['order']) && array_key_exists($_POST['order'], $order_defaults) ? esc_sql($_POST['order']) : 'DESC';
+    $type = !empty($_POST['type']) && array_key_exists($_POST['type'], REACG_ALLOWED_POST_TYPES) ? esc_sql($_POST['type']) : 'post';
+    $type_title = REACG_ALLOWED_POST_TYPES[$type]['title'];
 
-    $args = [
-      'post_type' => $type,
-      'post_status' => 'publish',
-      's' => $s,
-      'posts_per_page' => -1,
-      'orderby' => $orderby,
-      'order' => $order,
-    ];
+    $gallery_id = !empty($_POST['gallery_id']) ? intval($_POST['gallery_id']) : 0;
 
-    $query = new WP_Query($args);
+    $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
+
+    if ( empty($select_type) ) {
+      ob_end_clean();
+      ob_start();
+      ?>
+      <div class="reacg_select_type_wrapper">
+        <span class="spinner is-active"></span>
+        <div>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "reacg"); ?></button>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'reacg') : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
+        </div>
+      </div>
+      <?php
+      echo ob_get_clean();
+    }
+    elseif ( $select_type === "dynamic" ) {
+      $relation = ["or" => __("OR", "reacg"), "and" => __("AND", "reacg")];
+
+      $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0, 'count' => 6];
+      if ( !empty($additional_data) ) {
+        $additional_data_arr = json_decode($additional_data, TRUE);
+      }
+
+      $taxonomies = $this->get_taxonomies($type, $additional_data_arr['taxonomies']);
+
+      $args = [
+        'post_type' => $type,
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+      ];
+      $posts = get_posts($args);
+
+      ob_end_clean();
+      ob_start();
+      ?>
+      <div class="reacg_dynamic_wrapper">
+        <div>
+          <div>
+            <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'reacg'); ?></label>
+            <select multiple="multiple" name="reacg_taxanomies[]" id="reacg_taxanomies" class="reacg_searchable_select reacg_change_listener"  style="width: 100%">
+              <?php
+              foreach ( $taxonomies as $taxonomy => $terms ) {
+                ?>
+                <optgroup label="<?php echo esc_html(ucfirst(str_replace("_", "", $taxonomy))); ?>">
+                  <?php
+                  foreach ( $terms as $term ) {
+                    $value = $taxonomy . ":" . $term['id'];
+                    $title = $term['name'];
+                    ?>
+                    <option
+                      value="<?php echo esc_attr($value); ?>" <?php selected(TRUE, $term['selected']); ?>><?php echo esc_html($title); ?></option>
+                    <?php
+                  }
+                  ?>
+                </optgroup>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <label for="reacg_relation"><?php esc_html_e('Relation', 'reacg'); ?></label>
+            <select name="reacg_relation" id="reacg_relation" class="reacg_change_listener reacg_auto_width">
+              <?php
+              foreach ( $relation as $value => $name ) {
+                ?>
+                <option
+                  value="<?php echo esc_attr($value); ?>" <?php selected($value, $additional_data_arr['relation']); ?>><?php echo esc_html($name); ?></option>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'reacg'), $type_title); ?></label>
+            <select multiple="multiple" name="reacg_exclude" id="reacg_exclude" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
+              <?php
+              foreach ( $posts as $post ) {
+                $title = get_the_title($post->ID);
+                if ( empty($title) ) {
+                  $title = __('(no title)', 'reacg');
+                }
+                ?>
+                <option
+                  value="<?php echo intval($post->ID); ?>" <?php selected(TRUE, in_array($post->ID, $additional_data_arr['exclude'])); ?>><?php echo esc_html($title); ?></option>
+                <?php
+              }
+              ?>
+            </select>
+          </div>
+          <div>
+            <input type="checkbox"
+                   name="reacg_exclude_without_image"
+                   id="reacg_exclude_without_image"
+                   class="reacg_change_listener"
+              <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?> />
+            <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'reacg'), $type_title); ?></label>
+          </div>
+          <div>
+            <label><?php echo sprintf(__('%s count', 'reacg'), $type_title); ?></label>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('All', 'reacg'); ?>
+              <input type="radio"
+                     name="reacg_count_option"
+                     id="reacg_count_all"
+                     class="reacg_change_listener"
+                <?php checked(TRUE, empty($additional_data_arr['count'])); ?> />
+            </label>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('Custom', 'reacg'); ?>
+              <input type="radio"
+                     name="reacg_count_option"
+                     id="reacg_count_custom"
+                     class="reacg_change_listener"
+                <?php checked(TRUE, !empty($additional_data_arr['count'])); ?> />
+            </label>
+            <input type="number"
+                   name="reacg_count"
+                   id="reacg_count"
+                   min="1"
+                   class="reacg_change_listener <?php echo esc_html(empty($additional_data_arr['count']) ? 'reacg-invisible' : ''); ?>"
+                   value="<?php echo intval($additional_data_arr['count']); ?>" />
+          </div>
+        </div>
+      </div>
+      <?php
+      echo ob_get_clean();
+    }
+    elseif ( $select_type === "manual" ) {
+      $s = !empty($_POST['s']) ? esc_sql($_POST['s']) : '';
+
+      $orderby_defaults = [
+        'date' => __('Date', 'reacg'),
+        'title' => __('Title', 'reacg'),
+        'comment_count' => __('Comment count', 'reacg'),
+        'menu_order' => __('Menu order', 'reacg'),
+      ];
+      $order_defaults = [
+        'ASC' => __('Ascending', 'reacg'),
+        'DESC' => __('Descending', 'reacg'),
+      ];
+      $orderby = !empty($_POST['orderby']) && array_key_exists($_POST['orderby'], $orderby_defaults) ? esc_sql($_POST['orderby']) : 'date';
+      $order = !empty($_POST['order']) && array_key_exists($_POST['order'], $order_defaults) ? esc_sql($_POST['order']) : 'DESC';
+
+      $args = [
+        'post_type' => $type,
+        'post_status' => 'publish',
+        's' => $s,
+        'posts_per_page' => -1,
+        'orderby' => $orderby,
+        'order' => $order,
+      ];
+
+      $query = new WP_Query($args);
 
       ob_start();
       ?>
@@ -122,6 +289,7 @@ class REACG_Posts {
       <?php
       echo ob_get_clean();
       wp_reset_postdata();
+    }
 
     wp_die();
   }

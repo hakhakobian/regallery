@@ -19,8 +19,14 @@ jQuery(document).ready(function () {
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be deleted.*/
     let image_id = item.data("id");
-    if ( item.data("type") === "video" ) {
+    let type = item.data("type");
+    if ( type === "video" ) {
       reacg_remove_thumbnail(galleryItemsContainer, image_id);
+    }
+    else if ( reacg.allowed_post_types.hasOwnProperty(type)
+      && String(image_id).includes("dynamic") ) {
+      /* Reset additional data on dynamic gallery delete.*/
+      galleryItemsContainer.find(".additional_data").val("");
     }
     item.remove();
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
@@ -32,26 +38,91 @@ jQuery(document).ready(function () {
   });
 
   /* Bind an edit event to the every image item.*/
-  jQuery(document).on("click", ".reacg_item .reacg-edit", function () {
+  jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
     let item = jQuery(this).closest(".reacg_item");
+    const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
     let image_id = item.data("id");
     let type = item.data("type");
+    
+    if ( reacg.allowed_post_types.hasOwnProperty(type)
+      && String(image_id).includes("dynamic") ) {
+      /* If dynamic is edited.*/
+      let media_uploader = wp.media({
+        title: reacg.edit,
+        button: {text: reacg.update},
+        multiple: false
+      });
+      media_uploader.on('open', function () {
+        reacg_add_posts_tab(media_uploader, type.replace("dynamic", ""), galleryItemsContainer.data("post-id"));
+      });
+      media_uploader.on('select', function () {
+        const selected_images = media_uploader.state().get('selection').toJSON();
+        galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[0].additional_data));
+        reacg_save_images(galleryItemsContainer);
+        media_uploader.remove();
+      });
+      media_uploader.on("close", function () {
+        media_uploader.remove();
+      });
+      media_uploader.open();
+    }
+    else {
+      /* If image or video edited.*/
+      if ( jQuery(this).attr('disabled') ) {
+        /* To prevent multiple clicks.*/
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
 
-    let media_uploader = wp.media( {
-      title: reacg.edit,
-      button: { text: reacg.update },
-      multiple: false
-    } );
-    media_uploader.on('open', function() {
-      let selection = media_uploader.state().get('selection');
-      selection.add(wp.media.attachment(image_id));
-    });
-    media_uploader.open();
-    media_uploader.on( 'select', function () {
-      reacg_reload_preview();
-      media_uploader.close();
-    });
+      jQuery(this).attr("disabled", true);
+      const that = this;
+      /* Fetch the attachment.*/
+      const attachment = wp.media.attachment(image_id);
+      attachment.fetch().then(function () {
+        jQuery(that).removeAttr("disabled");
+        /* Create a custom Attachments collection containing only the given image.*/
+        const attachments = new wp.media.model.Attachments([attachment], {
+          query: false
+        });
+        /* Create a custom state with that one image.*/
+        const LibraryState = wp.media.controller.Library.extend({
+          defaults: _.defaults({
+            id: 'custom-library',
+            title: reacg.edit,
+            toolbar: 'select',
+            filterable: false,
+            multiple: false,
+            library: attachments
+          }, wp.media.controller.Library.prototype.defaults)
+        });
+        /* Create the media frame with custom state.*/
+        const media_uploader = wp.media({
+          frame: 'select',
+          button: {text: reacg.update},
+          state: 'custom-library',
+          states: [
+            new LibraryState()
+          ]
+        });
+        media_uploader.on('open', function () {
+          /* Change the active tab to the Media Library.*/
+          jQuery('#menu-item-browse').trigger('click');
+
+          let selection = media_uploader.state().get('selection');
+          selection.add(wp.media.attachment(image_id));
+        });
+        media_uploader.on('select', function () {
+          reacg_reload_preview();
+          media_uploader.remove();
+        });
+        media_uploader.on('close', function () {
+          media_uploader.remove();
+        });
+        media_uploader.open();
+      });
+    }
   });
 
   /* Bind an edit thumbnail event to the every video item.*/
@@ -67,6 +138,9 @@ jQuery(document).ready(function () {
       button: { text: reacg.update_thumbnail },
       multiple: false
     } );
+    media_uploader.on("close", function () {
+      media_uploader.remove();
+    });
     media_uploader.open();
     media_uploader.on( 'select', function () {
       let selected_image = media_uploader.state().get('selection').toJSON();
@@ -84,7 +158,7 @@ jQuery(document).ready(function () {
         item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
       }
 
-      media_uploader.close();
+      media_uploader.remove();
     } );
   });
 });
@@ -193,17 +267,17 @@ function reacg_check_images(images_ids) {
  * @param images_ids
  */
 function reacg_check_image(images_ids) {
-  // Select the container for images inside the media modal for the current uploader.
+  /* Select the container for images inside the media modal for the current uploader.*/
   let container = jQuery('.media-frame-content .attachments:visible');
   if ( container.length > 0 ) {
-    // Create a MutationObserver to watch for changes in the container.
+    /* Create a MutationObserver to watch for changes in the container.*/
     let observer = new MutationObserver(function (mutationsList) {
-      // Check if the .attachment container is added to the DOM.
+      /* Check if the .attachment container is added to the DOM.*/
       let attachmentContainer = container.find('.attachment');
       if ( attachmentContainer.length > 0 ) {
-        // Attach load event listener to its images.
+        /* Attach load event listener to its images.*/
         attachmentContainer.find('img').one('load', function () {
-          // Disable the image if it is already inserted into the gallery.
+          /* Disable the image if it is already inserted into the gallery.*/
           if ( jQuery.inArray(jQuery(this).closest("li").data("id"), images_ids) !== -1 ) {
             jQuery(this).closest("li").attr("title", "Already added").addClass("reacg-already-added");
             jQuery(this).closest("li").find(".thumbnail").on("click", function (e) {
@@ -215,11 +289,11 @@ function reacg_check_image(images_ids) {
             jQuery(this).trigger('load');
           }
         });
-        // Stop observing mutations once the container is found.
+        /* Stop observing mutations once the container is found.*/
         observer.disconnect();
       }
     });
-    // Start observing mutations in the container
+    /* Start observing mutations in the container.*/
     observer.observe(container[0], {childList: true, subtree: true});
   }
 }
@@ -238,32 +312,37 @@ function reacg_media_uploader( e, that ) {
   let media_uploader = wp.media.frames.file_frame = wp.media( {
     title: reacg.choose_images,
     button: { text: reacg.insert },
-    multiple: true
+    multiple: 'add'
   } );
 
-  // Disable the images which are already added to the gallery.
+  /* Disable the images which are already added to the gallery.*/
   media_uploader.on('open', function () {
-    // Get the added images.
+    /* Get the added images.*/
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
 
-    reacg_add_posts_tab(images_ids);
+    reacg_add_posts(media_uploader, images_ids, galleryItemsContainer.data("post-id"));
 
-    // On clicking Media library tab inside the uploader.
+    /* On clicking Media library tab inside the uploader.*/
     jQuery(document).on("click", ".media-menu-item", function () {
-      // When images are already loaded (e.g. opening after closing the uploader).
+      /* When images are already loaded (e.g. opening after closing the uploader).*/
       reacg_check_images(images_ids);
-      // When images are not loaded (e.g. opening first time).
+      /* When images are not loaded (e.g. opening first time).*/
       reacg_check_image(images_ids);
     });
 
-    // On clicking load more button in the uploader.
+    /* On clicking load more button in the uploader.*/
     jQuery(document).on("click", ".load-more-wrapper .load-more", function () {
       reacg_check_image(images_ids);
     });
 
-    // On opening Media library tab when images are not loaded.
+    /* On opening Media library tab when images are not loaded.*/
     reacg_check_image(images_ids);
   });
+
+  media_uploader.on("close", function () {
+    media_uploader.remove();
+  });
+
   media_uploader.open();
 
   media_uploader.on( 'select', function () {
@@ -278,34 +357,40 @@ function reacg_media_uploader( e, that ) {
       let type = selected_images[key].type;
       let thumbnail_url = reacg.no_image;
       if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
-        // If there is thumbnail for the video and it is not a default image (video.png/video.svg)
+        /* If there is thumbnail for the video and it is not a default image (video.png/video.svg)*/
         if ( selected_images[key].thumb.src.search("media/video.") === -1 )  {
           thumbnail_url = selected_images[key].thumb.src;
         }
-        type = "video";
       }
-      else if ( typeof sizes.thumbnail !== 'undefined' ) {
-        thumbnail_url = sizes.thumbnail.url;
-      }
-      else if ( typeof sizes.full.url !== 'undefined' ) {
-        thumbnail_url = sizes.full.url;
+      else if ( sizes ) {
+        if (typeof sizes.thumbnail !== 'undefined') {
+          thumbnail_url = sizes.thumbnail.url;
+        }
+        else if (sizes.full && typeof sizes.full.url !== 'undefined') {
+          thumbnail_url = sizes.full.url;
+        }
       }
 
       let image_id = selected_images[key].id;
 
       /* Add an image to the gallery, if it doesn't already exist.*/
       if ( jQuery.inArray(image_id, images_ids) === -1 ) {
-        let post_type = reacg.allowed_post_types.find(item => item.type === selected_images[key].type);
         /* Add selected image to the existing list of visual items.*/
         let clone = galleryItemsContainer.find(".reacg-template").clone();
         if ( type === "video" ) {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
           clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons dashicons-controls-play");
         }
-        else if ( post_type ) {
+        else if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
           /* Any of the allowed post types.*/
-          clone.find(".reacg-edit").addClass("reacg-hidden");
-          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + post_type.class);
+          if ( String(image_id).includes("dynamic") ) {
+            thumbnail_url = "";
+            galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[key].additional_data));
+          }
+          else {
+            clone.find(".reacg-edit").addClass("reacg-hidden");
+          }
+          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + reacg.allowed_post_types[type]['class']);
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
@@ -323,7 +408,7 @@ function reacg_media_uploader( e, that ) {
     /* Save the images.*/
     reacg_save_images(galleryItemsContainer);
 
-    media_uploader.close();
+    media_uploader.remove();
   } );
 }
 
@@ -341,6 +426,7 @@ function reacg_save_images(galleryItemsContainer) {
       "action": "reacg_save_images",
       "post_id": galleryItemsContainer.data("post-id"),
       "images_ids": reacg_get_image_ids(galleryItemsContainer, false),
+      "additional_data": galleryItemsContainer.find(".additional_data").val(),
       "gallery_timestamp": Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
     },
     complete: function (data) {
