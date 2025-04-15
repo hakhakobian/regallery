@@ -307,7 +307,6 @@ class REACG_Gallery {
     $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
 
     $data = [];
-    $images_ids_arr = [];
     $all_images_count = 0;
     if ( !empty($images_ids) ) {
       $images_ids_arr = json_decode($images_ids, TRUE);
@@ -873,7 +872,7 @@ class REACG_Gallery {
    *
    * @param $id
    *
-   * @return
+   * @return array|array[]|false
    */
   private function get_item_data($id) {
     if ( strpos($id, "dynamic") !== FALSE ) {
