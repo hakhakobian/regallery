@@ -64,12 +64,8 @@ final class REACG {
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
     $this->main_file = plugin_basename(__FILE__);
-    $this->allowed_post_types = [
-      'post' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
-      'page' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
-      'postdynamic' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post reacg-dynamic'],
-      'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
-    ];
+
+    add_action('init', array($this, 'define_translatable_constants'));
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
@@ -82,7 +78,6 @@ final class REACG {
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
-    define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
   }
 
   /**
@@ -119,6 +114,21 @@ final class REACG {
 
     require_once ($this->plugin_dir . '/includes/admin-notices.php');
     new REACG_Admin_Notices();
+  }
+
+  /**
+   * Translations should be loaded at the init.
+   *
+   * @return void
+   */
+  public function define_translatable_constants() {
+    $this->allowed_post_types = [
+      'post' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
+      'page' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
+      'postdynamic' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post reacg-dynamic'],
+      'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
+    ];
+    define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
   }
 
   /**
