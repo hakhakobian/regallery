@@ -312,7 +312,7 @@ function reacg_media_uploader( e, that ) {
   let media_uploader = wp.media.frames.file_frame = wp.media( {
     title: reacg.choose_images,
     button: { text: reacg.insert },
-    multiple: true
+    multiple: 'add'
   } );
 
   /* Disable the images which are already added to the gallery.*/

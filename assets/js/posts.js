@@ -131,8 +131,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
             jQuery(this).toggleClass("selected");
           }
           else {
-            /* If no key is pressed, select only the clicked item.*/
-            wrapper.find(".attachment").removeClass("selected");
+            /* If no key is pressed, select the clicked item.*/
             jQuery(this).addClass("selected");
           }
           lastSelected = this; /* Update last selected item.*/
