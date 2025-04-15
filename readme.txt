@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.12.1
+Stable tag: 1.12.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,10 +177,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.12.1: Fixed issue with selecting Blog templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.12.2: Added ability to dynamically add posts and pages. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.12.2 =
+= Updated: 16.04.2025 =
+* **Added:** Ability to dynamically add posts and pages.
+* **Improved:** Image selection in the media library now allows multiple selections without holding down the Control key.
+* **Fixed:** Resolved an issue where the lightbox opened the incorrect image when pagination was enabled and the gallery order was customized.
+* **Fixed:** Wrong image opening during editing image info.
 
 = 1.12.1 =
 = Updated: 12.04.2025 =
