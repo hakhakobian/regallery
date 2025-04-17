@@ -13,11 +13,16 @@ class REACG_Gallery {
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_menu', [ $this, 'modify_external_submenu_url'], 999);
+
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'custom_columns' ]);
     add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
     add_filter('manage_edit-' . $this->post_type . '_sortable_columns', [ $this, 'make_images_count_column_sortable' ]);
     add_action('pre_get_posts', [ $this, 'images_count_column_orderby' ]);
+
+    // Add duplicate link to the list.
+    add_filter('post_row_actions', [$this, 'duplicate_link'], 10, 2 );
+    add_action('admin_action_reacg_duplicate_gallery', [ $this, 'duplicate_gallery' ]);
 
     add_action('save_post', [ $this, 'save_post' ], 10, 2);
     add_action('delete_post', [ $this, 'delete_post' ], 10, 2);
@@ -274,6 +279,85 @@ class REACG_Gallery {
         ?><code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post_id)); ?></code><?php
         break;
       }
+    }
+  }
+
+  /**
+   * Add a Duplicate link to the quick actions list.
+   *
+   * @param $actions
+   * @param $post
+   *
+   * @return mixed
+   */
+  public function duplicate_link( $actions, $post ) {
+    if ( current_user_can( 'edit_posts' ) && $post->post_type === $this->post_type ) {
+      $url = wp_nonce_url(
+        admin_url( 'admin.php?action=reacg_duplicate_gallery&post=' . $post->ID ),
+        -1,
+        REACG_NONCE
+      );
+
+      $title = sprintf(__('Duplicate “%s”', 'reacg'), empty( $post->post_title ) ? __('(no title)', 'reacg') : $post->post_title);
+
+      $actions['duplicate'] = '<a href="' . esc_url( $url ) . '" title="' . esc_html($title) . '" aria-label="' . esc_html($title) . '">' . esc_html__('Duplicate', 'reacg') . '</a>';
+    }
+
+    return $actions;
+  }
+
+  /**
+   * Duplicate the gallery.
+   *
+   * @return void
+   */
+  public function duplicate_gallery() {
+    if ( !isset($_GET[REACG_NONCE]) || !wp_verify_nonce($_GET[REACG_NONCE]) ) {
+      return;
+    }
+
+    if ( !isset($_GET['post']) ) {
+      wp_die('No gallery to duplicate has been provided!');
+    }
+
+    $post_id = intval($_GET['post']);
+
+    $post = get_post($post_id);
+    if ( !empty($post) ) {
+      $new_post = array(
+        'post_title' => $post->post_title . ' ' . __('(Copy)', 'reacg'),
+        'post_content' => $post->post_content,
+        'post_status' => 'draft',
+        'post_type' => $post->post_type,
+        'post_author' => get_current_user_id(),
+      );
+      $new_post_id = wp_insert_post($new_post);
+      if ( $new_post_id && !is_wp_error($new_post_id) ) {
+        // Copy taxonomy terms.
+        $taxonomies = get_object_taxonomies($post->post_type);
+        foreach ( $taxonomies as $taxonomy ) {
+          $post_terms = wp_get_object_terms($post_id, $taxonomy, array( 'fields' => 'slugs' ));
+          wp_set_object_terms($new_post_id, $post_terms, $taxonomy, FALSE);
+        }
+
+        // Copy post meta.
+        $post_meta = get_post_meta($post_id);
+        foreach ( $post_meta as $meta_key => $meta_values ) {
+          foreach ( $meta_values as $meta_value ) {
+            add_post_meta($new_post_id, $meta_key, maybe_unserialize($meta_value));
+          }
+        }
+
+        // Copy options.
+        add_option('reacg_options' . $new_post_id, get_option('reacg_options' . $post_id, FALSE));
+      }
+
+      // Redirect to the edit screen.
+      wp_redirect(admin_url('edit.php?post_type=' . $this->post_type));
+      exit;
+    }
+    else {
+      wp_die('Gallery creation failed, could not find original gallery.');
     }
   }
 
