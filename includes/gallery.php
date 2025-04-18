@@ -492,8 +492,17 @@ class REACG_Gallery {
         $data = array_reverse($data);
       }
 
+      $per_page = '';
       $views_with_pagination = ['thumbnails', 'mosaic', 'masonry'];
-      $per_page = !empty($gallery_options['general']['itemsPerPage']) && in_array($gallery_options['type'], $views_with_pagination) && !empty($gallery_options[$gallery_options['type']]['paginationType']) && $gallery_options[$gallery_options['type']]['paginationType'] !== 'none' ? sanitize_text_field($gallery_options['general']['itemsPerPage']) : (isset($_GET['per_page']) ? sanitize_text_field($_GET['per_page']) : '');
+      if ( !empty($gallery_options['general']['itemsPerPage'])
+        && in_array($gallery_options['type'], $views_with_pagination)
+        && !empty($gallery_options[$gallery_options['type']]['paginationType'])
+        && $gallery_options[$gallery_options['type']]['paginationType'] !== 'none' ) {
+        $per_page = sanitize_text_field($gallery_options['general']['itemsPerPage']);
+      }
+      elseif ( !empty($_GET['per_page']) ) {
+        $per_page = sanitize_text_field($_GET['per_page']);
+      }
       // Run pagination on the data.
       if ( !empty($per_page) ) {
         $per_page = (int) $per_page;
