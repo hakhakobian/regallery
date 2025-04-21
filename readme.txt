@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.12.2
+Stable tag: 1.12.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,10 +177,20 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.12.2: Added ability to dynamically add posts and pages. Enjoy free functionality and add your suggestions via WP forum.
+* 1.12.3: Added gallery duplication functionality. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.12.3 =
+= Updated: 22.04.2025 =
+* **Added:** Gallery duplication functionality.
+* **Added:** New Overlay icon option for Hover effect.
+* **Added:** Simple Prism pre-built template.
+* **Fixed:** Issue where not all images loaded when pagination was disabled.
+* **Fixed:** Issue where videos in Blog view were not playing correctly on Safari.
+* **Fixed:** Prevented unintended onload animations with enabled Hover effects.
+* **Fixed:** Spacing issues in Prism Pattern, PolyGrid, and Hive Lens templates.
 
 = 1.12.2 =
 = Updated: 16.04.2025 =
