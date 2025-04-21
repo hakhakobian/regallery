@@ -713,6 +713,16 @@ class REACG_Gallery {
       update_post_meta($post_id, 'additional_data', $additional_data);
     }
 
+    if ( isset($_POST['css']) ) {
+      $options = get_option('reacg_options' . $post_id, FALSE);
+      if ( !empty($options) ) {
+        $data = json_decode($options, TRUE);
+        $data['custom_css'] = stripslashes(sanitize_text_field($_POST['custom_css']));
+        $data['custom_css'] = preg_replace('/\s+/', ' ', $data['custom_css']);
+        update_option('reacg_options' . $post_id, json_encode($data));
+      }
+    }
+
     remove_action( 'save_post', [ $this, 'save_post' ] );
     // Save the shortcode as the post content.
     wp_update_post([
@@ -826,6 +836,8 @@ class REACG_Gallery {
 
     // Metabox to display the available publishing methods.
     add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'default' );
+
+    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg'), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
   }
 
   public function meta_box_preview($post) {
@@ -887,6 +899,30 @@ class REACG_Gallery {
     <p class="reacg_shortcode">
       <code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post->ID)); ?></code>
     </p>
+    <?php
+  }
+
+  /**
+   * Add meta box for adding Custom CSS.
+   *
+   * @param $post
+   *
+   * @return void
+   */
+  public function meta_box_custom_css($post) {
+    $css = "";
+    $options = get_option('reacg_options' . $post->ID, FALSE);
+    if ( !empty($options) ) {
+      $data = json_decode($options, TRUE);
+      if ( !empty($data['custom_css']) ) {
+        $css = $data['custom_css'];
+        $css = preg_replace('/;/', ";\n ", $css); // Add newline after each semicolon
+        $css = preg_replace('/{/', " {\n ", $css); // Add newline and indentation after each opening brace
+        $css = preg_replace('/ }/', "}\n", $css); // Add newline before and after each closing brace
+      }
+    }
+    ?>
+    <textarea name="custom_css" cols="35" rows="20"><?php echo esc_attr($css); ?></textarea>
     <?php
   }
 
