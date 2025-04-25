@@ -273,6 +273,7 @@ final class REACG {
       'edit' => __('Edit', 'reacg'),
       'edit_thumbnail' => __('Edit video cover', 'reacg'),
       'choose_images' => __('Choose images', 'reacg'),
+      'generate_description' => __('Generate description', 'reacg'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,

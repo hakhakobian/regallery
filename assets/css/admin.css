@@ -208,3 +208,19 @@ to avoid a bug connected with preview.
   box-shadow: none;
   outline: none;
 }
+
+.reacg-ai-button {
+  background: #FFC54D;
+  border: #FFC54D;
+  border-radius: 3px;
+  padding: 3px 7px 1px;
+  margin: 2px;
+  cursor: pointer;
+}
+[data-setting="description"] .reacg-ai-button svg {
+  width: 18px;
+  height: 18px;
+}
+.reacg-float-none {
+  float: none !important;
+}
