@@ -517,9 +517,10 @@ class REACG_Options {
     // Get options for the gallery.
     $options = get_option($this->name . $gallery_id, FALSE);
 
-
-    // Get default options if the gallery options do not exist.
-    if ( $options === FALSE ) {
+    // Get default options
+    // if the gallery options do not exist
+    // or fetching direct with gallery ID 0 on selecting Default template.
+    if ( $options === FALSE || !$gallery_id ) {
       $options = get_option($this->name, FALSE);
     }
 
