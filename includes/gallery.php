@@ -426,7 +426,8 @@ class REACG_Gallery {
               $item['action_url'] = esc_url(get_permalink($post->ID));
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = html_entity_decode(get_the_title($post->ID));
-              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_content)), 50, '...'));
+              $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
+              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 50, '...'));
               $item['date'] = $post->post_date;
               $data[] = $item;
             }
