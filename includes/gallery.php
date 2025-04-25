@@ -836,7 +836,7 @@ class REACG_Gallery {
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
 
     // Metabox to display the available publishing methods.
-    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'default' );
+    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'high' );
 
     add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg'), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
     add_filter( 'default_hidden_meta_boxes', [$this, 'hide_custom_css_meta_box_by_default'], 10, 2 );
