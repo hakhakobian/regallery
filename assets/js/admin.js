@@ -165,57 +165,152 @@ jQuery(document).ready(function () {
   reacg_add_ai_button_to_uploader();
 });
 
-function reacg_ai_button(title) {
-  return jQuery('<button class="reacg-ai-button" title="' + title + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+function reacg_ai_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
     '<path fill="#FFFFFF" d="m19.026,12v6c0,.552-.448,1-1,1s-1-.448-1-1v-6c0-.552.448-1,1-1s1,.448,1,1Zm-7.42-5.283l3.071,11.029c.175.63-.298,1.254-.953,1.254-.443,0-.831-.294-.952-.72l-.643-2.28h-5.206l-.643,2.28c-.12.426-.509.72-.952.72h0c-.654,0-1.128-.624-.953-1.254l3.091-11.108c.141-.608.541-1.12,1.098-1.405.568-.292,1.22-.31,1.839-.05.587.246,1.037.817,1.204,1.535Zm-.041,7.283l-1.929-6.835c-.029-.114-.191-.114-.219,0l-1.929,6.835h4.077Zm11.462-4c-.552,0-1,.448-1,1v8c0,1.654-1.346,3-3,3H5.026c-1.654,0-3-1.346-3-3V5c0-1.654,1.346-3,3-3h8c.552,0,1-.448,1-1S13.578,0,13.026,0H5.026C2.269,0,.026,2.243.026,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5v-8c0-.552-.448-1-1-1Zm-6.85-4.82l1.868.787.745,1.865c.161.404.552.668.987.668s.825-.265.987-.668l.741-1.854,1.854-.741c.404-.161.668-.552.668-.987s-.265-.825-.668-.987l-1.854-.741-.741-1.854C20.601.265,20.21,0,19.776,0s-.825.265-.987.668l-.737,1.843-1.84.697c-.406.154-.678.54-.686.974-.008.435.25.83.65.999Z"/>' +
-    '</svg></button>');
+    '</svg>'
+}
+
+function reacg_info_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,21a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Z"/><path d="M11.545,9.545h-.3A1.577,1.577,0,0,0,9.64,10.938,1.5,1.5,0,0,0,11,12.532v4.65a1.5,1.5,0,0,0,3,0V12A2.455,2.455,0,0,0,11.545,9.545Z"/><path d="M11.83,8.466A1.716,1.716,0,1,0,10.114,6.75,1.715,1.715,0,0,0,11.83,8.466Z"/></svg>';
+}
+
+function reacg_ai_button(title) {
+  return jQuery('<button class="reacg-ai-button" title="' + title + '">' + reacg_ai_icon() + '</button>');
+}
+
+function reacg_modal() {
+  return jQuery('' +
+    '<div class="reacg-modal" style="display:none;">' +
+    '<div class="reacg-modal-wrapper">' +
+    '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+    '<div class="reacg-modal-content">' +
+    '<h1>Generative AI Description</h1>' +
+    '<div>' +
+    '<p class="reacg-modal-note">' + reacg_info_icon() + 'The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.</p>' +
+    '</div>' +
+    '<div>' +
+    '<label for="reacg-notes">Additional Notes:</label>' +
+    '<textarea class="reacg-notes" id="reacg-notes" rows="2" placeholder="You can add additional notes here to help generate a more accurate image description."></textarea>' +
+    '</div>' +
+    '<div>' +
+    '<label for="ai-notes">Generated Description:</label>' +
+    '<textarea class="reacg-generated_description" rows="5" disabled="disabled"></textarea>' +
+    '</div>' +
+    '<div class="reacg-modal-buttons-wrapper">' +
+    '<span class="spinner"></span>' +
+    '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + 'Generate</button>' +
+    '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">Proceed</button>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>');
+}
+
+function reacg_close_modal(modal) {
+  modal.hide();
+  modal.find(".reacg-modal-button-generate").html(reacg_ai_icon() + "Generate");
+  modal.find(".reacg-modal-button-proceed").attr("disabled", "disabled");
+  modal.find(".reacg-generated_description").attr("disabled", "disabled");
+  modal.find(".reacg-generated_description").val("");
+  modal.find(".reacg-notes").val("");
 }
 
 function reacg_add_ai_button_to_uploader() {
   wp.media.view.Attachment.Details.prototype.render = _.wrap(wp.media.view.Attachment.Details.prototype.render, function(render) {
     render.apply(this, _.rest(arguments));
 
-    if ( !this.$el.find('.reacg-ai-button').length ) {
+    const title_cont = this.$el.find('[data-setting="title"]');
+    /* Remove required notice on filling.*/
+    title_cont.find("input").on("keyup", function() {
+      if ( jQuery(this).val() !== "" ) {
+        title_cont.next(".description.required").remove();
+      }
+    });
+
+    if ( !this.$el.find('[data-setting="description"] .reacg-ai-button').length ) {
+      /* Create an AI button.*/
       const button = reacg_ai_button(reacg.generate_description);
       const spinner = '<span class="spinner reacg-float-none"></span>';
 
       this.$el.find('[data-setting="description"] label').after(button, spinner);
+      const spinnerCont = this.$el.find('[data-setting="description"] spinner');
       const that = this.$el;
 
       button.on('click', function() {
-        const button = jQuery(this);
-        const title = jQuery(that).find('[data-setting="title"] input').val();
-        const descriptionField = jQuery(that).find('[data-setting="description"] textarea');
-        const spinnerCont = jQuery(this).parent().find(".spinner");
         spinnerCont.addClass("is-active");
-        descriptionField.attr("disabled", "disabled");
-        button.attr("disabled", "disabled");
+        /* Add notification if title is empty.*/
+        const title = title_cont.find("input").val();
+        if ( !title ) {
+          spinnerCont.removeClass("is-active");
+          title_cont.next(".description.required").remove();
+          title_cont.after("<span class='description required'>Title is required. Make sure it accurately describes the image.</span>");
+          title_cont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          title_cont.find("input").focus();
+          return;
+        }
 
-        // Perform AJAX request to generate AI description
-        jQuery.ajax({
-          type: "GET",
-          //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
-          url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
-          contentType: "application/json",
-          data: {
-            "title": title,
-            "action": "get_description",
-          },
-          complete: function (response) {
-            spinnerCont.removeClass("is-active");
-            descriptionField.removeAttr("disabled");
-            button.removeAttr("disabled");
-            if ( response.status === 204 ) {
+        /* Create modal if not exist and open.*/
+        if ( !jQuery(this).closest(".media-modal").find(".reacg-modal").length ) {
+          const modal = reacg_modal();
+          jQuery(this).closest(".media-modal-content").after(modal);
 
-            }
-            else if ( response.success && response.responseJSON ) {
-              descriptionField.val(response.responseJSON);
-            }
-            else {
-              alert('Error generating description.');
-            }
-          }
-        });
+          const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
+          const descriptionField = modal.find(".reacg-generated_description");
+          const generateButton = modal.find(".reacg-modal-button-generate");
+          const proceedButton = modal.find(".reacg-modal-button-proceed");
+
+          modal.find(".reacg-modal-close, .reacg-modal").on('click', function() {
+            reacg_close_modal(modal);
+          });
+          modal.on('click', function() {
+            reacg_close_modal(modal);
+          });
+          modal.find(".reacg-modal-wrapper").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          });
+          generateButton.on("click", function () {
+            modalSpinnerCont.addClass("is-active");
+            descriptionField.attr("disabled", "disabled");
+            generateButton.attr("disabled", "disabled");
+            // Perform AJAX request to generate AI description
+            jQuery.ajax({
+              type: "GET",
+              //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+              url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+              contentType: "application/json",
+              data: {
+                "title": title,
+                "notes": modal.find(".reacg-notes").val(),
+                "action": "get_description",
+              },
+              complete: function (response) {
+                modalSpinnerCont.removeClass("is-active");
+                descriptionField.removeAttr("disabled");
+                generateButton.removeAttr("disabled");
+                if ( response.status === 204 ) {
+
+                }
+                else if ( response.success && response.responseJSON ) {
+                  descriptionField.removeAttr("disabled").val(response.responseJSON);
+                  proceedButton.removeAttr("disabled");
+                  generateButton.html(reacg_ai_icon() + "Regenerate");
+                }
+                else {
+                  alert('Error generating description.');
+                }
+              }
+            });
+          });
+          proceedButton.on("click", function () {
+            jQuery(that).find('[data-setting="description"] textarea').val(descriptionField.val());
+            reacg_close_modal(modal);
+          });
+        }
+        jQuery(".reacg-modal").css("display", "flex").show();
+        spinnerCont.removeClass("is-active");
       });
     }
 
