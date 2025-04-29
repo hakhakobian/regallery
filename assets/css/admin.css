@@ -216,10 +216,10 @@ to avoid a bug connected with preview.
   padding: 3px 7px 1px;
   margin: 2px;
   cursor: pointer;
-}
-[data-setting="description"] .reacg-ai-button svg {
-  width: 18px;
-  height: 18px;
+  svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 .reacg-float-none {
   float: none !important;
@@ -238,77 +238,70 @@ to avoid a bug connected with preview.
   justify-content: center;
   -webkit-box-align: center;
   align-items: center;
-}
-
-.reacg-modal-wrapper {
-  background-color: #fff;
-  border-radius: 24px;
-  position: relative;
-  max-height: calc(100% - 64px);
-  max-width: 600px;
-  overflow-y: auto;
-}
-
-.reacg-modal-close {
-  position: absolute;
-  right: 0;
-  padding: 15px;
-  top: 0;
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-}
-
-.reacg-modal-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: start;
-  padding: 30px;
-}
-
-.reacg-modal-content h1 {
-  margin-top: 0;
-}
-
-.reacg-modal-content label {
-  cursor: pointer;
-  display: block;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 7px;
-}
-.reacg-modal-note svg {
-  width: 18px;
-  height: 18px;
-  fill: #FFC54D;
-  margin-right: 5px;
-  margin-bottom: -4px;
-}
-.reacg-modal-content p {
-  margin: 0;
-  font-size: 14px;
-}
-.reacg-modal-content textarea {
-  width: 100%;
-  resize: none;
-}
-.reacg-modal-content div {
-  width: 100%;
-  margin-top: 20px;
-}
-.reacg-modal-buttons-wrapper {
-  margin-top: 20px;
-  display: flex;
-  justify-content: end;
-  .reacg-modal-button-generate {
-    margin-right: 10px;
+  .reacg-modal-wrapper {
+    background-color: #fff;
+    border-radius: 24px;
+    position: relative;
+    max-height: calc(100% - 64px);
+    max-width: 600px;
+    overflow-y: auto;
   }
-}
-
-.reacg-modal-button-generate svg {
-  width: 18px;
-  height: 18px;
-  margin: -4px 5px 0 0;
-  vertical-align: middle;
+  .reacg-modal-close {
+    position: absolute;
+    right: 0;
+    padding: 15px;
+    top: 0;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+  }
+  .reacg-modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 30px;
+    h1 {
+      margin-top: 0;
+    }
+    label {
+      cursor: pointer;
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      resize: none;
+    }
+    div {
+      width: 100%;
+      margin-top: 20px;
+    }
+    .reacg-modal-buttons-wrapper {
+      display: flex;
+      justify-content: end;
+      .reacg-modal-button-generate {
+        margin-right: 10px;
+      }
+      .reacg-modal-button-generate svg {
+        width: 18px;
+        height: 18px;
+        margin: -4px 5px 0 0;
+        vertical-align: middle;
+      }
+    }
+    .reacg-modal-note svg {
+      width: 18px;
+      height: 18px;
+      fill: #FFC54D;
+      margin-right: 5px;
+      margin-bottom: -4px;
+    }
+  }
 }
