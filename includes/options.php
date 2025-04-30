@@ -88,6 +88,7 @@ class REACG_Options {
       'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Inherit', #string
       'captionColor' => '#FFFFFF', #string;
+      'isFullCoverImage' => FALSE, #boolean
     ],
     'cube' => [
       'width' => 300, #number
@@ -258,6 +259,7 @@ class REACG_Options {
       'showDescription',
       'showButton',
       'openInNewTab',
+      'isFullCoverImage',
     ];
     $float = [
       'scale',
