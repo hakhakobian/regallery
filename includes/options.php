@@ -7,6 +7,7 @@ class REACG_Options {
     'template' => false, #boolean
     'template_id' => 0, #number
     'css' => '', #string
+    'custom_css' => '', #string
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
     'thumbnails' => [
       'width' => 250, #number
@@ -87,6 +88,7 @@ class REACG_Options {
       'captionsPosition' => 'none', #string top | bottom | above | below | none
       'captionFontFamily' => 'Inherit', #string
       'captionColor' => '#FFFFFF', #string;
+      'isFullCoverImage' => FALSE, #boolean
     ],
     'cube' => [
       'width' => 300, #number
@@ -257,12 +259,14 @@ class REACG_Options {
       'showDescription',
       'showButton',
       'openInNewTab',
+      'isFullCoverImage',
     ];
     $float = [
       'scale',
     ];
     $style = [
       'css',
+      'custom_css',
     ];
     $specific = [
       'type' => [
