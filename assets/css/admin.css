@@ -303,5 +303,8 @@ to avoid a bug connected with preview.
       margin-right: 5px;
       margin-bottom: -4px;
     }
+    .reacg-modal-error-note {
+      color: #b32d2e;
+    }
   }
 }

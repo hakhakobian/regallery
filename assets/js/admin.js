@@ -550,6 +550,9 @@ function reacg_modal(field) {
     '<label for="reacg-modal-generated-text">' + field.label + ':</label>' +
     '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
     '</div>' +
+    '<div>' +
+    '<p class="reacg-modal-error-note hidden"></p>' +
+    '</div>' +
     '<div class="reacg-modal-buttons-wrapper">' +
     '<span class="spinner"></span>' +
     '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + reacg.generate + '</button>' +
@@ -572,9 +575,8 @@ function reacg_add_ai_button(that, field) {
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
     const title_cont = that.find('[data-setting="title"]');
-
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
-    const spinnerCont = that.find('[data-setting="' + field.name + '"] spinner');
+    const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
     button.on('click', function() {
       spinnerCont.addClass("is-active");
@@ -589,68 +591,84 @@ function reacg_add_ai_button(that, field) {
 
         return;
       }
-
-      /* Create modal if not exist and open.*/
-      if ( !jQuery(this).closest(".media-modal").find(".reacg-modal").length ) {
-        const modal = reacg_modal(field);
-        jQuery(this).closest(".media-modal-content").after(modal);
-
-        const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
-        const generatedText = modal.find(".reacg-modal-generated-text");
-        const generateButton = modal.find(".reacg-modal-button-generate");
-        const proceedButton = modal.find(".reacg-modal-button-proceed");
-
-        modal.find(".reacg-modal-close, .reacg-modal").on('click', function() {
-          modal.remove();
-        });
-        modal.on('click', function() {
-          modal.remove();
-        });
-        modal.find(".reacg-modal-wrapper").on("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        });
-        generateButton.on("click", function () {
-          modalSpinnerCont.addClass("is-active");
-          generatedText.attr("disabled", "disabled");
-          generateButton.attr("disabled", "disabled");
-          /* Perform AJAX request to generate AI text.*/
-          jQuery.ajax({
-            type: "GET",
-            url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
-            //url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
-            contentType: "application/json",
-            data: {
-              "title": title,
-              "notes": modal.find(".reacg-modal-notes").val(),
-              "action": field.action,
-            },
-            complete: function (response) {
-              modalSpinnerCont.removeClass("is-active");
-              generatedText.removeAttr("disabled");
-              generateButton.removeAttr("disabled");
-              if ( response.status === 204 ) {
-
-              }
-              else if ( response.success && response.responseJSON ) {
-                generatedText.removeAttr("disabled").val(response.responseJSON);
-                proceedButton.removeAttr("disabled");
-                generateButton.html(reacg_ai_icon() + reacg.regenerate);
-              }
-              else {
-                alert('Error generating description.');
-              }
+      //const that = this;
+      jQuery.ajax({
+        type: "GET",
+        //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+        url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+        contentType: "application/json",
+        data: {
+          "action": "check",
+        },
+        complete: function (response) {
+          if (response.status === 204) {
+            reacg_open_premium_offer_dialog();
+          }
+          else if (response.status === 200) {
+            /* Create modal if not exist and open.*/
+            if (!button.closest(".media-modal").find(".reacg-modal").length) {
+              const modal = reacg_modal(field);
+              button.closest(".media-modal-content").after(modal);
+              const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
+              const generatedText = modal.find(".reacg-modal-generated-text");
+              const generateButton = modal.find(".reacg-modal-button-generate");
+              const proceedButton = modal.find(".reacg-modal-button-proceed");
+              const errorNoteCont = modal.find(".reacg-modal-error-note");
+              modal.find(".reacg-modal-close, .reacg-modal").on('click', function () {
+                modal.remove();
+              });
+              modal.on('click', function () {
+                modal.remove();
+              });
+              modal.find(".reacg-modal-wrapper").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+              });
+              generateButton.on("click", function () {
+                errorNoteCont.addClass("hidden");
+                modalSpinnerCont.addClass("is-active");
+                generatedText.attr("disabled", "disabled");
+                generateButton.attr("disabled", "disabled");
+                /* Perform AJAX request to generate AI text.*/
+                jQuery.ajax({
+                  type: "GET",
+                  //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+                  url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+                  contentType: "application/json",
+                  data: {
+                    "title": title,
+                    "notes": modal.find(".reacg-modal-notes").val(),
+                    "action": field.action,
+                  },
+                  complete: function (response) {
+                    modalSpinnerCont.removeClass("is-active");
+                    generatedText.removeAttr("disabled");
+                    generateButton.removeAttr("disabled");
+                    if (response.status === 204) {
+                      reacg_open_premium_offer_dialog();
+                    }
+                    else if (response.status === 200 && response.success && response.responseJSON) {
+                      generatedText.removeAttr("disabled").val(response.responseJSON);
+                      proceedButton.removeAttr("disabled");
+                      generateButton.html(reacg_ai_icon() + reacg.regenerate);
+                    }
+                    else {
+                      errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+                    }
+                  }
+                });
+              });
+              proceedButton.on("click", function () {
+                jQuery(that).find('[data-setting="' + field.name + '"] textarea').val(generatedText.val());
+                modal.remove();
+              });
             }
-          });
-        });
-        proceedButton.on("click", function () {
-          jQuery(that).find('[data-setting="' + field.name + '"] textarea').val(generatedText.val());
-          modal.remove();
-        });
-      }
-      jQuery(".reacg-modal").css("display", "flex").show();
-      spinnerCont.removeClass("is-active");
+            jQuery(".reacg-modal").css("display", "flex").show();
+          }
+          spinnerCont.removeClass("is-active");
+        }
+      });
     });
   }
 }
