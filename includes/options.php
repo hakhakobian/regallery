@@ -7,6 +7,7 @@ class REACG_Options {
     'template' => false, #boolean
     'template_id' => 0, #number
     'css' => '', #string
+    'custom_css' => '', #string
     'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
     'thumbnails' => [
       'width' => 250, #number
@@ -265,6 +266,7 @@ class REACG_Options {
     ];
     $style = [
       'css',
+      'custom_css',
     ];
     $specific = [
       'type' => [

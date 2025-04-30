@@ -208,3 +208,7 @@ to avoid a bug connected with preview.
   box-shadow: none;
   outline: none;
 }
+
+#gallery-custom-css {
+  display: none;
+}
