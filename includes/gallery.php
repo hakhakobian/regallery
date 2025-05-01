@@ -1042,9 +1042,12 @@ class REACG_Gallery {
       $data = $this->get_image_urls($post_thumbnail_id);
       $data['type'] = $matches[1];
       $data['title'] = html_entity_decode(get_the_title($id));
+      // Get the post featured image alt as image alt.
+      $data['alt'] = html_entity_decode(get_post_meta($post_thumbnail_id, '_wp_attachment_image_alt', TRUE));
 
       return $data;
     }
+
     $meta = wp_get_attachment_metadata($id);
 
     if ( isset($meta['mime_type']) && strpos($meta['mime_type'], "video") !== -1 ) {
@@ -1068,12 +1071,15 @@ class REACG_Gallery {
       $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
       $data['original']['height'] = !empty($meta['height']) ? $meta['height'] : 0;
       $data['type'] = "video";
+      // Get the video cover image alt as video alt.
+      $data['alt'] = html_entity_decode(get_post_meta($thumbnail_id, '_wp_attachment_image_alt', TRUE));
     }
     else {
       $data = $this->get_image_urls($id);
       // If the attachment exists.
       if ( $data ) {
         $data['type'] = "image";
+        $data['alt'] = html_entity_decode(get_post_meta($id, '_wp_attachment_image_alt', TRUE));
       }
     }
     $data['title'] = html_entity_decode(get_the_title($id));
