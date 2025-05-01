@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.12.3
+Stable tag: 1.12.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,10 +177,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.12.3: Added gallery duplication functionality. Enjoy free functionality and add your suggestions via WP forum.
+* 1.12.4: Added Full cover image option for Slideshow view. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.12.4 =
+= Updated: 01.05.2025 =
+* **Added:** Full cover image option for Slideshow view.
+* **Fixed:** Options reset issue.
+* **Fixed:** Use post excerpt as image description (if available) for dynamic posts.
 
 = 1.12.3 =
 = Updated: 22.04.2025 =
