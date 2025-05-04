@@ -58,3 +58,11 @@
 .reacg-createButton {
   margin: 0 auto;
 }
+
+.reacg-enable-options__wrapper {
+  margin-bottom: 10px;
+  label {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
