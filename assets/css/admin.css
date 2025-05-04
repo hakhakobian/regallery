@@ -325,3 +325,56 @@ to avoid a bug connected with preview.
     }
   }
 }
+
+.reacg-tooltip {
+  position: absolute;
+  z-index: 10000000;
+  max-width: 300px;
+  margin: 0px 0px 0px -10px;
+  overflow-wrap: break-word;
+  font-weight: 500;
+  padding: 16px;
+  overflow: visible;
+  background-color: rgb(26, 118, 210);
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  width: 272px;
+  color: rgb(255, 255, 255);
+  border-radius: 12px;
+  font-family: lexend;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+
+  .reacg-tooltip-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+  }
+  .reacg-tooltip-icon-wrapper {
+    display: flex;
+    align-items: center;
+  }
+.reacg-tooltip-arrow[data-popper-placement*="left"] {
+    right: 0;
+    width: 15px;
+    height: 24px;
+    margin-right: -12px;
+    position: absolute;
+    top: calc(50% - 12px);
+    overflow: hidden;
+    box-sizing: border-box;
+    color: rgb(26, 118, 210);
+  }
+  .reacg-tooltip-arrow[data-popper-placement*="left"]::before {
+    content: "";
+    margin: auto;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(26, 118, 210);
+    transform: rotate(45deg);
+    transform-origin: 0 0;
+  }
+}

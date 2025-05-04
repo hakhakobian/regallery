@@ -578,6 +578,13 @@ function reacg_add_ai_button(that, field) {
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
+    if ( field.name === "alt" ) {
+      if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
+        reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
+        localStorage.setItem("reacg-highlight-ai-alt-generation", true);
+      }
+    }
+
     button.on('click', function() {
       spinnerCont.addClass("is-active");
       /* Add notification if title is empty.*/
@@ -594,8 +601,7 @@ function reacg_add_ai_button(that, field) {
       //const that = this;
       jQuery.ajax({
         type: "GET",
-        //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
-        url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+        url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
         contentType: "application/json",
         data: {
           "action": "check",
@@ -633,8 +639,7 @@ function reacg_add_ai_button(that, field) {
                 /* Perform AJAX request to generate AI text.*/
                 jQuery.ajax({
                   type: "GET",
-                  //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
-                  url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+                  url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
                   contentType: "application/json",
                   data: {
                     "title": title,
@@ -709,4 +714,67 @@ function reacg_add_ai_button_to_uploader() {
 
     return this;
   });
+}
+
+function reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text) {
+  const el = typeof selectorOrEl === 'string' ? parent.find(selectorOrEl) : selectorOrEl;
+  if ( !el.length ) {
+    /* Retry if element is not yet in DOM.*/
+    setTimeout(() => reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text), 200);
+
+    return;
+  }
+
+  if ( !containerToBeScrolled.length ) {
+    return;
+  }
+  const containerTop = containerToBeScrolled.offset().top;
+  const targetTop = el.offset().top - 100;
+  const scrollPosition = containerToBeScrolled.scrollTop() + (targetTop - containerTop);
+  containerToBeScrolled.animate({ scrollTop: scrollPosition }, 300, () => {
+    /* After scroll completes, show tooltip.*/
+    reacg_tooltip(el, text);
+  });
+}
+
+function reacg_tooltip_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" font-size="30px" width="1em" height="1em" fill="yellow"><path d="m11.864,4.001c-4.184.069-7.709,3.526-7.858,7.705-.088,2.428.914,4.733,2.75,6.326.791.687,1.244,1.743,1.244,2.968,0,1.654,1.346,3,3,3h2c1.654,0,3-1.346,3-3v-.375c0-.966.455-1.898,1.282-2.626,1.728-1.518,2.718-3.704,2.718-5.999,0-2.161-.849-4.187-2.39-5.703-1.541-1.516-3.583-2.345-5.746-2.296Zm2.136,16.999c0,.552-.448,1-1,1h-2c-.552,0-1-.448-1-1.069,0-.316-.031-.626-.077-.931h4.118c-.025.206-.041.415-.041.625v.375Zm1.962-4.503c-.511.449-.923.957-1.24,1.503h-1.722v-4.184c1.161-.414,2-1.514,2-2.816,0-.553-.447-1-1-1s-1,.447-1,1-.448,1-1,1-1-.448-1-1-.447-1-1-1-1,.447-1,1c0,1.302.839,2.402,2,2.816v4.184h-1.746c-.31-.558-.707-1.06-1.188-1.478-1.376-1.195-2.128-2.924-2.062-4.744.112-3.134,2.756-5.726,5.894-5.777.034,0,.067,0,.102,0,1.586,0,3.077.609,4.208,1.723,1.156,1.137,1.793,2.656,1.793,4.277,0,1.72-.743,3.358-2.038,4.497Zm.823-14.023l1.235-2.01c.288-.472.904-.619,1.375-.328.471.289.618.904.328,1.375l-1.235,2.01c-.188.308-.517.477-.853.477-.179,0-.359-.048-.522-.148-.471-.289-.618-.904-.328-1.375Zm6.628,4.148l-1.933.872c-.133.061-.273.089-.41.089-.382,0-.745-.219-.912-.589-.228-.503-.004-1.096.5-1.322l1.933-.872c.506-.229,1.096-.003,1.322.5.228.503.004,1.096-.5,1.322ZM4.194,1.51c-.289-.471-.141-1.087.33-1.375.473-.288,1.087-.14,1.375.33l1.232,2.011c.289.471.141,1.087-.33,1.375-.163.1-.344.147-.521.147-.337,0-.665-.17-.854-.478l-1.232-2.011Zm-.483,5.551c-.171.359-.529.568-.902.568-.145,0-.292-.031-.431-.099l-1.798-.861c-.498-.238-.709-.835-.47-1.333.237-.499.837-.712,1.333-.47l1.798.861c.498.238.709.835.47,1.333Z"></path></svg>';
+}
+function reacg_tooltip(element, text) {
+  /* Remove existing tooltip if any.*/
+  jQuery(".reacg-tooltip").remove();
+
+  const tooltip = jQuery('<div role="tooltip" class="reacg-tooltip">' +
+    '<div>' +
+    '<div class="reacg-tooltip-wrapper">' +
+    '<span class="reacg-tooltip-icon-wrapper">' + reacg_tooltip_icon() + '</span>' +
+    text +
+    '</div>' +
+    '<span class="reacg-tooltip-arrow" data-popper-placement="left"></span>' +
+    '</div>' +
+    '</div>');
+
+  jQuery("body").append(tooltip);
+
+  const offset = element.offset();
+  const elementHeight = element.outerHeight();
+  const tooltipHeight = tooltip.outerHeight();
+
+  tooltip.css({
+    left: offset.left - tooltip.outerWidth(),
+    top: offset.top - tooltipHeight / 2 + elementHeight / 2
+  });
+
+  const removeTooltip = () => {
+    jQuery(".reacg-tooltip").remove();
+    jQuery("*").off("scroll.reacgTooltip");
+    jQuery(window).off("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip");
+  };
+
+  setTimeout(() => {
+    /* Remove on ANY scroll (including divs).*/
+    jQuery("*").on("scroll.reacgTooltip", removeTooltip);
+    /* Also remove on common user interactions.*/
+    jQuery(window).on("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip", removeTooltip);
+  }, 200); /* Small delay to ensure tooltip is in DOM.*/
 }
