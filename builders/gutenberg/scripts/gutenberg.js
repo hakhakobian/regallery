@@ -26,6 +26,10 @@
       hidePreview: {
         type: "boolean",
         value: false
+      },
+      enableOptions: {
+        type: 'int',
+        default: 1,
       }
     },
 
@@ -82,7 +86,7 @@
     const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id ? "" : "reacg-hidden")});
     const timestamp = Date.now();
     const preview = el('div', {
-      'data-options-section': 1,
+      'data-options-section': props.attributes.enableOptions,
       'data-gallery-id': shortcode_id,
       'data-plugin-version': reacg_gutenberg.plugin_version,
       'data-gallery-timestamp': timestamp,
@@ -99,6 +103,30 @@
       src: reacg_gutenberg.icon
     } ), shortcodes.length > 1 ? el( 'p', {}, "Create new gallery or select the existing one." ) : "");
 
+    const enableOptionsCont = shortcode_id ? el("div", { className: "reacg-enable-options__wrapper" },
+        el("label", {}, "Enable options section:"),
+          el("label", {},
+            el("input", {
+              type: "radio",
+              name: "enableOptions",
+              value: "1",
+              checked: props.attributes.enableOptions == 1,
+              onChange: (event) => onOptionsChange(event, props, shortcode_id),
+            }),
+            "Yes"
+          ),
+          el("label", {},
+            el("input", {
+              type: "radio",
+              name: "enableOptions",
+              value: "0",
+              checked: props.attributes.enableOptions == 0,
+              onChange: (event) => onOptionsChange(event, props, shortcode_id),
+            }),
+            "No"
+          ),
+      ) : "";
+
     return el(
       "div",
       {
@@ -107,6 +135,7 @@
       },
       loader,
       instruction,
+      enableOptionsCont,
       el( "div",
         {
           class: "reacg-gutenberg-controls"
@@ -118,6 +147,19 @@
       images_cont,
       preview,
     );
+  }
+
+  function onOptionsChange(event, props, shortcode_id) {
+    const checkedValue = event.target.value;
+    const baseCont = document.getElementById('reacg-gutenberg' + shortcode_id);
+    const galleryCont = baseCont.querySelector(".reacg-gallery");
+    galleryCont.setAttribute('data-options-section', checkedValue);
+    reload_gallery(shortcode_id);
+    baseCont.querySelector("#reacg-gallery-images").classList.toggle("reacg-hidden", checkedValue != "1");
+
+    props.setAttributes({
+      enableOptions: checkedValue,
+    });
   }
 
   function separator() {
@@ -141,12 +183,13 @@
     );
   }
 
-  function set_data(baseCont, shortcode_id) {
+  function set_data(baseCont, shortcode_id, props) {
+    baseCont.querySelector("#reacg-gallery-images").classList.toggle("reacg-hidden", props.attributes.enableOptions != "1");
     const galleryCont = baseCont.querySelector(".reacg-gallery");
     if ( galleryCont ) {
       const timestamp = Date.now();
       galleryCont.classList.remove("reacg-hidden");
-      galleryCont.setAttribute('data-options-section', 1);
+      galleryCont.setAttribute('data-options-section', props.attributes.enableOptions);
       galleryCont.setAttribute('data-gallery-id', shortcode_id);
       galleryCont.setAttribute('data-plugin-version', reacg_gutenberg.plugin_version);
       galleryCont.setAttribute('data-gallery-timestamp', timestamp);
@@ -163,7 +206,7 @@
     }
   }
 
-  function images_cont(baseCont, shortcode_id) {
+  function images_cont(baseCont, shortcode_id, props) {
     fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
@@ -173,7 +216,7 @@
           container.innerHTML = data;
           /* Make the image items sortable.*/
           reacg_make_items_sortable(container);
-          set_data(baseCont, shortcode_id);
+          set_data(baseCont, shortcode_id, props);
           reload_gallery(shortcode_id);
         }
         baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
@@ -196,12 +239,12 @@
               shortcode_id: shortcode_id,
             });
             baseCont.querySelector(".reacg-gutenberg-controls").classList.add("reacg-hidden");
-            images_cont(baseCont, shortcode_id);
+            images_cont(baseCont, shortcode_id, props);
           })
           .catch(error => console.error("Error fetching data:", error));
       }
       else {
-        images_cont(baseCont, shortcode_id);
+        images_cont(baseCont, shortcode_id, props);
       }
     }
   }
@@ -224,7 +267,7 @@
       // Show images container on page load for the selected gallery.
       const baseCont = document.getElementById(`reacg-gutenberg${props.attributes.shortcode_id}`);
       if ( baseCont && !baseCont.querySelector("#reacg-gallery-images").innerHTML) {
-        images_cont(baseCont, props.attributes.shortcode_id);
+        images_cont(baseCont, props.attributes.shortcode_id, props);
       }
     }
 
