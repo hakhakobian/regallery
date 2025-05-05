@@ -592,7 +592,8 @@ function reacg_add_ai_button(that, field) {
       if ( !title ) {
         spinnerCont.removeClass("is-active");
         title_cont.next(".description.required").remove();
-        title_cont.after("<span class='description required'>Title is required. Make sure it accurately describes the image.</span>");
+        title_cont.find("input").addClass("reacg-required-input");
+        title_cont.after("<span class='description required'>" + reacg.ai_title_is_required + "</span>");
         title_cont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
         title_cont.find("input").focus();
 
@@ -690,6 +691,7 @@ function reacg_add_ai_button_to_uploader() {
     title_cont.find("input").on("keyup", function() {
       if ( jQuery(this).val() !== "" ) {
         title_cont.next(".description.required").remove();
+        title_cont.find("input").removeClass("reacg-required-input");
       }
     });
 

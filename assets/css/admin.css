@@ -213,6 +213,10 @@ to avoid a bug connected with preview.
   display: none;
 }
 
+#gallery-custom-css textarea {
+  width: 100%;
+}
+
 .reacg-ai-button {
   background: #FFC54D;
   border: #FFC54D;
@@ -227,6 +231,11 @@ to avoid a bug connected with preview.
 }
 .reacg-float-none {
   float: none !important;
+}
+
+.reacg-required-input {
+  border-color: #b32d2e !important;
+  box-shadow: none !important;
 }
 
 .reacg-modal {

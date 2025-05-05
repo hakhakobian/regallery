@@ -714,7 +714,7 @@ class REACG_Gallery {
       update_post_meta($post_id, 'additional_data', $additional_data);
     }
 
-    if ( isset($_POST['css']) ) {
+    if ( isset($_POST['custom_css']) ) {
       $options = get_option('reacg_options' . $post_id, FALSE);
       if ( !empty($options) ) {
         $data = json_decode($options, TRUE);
@@ -924,7 +924,7 @@ class REACG_Gallery {
       }
     }
     ?>
-    <textarea name="custom_css" cols="35" rows="20"><?php echo esc_attr($css); ?></textarea>
+    <textarea name="custom_css" rows="20"><?php echo esc_attr($css); ?></textarea>
     <?php
   }
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: Photo gallery plugin is a responsive image gallery WordPress plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
- * Version: 1.12.4
+ * Version: 1.13.0
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.12.4';
+  public $version = '1.13.0';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
@@ -276,6 +276,7 @@ final class REACG {
       'generate' => __('Generate', 'reacg'),
       'regenerate' => __('Regenerate', 'reacg'),
       'proceed' => __('Proceed', 'reacg'),
+      'ai_title_is_required' => __('Title is required. Make sure it accurately describes the image.', 'reacg'),
       'ai_popup_note' => __('The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.', 'reacg'),
       'ai_popup_additional_notes_label' => __('Additional Notes', 'reacg'),
       'ai_popup_additional_notes_placeholder' => __('You can add additional notes here to help generate a more accurate text.', 'reacg'),
@@ -283,7 +284,7 @@ final class REACG {
       'ai_popup_description_field_label' => __('Generated Description', 'reacg'),
       'ai_popup_alt_title' => __('Generative AI Alt', 'reacg'),
       'ai_popup_alt_field_label' => __('Generated Alt', 'reacg'),
-      'ai_highlight' => __('Use our built-in AI tools to instantly generate a Description text and Alt tags-ideal for better SEO and accessibility.', 'reacg'),
+      'ai_highlight' => __('Use our built-in AI tools to instantly generate a Description text and Alt text - ideal for better SEO and accessibility.', 'reacg'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
