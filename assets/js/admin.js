@@ -161,6 +161,8 @@ jQuery(document).ready(function () {
       media_uploader.remove();
     } );
   });
+
+  reacg_add_ai_button_to_uploader();
 });
 
 /**
@@ -513,4 +515,266 @@ function reacg_remove_thumbnail(galleryItemsContainer, id) {
 function reacg_toggle_loading() {
   jQuery("#publishing-action .spinner").toggleClass("is-active");
   jQuery("#publishing-action #publish").toggleClass("disabled");
+}
+
+
+function reacg_ai_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+    '<path fill="#FFFFFF" d="m19.026,12v6c0,.552-.448,1-1,1s-1-.448-1-1v-6c0-.552.448-1,1-1s1,.448,1,1Zm-7.42-5.283l3.071,11.029c.175.63-.298,1.254-.953,1.254-.443,0-.831-.294-.952-.72l-.643-2.28h-5.206l-.643,2.28c-.12.426-.509.72-.952.72h0c-.654,0-1.128-.624-.953-1.254l3.091-11.108c.141-.608.541-1.12,1.098-1.405.568-.292,1.22-.31,1.839-.05.587.246,1.037.817,1.204,1.535Zm-.041,7.283l-1.929-6.835c-.029-.114-.191-.114-.219,0l-1.929,6.835h4.077Zm11.462-4c-.552,0-1,.448-1,1v8c0,1.654-1.346,3-3,3H5.026c-1.654,0-3-1.346-3-3V5c0-1.654,1.346-3,3-3h8c.552,0,1-.448,1-1S13.578,0,13.026,0H5.026C2.269,0,.026,2.243.026,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5v-8c0-.552-.448-1-1-1Zm-6.85-4.82l1.868.787.745,1.865c.161.404.552.668.987.668s.825-.265.987-.668l.741-1.854,1.854-.741c.404-.161.668-.552.668-.987s-.265-.825-.668-.987l-1.854-.741-.741-1.854C20.601.265,20.21,0,19.776,0s-.825.265-.987.668l-.737,1.843-1.84.697c-.406.154-.678.54-.686.974-.008.435.25.83.65.999Z"/>' +
+    '</svg>';
+}
+
+function reacg_info_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,21a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Z"/><path d="M11.545,9.545h-.3A1.577,1.577,0,0,0,9.64,10.938,1.5,1.5,0,0,0,11,12.532v4.65a1.5,1.5,0,0,0,3,0V12A2.455,2.455,0,0,0,11.545,9.545Z"/><path d="M11.83,8.466A1.716,1.716,0,1,0,10.114,6.75,1.715,1.715,0,0,0,11.83,8.466Z"/></svg>';
+}
+
+function reacg_ai_button() {
+  return jQuery('<button class="reacg-ai-button" title="' + reacg.generate + '">' + reacg_ai_icon() + '</button>');
+}
+
+function reacg_modal(field) {
+  return jQuery('' +
+    '<div class="reacg-modal" style="display:none;">' +
+    '<div class="reacg-modal-wrapper">' +
+    '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+    '<div class="reacg-modal-content">' +
+    '<h1>' + field.title + '</h1>' +
+    '<div>' +
+    '<p class="reacg-modal-note">' + reacg_info_icon() + reacg.ai_popup_note + '</p>' +
+    '</div>' +
+    '<div>' +
+    '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
+    '<textarea class="reacg-modal-notes" id="reacg-modal-notes" rows="2" placeholder="' + reacg.ai_popup_additional_notes_placeholder + '"></textarea>' +
+    '</div>' +
+    '<div>' +
+    '<label for="reacg-modal-generated-text">' + field.label + ':</label>' +
+    '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
+    '</div>' +
+    '<div>' +
+    '<p class="reacg-modal-error-note hidden"></p>' +
+    '</div>' +
+    '<div class="reacg-modal-buttons-wrapper">' +
+    '<span class="spinner"></span>' +
+    '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + reacg.generate + '</button>' +
+    '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">' + reacg.proceed + '</button>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+    '</div>');
+}
+
+/**
+ * Insert AI button to the given field.
+ *
+ * @param that
+ * @param field
+ */
+function reacg_add_ai_button(that, field) {
+  if ( !that.find('[data-setting="' + field.name + '"] .reacg-ai-button').length ) {
+    /* Create an AI button.*/
+    const button = reacg_ai_button();
+    const spinner = '<span class="spinner reacg-float-none"></span>';
+    const title_cont = that.find('[data-setting="title"]');
+    that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
+    const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
+
+    if ( field.name === "alt" ) {
+      if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
+        reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
+        localStorage.setItem("reacg-highlight-ai-alt-generation", true);
+      }
+    }
+
+    button.on('click', function() {
+      spinnerCont.addClass("is-active");
+      /* Add notification if title is empty.*/
+      const title = title_cont.find("input").val();
+      if ( !title ) {
+        spinnerCont.removeClass("is-active");
+        title_cont.next(".description.required").remove();
+        title_cont.after("<span class='description required'>Title is required. Make sure it accurately describes the image.</span>");
+        title_cont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        title_cont.find("input").focus();
+
+        return;
+      }
+      //const that = this;
+      jQuery.ajax({
+        type: "GET",
+        url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+        contentType: "application/json",
+        data: {
+          "action": "check",
+        },
+        complete: function (response) {
+          if (response.status === 204) {
+            reacg_open_premium_offer_dialog();
+          }
+          else if (response.status === 200) {
+            /* Create modal if not exist and open.*/
+            if (!button.closest(".media-modal").find(".reacg-modal").length) {
+              const modal = reacg_modal(field);
+              button.closest(".media-modal-content").after(modal);
+              const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
+              const generatedText = modal.find(".reacg-modal-generated-text");
+              const generateButton = modal.find(".reacg-modal-button-generate");
+              const proceedButton = modal.find(".reacg-modal-button-proceed");
+              const errorNoteCont = modal.find(".reacg-modal-error-note");
+              modal.find(".reacg-modal-close, .reacg-modal").on('click', function () {
+                modal.remove();
+              });
+              modal.on('click', function () {
+                modal.remove();
+              });
+              modal.find(".reacg-modal-wrapper").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+              });
+              generateButton.on("click", function () {
+                errorNoteCont.addClass("hidden");
+                modalSpinnerCont.addClass("is-active");
+                generatedText.attr("disabled", "disabled");
+                generateButton.attr("disabled", "disabled");
+                /* Perform AJAX request to generate AI text.*/
+                jQuery.ajax({
+                  type: "GET",
+                  url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+                  contentType: "application/json",
+                  data: {
+                    "title": title,
+                    "notes": modal.find(".reacg-modal-notes").val(),
+                    "action": field.action,
+                  },
+                  complete: function (response) {
+                    modalSpinnerCont.removeClass("is-active");
+                    generatedText.removeAttr("disabled");
+                    generateButton.removeAttr("disabled");
+                    if (response.status === 204) {
+                      reacg_open_premium_offer_dialog();
+                    }
+                    else if (response.status === 200 && response.success && response.responseJSON) {
+                      generatedText.removeAttr("disabled").val(response.responseJSON);
+                      proceedButton.removeAttr("disabled");
+                      generateButton.html(reacg_ai_icon() + reacg.regenerate);
+                    }
+                    else {
+                      errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+                    }
+                  }
+                });
+              });
+              proceedButton.on("click", function () {
+                jQuery(that).find('[data-setting="' + field.name + '"] textarea').val(generatedText.val());
+                modal.remove();
+              });
+            }
+            jQuery(".reacg-modal").css("display", "flex").show();
+          }
+          spinnerCont.removeClass("is-active");
+        }
+      });
+    });
+  }
+}
+
+/**
+ * Add AI buttons to the specified fields.
+ */
+function reacg_add_ai_button_to_uploader() {
+  wp.media.view.Attachment.Details.prototype.render = _.wrap(wp.media.view.Attachment.Details.prototype.render, function(render) {
+    render.apply(this, _.rest(arguments));
+
+    const title_cont = this.$el.find('[data-setting="title"]');
+    /* Remove required notice on filling.*/
+    title_cont.find("input").on("keyup", function() {
+      if ( jQuery(this).val() !== "" ) {
+        title_cont.next(".description.required").remove();
+      }
+    });
+
+    const add_button_to = {
+      alt: {
+        name: "alt",
+        action: "get_alt",
+        title: reacg.ai_popup_alt_title,
+        label: reacg.ai_popup_alt_field_label,
+      },
+      description: {
+        name: "description",
+        action: "get_description",
+        title: reacg.ai_popup_description_title,
+        label: reacg.ai_popup_description_field_label,
+      }
+    }
+
+    for ( let i in add_button_to ) {
+      reacg_add_ai_button(this.$el, add_button_to[i]);
+    }
+
+    return this;
+  });
+}
+
+function reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text) {
+  const el = typeof selectorOrEl === 'string' ? parent.find(selectorOrEl) : selectorOrEl;
+  if ( !el.length ) {
+    /* Retry if element is not yet in DOM.*/
+    setTimeout(() => reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text), 200);
+
+    return;
+  }
+
+  if ( !containerToBeScrolled.length ) {
+    return;
+  }
+  const containerTop = containerToBeScrolled.offset().top;
+  const targetTop = el.offset().top - 100;
+  const scrollPosition = containerToBeScrolled.scrollTop() + (targetTop - containerTop);
+  containerToBeScrolled.animate({ scrollTop: scrollPosition }, 300, () => {
+    /* After scroll completes, show tooltip.*/
+    reacg_tooltip(el, text);
+  });
+}
+
+function reacg_tooltip_icon() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" font-size="30px" width="1em" height="1em" fill="yellow"><path d="m11.864,4.001c-4.184.069-7.709,3.526-7.858,7.705-.088,2.428.914,4.733,2.75,6.326.791.687,1.244,1.743,1.244,2.968,0,1.654,1.346,3,3,3h2c1.654,0,3-1.346,3-3v-.375c0-.966.455-1.898,1.282-2.626,1.728-1.518,2.718-3.704,2.718-5.999,0-2.161-.849-4.187-2.39-5.703-1.541-1.516-3.583-2.345-5.746-2.296Zm2.136,16.999c0,.552-.448,1-1,1h-2c-.552,0-1-.448-1-1.069,0-.316-.031-.626-.077-.931h4.118c-.025.206-.041.415-.041.625v.375Zm1.962-4.503c-.511.449-.923.957-1.24,1.503h-1.722v-4.184c1.161-.414,2-1.514,2-2.816,0-.553-.447-1-1-1s-1,.447-1,1-.448,1-1,1-1-.448-1-1-.447-1-1-1-1,.447-1,1c0,1.302.839,2.402,2,2.816v4.184h-1.746c-.31-.558-.707-1.06-1.188-1.478-1.376-1.195-2.128-2.924-2.062-4.744.112-3.134,2.756-5.726,5.894-5.777.034,0,.067,0,.102,0,1.586,0,3.077.609,4.208,1.723,1.156,1.137,1.793,2.656,1.793,4.277,0,1.72-.743,3.358-2.038,4.497Zm.823-14.023l1.235-2.01c.288-.472.904-.619,1.375-.328.471.289.618.904.328,1.375l-1.235,2.01c-.188.308-.517.477-.853.477-.179,0-.359-.048-.522-.148-.471-.289-.618-.904-.328-1.375Zm6.628,4.148l-1.933.872c-.133.061-.273.089-.41.089-.382,0-.745-.219-.912-.589-.228-.503-.004-1.096.5-1.322l1.933-.872c.506-.229,1.096-.003,1.322.5.228.503.004,1.096-.5,1.322ZM4.194,1.51c-.289-.471-.141-1.087.33-1.375.473-.288,1.087-.14,1.375.33l1.232,2.011c.289.471.141,1.087-.33,1.375-.163.1-.344.147-.521.147-.337,0-.665-.17-.854-.478l-1.232-2.011Zm-.483,5.551c-.171.359-.529.568-.902.568-.145,0-.292-.031-.431-.099l-1.798-.861c-.498-.238-.709-.835-.47-1.333.237-.499.837-.712,1.333-.47l1.798.861c.498.238.709.835.47,1.333Z"></path></svg>';
+}
+function reacg_tooltip(element, text) {
+  /* Remove existing tooltip if any.*/
+  jQuery(".reacg-tooltip").remove();
+
+  const tooltip = jQuery('<div role="tooltip" class="reacg-tooltip">' +
+    '<div>' +
+    '<div class="reacg-tooltip-wrapper">' +
+    '<span class="reacg-tooltip-icon-wrapper">' + reacg_tooltip_icon() + '</span>' +
+    text +
+    '</div>' +
+    '<span class="reacg-tooltip-arrow" data-popper-placement="left"></span>' +
+    '</div>' +
+    '</div>');
+
+  jQuery("body").append(tooltip);
+
+  const offset = element.offset();
+  const elementHeight = element.outerHeight();
+  const tooltipHeight = tooltip.outerHeight();
+
+  tooltip.css({
+    left: offset.left - tooltip.outerWidth(),
+    top: offset.top - tooltipHeight / 2 + elementHeight / 2
+  });
+
+  const removeTooltip = () => {
+    jQuery(".reacg-tooltip").remove();
+    jQuery("*").off("scroll.reacgTooltip");
+    jQuery(window).off("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip");
+  };
+
+  setTimeout(() => {
+    /* Remove on ANY scroll (including divs).*/
+    jQuery("*").on("scroll.reacgTooltip", removeTooltip);
+    /* Also remove on common user interactions.*/
+    jQuery(window).on("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip", removeTooltip);
+  }, 200); /* Small delay to ensure tooltip is in DOM.*/
 }
