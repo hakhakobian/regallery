@@ -427,7 +427,7 @@ class REACG_Gallery {
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = html_entity_decode(get_the_title($post->ID));
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
-              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 50, '...'));
+              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
               $item['date'] = $post->post_date;
               $data[] = $item;
             }
@@ -449,7 +449,7 @@ class REACG_Gallery {
             $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', TRUE));
           }
           $item['title'] = html_entity_decode(get_the_title($images_id));
-          $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 50, '...'));
+          $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
           $item['date'] = $post->post_date;
           $data[] = $item;
         }
