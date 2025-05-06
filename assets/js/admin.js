@@ -599,7 +599,7 @@ function reacg_add_ai_button(that, field) {
 
         return;
       }
-      //const that = this;
+
       jQuery.ajax({
         type: "GET",
         url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
