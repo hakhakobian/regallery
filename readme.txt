@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.12.4
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,9 +82,21 @@ Below are some of the most popular Re Gallery tutorials:
 
 == 🥇 PRO Pre-Built Templates ==
 
-Save time with our customizable pre-built templates! For less than $1.3/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional – get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
+Save time with our customizable pre-built templates! For less than $2.5/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional – get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
 
 🔗 [Click here to see Pro Pre-Built templates now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=social)
+
+
+== 🎯 Smarter WordPress Photo Gallery with AI ==
+
+With Re Gallery PRO, managing your WordPress photo gallery just got easier. Our built-in AI tools automatically generate alt text and image descriptions, saving you time and helping your site rank better on search engines.
+
+Perfect for photographers, bloggers, online stores, and anyone using WordPress, these features improve SEO and accessibility without any extra effort.
+
+Just upload your images and let Re Gallery PRO do the work.
+
+👉 [Upgrade to Re Gallery PRO and create a smarter, faster photo gallery today.](https://regallery.team/?utm_source=wordpress&utm_medium=social#pricing)
+
 
 == Important ==
 In case you have any questions, suggestions, or if you've found a bug, please check out our [Support Forum](https://wordpress.org/support/plugin/regallery).
@@ -177,16 +189,21 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.12.4: Added Full cover image option for Slideshow view. Enjoy free functionality and add your suggestions via WP forum.
+* 1.13.0: Added possibility to generate image description and alt text with AI based on the image title. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
-= 1.12.4 =
-= Updated: 01.05.2025 =
+= 1.13.0 =
+= Updated: 07.05.2025 =
+* **Added:** Possibility to generate image description with AI based on the image title.
+* **Added:** Possibility to generate image alt text with AI based on the image title for improved SEO.
 * **Added:** Full cover image option for Slideshow view.
+* **Added:** Option to hide gallery settings in the Gutenberg editor.
 * **Fixed:** Options reset issue.
 * **Fixed:** Use post excerpt as image description (if available) for dynamic posts.
+* **Fixed:** Video icon position when lightbox is disabled.
+* **Fixed:** Certain options not functioning when "Image Click" is set to "None" in Mosaic and Masonry views.
 
 = 1.12.3 =
 = Updated: 22.04.2025 =

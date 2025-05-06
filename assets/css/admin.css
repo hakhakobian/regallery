@@ -220,8 +220,8 @@ to avoid a bug connected with preview.
 .reacg-ai-button {
   background: #FFC54D;
   border: #FFC54D;
-  border-radius: 3px;
-  padding: 3px 7px 1px;
+  border-radius: 5px;
+  padding: 4px 6px 1px;
   margin: 2px;
   cursor: pointer;
   svg {
