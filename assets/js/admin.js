@@ -574,6 +574,7 @@ function reacg_add_ai_button(that, field) {
     /* Create an AI button.*/
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
+    const url_cont = that.find('[data-setting="url"]');
     const title_cont = that.find('[data-setting="title"]');
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
@@ -602,7 +603,8 @@ function reacg_add_ai_button(that, field) {
 
       jQuery.ajax({
         type: "GET",
-        url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+        url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+        //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
         contentType: "application/json",
         data: {
           "action": "check",
@@ -640,9 +642,12 @@ function reacg_add_ai_button(that, field) {
                 /* Perform AJAX request to generate AI text.*/
                 jQuery.ajax({
                   type: "GET",
-                  url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+                  url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
+                  //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
                   contentType: "application/json",
                   data: {
+                    "image_url": "https://template3.10web.cloud/wp-content/uploads/2025/04/pexels-solliefoto-298864.jpg",
+                    //"image_url": url_cont.find("input").val(),
                     "title": title,
                     "notes": modal.find(".reacg-modal-notes").val(),
                     "action": field.action,
@@ -705,6 +710,12 @@ function reacg_add_ai_button_to_uploader() {
       description: {
         name: "description",
         action: "get_description",
+        title: reacg.ai_popup_description_title,
+        label: reacg.ai_popup_description_field_label,
+      },
+      title: {
+        name: "title",
+        action: "get_title",
         title: reacg.ai_popup_description_title,
         label: reacg.ai_popup_description_field_label,
       }
