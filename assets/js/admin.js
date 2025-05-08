@@ -540,7 +540,7 @@ function reacg_modal(field) {
     '<div class="reacg-modal-content">' +
     '<h1>' + field.title + '</h1>' +
     '<div>' +
-    '<p class="reacg-modal-note">' + reacg_info_icon() + reacg.ai_popup_note + '</p>' +
+    '<p class="reacg-modal-note">' + reacg_info_icon() + field.notice + '</p>' +
     '</div>' +
     '<div>' +
     '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
@@ -579,6 +579,7 @@ function reacg_add_ai_button(that, field) {
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
+    /* Show tooltip for the first field.*/
     if ( field.name === "alt" ) {
       if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
         reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
@@ -590,7 +591,7 @@ function reacg_add_ai_button(that, field) {
       spinnerCont.addClass("is-active");
       /* Add notification if title is empty.*/
       const title = title_cont.find("input").val();
-      if ( !title ) {
+      if ( !title && field.name !== "title" ) {
         spinnerCont.removeClass("is-active");
         title_cont.next(".description.required").remove();
         title_cont.find("input").addClass("reacg-required-input");
@@ -603,8 +604,7 @@ function reacg_add_ai_button(that, field) {
 
       jQuery.ajax({
         type: "GET",
-        url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
-        //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+        url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
         contentType: "application/json",
         data: {
           "action": "check",
@@ -642,12 +642,10 @@ function reacg_add_ai_button(that, field) {
                 /* Perform AJAX request to generate AI text.*/
                 jQuery.ajax({
                   type: "GET",
-                  url: "http://localhost/wordpress/wp-json/reacgcore/v2/ai",
-                  //url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+                  url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
                   contentType: "application/json",
                   data: {
-                    "image_url": "https://template3.10web.cloud/wp-content/uploads/2025/04/pexels-solliefoto-298864.jpg",
-                    //"image_url": url_cont.find("input").val(),
+                    "image_url": url_cont.find("input").val(),
                     "title": title,
                     "notes": modal.find(".reacg-modal-notes").val(),
                     "action": field.action,
@@ -704,20 +702,23 @@ function reacg_add_ai_button_to_uploader() {
       alt: {
         name: "alt",
         action: "get_alt",
-        title: reacg.ai_popup_alt_title,
+        title: reacg.ai_popup_alt_heading,
+        notice: reacg.ai_popup_alt_desc_notice,
         label: reacg.ai_popup_alt_field_label,
       },
       description: {
         name: "description",
         action: "get_description",
-        title: reacg.ai_popup_description_title,
+        title: reacg.ai_popup_description_heading,
+        notice: reacg.ai_popup_alt_desc_notice,
         label: reacg.ai_popup_description_field_label,
       },
       title: {
         name: "title",
         action: "get_title",
-        title: reacg.ai_popup_description_title,
-        label: reacg.ai_popup_description_field_label,
+        title: reacg.ai_popup_title_heading,
+        notice: reacg.ai_popup_title_notice,
+        label: reacg.ai_popup_title_field_label,
       }
     }
 
