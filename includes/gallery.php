@@ -236,10 +236,13 @@ class REACG_Gallery {
           foreach ( $images_ids_arr as $key => $images_id ) {
             $item = $this->get_item_data($images_id);
 
+            // The post type is disabled.
             if ( !$item ) {
               // The attachment doesn't exist.
-              unset($images_ids_arr[$key]);
-              $is_deleted_attachment = TRUE;
+              if ( $item === FALSE ) {
+                unset($images_ids_arr[$key]);
+                $is_deleted_attachment = TRUE;
+              }
             }
             elseif ( $url === "" ) {
               // Get first existing thumbnail.
@@ -399,10 +402,13 @@ class REACG_Gallery {
       foreach ( $images_ids_arr as $key => $images_id ) {
         $item = $this->get_item_data($images_id);
 
-        // The attachment doesn't exist.
+        // The attachment doesn't exist or the post type is disabled.
         if ( !$item ) {
-          unset($images_ids_arr[$key]);
-          $is_deleted_attachment = TRUE;
+          // The attachment doesn't exist.
+          if ( $item === FALSE ) {
+            unset($images_ids_arr[$key]);
+            $is_deleted_attachment = TRUE;
+          }
           continue;
         }
 
@@ -421,11 +427,15 @@ class REACG_Gallery {
                 continue;
               }
               $item = $this->get_item_data($post_type . $post->ID);
+              // The post type is disabled.
+              if ( !$item ) {
+                continue;
+              }
               $item['id'] = $gallery_id . $images_id . $post->ID;
               $item['caption'] = html_entity_decode($post->post_excerpt);
-              $item['action_url'] = esc_url(get_permalink($post->ID));
+              $item['action_url'] = $this->get_action_url($post_type, $post->ID);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
-              $item['title'] = html_entity_decode(get_the_title($post->ID));
+              $item['title'] = $this->get_title($post_type, $post->ID);
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
               $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
               $item['date'] = $post->post_date;
@@ -439,16 +449,17 @@ class REACG_Gallery {
             $post = get_post($images_id);
             $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
             $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
-            $item['action_url'] = esc_url(get_permalink($images_id));
+            $item['action_url'] = $this->get_action_url($matches[1], $images_id);
+            $item['title'] = $this->get_title($matches[1], $images_id);
             $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
           }
           else {
             $post = get_post($images_id);
             $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
             $description = $post->post_content;
-            $item['action_url'] = esc_url(get_post_meta($images_id, 'action_url', TRUE));
+            $item['action_url'] = $this->get_action_url($item['type'], $images_id);
+            $item['title'] = $this->get_title($item['type'], $images_id);
           }
-          $item['title'] = html_entity_decode(get_the_title($images_id));
           $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
           $item['date'] = $post->post_date;
           $data[] = $item;
@@ -520,6 +531,120 @@ class REACG_Gallery {
     }
 
     return ['images' => $data, 'count' => $all_images_count];
+  }
+
+  /**
+   * Return the Title depends on type.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_title($type, $id) {
+    switch ($type) {
+      case "image":
+      case "video": {
+      $title = get_the_title($id);
+        break;
+      }
+      case "post":
+      case "page": {
+        $title = get_the_title($id);
+        break;
+      }
+      case "product": {
+        $title = get_the_title($id);
+        if ( $this->obj->woocommerce_is_active ) {
+          $product = wc_get_product( $id );
+          if ( $product && $product->is_type( 'simple' ) ) {
+            $title .= " / " . $this->get_product_price($product);
+          }
+        }
+        break;
+      }
+      default: {
+        $title = "";
+        break;
+      }
+    }
+
+    return html_entity_decode($title);
+  }
+
+  /**
+   * Return the product formatted price based on WooCommerce option.
+   *
+   * @param $product
+   *
+   * @return string
+   */
+  private function get_product_price($product) {
+    $decimals = wc_get_price_decimals();
+    $price = number_format( $product->get_price(), $decimals, wc_get_price_decimal_separator(), wc_get_price_thousand_separator() );
+    $currency        = get_woocommerce_currency();
+    $currency_symbol = get_woocommerce_currency_symbol( $currency );
+    $currency_pos    = get_option( 'woocommerce_currency_pos' );
+
+    // Format price based on position.
+    switch ( $currency_pos ) {
+      case 'left':
+        $formatted_price = $currency_symbol . $price;
+        break;
+      case 'right':
+        $formatted_price = $price . $currency_symbol;
+        break;
+      case 'left_space':
+        $formatted_price = $currency_symbol . ' ' . $price;
+        break;
+      case 'right_space':
+        $formatted_price = $price . ' ' . $currency_symbol;
+        break;
+      default:
+        $formatted_price = $price . ' ' . $currency_symbol;
+        break;
+    }
+
+    return $formatted_price;
+  }
+
+  /**
+   * Return the Action URL depends on type.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_action_url($type, $id) {
+    switch ($type) {
+      case "image":
+      case "video": {
+        $action_url = get_post_meta($id, 'action_url', TRUE);
+        break;
+      }
+      case "post":
+      case "page": {
+        $action_url = get_permalink($id);
+        break;
+      }
+      case "product": {
+        $action_url = get_permalink($id);
+//        if ( $this->obj->woocommerce_is_active ) {
+//          $product = wc_get_product( $id );
+//          if ( $product && $product->is_type( 'simple' ) ) {
+//            $action_url = add_query_arg('add-to-cart', $id, wc_get_cart_url());
+//          }
+//        }
+        break;
+      }
+      default: {
+        $action_url = "";
+        break;
+      }
+    }
+
+    return esc_url($action_url);
   }
 
   /**
@@ -1024,6 +1149,10 @@ class REACG_Gallery {
    */
   private function get_item_data($id) {
     if ( strpos($id, "dynamic") !== FALSE ) {
+      if ( !array_key_exists($id, REACG_ALLOWED_POST_TYPES) ) {
+        // If is post (is not image or video), but the post type is disabled (e.g. deactivated WooCommerce plugin after adding products).
+        return "";
+      }
       $data = [
         "type" => $id,
         "title" => REACG_ALLOWED_POST_TYPES[$id]['title'],
@@ -1046,6 +1175,10 @@ class REACG_Gallery {
       $data['alt'] = html_entity_decode(get_post_meta($post_thumbnail_id, '_wp_attachment_image_alt', TRUE));
 
       return $data;
+    }
+    elseif ( !is_int($id) ) {
+      // If is post (is not image or video), but the post type is disabled (e.g. deactivated WooCommerce plugin after adding products).
+      return "";
     }
 
     $meta = wp_get_attachment_metadata($id);
@@ -1121,7 +1254,7 @@ class REACG_Gallery {
         foreach ($images_ids_arr as $image_id) {
           $item = $this->get_item_data($image_id);
 
-          // The attachment doesn't exist.
+          // The attachment doesn't exist or the post type is disabled.
           if ( !$item ) {
             continue;
           }
