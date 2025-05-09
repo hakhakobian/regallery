@@ -557,7 +557,7 @@ class REACG_Gallery {
         $title = get_the_title($id);
         if ( $this->obj->woocommerce_is_active ) {
           $product = wc_get_product( $id );
-          if ( $product && $product->is_type( 'simple' ) ) {
+          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
             $title .= " / " . $this->get_product_price($product);
           }
         }
