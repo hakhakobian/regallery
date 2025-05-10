@@ -231,4 +231,33 @@ class REACGLibrary {
 
     return $installed_time;
   }
+
+  /**
+   * Return Pro post types.
+   *
+   * @param $obj
+   *
+   * @return array
+   */
+  public static function get_pro_post_types($obj) {
+    $pro_post_types = [];
+    if ( $obj->woocommerce_is_active ) {
+      $response = wp_remote_get( add_query_arg(
+                                   [ 'woocommerce' => $obj->woocommerce_is_active ],
+                                   "https://regallery.team/core/wp-json/reacgcore/v2/postTypes"
+                                 )
+      );
+      if ( !is_wp_error($response) ) {
+        if ( wp_remote_retrieve_response_code($response) === 200 ) {
+          $body = wp_remote_retrieve_body( $response );
+          $data = json_decode( $body, true );
+          if ( is_array($data) ) {
+            $pro_post_types = $data;
+          }
+        }
+      }
+    }
+
+    return $pro_post_types;
+  }
 }
