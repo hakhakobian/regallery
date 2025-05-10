@@ -264,7 +264,7 @@ to avoid a bug connected with preview.
     border-radius: 24px;
     position: relative;
     max-height: calc(100% - 64px);
-    max-width: 600px;
+    width: 600px;
     overflow-y: auto;
   }
 

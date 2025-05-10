@@ -540,7 +540,7 @@ function reacg_modal(field) {
     '<div class="reacg-modal-content">' +
     '<h1>' + field.title + '</h1>' +
     '<div>' +
-    '<p class="reacg-modal-note">' + reacg_info_icon() + reacg.ai_popup_note + '</p>' +
+    '<p class="reacg-modal-note">' + reacg_info_icon() + field.notice + '</p>' +
     '</div>' +
     '<div>' +
     '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
@@ -574,10 +574,12 @@ function reacg_add_ai_button(that, field) {
     /* Create an AI button.*/
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
+    const url_cont = that.find('[data-setting="url"]');
     const title_cont = that.find('[data-setting="title"]');
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
+    /* Show tooltip for the first field.*/
     if ( field.name === "alt" ) {
       if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
         reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
@@ -589,7 +591,7 @@ function reacg_add_ai_button(that, field) {
       spinnerCont.addClass("is-active");
       /* Add notification if title is empty.*/
       const title = title_cont.find("input").val();
-      if ( !title ) {
+      if ( !title && field.name !== "title" ) {
         spinnerCont.removeClass("is-active");
         title_cont.next(".description.required").remove();
         title_cont.find("input").addClass("reacg-required-input");
@@ -643,6 +645,7 @@ function reacg_add_ai_button(that, field) {
                   url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
                   contentType: "application/json",
                   data: {
+                    "image_url": url_cont.find("input").val(),
                     "title": title,
                     "notes": modal.find(".reacg-modal-notes").val(),
                     "action": field.action,
@@ -699,14 +702,23 @@ function reacg_add_ai_button_to_uploader() {
       alt: {
         name: "alt",
         action: "get_alt",
-        title: reacg.ai_popup_alt_title,
+        title: reacg.ai_popup_alt_heading,
+        notice: reacg.ai_popup_alt_desc_notice,
         label: reacg.ai_popup_alt_field_label,
       },
       description: {
         name: "description",
         action: "get_description",
-        title: reacg.ai_popup_description_title,
+        title: reacg.ai_popup_description_heading,
+        notice: reacg.ai_popup_alt_desc_notice,
         label: reacg.ai_popup_description_field_label,
+      },
+      title: {
+        name: "title",
+        action: "get_title",
+        title: reacg.ai_popup_title_heading,
+        notice: reacg.ai_popup_title_notice,
+        label: reacg.ai_popup_title_field_label,
       }
     }
 
