@@ -178,6 +178,11 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
 
   jQuery(document).off("click", ".media-menu-item").on("click", ".media-menu-item", function () {
     if ( reacg.allowed_post_types.hasOwnProperty(jQuery(this).data("type")) ) {
+      if ( jQuery(this).data("type").includes("paid") ) {
+        /* If trying to get Pro post type with free account.*/
+        reacg_open_premium_offer_dialog();
+        return;
+      }
       /* Reset images selection on tab change.*/
       media_uploader.state().get('selection').reset();
       let media_modal = jQuery(this).closest(".media-modal-content");

@@ -70,7 +70,8 @@
   border: 3px solid #cacccb;
 }
 .reacg-cover.dashicons.dashicons-admin-post:before,
-.reacg-cover.dashicons.dashicons-admin-page:before {
+.reacg-cover.dashicons.dashicons-admin-page:before,
+.reacg-cover.dashicons.dashicons-archive:before {
   font-size: 35px;
 }
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after {
@@ -79,8 +80,13 @@
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after {
   content: "\f105";
 }
+
+.reacg-cover.reacg-dynamic.dashicons.dashicons-archive:after {
+  content: "\f480";
+}
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after,
-.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after {
+.reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after,
+.reacg-cover.reacg-dynamic.dashicons.dashicons-archive:after {
   left: 30%;
   top: 40%;
   font-size: 35px;
@@ -88,6 +94,7 @@
   color: #9b9b9b;
 }
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:before,
+.reacg-cover.reacg-dynamic.dashicons.dashicons-archive:before,
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:before {
   transform: translate(-35%, -40%);
 }

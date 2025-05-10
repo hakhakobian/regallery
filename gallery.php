@@ -38,6 +38,7 @@ final class REACG {
   public $abspath = '';
 
   public $allowed_post_types = [];
+  public $woocommerce_is_active = FALSE;
 
   /**
    * Ensures only one instance is loaded or can be loaded.
@@ -128,6 +129,13 @@ final class REACG {
       'postdynamic' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post reacg-dynamic'],
       'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
     ];
+    $this->woocommerce_is_active = class_exists( 'WooCommerce' );
+
+    $pro_post_types = REACGLibrary::get_pro_post_types($this);
+    if ( !empty($pro_post_types) ) {
+      $this->allowed_post_types = array_merge($this->allowed_post_types, $pro_post_types);
+    }
+
     define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
   }
 
