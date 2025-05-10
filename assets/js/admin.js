@@ -669,7 +669,7 @@ function reacg_add_ai_button(that, field) {
                 });
               });
               proceedButton.on("click", function () {
-                jQuery(that).find('[data-setting="' + field.name + '"] textarea').val(generatedText.val());
+                jQuery(that).find('[data-setting="' + field.name + '"]').find('textarea, input').first().val(generatedText.val());
                 modal.remove();
               });
             }
