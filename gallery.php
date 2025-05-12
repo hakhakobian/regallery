@@ -289,7 +289,7 @@ final class REACG {
       'ai_popup_additional_notes_placeholder' => __('You can add additional notes here to help generate a more accurate text.', 'reacg'),
       'ai_popup_title_heading' => __('Generative AI Title', 'reacg'),
       'ai_popup_title_field_label' => __('Generated Title', 'reacg'),
-      'ai_popup_title_notice' => __('The image title will be generated based on the image.', 'reacg'),
+      'ai_popup_title_notice' => __('The title will be generated based on the image.', 'reacg'),
       'ai_popup_alt_desc_notice' => __('The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.', 'reacg'),
       'ai_popup_description_heading' => __('Generative AI Description', 'reacg'),
       'ai_popup_description_field_label' => __('Generated Description', 'reacg'),
