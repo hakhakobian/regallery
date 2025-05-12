@@ -95,6 +95,11 @@ Perfect for photographers, bloggers, online stores, and anyone using WordPress, 
 
 Just upload your images and let Re Gallery PRO do the work.
 
+
+== 🛍️ WooCommerce Product Integration ==
+
+Display your WooCommerce products in stunning, customizable galleries with Re Gallery. Automatically pull product images, titles, and prices into beautiful layouts that boost engagement and drive sales, no manual setup needed!
+
 👉 [Upgrade to Re Gallery PRO and create a smarter, faster photo gallery today.](https://regallery.team/?utm_source=wordpress&utm_medium=social#pricing)
 
 
