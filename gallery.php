@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: ReGallery
- * Description: Photo gallery plugin is a responsive image gallery WordPress plugin for easily creating beautiful, mobile-friendly galleries in just minutes.
+ * Description: Photo gallery WordPress plugin lets you create responsive, mobile-friendly image gallery with AI generated titles, descriptions & alt text.
  * Version: 1.13.0
  * Requires at least: 4.6
  * Requires PHP: 7.0
