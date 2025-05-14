@@ -436,6 +436,7 @@ class REACG_Gallery {
               $item['action_url'] = $this->get_action_url($post_type, $post->ID);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = $this->get_title($post_type, $post->ID);
+              $item['caption'] = $this->get_caption($post_type, $post->ID);
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
               $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
               $item['date'] = $post->post_date;
@@ -451,14 +452,15 @@ class REACG_Gallery {
             $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
             $item['action_url'] = $this->get_action_url($matches[1], $images_id);
             $item['title'] = $this->get_title($matches[1], $images_id);
+            $item['caption'] = $this->get_caption($matches[1], $images_id);
             $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
           }
           else {
             $post = get_post($images_id);
-            $item['caption'] = html_entity_decode(wp_get_attachment_caption($images_id));
             $description = $post->post_content;
             $item['action_url'] = $this->get_action_url($item['type'], $images_id);
             $item['title'] = $this->get_title($item['type'], $images_id);
+            $item['caption'] = $this->get_caption($item['type'], $images_id);
           }
           $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
           $item['date'] = $post->post_date;
@@ -544,23 +546,11 @@ class REACG_Gallery {
   private function get_title($type, $id) {
     switch ($type) {
       case "image":
-      case "video": {
-      $title = get_the_title($id);
-        break;
-      }
+      case "video":
       case "post":
-      case "page": {
-        $title = get_the_title($id);
-        break;
-      }
+      case "page":
       case "product": {
         $title = get_the_title($id);
-        if ( $this->obj->woocommerce_is_active ) {
-          $product = wc_get_product( $id );
-          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
-            $title .= " / " . $this->get_product_price($product);
-          }
-        }
         break;
       }
       default: {
@@ -570,6 +560,46 @@ class REACG_Gallery {
     }
 
     return html_entity_decode($title);
+  }
+
+  /**
+   * Return the Captionm depends on type.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_caption($type, $id) {
+    switch ($type) {
+      case "image":
+      case "video": {
+//        $caption = wp_get_attachment_caption($id);
+        $caption = "";
+        break;
+      }
+      case "post":
+      case "page": {
+        $caption = "";
+        break;
+      }
+      case "product": {
+        $caption = "";
+        if ( $this->obj->woocommerce_is_active ) {
+          $product = wc_get_product( $id );
+          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
+            $caption = $this->get_product_price($product);
+          }
+        }
+        break;
+      }
+      default: {
+        $caption = "";
+        break;
+      }
+    }
+
+    return html_entity_decode($caption);
   }
 
   /**
@@ -998,6 +1028,11 @@ class REACG_Gallery {
         'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
       ];
     }
+    if ( function_exists( 'vc_map' ) ) {
+      $available_builders['wpbakery'] = [
+        'title' => __('WPBakery Element', 'reacg'),
+      ];
+    }
     if ( !empty($available_builders) ) {
       ?>
     <p>
@@ -1008,9 +1043,21 @@ class REACG_Gallery {
       foreach ( $available_builders as $builder ) {
         ?>
       <li>
+        <?php
+        if ( !empty($builder['video']) ) {
+        ?>
         <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'reacg' ); ?>">
+        <?php
+        }
+        ?>
           <strong><?php esc_html_e($builder['title']); ?></strong>
+          <?php
+        if ( !empty($builder['video']) ) {
+        ?>
         </a>
+        <?php
+        }
+        ?>
       </li>
         <?php
       }
