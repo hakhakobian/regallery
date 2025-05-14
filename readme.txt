@@ -77,6 +77,8 @@ Below are some of the most popular Re Gallery tutorials:
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
 [How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
+[How to create dynamic gallery from your latest posts](https://www.youtube.com/watch?v=IQETfwbUKKg)
+[How to use AI to automate Titles, Descriptions, Alt Text in WordPress galleries](https://www.youtube.com/watch?v=hTKaRB63_ds)
 
 
 == 🥇 PRO Pre-Built Templates ==
