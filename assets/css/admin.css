@@ -394,3 +394,8 @@ to avoid a bug connected with preview.
     transform-origin: 0 0;
   }
 }
+
+.reacg-icon,
+.vc_element-icon.reacg-icon {
+  background-image: url(../images/icon.svg);
+}

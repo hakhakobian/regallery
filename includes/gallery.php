@@ -1028,6 +1028,11 @@ class REACG_Gallery {
         'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
       ];
     }
+    if ( function_exists( 'vc_map' ) ) {
+      $available_builders['wpbakery'] = [
+        'title' => __('WPBakery Element', 'reacg'),
+      ];
+    }
     if ( !empty($available_builders) ) {
       ?>
     <p>
@@ -1038,9 +1043,21 @@ class REACG_Gallery {
       foreach ( $available_builders as $builder ) {
         ?>
       <li>
+        <?php
+        if ( !empty($builder['video']) ) {
+        ?>
         <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'reacg' ); ?>">
+        <?php
+        }
+        ?>
           <strong><?php esc_html_e($builder['title']); ?></strong>
+          <?php
+        if ( !empty($builder['video']) ) {
+        ?>
         </a>
+        <?php
+        }
+        ?>
       </li>
         <?php
       }
