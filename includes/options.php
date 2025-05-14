@@ -323,10 +323,6 @@ class REACG_Options {
         'allowed' => [ 'top', 'bottom', 'start', 'end', 'none' ],
         'default' => 'bottom',
       ],
-//      'captionsPosition' => [
-//        'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
-//        'default' => 'bottom',
-//      ],
       'textPosition' => [
         'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
         'default' => 'bottom',
@@ -336,7 +332,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
@@ -619,8 +615,8 @@ class REACG_Options {
    */
   protected function modify($options) {
     if ( !empty($options) ) {
-      // Options to be moved.
-      $rename = [
+      // Renamed options.
+      $renamed = [
         'slideshow' => [
           ['old' => 'captionsPosition', 'new' => 'textPosition'],
           ['old' => 'captionFontFamily', 'new' => 'textFontFamily'],
@@ -632,7 +628,7 @@ class REACG_Options {
           ['old' => 'captionColor', 'new' => 'textColor'],
         ],
       ];
-      foreach ( $rename as $key => $group ) {
+      foreach ( $renamed as $key => $group ) {
         if ( isset($options[$key]) ) {
           foreach ( $group as $value ) {
             if ( isset($options[$key][$value['old']]) ) {
@@ -642,6 +638,33 @@ class REACG_Options {
           }
         }
       }
+
+      // Renamed options values.
+      $renamed_values = [
+        'thumbnails' => [
+          'hoverEffect' =>  ['old' => 'overlay-icon', 'new' => 'overlay-icon-zoom'],
+        ],
+        'mosaic' => [
+          'hoverEffect' =>  ['old' => 'overlay-icon', 'new' => 'overlay-icon-zoom'],
+        ],
+        'masonry' => [
+          'hoverEffect' =>  ['old' => 'overlay-icon', 'new' => 'overlay-icon-zoom'],
+        ],
+        'blog' => [
+          'hoverEffect' =>  ['old' => 'overlay-icon', 'new' => 'overlay-icon-zoom'],
+        ],
+      ];
+      foreach ( $renamed_values as $key => $group ) {
+        if ( isset($options[$key]) ) {
+          foreach ( $group as $option => $value ) {
+            if ( isset($options[$key][$option]) && $options[$key][$option] === $value['old'] ) {
+              $options[$key][$option] = $value['new'];
+            }
+          }
+        }
+      }
+
+      // Options to be moved.
       $move = [
         'lightbox' => [ 'showLightbox' ],
         'thumbnails' => [
