@@ -432,7 +432,6 @@ class REACG_Gallery {
                 continue;
               }
               $item['id'] = $gallery_id . $images_id . $post->ID;
-              $item['caption'] = html_entity_decode($post->post_excerpt);
               $item['action_url'] = $this->get_action_url($post_type, $post->ID);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = $this->get_title($post_type, $post->ID);
@@ -449,7 +448,6 @@ class REACG_Gallery {
             $images_id = $matches[2];
             $post = get_post($images_id);
             $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
-            $item['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
             $item['action_url'] = $this->get_action_url($matches[1], $images_id);
             $item['title'] = $this->get_title($matches[1], $images_id);
             $item['caption'] = $this->get_caption($matches[1], $images_id);
@@ -580,6 +578,8 @@ class REACG_Gallery {
       }
       case "post":
       case "page": {
+//        $post = get_post($images_id);
+//        $caption = wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...');
         $caption = "";
         break;
       }
