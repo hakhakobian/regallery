@@ -11,9 +11,9 @@ class REACG_Shortcode {
   }
 
   public function content( $params = array() ) {
-    if ( (is_admin() && defined('DOING_AJAX') && !DOING_AJAX) || !isset($params['id']) ) {
-      return false;
-    }
+//    if ( (is_admin() && defined('DOING_AJAX') && !DOING_AJAX) || !isset($params['id']) ) {
+//      return false;
+//    }
 
     $id = (int) $params['id'];
     ob_start();

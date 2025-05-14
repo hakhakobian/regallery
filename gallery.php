@@ -106,6 +106,10 @@ final class REACG {
     // Register Divi module.
     add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
 
+    // Register WP Bakery widget.
+    add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
+    add_action( 'admin_enqueue_scripts', array($this, 'register_wpbakery_scripts') );
+
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
@@ -174,6 +178,28 @@ final class REACG {
       return;
     }
     require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
+  }
+
+  public function register_wpbakery_widget() {
+    if ( ! function_exists( 'vc_map' ) ) {
+      return;
+    }
+
+    require_once ($this->plugin_dir . '/builders/wpbakery/wpbakery.php');
+
+    new REACG_WPBakery($this);
+  }
+
+  public function register_wpbakery_scripts($hook) {
+//    if ( ! function_exists( 'vc_map' ) ) {
+//      return;
+//    }
+//    if ( $hook === 'post.php' || $hook === 'post-new.php' ) {
+//      if ( function_exists('vc_is_inline') && vc_is_inline() ) {
+//        wp_enqueue_script($this->prefix . '_wpbakery', $this->plugin_url . '/builders/wpbakery/js/wpbakery.js', [ 'jquery', $this->prefix . '_thumbnails' ], $this->version);
+    wp_enqueue_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', [], $this->version);
+//      }
+//    }
   }
 
   /**
