@@ -318,7 +318,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
