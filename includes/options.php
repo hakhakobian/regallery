@@ -84,10 +84,16 @@ class REACG_Options {
       'thumbnailBorderRadius' => 0, #number
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
-      'backgroundColor' => '#000000', #string;
-      'captionsPosition' => 'none', #string top | bottom | above | below | none
-      'captionFontFamily' => 'Inherit', #string
-      'captionColor' => '#FFFFFF', #string;
+      'backgroundColor' => '#000000', #string
+      'textPosition' => 'none', #string top | bottom | above | below | none
+      'textFontFamily' => 'Inherit', #string
+      'textColor' => '#FFFFFF', #string
+      'showTitle' => TRUE, #bool
+      'titleFontSize' => 1.6, #float
+      'titleAlignment' => 'left', #string
+      'showDescription' => TRUE, #bool
+      'descriptionFontSize' => 1.3, #float
+      'descriptionMaxRowsCount' => 1, #number
       'isFullCoverImage' => FALSE, #boolean
     ],
     'cube' => [
@@ -188,9 +194,15 @@ class REACG_Options {
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
       'backgroundColor' => '#000000', #string;
-      'captionsPosition' => 'none', #string top | bottom | above | below | none
-      'captionFontFamily' => 'Inherit', #string
-      'captionColor' => '#FFFFFF', #string;
+      'textPosition' => 'none', #string top | bottom | above | below | none
+      'textFontFamily' => 'Inherit', #string
+      'textColor' => '#FFFFFF', #string
+      'showTitle' => TRUE, #bool
+      'titleFontSize' => 1.6, #float
+      'titleAlignment' => 'left', #string
+      'showDescription' => TRUE, #bool
+      'descriptionFontSize' => 1.3, #float
+      'descriptionMaxRowsCount' => 1, #number
     ],
   ];
   protected $name = "reacg_options";
@@ -263,6 +275,8 @@ class REACG_Options {
     ];
     $float = [
       'scale',
+      'titleFontSize',
+      'descriptionFontSize',
     ];
     $style = [
       'css',
@@ -309,7 +323,11 @@ class REACG_Options {
         'allowed' => [ 'top', 'bottom', 'start', 'end', 'none' ],
         'default' => 'bottom',
       ],
-      'captionsPosition' => [
+//      'captionsPosition' => [
+//        'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
+//        'default' => 'bottom',
+//      ],
+      'textPosition' => [
         'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
         'default' => 'bottom',
       ],
@@ -346,8 +364,8 @@ class REACG_Options {
         'default' => 'staggered',
       ],
     ];
-    if ( in_array($key, $number) ) {
-      return intval(max($value, 1));
+    if ( in_array($key, $float) ) {
+      return floatval($value);
     }
     elseif ( in_array($key, $empty_number) ) {
       return $value === '' || intval($value) < 0 ? '' : intval($value);
@@ -355,8 +373,8 @@ class REACG_Options {
     elseif ( in_array($key, $negative_number) ) {
       return intval($value);
     }
-    elseif ( in_array($key, $float) ) {
-      return floatval($value);
+    elseif ( in_array($key, $number) ) {
+      return intval(max($value, 1));
     }
     elseif ( in_array($key, $boolean) ) {
       return filter_var($value, FILTER_VALIDATE_BOOLEAN);
@@ -602,6 +620,28 @@ class REACG_Options {
   protected function modify($options) {
     if ( !empty($options) ) {
       // Options to be moved.
+      $rename = [
+        'slideshow' => [
+          ['old' => 'captionsPosition', 'new' => 'textPosition'],
+          ['old' => 'captionFontFamily', 'new' => 'textFontFamily'],
+          ['old' => 'captionColor', 'new' => 'textColor'],
+        ],
+        'lightbox' => [
+          ['old' => 'captionsPosition', 'new' => 'textPosition'],
+          ['old' => 'captionFontFamily', 'new' => 'textFontFamily'],
+          ['old' => 'captionColor', 'new' => 'textColor'],
+        ],
+      ];
+      foreach ( $rename as $key => $group ) {
+        if ( isset($options[$key]) ) {
+          foreach ( $group as $value ) {
+            if ( isset($options[$key][$value['old']]) ) {
+              $options[$key][$value['new']] = $options[$key][$value['old']];
+              unset($options[$key][$value['old']]);
+            }
+          }
+        }
+      }
       $move = [
         'lightbox' => [ 'showLightbox' ],
         'thumbnails' => [
