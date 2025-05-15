@@ -86,3 +86,8 @@
   padding-bottom: 6px;
   margin-top: 5px;
 }
+
+/* WP Bakery builder element. */
+.vc_element-icon.reacg-icon {
+  background-image: url(../images/icon.svg);
+}

@@ -183,7 +183,7 @@ final class REACG {
     if ( ! function_exists( 'vc_map' ) ) {
       return;
     }
-
+    REACGLibrary::enqueue_scripts();
     require_once ($this->plugin_dir . '/builders/wpbakery/wpbakery.php');
 
     new REACG_WPBakery($this);

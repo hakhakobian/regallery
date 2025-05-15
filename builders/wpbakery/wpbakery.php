@@ -1,12 +1,14 @@
 <?php
 
 class REACG_WPBakery {
+  private $obj;
   public function __construct($obj) {
-    wp_enqueue_style($obj->prefix . '_admin');
-    $this->widget($obj);
+    $this->obj = $obj;
+    add_shortcode( $obj->shortcode . '_wpbakery_widget', [$this, 'render_widget'] );
+    $this->widget();
   }
 
-  private function widget($obj) {
+  private function widget() {
     $options = [];
     foreach ( REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE) as $id => $label ) {
       $options[ $label ] = $id;
@@ -15,7 +17,7 @@ class REACG_WPBakery {
 
     vc_map( array(
               'name' => REACG_NICENAME,
-              'base' => $obj->shortcode,
+              'base' => $this->obj->shortcode . '_wpbakery_widget',
               'class' => '',
               'category' => 'Content',
               "icon" => "reacg-icon",
@@ -29,5 +31,27 @@ class REACG_WPBakery {
                 ),
               )
             ) );
+  }
+
+  public function render_widget( $atts ) {
+    $atts = shortcode_atts( [ 'id' => 0 ], $atts, $this->obj->shortcode . '_wpbakery_widget' );
+
+    $id = intval( $atts['id'] );
+
+    ob_start();
+    echo REACGLibrary::get_rest_routs( $id );
+    if ( isset( $_GET['vc_editable'] ) && $_GET['vc_editable'] === 'true' ) {
+      ?>
+      <script type="text/javascript">
+        var reacgLoadApp = document.getElementById('reacg-loadApp');
+        if ( reacgLoadApp ) {
+          reacgLoadApp.setAttribute('data-id', 'reacg-root<?php echo esc_js($id); ?>');
+          reacgLoadApp.click();
+        }
+      </script>
+      <?php
+    }
+
+    return ob_get_clean();
   }
 }
