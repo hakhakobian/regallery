@@ -73,12 +73,13 @@ Below are some of the most popular Re Gallery tutorials:
 [How to edit video cover](https://www.youtube.com/watch?v=EsfVm63EnBE)
 [Add gallery with Gutenberg](https://www.youtube.com/watch?v=Ep5L3xKdDH8)
 [Add gallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
-[Add gallery with Divi builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
+[Add gallery with Divi Builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
+[Add gallery with WPBakery Page Builder](https://www.youtube.com/watch?v=FClpKpREzPQ)
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
 [How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
 [How to create dynamic gallery from your latest posts](https://www.youtube.com/watch?v=IQETfwbUKKg)
-[How to use AI to automate Titles, Descriptions, Alt Text in WordPress galleries](https://www.youtube.com/watch?v=hTKaRB63_ds)
+[How to use AI to automate Titles, Descriptions, Alt Text in WordPress galleries](https://www.youtube.com/watch?v=z0bK6SP8jbg)
 
 
 == 🥇 PRO Pre-Built Templates ==

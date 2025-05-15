@@ -1030,6 +1030,7 @@ class REACG_Gallery {
     }
     if ( function_exists( 'vc_map' ) ) {
       $available_builders['wpbakery'] = [
+        'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
         'title' => __('WPBakery Element', 'reacg'),
       ];
     }
