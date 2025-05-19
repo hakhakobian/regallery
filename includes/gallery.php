@@ -480,7 +480,7 @@ class REACG_Gallery {
       }
 
       // Filter the data by title and description.
-      $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '');
+      $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '');
       if ( $filter ) {
         $data = array_filter($data, function( $item ) use ( $filter ) {
           if ( stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE ) {
@@ -490,6 +490,9 @@ class REACG_Gallery {
           return FALSE;
         });
       }
+
+      // Images count after filter.
+      $all_images_count = count($data);
 
       // Order the data.
       if ( in_array($order_by, array('title', 'caption', 'description', 'date')) ) {
