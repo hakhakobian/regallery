@@ -114,8 +114,19 @@ jQuery(document).ready(function () {
           selection.add(wp.media.attachment(image_id));
         });
         media_uploader.on('select', function () {
-          reacg_reload_preview();
-          media_uploader.remove();
+          const image = media_uploader.state().get('selection').first();
+          if ( image && image.save ) {
+            /* If the user edited metadata, image.save() will trigger an AJAX request to save those changes.*/
+            image.save().done(function () {
+              /* Waits until the save completes then reload the preview.*/
+              reacg_reload_preview();
+              media_uploader.remove();
+            });
+          }
+          else {
+            reacg_reload_preview();
+            media_uploader.remove();
+          }
         });
         media_uploader.on('close', function () {
           media_uploader.remove();
