@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,24 +117,24 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 
 == Screenshots ==
 
-1. Gallery view
-2. Gallery view
-3. Gallery view
-4. Gallery view
-5. Gallery view
-6. Gallery view
-7. Gallery view
-8. Gallery view
-9. Image lightbox
-10. Gallery template
-11. Gallery template
-12. Gallery template
-13. Gallery template
-14. Gallery template
-15. Gallery template
-16. Gallery edit page
-17. Gallery options
-18. Insert gallery
+1. Gallery Thumbnails view
+2. Gallery Mosaic view
+3. Gallery Masonry view
+4. Gallery Slideshow view
+5. Gallery Cube view
+6. Gallery Carousel view
+7. Gallery Cards view
+8. Gallery Blog view
+9. Image Gallery Lightbox
+10. Gallery Chaos template
+11. Gallery Circle template
+12. Gallery Modern template
+13. Gallery Prism Pattern template
+14. Gallery Dynamic template
+15. Gallery Grid template
+16. Add Image to the Gallery
+17. Gallery Options with Live Preview
+18. Insert gallery with Gutenberg, Elementor, Divi Builder, WP Bakery Page Builder
 
 
 == Frequently Asked Questions ==
@@ -196,10 +196,23 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.13.0: Added possibility to generate image description and alt text with AI based on the image title. Enjoy free functionality and add your suggestions via WP forum.
+* 1.14.0: Added WooCommerce integration with the ability to add products to the gallery. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+
+= 1.14.0 =
+= Updated: 20.05.2025 =
+* **Added:** Possibility to generate image title with AI based on the image.
+* **Added:** WooCommerce integration with the ability to add products to the gallery.
+* **Added:** WPBakery Page Builder element for Re Gallery.
+* **Added:** Option to enable image title and description separately in Slideshow view.
+* **Added:** Font size and alignment options for title and description in Slideshow view.
+* **Added:** Description length control for Slideshow view.
+* **Added:** Overlay Cart Icon and Plus Icon hover effects.
+* **Added:** Image load animation.
+* **Added:** Ability to close the lightbox by clicking on empty areas.
+
 
 = 1.13.0 =
 = Updated: 07.05.2025 =
