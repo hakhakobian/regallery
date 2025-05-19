@@ -1015,26 +1015,26 @@ class REACG_Gallery {
     $available_builders = [];
     if ( function_exists( 'register_block_type' ) ) {
       $available_builders['gutenberg'] = [
-        'title' => __('Gutenberg block', 'reacg'),
+        'title' => __('Gutenberg Block', 'reacg'),
         'video' => 'https://www.youtube.com/watch?v=Ep5L3xKdDH8',
       ];
     }
     if ( class_exists( '\Elementor\Plugin' ) ) {
       $available_builders['elementor'] = [
-        'title' => __('Elementor widget', 'reacg'),
+        'title' => __('Elementor Widget', 'reacg'),
         'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
       ];
     }
     if ( class_exists( 'ET_Builder_Module' ) ) {
       $available_builders['divi'] = [
-        'title' => __('Divi builder module', 'reacg'),
+        'title' => __('Divi Builder Module', 'reacg'),
         'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
       ];
     }
     if ( function_exists( 'vc_map' ) ) {
       $available_builders['wpbakery'] = [
+        'title' => __('WPBakery Builder Element', 'reacg'),
         'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
-        'title' => __('WPBakery Element', 'reacg'),
       ];
     }
     if ( !empty($available_builders) ) {
