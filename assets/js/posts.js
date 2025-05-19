@@ -178,11 +178,6 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
 
   jQuery(document).off("click", ".media-menu-item").on("click", ".media-menu-item", function () {
     if ( reacg.allowed_post_types.hasOwnProperty(jQuery(this).data("type")) ) {
-      if ( jQuery(this).data("type").includes("paid") ) {
-        /* If trying to get Pro post type with free account.*/
-        reacg_open_premium_offer_dialog();
-        return;
-      }
       /* Reset images selection on tab change.*/
       media_uploader.state().get('selection').reset();
       let media_modal = jQuery(this).closest(".media-modal-content");
@@ -190,7 +185,26 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
       jQuery(this).addClass("active").attr("aria-selected", true).removeAttr("tabindex");
       media_modal.find(".media-frame-content").html('<div class="reacg-posts-wrapper attachments-browser" data-type="' + jQuery(this).data("type") + '"><span class="spinner is-active"></span></div>');
 
-      reacg_get_posts(media_uploader, media_modal, "", images_ids, gallery_id);
+      if ( jQuery(this).data("type").includes("product") ) {
+        jQuery.ajax({
+          type: "GET",
+          url: "https://regallery.team/core/wp-json/reacgcore/v2/postTypes",
+          contentType: "application/json",
+          complete: function (response) {
+            if (response.status === 204) {
+              /* If trying to get Pro post type with free account.*/
+              reacg_open_premium_offer_dialog();
+              media_modal.find(".media-frame-content .spinner").removeClass("is-active");
+            }
+            else if (response.status === 200) {
+              reacg_get_posts(media_uploader, media_modal, "", images_ids, gallery_id);
+            }
+          }
+        });
+      }
+      else {
+        reacg_get_posts(media_uploader, media_modal, "", images_ids, gallery_id);
+      }
     }
     else {
       /* Re-render the media frame content.*/

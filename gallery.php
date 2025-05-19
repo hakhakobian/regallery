@@ -133,10 +133,9 @@ final class REACG {
       'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
     ];
     $this->woocommerce_is_active = class_exists( 'WooCommerce' );
-
-    $pro_post_types = REACGLibrary::get_pro_post_types($this);
-    if ( !empty($pro_post_types) ) {
-      $this->allowed_post_types = array_merge($this->allowed_post_types, $pro_post_types);
+    if ( $this->woocommerce_is_active ) {
+      $this->allowed_post_types['product'] = [ 'title' => __('WooCommerce Products', 'reacg'), 'class' => 'dashicons-archive' ];
+      $this->allowed_post_types['productdynamic'] = [ 'title' => __('WooCommerce Products', 'reacg'), 'class' => 'dashicons-archive reacg-dynamic' ];
     }
 
     define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
