@@ -212,7 +212,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * **Added:** Overlay Cart Icon and Plus Icon hover effects.
 * **Added:** Image load animation.
 * **Added:** Ability to close the lightbox by clicking on empty areas.
-
+* **Fixed:** Preview reloads correctly after image metadata is updated.
 
 = 1.13.0 =
 = Updated: 07.05.2025 =
