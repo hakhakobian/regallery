@@ -482,13 +482,9 @@ class REACG_Gallery {
       // Filter the data by title and description.
       $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '');
       if ( $filter ) {
-        $data = array_filter($data, function( $item ) use ( $filter ) {
-          if ( stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE ) {
-            return TRUE;
-          }
-
-          return FALSE;
-        });
+        $data = array_values(array_filter($data, function( $item ) use ( $filter ) {
+          return stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE;
+        }));
       }
 
       // Images count after filter.
