@@ -1,6 +1,19 @@
 jQuery(document).ready(function () {
   reacg_track_unsaved_changes();
 
+  const max_edit_count = 10;
+  const max_minutes_spent = 5;
+  jQuery(".reacg_items").each(function () {
+    if ( jQuery(this).data("edit-count") > max_edit_count ) {
+    }
+  });
+  jQuery(document).on("click", ".reacg_help", function () {
+
+  });
+  setTimeout(function () {
+
+  }, max_minutes_spent * 60 * 1000);
+
   /* Save options on saving the gallery.*/
   jQuery("#publish").on("click", function () {
     jQuery( ".save-settings-button" ).trigger("click");
