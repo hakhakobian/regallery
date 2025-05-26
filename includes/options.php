@@ -48,6 +48,24 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
     ],
+    'justified' => [
+      'width' => 100, #number
+      'gap' => 10, #number
+      'backgroundColor' => '', #string
+      'containerPadding' => 0, #number
+      'padding' => 0, #number
+      'paddingColor' => '', #string
+      'rowHeight' => 200, #number
+      'borderRadius' => 0, #number
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
+      'titleAlignment' => 'left', #string left | center | right
+      'titleColor' => '#CCCCCC', #string
+      'titleFontSize' => 12, #number
+      'titleFontFamily' => 'Inherit', #string
+      'paginationType' => 'simple', #string simple | none
+    ],
     'masonry' => [
       'width' => 100, #number
       'gap' => 10, #number
@@ -284,7 +302,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'blog' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'blog' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
@@ -715,6 +733,15 @@ class REACG_Options {
       if ( isset($options['lightbox']['showLightbox']) ) {
         $options['general']['clickAction'] = in_array((!isset($options['type']) ? 'thumbnails' : $options['type']), ['thumbnails', 'mosaic', 'masonry']) && $options['lightbox']['showLightbox'] ? 'lightbox' : 'none';
         unset($options['lightbox']['showLightbox']);
+      }
+      if ( !empty($options['type']) && $options['type'] === "mosaic"
+        && !empty($options['mosaic']) && $options['mosaic']['direction'] === "horizontal" ) {
+        $options['type'] = "justified";
+        $options['justified'] = $options['mosaic'];
+        unset($options['mosaic']['direction']);
+        unset($options['mosaic']['rowHeight']);
+        unset($options['justified']['direction']);
+        unset($options['justified']['columns']);
       }
     }
 
