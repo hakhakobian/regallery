@@ -740,6 +740,7 @@ class REACG_Options {
         $options['justified'] = $options['mosaic'];
         unset($options['mosaic']['direction']);
         unset($options['mosaic']['rowHeight']);
+        unset($options['justified']['direction']);
         unset($options['justified']['columns']);
       }
     }
