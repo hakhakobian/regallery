@@ -188,6 +188,7 @@ class REACG_Options {
       'paginationButtonShape' => 'circular', #string rounded | circular
       'loadMoreButtonColor' => '#afafaf80', #string
       'paginationTextColor' => '#000000de', #string
+      'showSearchField' => false, #boolean
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
@@ -290,6 +291,7 @@ class REACG_Options {
       'showButton',
       'openInNewTab',
       'isFullCoverImage',
+      'showSearchField',
     ];
     $float = [
       'scale',
