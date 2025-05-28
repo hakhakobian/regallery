@@ -1,18 +1,34 @@
 jQuery(document).ready(function () {
   reacg_track_unsaved_changes();
 
-  const max_edit_count = 10;
-  const max_minutes_spent = 5;
-  jQuery(".reacg_items").each(function () {
-    if ( jQuery(this).data("edit-count") > max_edit_count ) {
-    }
-  });
-  jQuery(document).on("click", ".reacg_help", function () {
+  const max_edit_count = 7;
+  const max_minutes_spent = 10;
+  if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
+    setTimeout(function () {
+      if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
+        && jQuery(".reacg_items").data("edit-count") > max_edit_count ) {
+        const reacg_open_need_help_dialog_exist = setInterval(function () {
+          if ( typeof reacg_open_need_help_dialog !== "undefined" ) {
+            reacg_open_need_help_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
+            clearInterval(reacg_open_need_help_dialog_exist);
+          }
+        }, 100);
+      }
+    }, 5 * 1000);
+  }
 
+  jQuery(document).on("click", ".reacg_help_icon", function () {
+    reacg_open_need_help_dialog();
   });
-  setTimeout(function () {
 
-  }, max_minutes_spent * 60 * 1000);
+  if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
+    setTimeout(function () {
+      if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
+        && typeof reacg_open_new_here_dialog !== "undefined" ) {
+        reacg_open_new_here_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
+      }
+    }, max_minutes_spent * 60 * 1000);
+  }
 
   /* Save options on saving the gallery.*/
   jQuery("#publish").on("click", function () {
