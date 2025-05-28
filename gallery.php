@@ -241,7 +241,6 @@ final class REACG {
       'plugin_url' => $this->plugin_url,
       'text' => [
         'load_more' => __('Load more', 'reacg'),
-        'search' => __('Search', 'reacg'),
         'no_data' => __('There is not data.', 'reacg'),
       ],
    ) );
