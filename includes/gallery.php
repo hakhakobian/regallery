@@ -504,7 +504,7 @@ class REACG_Gallery {
       }
 
       $per_page = '';
-      $views_with_pagination = ['thumbnails', 'mosaic', 'masonry'];
+      $views_with_pagination = ['thumbnails', 'mosaic', 'masonry', 'justified'];
       if ( !empty($gallery_options['general']['itemsPerPage'])
         && in_array($gallery_options['type'], $views_with_pagination)
         && !empty($gallery_options[$gallery_options['type']]['paginationType'])

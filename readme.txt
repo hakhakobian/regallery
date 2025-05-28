@@ -27,8 +27,8 @@ For more details, updates, and inspiration, please visit our website: 🔗 [ReGa
 == Benefits ==
 
 *   **Ultra-Lightweight Design:** Re Gallery Photo Gallery WordPress plugin is engineered for lightning-fast performance, reducing load times and ensuring a smooth browsing experience, even for mobile-friendly responsive galleries.
-*   **Increased User Engagement:** Style and optimize your image gallery and album with features like slideshow, thumbnails and masonry layouts. Engaging visual content increases interaction, improving pageviews and user retention.
-*   **Interactive Live Demo:** Preview changes instantly with our live demo feature. This interactive experience allows you to experiment with gallery settings such as carousel, cards, cube, or mosaic designs to achieve the perfect visual. The changes appear in the live demo. Moreover, the UX/UI design of the photo gallery plugin closely aligns with WordPress, making it even easier and more intuitive to work with its features.
+*   **Increased User Engagement:** Style and optimize your image gallery and album with features like slideshow, thumbnails and masonry layouts. Engaging visual content increases interaction, improving page views and user retention.
+*   **Interactive Live Demo:** Preview changes instantly with our live demo feature. This interactive experience allows you to experiment with gallery settings such as carousel, cards, cube, masonry, justified, thumbnails, slideshow, blog or mosaic designs to achieve the perfect visual. The changes appear in the live demo. Moreover, the UX/UI design of the photo gallery plugin closely aligns with WordPress, making it even easier and more intuitive to work with its features.
 *   **Enhanced SEO:** Optimizing images, titles, and descriptions enhances visibility on Google. Re Gallery ensures your image browser, lightbox, and other gallery features are fully SEO-friendly, boosting your site's search engine performance.
 *   **A User-Friendly Interface:** Create and manage the photo gallery with ease using our intuitive dashboard. Whether you're working with albums and video support, or platforms like YouTube, Vimeo, Instagram, Flickr, or Dailymotion, Re Gallery image gallery plugin simplifies the process for all levels of users.
 *   **Powered by React.js:** Our plugin leverages cutting-edge technology for responsive updates and a seamless user journey, whether you're managing widgets or customizing gallery views.
@@ -120,65 +120,79 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 1. Gallery Thumbnails view
 2. Gallery Mosaic view
 3. Gallery Masonry view
-4. Gallery Slideshow view
-5. Gallery Cube view
-6. Gallery Carousel view
-7. Gallery Cards view
-8. Gallery Blog view
-9. Image Gallery Lightbox
-10. Gallery Chaos template
-11. Gallery Circle template
-12. Gallery Modern template
-13. Gallery Prism Pattern template
-14. Gallery Dynamic template
-15. Gallery Grid template
-16. Add Image to the Gallery
-17. Gallery Options with Live Preview
-18. Insert gallery with Gutenberg, Elementor, Divi Builder, WP Bakery Page Builder
+4. Gallery Justified view
+5. Gallery Slideshow view
+6. Gallery Cube view
+7. Gallery Carousel view
+8. Gallery Cards view
+9. Gallery Blog view
+10. Image Gallery Lightbox
+11. Gallery Chaos template
+12. Gallery Circle template
+13. Gallery Modern template
+14. Gallery Prism Pattern template
+15. Gallery Dynamic template
+16. Gallery Grid template
+17. Add Image to the Gallery
+18. Gallery Options with Live Preview
+19. Insert gallery with Gutenberg, Elementor, Divi Builder, WP Bakery Page Builder
 
 
 == Frequently Asked Questions ==
 
-= Can I add galleries using Gutenberg? =
-Absolutely! Our photo gallery plugin smoothly works with the Gutenberg editor, making gallery addition and management a breeze for a user-friendly experience. Additionally, Option changes can be saved both from the live demo feature and working in the Gutenberg editor, ensuring a consistent experience.
+= What is Re Gallery photo gallery plugin? =
+Re Gallery is a responsive WordPress photo gallery plugin that lets you easily create image galleries in WordPress with drag-and-drop tools, AI-generated image captions, and pre-designed gallery templates. It's compatible with major page builders like Gutenberg, Elementor, WPBakery, and Divi, and supports WooCommerce photo gallery integration for eCommerce sites.
 
-= How can I change the title of an image in my photo gallery? =
-To change the title of an image, simply edit the image and modify the title from the media uploader screen.
+= How do I create my first image gallery using Re Gallery? =
+Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images using the drag and drop interface, choose a pre-designed gallery template, customize with AI captions, hover effects, or lightbox, then insert it into any page using shortcode or your page builder (Gutenberg, Elementor, WPBakery, Divi).
 
-= Can images within a gallery be reordered? =
-Our photo gallery plugin supports drag-and-drop functionality, enabling you to easily reorder and restructure images within your gallery.
+= Is Re Gallery photo gallery plugin compatible with Elementor page builder? =
+Re Gallery works seamlessly with Gutenberg, Elementor, Divi, and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
 
-= Can I use this image gallery plugin for a professional photography website? =
-Our photo gallery plugin is perfect for everyone, providing the elegance and adaptability required for top-notch galleries.
+= Is Re Gallery WordPress gallery plugin optimized for mobile devices? =
+Yes, Re Gallery is fully mobile-optimized. All responsive photo galleries automatically adjust to fit any screen size, ensuring a smooth user experience on smartphones, tablets, and desktops. Gallery views like mosaic, justified, masonry, thumbnails, cards, carousel, cube, blog and slideshow are designed to be fully responsive, making Re Gallery perfect for creating mobile-friendly WordPress sites.
 
-= Is the plugin optimized for mobile devices? =
-Yes, our photo gallery plugin is fully responsive, ensuring your galleries look amazing on all devices.
+= What are Generative AI Captions in Re Gallery photo gallery plugin? =
+Generative AI Captions in Re Gallery automatically create image titles, descriptions, and alt text using AI. This feature helps improve SEO, accessibility, and user engagement. It’s built into the plugin and works seamlessly with your responsive photo gallery, pre-designed templates, and is fully compatible with WordPress page builders.
 
-= What Views Are Available in the Re Gallery plugin? =
-Re Gallery offers a variety of stunning views to enhance your photo gallery. Our image gallery plugin includes the following views:
+= Can I edit AI-generated image captions in Re Gallery photo gallery plugin? =
+Yes, you can fully edit the AI-generated image captions in Re Gallery. After generating a title, description, and alt text using the built-in AI tool, you can customize the content to better fit your responsive photo gallery.
 
-* **Thumbnail view:** Present your photo gallery with clickable thumbnails that open larger versions of the images.
+= Is Re Gallery photo gallery plugin SEO friendly? =
+Yes, Re Gallery is highly SEO friendly. Its AI-generated image captions automatically create descriptive titles, alt text, and descriptions for your images, which improves search engine visibility. Combined with responsive photo galleries and optimized mobile galleries, this helps your WordPress site rank better.
+
+= How does Re Gallery photo gallery plugin integrate with WooCommerce for photo galleries? =
+Re Gallery integrates smoothly with WooCommerce, allowing you to create beautiful, responsive photo galleries for your products. It includes features like lightbox viewing, hover effects, AI-generated image captions, and customizable gallery layouts such as masonry, mosaic, justified, thumbnails, carousel, cards, slideshow, blog and cube. These tools help make your product galleries more engaging, mobile-optimized, and SEO-friendly, delivering a better shopping experience for your customers.
+
+= Which gallery views like masonry, carousel, justified are available in WordPress photo gallery plugin? =
+Re Gallery supports multiple gallery layouts including։
+
+* **Thumbnails view:** Present your photo gallery with clickable thumbnails that open larger versions of the images.
 * **Mosaic view:** Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
 * **Masonry view:** Show your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
+* **Justified view:** Arrange your images in clean, horizontal rows of equal height, adjusting widths automatically to maintain alignment.
 * **Slideshow view:** Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
 * **Cube view:** A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
-* **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space. Great for highlighting products, portfolios, or collections.
+* **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space.
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
+* **Blog view:** Display your images in a vertically stacked layout similar to blog posts, often including captions or descriptions.
 
-= How does the live demo feature work? =
-The live demo allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your photo gallery.
+All views are fully responsive and mobile-optimized. Besides these layouts, Re Gallery offers features like Live Demo, AI-generated image captions, WooCommerce photo gallery integration, pre-designed gallery templates, and customizable gallery styles to help you create professional and engaging photo galleries in WordPress.
 
-= Are there any limitations on the number of galleries I can create? =
-No limits! Create as many galleries as you need, each with its unique flair.
+= Does Re Gallery offer a live demo or template layouts? =
+Yes, Re Gallery provides a live demo feature that allows you to see changes in real-time as you adjust settings, offering a dynamic preview of your photo gallery.
 
-= What are PRO Pre-Built Templates? =
-Pro Pre-Built Templates are designed to help you quickly and easily create beautiful, professional-looking galleries without starting from scratch. These templates save you time by offering ready-made layouts that can be customized to suit your style and needs.
+= What are Pro pre-built templates in Re Gallery photo gallery plugin? =
+Pro pre-built templates are professionally designed, ready-to-use gallery templates included in the premium plans of the Re Gallery plugin. These templates allow you to quickly create stunning, responsive photo galleries with customizable layouts, hover effects, and lightbox features. They save you time and work perfectly with popular WordPress page builders.
 
-= Can I switch between plans later? =
-Sure, you can! Please send us an inquiry at regalleryteam@gmail.com, and we'll get back to you as soon as possible.
+= Can Re Gallery  photo gallery plugin display video files as well as photos? =
+Yes, Re Gallery allows you to display both videos and photos together in one gallery. You can easily combine images and videos to create dynamic, engaging responsive photo galleries. Plus, it integrates smoothly with WordPress posts and pages, letting you showcase mixed media galleries dynamically across your site.
 
-= What happens with my galleries when my plan expires? =
-When your plan expires, you will still have access to the galleries where you have applied PRO Pre-Built templates. However, we regularly add new templates, and if you do not renew your plan, you will not be able to access PRO Pre-Built templates.
+= What plans do you offer for Re Gallery WordPress photo gallery plugin? =
+Re Gallery offers flexible pricing plans, including a free version with essential features and multiple premium plans with advanced options like WooCommerce photo gallery integration, AI-generated image captions, customizable gallery layouts, and access to Pro pre-built templates. Plans vary based on the number of sites and include options for annual subscriptions.
+
+= What happens to my galleries when my Re Gallery plugin plan expires? =
+If your Re Gallery plugin plan expires, your galleries will continue to function normally on your WordPress site. However, you will lose access to premium features.
 
 
 == Installation ==
