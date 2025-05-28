@@ -1073,6 +1073,11 @@ class REACG_Gallery {
     <p class="reacg_shortcode">
       <code><?php echo esc_html(REACGLibrary::get_shortcode($this->obj, $post->ID)); ?></code>
     </p>
+    <div class="reacg_help_icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
+        <path d="M12,19c-.829,0-1.5-.672-1.5-1.5,0-1.938,1.352-3.709,3.909-5.118,1.905-1.05,2.891-3.131,2.51-5.301-.352-2.003-1.997-3.648-4-4-1.445-.254-2.865,.092-4.001,.974-1.115,.867-1.816,2.164-1.922,3.559-.063,.825-.785,1.445-1.609,1.382-.826-.063-1.445-.783-1.382-1.609,.17-2.237,1.29-4.315,3.073-5.7C8.89,.278,11.149-.275,13.437,.126c3.224,.566,5.871,3.213,6.437,6.437,.597,3.399-1.018,6.794-4.017,8.447-1.476,.813-2.357,1.744-2.357,2.49,0,.828-.671,1.5-1.5,1.5Zm-1.5,3.5c0,.828,.672,1.5,1.5,1.5s1.5-.672,1.5-1.5-.672-1.5-1.5-1.5-1.5,.672-1.5,1.5Z"/>
+      </svg>
+    </div>
     <?php
   }
 
@@ -1287,11 +1292,17 @@ class REACG_Gallery {
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $additional_data = get_post_meta( $post_id, 'additional_data', true );
 
+    // Calculate eidts count.
+    $edit_count = get_post_meta($post_id, 'edit_count', true);
+    $edit_count = $edit_count ? (int) $edit_count + 1 : 1;
+    update_post_meta($post_id, 'edit_count', $edit_count);
+
     if ( $valid_ajax_call ) {
       ob_start();
     }
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post_id); ?>"
+         data-edit-count="<?php echo esc_attr($edit_count); ?>"
          data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->obj->nonce)); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
