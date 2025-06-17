@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.1
+Stable tag: 1.15.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -216,10 +216,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.1: Fixed warning when images do not exist. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.2: Fixed minor bug. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.2 =
+= Updated: 18.06.2025 =
+* **Fixed:** Live Preview on WP.org.
+* **Fixed:** Issue with filmstrip image covers not displaying correctly in Slideshow and Lightbox when using Elementor.
+
 = 1.15.1 =
 = Updated: 05.06.2025 =
 * **Fixed:** Warning when images do not exist.
