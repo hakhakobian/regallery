@@ -109,6 +109,9 @@ final class REACG {
     // Register WP Bakery widget.
     add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
 
+    // Register Beaver Builder module.
+    add_action( 'init', array($this, 'register_buiver_builder_widget') );
+
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
@@ -186,6 +189,12 @@ final class REACG {
     require_once ($this->plugin_dir . '/builders/wpbakery/wpbakery.php');
 
     new REACG_WPBakery($this);
+  }
+
+  public function register_buiver_builder_widget() {
+    if ( class_exists( 'FLBuilder' ) ) {
+      require_once $this->plugin_dir . '/builders/beaverbuilder/beaverbuilder.php';
+    }
   }
 
   /**
