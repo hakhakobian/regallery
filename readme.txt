@@ -81,6 +81,7 @@ Below are some of the most popular Re Gallery tutorials:
 [Add gallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
 [Add gallery with Divi Builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
 [Add gallery with WPBakery Page Builder](https://www.youtube.com/watch?v=FClpKpREzPQ)
+[Add gallery with Beaver Builder](https://www.youtube.com/watch?v=A5U2ghLKYNg)
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
 [How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
@@ -147,13 +148,13 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 == Frequently Asked Questions ==
 
 = What is Re Gallery photo gallery plugin? =
-Re Gallery is a responsive WordPress photo gallery plugin that lets you easily create image galleries in WordPress with drag-and-drop tools, AI-generated image captions, and pre-designed gallery templates. It's compatible with major page builders like Gutenberg, Elementor, WPBakery, and Divi, and supports WooCommerce photo gallery integration for eCommerce sites.
+Re Gallery is a responsive WordPress photo gallery plugin that lets you easily create image galleries in WordPress with drag-and-drop tools, AI-generated image captions, and pre-designed gallery templates. It's compatible with major page builders like Gutenberg, Elementor, WPBakery, Beaver Builder and Divi, and supports WooCommerce photo gallery integration for eCommerce sites.
 
 = How do I create my first image gallery using Re Gallery? =
-Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images using the drag and drop interface, choose a pre-designed gallery template, customize with AI captions, hover effects, or lightbox, then insert it into any page using shortcode or your page builder (Gutenberg, Elementor, WPBakery, Divi).
+Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images using the drag and drop interface, choose a pre-designed gallery template, customize with AI captions, hover effects, or lightbox, then insert it into any page using shortcode or your page builder (Gutenberg, Elementor, WPBakery, Divi, Beaver Builder).
 
 = Is Re Gallery photo gallery plugin compatible with Elementor page builder? =
-Re Gallery works seamlessly with Gutenberg, Elementor, Divi, and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
+Re Gallery works seamlessly with Gutenberg, Elementor, Divi, Beaver Builder and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
 
 = Is Re Gallery WordPress gallery plugin optimized for mobile devices? =
 Yes, Re Gallery is fully mobile-optimized. All responsive photo galleries automatically adjust to fit any screen size, ensuring a smooth user experience on smartphones, tablets, and desktops. Gallery views like mosaic, justified, masonry, thumbnails, cards, carousel, cube, blog and slideshow are designed to be fully responsive, making Re Gallery perfect for creating mobile-friendly WordPress sites.

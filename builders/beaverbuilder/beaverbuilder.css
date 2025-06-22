@@ -1,0 +1,9 @@
+.dashicons-reacg-bb-icon:before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-image: url("../../assets/images/icon.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}

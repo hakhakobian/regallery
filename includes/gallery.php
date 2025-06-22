@@ -1033,6 +1033,12 @@ class REACG_Gallery {
         'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
       ];
     }
+    if ( class_exists( 'FLBuilder' ) ) {
+      $available_builders['beaverbuilder'] = [
+        'title' => __('Beaver Builder Module', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=A5U2ghLKYNg',
+      ];
+    }
     if ( !empty($available_builders) ) {
       ?>
     <p>

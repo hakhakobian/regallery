@@ -24,7 +24,7 @@ class REACG_WPBakery {
               'params' => array(
                 array(
                   'type' => 'dropdown',
-                  'heading' => __( 'Select Gallery', 'reacg' ),
+                  'heading' => __( 'Select gallery', 'reacg' ),
                   'param_name' => 'id',
                   'value' => $options,
                   'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
