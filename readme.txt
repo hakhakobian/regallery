@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.2
+Stable tag: 1.15.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -217,10 +217,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.2: Fixed minor bug. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.3: Added Beaver Builder module. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.3 =
+= Updated: 24.06.2025 =
+* **Added:** Beaver Builder module for Re Gallery.
+
 = 1.15.2 =
 = Updated: 18.06.2025 =
 * **Fixed:** Live Preview on WP.org.
