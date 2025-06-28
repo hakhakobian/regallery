@@ -1039,6 +1039,12 @@ class REACG_Gallery {
         'video' => 'https://www.youtube.com/watch?v=A5U2ghLKYNg',
       ];
     }
+    if ( class_exists( '\Bricks\Elements' ) ) {
+      $available_builders['bricks'] = [
+        'title' => __('Bricks Builder Element', 'reacg'),
+        'video' => 'https://www.youtube.com/watch?v=aiYdYAn1D_8',
+      ];
+    }
     if ( !empty($available_builders) ) {
       ?>
     <p>

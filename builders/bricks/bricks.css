@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'ReGallery';
+  src: url('../../assets/css/fonts/ReGallery.eot');
+  src: url('../../assets/css/fonts/ReGallery.eot?#iefix') format('embedded-opentype'),
+  url('../../assets/css/fonts/ReGallery.woff') format('woff'),
+  url('../../assets/css/fonts/ReGallery.ttf') format('truetype'),
+  url('../../assets/images/icon.svg#ReGallery') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.reacg-icon:before {
+  content:'\0041';
+  display: inline-block;
+  font-family: 'ReGallery';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale
+}
