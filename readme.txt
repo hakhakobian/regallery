@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.3
+Stable tag: 1.15.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,7 @@ Below are some of the most popular Re Gallery tutorials:
 [Add gallery with Divi Builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
 [Add gallery with WPBakery Page Builder](https://www.youtube.com/watch?v=FClpKpREzPQ)
 [Add gallery with Beaver Builder](https://www.youtube.com/watch?v=A5U2ghLKYNg)
+[Add gallery with Bricks Builder](https://www.youtube.com/watch?v=aiYdYAn1D_8)
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
 [How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
@@ -142,19 +143,19 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 16. Gallery Grid template
 17. Add Image to the Gallery
 18. Gallery Options with Live Preview
-19. Insert gallery with Gutenberg, Elementor, Divi Builder, WP Bakery Page Builder
+19. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
 
 
 == Frequently Asked Questions ==
 
 = What is Re Gallery photo gallery plugin? =
-Re Gallery is a responsive WordPress photo gallery plugin that lets you easily create image galleries in WordPress with drag-and-drop tools, AI-generated image captions, and pre-designed gallery templates. It's compatible with major page builders like Gutenberg, Elementor, WPBakery, Beaver Builder and Divi, and supports WooCommerce photo gallery integration for eCommerce sites.
+Re Gallery is a responsive WordPress photo gallery plugin that lets you easily create image galleries in WordPress with drag-and-drop tools, AI-generated image captions, and pre-designed gallery templates. It's compatible with major page builders like Gutenberg, Elementor, WPBakery, Bricks, Beaver Builder and Divi, and supports WooCommerce photo gallery integration for eCommerce sites.
 
 = How do I create my first image gallery using Re Gallery? =
-Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images using the drag and drop interface, choose a pre-designed gallery template, customize with AI captions, hover effects, or lightbox, then insert it into any page using shortcode or your page builder (Gutenberg, Elementor, WPBakery, Divi, Beaver Builder).
+Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images using the drag and drop interface, choose a pre-designed gallery template, customize with AI captions, hover effects, or lightbox, then insert it into any page using shortcode or your page builder (Gutenberg, Elementor, WPBakery, Divi, Bricks, Beaver Builder).
 
 = Is Re Gallery photo gallery plugin compatible with Elementor page builder? =
-Re Gallery works seamlessly with Gutenberg, Elementor, Divi, Beaver Builder and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
+Re Gallery works seamlessly with Gutenberg, Elementor, Divi, Bricks, Beaver Builder and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
 
 = Is Re Gallery WordPress gallery plugin optimized for mobile devices? =
 Yes, Re Gallery is fully mobile-optimized. All responsive photo galleries automatically adjust to fit any screen size, ensuring a smooth user experience on smartphones, tablets, and desktops. Gallery views like mosaic, justified, masonry, thumbnails, cards, carousel, cube, blog and slideshow are designed to be fully responsive, making Re Gallery perfect for creating mobile-friendly WordPress sites.
@@ -217,10 +218,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.3: Added Beaver Builder module. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.4: Added Bricks Builder element. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.4 =
+= Updated: 30.06.2025 =
+* **Added:** Bricks Builder element for Re Gallery.
+* **Fixed:** Long titles and descriptions not displaying correctly in the Overlay Slideshow template.
+
 = 1.15.3 =
 = Updated: 24.06.2025 =
 * **Added:** Beaver Builder module for Re Gallery.
