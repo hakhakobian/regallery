@@ -436,6 +436,7 @@ class REACG_Gallery {
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = $this->get_title($post_type, $post->ID);
               $item['caption'] = $this->get_caption($post_type, $post->ID);
+              $item['price'] = $this->get_price($post_type, $post->ID);
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
               $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
               $item['date'] = $post->post_date;
@@ -451,6 +452,7 @@ class REACG_Gallery {
             $item['action_url'] = $this->get_action_url($matches[1], $images_id);
             $item['title'] = $this->get_title($matches[1], $images_id);
             $item['caption'] = $this->get_caption($matches[1], $images_id);
+            $item['price'] = $this->get_price($matches[1], $images_id);
             $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
           }
           else {
@@ -459,6 +461,7 @@ class REACG_Gallery {
             $item['action_url'] = $this->get_action_url($item['type'], $images_id);
             $item['title'] = $this->get_title($item['type'], $images_id);
             $item['caption'] = $this->get_caption($item['type'], $images_id);
+            $item['price'] = $this->get_price($item['type'], $images_id);
           }
           $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
           $item['date'] = $post->post_date;
@@ -560,7 +563,7 @@ class REACG_Gallery {
   }
 
   /**
-   * Return the Captionm depends on type.
+   * Return the Caption depends on type.
    *
    * @param $type
    * @param $id
@@ -571,25 +574,14 @@ class REACG_Gallery {
     switch ($type) {
       case "image":
       case "video": {
-//        $caption = wp_get_attachment_caption($id);
-        $caption = "";
+        $caption = wp_get_attachment_caption($id);
         break;
       }
       case "post":
-      case "page": {
-//        $post = get_post($images_id);
-//        $caption = wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...');
-        $caption = "";
-        break;
-      }
+      case "page":
       case "product": {
-        $caption = "";
-        if ( $this->obj->woocommerce_is_active ) {
-          $product = wc_get_product( $id );
-          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
-            $caption = $this->get_product_price($product);
-          }
-        }
+        $post = get_post($id);
+        $caption = wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...');
         break;
       }
       default: {
@@ -599,6 +591,35 @@ class REACG_Gallery {
     }
 
     return html_entity_decode($caption);
+  }
+
+  /**
+   * Return the Price.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_price($type, $id) {
+    switch ($type) {
+      case "product": {
+        $price = "";
+        if ( $this->obj->woocommerce_is_active ) {
+          $product = wc_get_product( $id );
+          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
+            $price = $this->get_product_price($product);
+          }
+        }
+        break;
+      }
+      default: {
+        $price = "";
+        break;
+      }
+    }
+
+    return html_entity_decode($price);
   }
 
   /**
