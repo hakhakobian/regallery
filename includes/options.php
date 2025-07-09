@@ -21,6 +21,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -41,6 +42,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -59,6 +61,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -77,6 +80,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -316,6 +320,10 @@ class REACG_Options {
       'titlePosition' => [
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
+      ],
+      'titleSource' => [
+        'allowed' => [ 'title', 'caption', 'alt', 'description' ],
+        'default' => 'title',
       ],
       'textVerticalAlignment' => [
         'allowed' => [ 'bottom', 'top', 'center' ],
