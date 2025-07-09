@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: Photo gallery WordPress plugin lets you create responsive, mobile-friendly image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.15.1
+ * Version: 1.15.5
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.15.1';
+  public $version = '1.15.5';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
@@ -109,6 +109,12 @@ final class REACG {
     // Register WP Bakery widget.
     add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
 
+    // Register Beaver Builder module.
+    add_action( 'init', array($this, 'register_buiver_builder_widget') );
+
+    // Register Bricks Builder element.
+    add_action( 'init', array($this, 'register_bricks_builder_element'), 11);
+
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
@@ -188,12 +194,27 @@ final class REACG {
     new REACG_WPBakery($this);
   }
 
+  public function register_buiver_builder_widget() {
+    if ( class_exists( 'FLBuilder' ) ) {
+      require_once $this->plugin_dir . '/builders/beaverbuilder/beaverbuilder.php';
+    }
+  }
+
+  public function register_bricks_builder_element($elements_manager) {
+    if ( !class_exists('\Bricks\Elements') ) {
+      return;
+    }
+
+    \Bricks\Elements::register_element( $this->plugin_dir . '/builders/bricks/bricks.php' );
+  }
+
   /**
    * Create custom post types.
    */
   public function post_type_gallery() {
     $this->rest_root = rest_url() . "reacg/v1/";
     $this->rest_nonce = wp_create_nonce( 'wp_rest' );
+    define('REACG_REST_NONCE', $this->rest_nonce );
     require_once($this->plugin_dir . '/includes/gallery.php');
     new REACG_Gallery( $this );
     require_once($this->plugin_dir . '/includes/posts.php');
@@ -235,7 +256,6 @@ final class REACG {
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
-
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
@@ -244,7 +264,7 @@ final class REACG {
         'search' => __('Search', 'reacg'),
         'no_data' => __('There is not data.', 'reacg'),
       ],
-   ) );
+    ) );
   }
 
   /**
@@ -324,6 +344,9 @@ final class REACG {
    */
   public function register_frontend_scripts() {
     $this->register_general_scripts();
+    if ( isset($_GET['bricks']) && $_GET['bricks'] === 'run' ) {
+      wp_enqueue_style($this->prefix . '_bricks', $this->plugin_url . '/builders/bricks/bricks.css', [], '1.0');
+    }
   }
 
   /**
