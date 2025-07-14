@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.5
+Stable tag: 1.15.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.5: Added Team pre-built template. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.6: Added ability to choose the source of Title and Description. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.6 =
+= Updated: 15.07.2025 =
+* **Added:** Ability to choose the source of Title and Description.
+
 = 1.15.5 =
 = Updated: 08.07.2025 =
 * **Added:** Team pre-built template.
