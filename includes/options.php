@@ -21,6 +21,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -41,6 +42,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -59,6 +61,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -77,6 +80,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'titleSource' => 'title', #string title | caption | alt | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -107,9 +111,11 @@ class REACG_Options {
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
+      'titleSource' => 'title', #string title | caption | alt | description
       'titleFontSize' => 1.6, #float
       'titleAlignment' => 'left', #string
       'showDescription' => TRUE, #bool
+      'descriptionSource' => 'description', #string title | caption | alt | description
       'descriptionFontSize' => 1.3, #float
       'descriptionMaxRowsCount' => 1, #number
       'isFullCoverImage' => FALSE, #boolean
@@ -157,10 +163,12 @@ class REACG_Options {
       'imageRadius' => 0, #number
       'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
       'showTitle' => TRUE, #boolean
+      'titleSource' => 'title', #string title | caption | alt | description
       'titleFontSize' => 36, #number
       'titleColor' => '#000000', #string
       'titleAlignment' => 'left', #string left | center | right
       'showDescription' => TRUE, #boolean
+      'descriptionSource' => 'description', #string title | caption | alt | description
       'descriptionFontSize' => 16, #number
       'descriptionColor' => '#333333', #string
       'descriptionMaxRowsCount' => 4, #number
@@ -216,9 +224,11 @@ class REACG_Options {
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
+      'titleSource' => 'title', #string title | caption | alt | description
       'titleFontSize' => 1.6, #float
       'titleAlignment' => 'left', #string
       'showDescription' => TRUE, #bool
+      'descriptionSource' => 'description', #string title | caption | alt | description
       'descriptionFontSize' => 1.3, #float
       'descriptionMaxRowsCount' => 1, #number
     ],
@@ -316,6 +326,14 @@ class REACG_Options {
       'titlePosition' => [
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
+      ],
+      'titleSource' => [
+        'allowed' => [ 'title', 'caption', 'alt', 'description' ],
+        'default' => 'title',
+      ],
+      'descriptionSource' => [
+        'allowed' => [ 'title', 'caption', 'alt', 'description' ],
+        'default' => 'description',
       ],
       'textVerticalAlignment' => [
         'allowed' => [ 'bottom', 'top', 'center' ],
