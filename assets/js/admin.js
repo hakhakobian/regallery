@@ -759,6 +759,13 @@ function reacg_add_ai_button_to_uploader() {
         title: reacg.ai_popup_title_heading,
         notice: reacg.ai_popup_title_notice,
         label: reacg.ai_popup_title_field_label,
+      },
+      caption: {
+        name: "caption",
+        action: "get_caption",
+        title: reacg.ai_popup_caption_heading,
+        notice: reacg.ai_popup_caption_notice,
+        label: reacg.ai_popup_caption_field_label,
       }
     }
 
