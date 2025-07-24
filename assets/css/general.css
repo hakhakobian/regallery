@@ -26,8 +26,8 @@
   position: absolute !important;
 }
 
-.react-lightbox__background .yarl__portal.yarl__portal_open {
-  z-index: 100000;
+.reacg-lightbox.yarl__portal.yarl__portal_open {
+  z-index: 1000000;
 }
 
 .react-lightbox__background div,
