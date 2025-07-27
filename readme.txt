@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.7
+Stable tag: 1.15.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.7: Added possibility to generate image caption with AI based on the image title. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.8: Added option to display image caption separately. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.8 =
+= Updated: 28.07.2025 =
+* **Added:** Option to display image caption separately.
+* **Added:** Option to set WooCommerce product price as a source for title, description, and caption.
+* **Added:** Deep linking support for lightbox images.
+* **Added:** Option to enable sharing functionality within the lightbox.
+
 = 1.15.7 =
 = Updated: 22.07.2025 =
 * **Added:** Possibility to generate image caption with AI based on the image title.
