@@ -34,7 +34,7 @@ jQuery(document).ready(function () {
     }
   });
 
-  jQuery(document).on("click", ".reacg-activate-button", function () {
+  jQuery(document).on("click", ".reacg-license-activate-button", function () {
     const activate = jQuery(this).data("activate");
     const container = jQuery(this).closest("#gallery-license");
     const licenseKey = container.find(".reacg-license-key").val();
@@ -61,27 +61,15 @@ jQuery(document).ready(function () {
         action: activate ? "activate" : "deactivate",
       }),
       complete: function (response) {
+        spinner.removeClass("is-active");
+        button.removeAttr("disabled");
         if (response.status === 200 && response.success && response.responseJSON) {
-          jQuery.ajax({
-            type: "POST",
-            url: jQuery(".reacg_items").data("ajax-url"),
-            data: {
-              "action": "reacg_save_license_status",
-              "is_pro": activate
-            },
-            complete: function (data) {
-              spinner.removeClass("is-active");
-              button.removeAttr("disabled");
-              container.find(".reacg-success").html(response.responseJSON.message);
-              const isPro = !!activate;
-              container.find(".reacg-pro-not-active").toggle(!isPro);
-              container.find(".reacg-pro-active").toggle(isPro);
-            }
-          });
+          container.find(".reacg-success").html(response.responseJSON.message);
+          const isPro = !!activate;
+          container.find(".reacg-pro-not-active").toggle(!isPro);
+          container.find(".reacg-pro-active").toggle(isPro);
         }
         else {
-          spinner.removeClass("is-active");
-          button.removeAttr("disabled");
           errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
         }
       }

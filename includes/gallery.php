@@ -42,9 +42,6 @@ class REACG_Gallery {
     // Register an ajax action to get the gallery images (need for builders).
     add_action('wp_ajax_reacg_get_images', [ $this, 'meta_box_images' ]);
 
-    // Register an ajax action to enable/disable Pro version.
-    add_action('wp_ajax_reacg_save_license_status', [ $this, 'save_license_status' ]);
-
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
@@ -1013,11 +1010,11 @@ class REACG_Gallery {
     // Metabox for live preview.
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
 
-    // Metabox to display the available publishing methods.
-    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'high' );
-
-    // Metabox to activate the pro version.
+    // Metabox to activate/deactivate pro version.
     add_meta_box( 'gallery-license', __( 'License', 'reacg' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
+
+    // Metabox to display the available publishing methods.
+    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
     add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg'), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
     add_filter( 'default_hidden_meta_boxes', [$this, 'hide_custom_css_meta_box_by_default'], 10, 2 );
@@ -1126,7 +1123,6 @@ class REACG_Gallery {
    * @return void
    */
   public function meta_box_license() {
-    $is_pro = FALSE; //get_option('reacg_is_pro', FALSE);
     ?>
     <div class="reacg-pro-not-active" style="display: none;">
       <p>
@@ -1143,8 +1139,8 @@ class REACG_Gallery {
       <p class="reacg-error description hidden"></p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>
-        <button type="button" class="button button-primary button-large reacg-primary-button reacg-activate-button" data-activate="true">
-          <?php esc_html_e( "Activate", 'reacg' ); ?>
+        <button type="button" class="button button-primary button-large reacg-primary-button reacg-license-activate-button" data-activate="true">
+          <?php esc_html_e( "Activate Pro version", 'reacg' ); ?>
         </button>
       </div>
     </div>
@@ -1154,7 +1150,7 @@ class REACG_Gallery {
       </p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>
-        <button type="button" class="button button-secondary button-large reacg-activate-button" data-activate="false">
+        <button type="button" class="button button-secondary button-large reacg-license-activate-button" data-activate="false">
           <?php esc_html_e( "Deactivate Pro version", 'reacg' ); ?>
         </button>
       </div>
@@ -1514,24 +1510,5 @@ class REACG_Gallery {
       }
     }
 
-  }
-
-  /**
-   * Save license status.
-   *
-   * @return void
-   */
-  public function save_license_status() {
-    if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce])
-      && isset($_POST['is_pro'])
-      && filter_var($_POST['is_pro'], FILTER_VALIDATE_BOOLEAN) === TRUE ) {
-        update_option('reacg_is_pro', TRUE);
-    }
-    else {
-      delete_option('reacg_is_pro');
-    }
-
-    wp_die();
   }
 }

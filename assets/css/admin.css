@@ -397,8 +397,8 @@ to avoid a bug connected with preview.
 
 .reacg_help_icon {
   position: fixed;
-  bottom: 35px;
-  right: 35px;
+  bottom: 20px;
+  right: 20px;
   z-index: 1301;
   border-radius: 50%;
   width: 60px;
