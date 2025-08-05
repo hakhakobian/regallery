@@ -21,6 +21,73 @@ jQuery(document).ready(function () {
     reacg_open_need_help_dialog();
   });
 
+  /* Check if user is pro.*/
+  jQuery.ajax({
+    type: "GET",
+    //url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+    url: "http://localhost/wordpress/wp-json/reacgcore/v2/user",
+    contentType: "application/json",
+    complete: function (response) {
+      const isPro = !!response.responseJSON;
+      jQuery(".reacg-pro-not-active").toggle(!isPro);
+      jQuery(".reacg-pro-active").toggle(isPro);
+    }
+  });
+
+  jQuery(document).on("click", ".reacg-activate-button", function () {
+    const activate = jQuery(this).data("activate");
+    const container = jQuery(this).closest("#gallery-license");
+    const licenseKey = container.find(".reacg-license-key").val();
+    const errorNoteCont = container.find(".reacg-error");
+    
+    if ( activate && !licenseKey ) {
+      errorNoteCont.removeClass("hidden").html(reacg.enter_license_key);
+      return;
+    }
+
+    const spinner = container.find(".spinner");
+    spinner.addClass("is-active");
+
+    const button = jQuery(this);
+    button.attr("disabled", "desabled");
+
+    jQuery.ajax({
+      type: "POST",
+      //url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+      url: "http://localhost/wordpress/wp-json/reacgcore/v2/user",
+      contentType: "application/json",
+      data: JSON.stringify({
+        licenseKey: licenseKey,
+        action: activate ? "activate" : "deactivate",
+      }),
+      complete: function (response) {
+        if (response.status === 200 && response.success && response.responseJSON) {
+          jQuery.ajax({
+            type: "POST",
+            url: jQuery(".reacg_items").data("ajax-url"),
+            data: {
+              "action": "reacg_save_license_status",
+              "is_pro": activate
+            },
+            complete: function (data) {
+              spinner.removeClass("is-active");
+              button.removeAttr("disabled");
+              container.find(".reacg-success").html(response.responseJSON.message);
+              const isPro = !!activate;
+              container.find(".reacg-pro-not-active").toggle(!isPro);
+              container.find(".reacg-pro-active").toggle(isPro);
+            }
+          });
+        }
+        else {
+          spinner.removeClass("is-active");
+          button.removeAttr("disabled");
+          errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+        }
+      }
+    });
+  });
+
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
       if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
