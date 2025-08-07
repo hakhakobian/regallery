@@ -228,6 +228,7 @@ class REACG_Options {
       'areControlButtonsShown' => TRUE, #boolean
       'isInfinite' => TRUE, #boolean
       'padding' => 0, #number
+      'showCounter' => TRUE, #boolean
       'canShare' => FALSE, #boolean
       'canDownload' => FALSE, #boolean
       'canZoom' => TRUE, #boolean
@@ -316,6 +317,7 @@ class REACG_Options {
       'isFullscreen',
       'areControlButtonsShown',
       'isInfinite',
+      'showCounter',
       'canShare',
       'canDownload',
       'canZoom',
