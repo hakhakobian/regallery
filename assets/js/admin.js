@@ -21,6 +21,59 @@ jQuery(document).ready(function () {
     reacg_open_need_help_dialog();
   });
 
+  /* Check if user is pro.*/
+  jQuery.ajax({
+    type: "GET",
+    url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+    contentType: "application/json",
+    complete: function (response) {
+      const isPro = !!response.responseJSON;
+      jQuery(".reacg-pro-not-active").toggle(!isPro);
+      jQuery(".reacg-pro-active").toggle(isPro);
+    }
+  });
+
+  jQuery(document).on("click", ".reacg-license-activate-button", function () {
+    const activate = jQuery(this).data("activate");
+    const container = jQuery(this).closest("#gallery-license");
+    const licenseKey = container.find(".reacg-license-key").val();
+    const errorNoteCont = container.find(".reacg-error");
+    
+    if ( activate && !licenseKey ) {
+      errorNoteCont.removeClass("hidden").html(reacg.enter_license_key);
+      return;
+    }
+
+    const spinner = container.find(".spinner");
+    spinner.addClass("is-active");
+
+    const button = jQuery(this);
+    button.attr("disabled", "desabled");
+
+    jQuery.ajax({
+      type: "POST",
+      url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+      contentType: "application/json",
+      data: JSON.stringify({
+        licenseKey: licenseKey,
+        action: activate ? "activate" : "deactivate",
+      }),
+      complete: function (response) {
+        spinner.removeClass("is-active");
+        button.removeAttr("disabled");
+        if (response.status === 200 && response.success && response.responseJSON) {
+          container.find(".reacg-success").html(response.responseJSON.message);
+          const isPro = !!activate;
+          container.find(".reacg-pro-not-active").toggle(!isPro);
+          container.find(".reacg-pro-active").toggle(isPro);
+        }
+        else {
+          errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+        }
+      }
+    });
+  });
+
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
       if ( !localStorage.getItem("reacg-opened-contact-us-dialog")

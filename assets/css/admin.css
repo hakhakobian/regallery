@@ -397,8 +397,8 @@ to avoid a bug connected with preview.
 
 .reacg_help_icon {
   position: fixed;
-  bottom: 35px;
-  right: 35px;
+  bottom: 20px;
+  right: 20px;
   z-index: 1301;
   border-radius: 50%;
   width: 60px;
@@ -412,4 +412,30 @@ to avoid a bug connected with preview.
   &:hover {
     transform: scale(1.03);
   }
+}
+
+#gallery-license {
+  .reacg-license-key {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .spinner {
+    float: none;
+    margin-top: 5px;
+  }
+  .reacg-activate-action {
+    text-align: right;
+  }
+  .reacg-error {
+    color: red;
+  }
+}
+
+.button.reacg-primary-button,
+.button.reacg-primary-button:hover,
+.button.reacg-primary-button:active,
+.button.reacg-primary-button:focus {
+  background: rgb(167, 201, 87);
+  color: white;
+  border: none;
 }

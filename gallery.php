@@ -331,6 +331,7 @@ final class REACG {
       'ai_popup_alt_heading' => __('Generative AI Alt', 'reacg'),
       'ai_popup_alt_field_label' => __('Generated Alt', 'reacg'),
       'ai_highlight' => __('Use our built-in AI tools to instantly generate a Description text and Alt text - ideal for better SEO and accessibility.', 'reacg'),
+      'enter_license_key' => __('Please enter license key.', 'reacg'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,

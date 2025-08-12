@@ -1010,8 +1010,11 @@ class REACG_Gallery {
     // Metabox for live preview.
     add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
 
+    // Metabox to activate/deactivate pro version.
+    add_meta_box( 'gallery-license', __( 'License', 'reacg' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
+
     // Metabox to display the available publishing methods.
-    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'high' );
+    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
     add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg'), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
     add_filter( 'default_hidden_meta_boxes', [$this, 'hide_custom_css_meta_box_by_default'], 10, 2 );
@@ -1110,6 +1113,49 @@ class REACG_Gallery {
       <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
         <path d="M12,19c-.829,0-1.5-.672-1.5-1.5,0-1.938,1.352-3.709,3.909-5.118,1.905-1.05,2.891-3.131,2.51-5.301-.352-2.003-1.997-3.648-4-4-1.445-.254-2.865,.092-4.001,.974-1.115,.867-1.816,2.164-1.922,3.559-.063,.825-.785,1.445-1.609,1.382-.826-.063-1.445-.783-1.382-1.609,.17-2.237,1.29-4.315,3.073-5.7C8.89,.278,11.149-.275,13.437,.126c3.224,.566,5.871,3.213,6.437,6.437,.597,3.399-1.018,6.794-4.017,8.447-1.476,.813-2.357,1.744-2.357,2.49,0,.828-.671,1.5-1.5,1.5Zm-1.5,3.5c0,.828,.672,1.5,1.5,1.5s1.5-.672,1.5-1.5-.672-1.5-1.5-1.5-1.5,.672-1.5,1.5Z"/>
       </svg>
+    </div>
+    <?php
+  }
+
+  /**
+   * Add meta box to activate/deactivate Pro version.
+   *
+   * @return void
+   */
+  public function meta_box_license() {
+    ?>
+    <div class="reacg-pro-not-active" style="display: none;">
+      <p>
+        <?php echo sprintf(__( "You're using the free version of %s - no license needed. Enjoy!", 'reacg' ), REACG_NICENAME); ?>
+        <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
+      </p>
+      <p>
+        <?php echo sprintf(__( "To unlock more features consider %s.", 'reacg' ), '<strong><a href="https://regallery.team/#pricing?utm_source=plugin&amp;utm_campaign=upgradingtopro" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'reacg') . '</a></strong>'); ?>
+      </p>
+      <label for="reacg-license-key">
+        <p class="description">
+          <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'reacg' ), REACG_NICENAME); ?>
+        </p>
+      </label>
+      <input placeholder="<?php esc_html_e( "Paste license key here", 'reacg' ); ?>" type="text" id="reacg-license-key" class="reacg-license-key"  />
+      <p class="reacg-error description hidden"></p>
+      <div class="reacg-activate-action">
+        <span class="spinner"></span>
+        <button type="button" class="button button-primary button-large reacg-primary-button reacg-license-activate-button" data-activate="true">
+          <?php esc_html_e( "Activate Pro version", 'reacg' ); ?>
+        </button>
+      </div>
+    </div>
+    <div class="reacg-pro-active" style="display: none;">
+      <p class="reacg-success">
+        <?php echo sprintf(__( "%s PRO version is active!", 'reacg' ), REACG_NICENAME); ?>
+      </p>
+      <div class="reacg-activate-action">
+        <span class="spinner"></span>
+        <button type="button" class="button button-secondary button-large reacg-license-activate-button" data-activate="false">
+          <?php esc_html_e( "Deactivate Pro version", 'reacg' ); ?>
+        </button>
+      </div>
     </div>
     <?php
   }
