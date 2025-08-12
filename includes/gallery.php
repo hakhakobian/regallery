@@ -1132,10 +1132,12 @@ class REACG_Gallery {
       <p>
         <?php echo sprintf(__( "To unlock more features consider %s.", 'reacg' ), '<strong><a href="https://regallery.team/#pricing?utm_source=plugin&amp;utm_campaign=upgradingtopro" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'reacg') . '</a></strong>'); ?>
       </p>
-      <p class="description">
-        <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'reacg' ), REACG_NICENAME); ?>
-      </p>
-      <input placeholder="<?php esc_html_e( "Paste license key here", 'reacg' ); ?>" type="password" class="reacg-license-key" value="" />
+      <label for="reacg-license-key">
+        <p class="description">
+          <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'reacg' ), REACG_NICENAME); ?>
+        </p>
+      </label>
+      <input placeholder="<?php esc_html_e( "Paste license key here", 'reacg' ); ?>" type="text" id="reacg-license-key" class="reacg-license-key"  />
       <p class="reacg-error description hidden"></p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>

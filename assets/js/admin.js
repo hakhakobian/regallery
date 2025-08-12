@@ -24,8 +24,7 @@ jQuery(document).ready(function () {
   /* Check if user is pro.*/
   jQuery.ajax({
     type: "GET",
-    //url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
-    url: "http://localhost/wordpress/wp-json/reacgcore/v2/user",
+    url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
     contentType: "application/json",
     complete: function (response) {
       const isPro = !!response.responseJSON;
@@ -53,8 +52,7 @@ jQuery(document).ready(function () {
 
     jQuery.ajax({
       type: "POST",
-      //url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
-      url: "http://localhost/wordpress/wp-json/reacgcore/v2/user",
+      url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
       contentType: "application/json",
       data: JSON.stringify({
         licenseKey: licenseKey,
