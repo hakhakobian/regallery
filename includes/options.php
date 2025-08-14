@@ -216,9 +216,9 @@ class REACG_Options {
       'orderDirection' => 'asc', #string
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
-      'inactiveButtonColor' => '#afafaf80', #string
-      'paginationButtonShape' => 'circular', #string rounded | circular
-      'loadMoreButtonColor' => '#afafaf80', #string
+      'inactiveButtonColor' => '#D7D7D7', #string
+      'paginationButtonShape' => 'rounded', #string rounded | circular
+      'loadMoreButtonColor' => '#D7D7D7', #string
       'paginationTextColor' => '#000000de', #string
     ],
     'lightbox' => [
