@@ -121,6 +121,7 @@ final class REACG {
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
 
     add_action('init', array($this, 'load_string'), 8);
+    add_action('admin_init', array($this, 'do_activation_redirect'));
 
     require_once ($this->plugin_dir . '/includes/admin-notices.php');
     new REACG_Admin_Notices();
@@ -441,12 +442,25 @@ final class REACG {
     $wp_rewrite->flush_rules();
 
     if ( $activate ) {
+      add_option( 'reacg_do_activation_redirect', true );
       // Set installation time.
       REACGLibrary::installed_time();
 
       // Add default options.
       require_once REACG()->plugin_dir . "/includes/options.php";
       new REACG_Options(TRUE);
+    }
+  }
+
+  public function do_activation_redirect() {
+    if ( get_option( 'reacg_do_activation_redirect', FALSE ) ) {
+      delete_option( 'reacg_do_activation_redirect' );
+
+      // Avoid redirect on bulk activation
+      if ( ! isset( $_GET['activate-multi'] ) ) {
+        wp_safe_redirect( admin_url( 'edit.php?post_type=reacg' ) );
+        exit;
+      }
     }
   }
 
