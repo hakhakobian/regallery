@@ -8,18 +8,18 @@ class REACG_Options {
     'template_id' => 0, #number
     'css' => '', #string
     'custom_css' => '', #string
-    'type' => 'thumbnails', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
+    'type' => 'mosaic', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
     'thumbnails' => [
-      'width' => 250, #number
-      'height' => 170, #number
-      'columns' => 4, #number
+      'width' => 430, #number
+      'height' => 380, #number
+      'columns' => 3, #number
       'gap' => 10, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titleSource' => 'title', #string title | caption | alt | price | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
@@ -36,15 +36,15 @@ class REACG_Options {
     'mosaic' => [
       'width' => 100, #number
       'direction' => 'vertical', #string horizontal | vertical
-      'gap' => 10, #number
+      'gap' => 5, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
       'rowHeight' => 200, #number
-      'columns' => 4, #number
+      'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titleSource' => 'title', #string title | caption | alt | price | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
@@ -60,14 +60,14 @@ class REACG_Options {
     ],
     'justified' => [
       'width' => 100, #number
-      'gap' => 10, #number
+      'gap' => 2, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
-      'rowHeight' => 200, #number
+      'rowHeight' => 300, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titleSource' => 'title', #string title | caption | alt | price | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
@@ -83,14 +83,14 @@ class REACG_Options {
     ],
     'masonry' => [
       'width' => 100, #number
-      'gap' => 10, #number
+      'gap' => 20, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
       'paddingColor' => '', #string
-      'columns' => 4, #number
+      'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
       'titleSource' => 'title', #string title | caption | alt | price | description
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
@@ -105,8 +105,9 @@ class REACG_Options {
       'captionFontColor' => '#CCCCCC', #string
     ],
     'slideshow' => [
-      'width' => 800, #number
-      'height' => 600, #number
+      'width' => 1080, #number
+      'height' => 608, #number
+      'isFullCoverImage' => TRUE, #boolean
       'isInfinite' => TRUE, #boolean
       'padding' => 0, #number
       'autoplay' => FALSE, #boolean
@@ -114,7 +115,7 @@ class REACG_Options {
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
       'isFullscreenAllowed' => TRUE, #boolean
-      'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
+      'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
       'thumbnailWidth' => 120, #number
       'thumbnailHeight' => 90, #number
       'thumbnailBorder' => 0, #number
@@ -134,7 +135,6 @@ class REACG_Options {
       'descriptionSource' => 'description', #string title | caption | alt | price | description
       'descriptionFontSize' => 1.3, #float
       'descriptionMaxRowsCount' => 1, #number
-      'isFullCoverImage' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description
       'captionFontSize' => 1.5, #float
@@ -151,21 +151,21 @@ class REACG_Options {
       'shadow' => TRUE, #boolean
     ],
     'carousel' => [
-      'width' => 200, #number
-      'height' => 250, #number
+      'width' => 600, #number
+      'height' => 420, #number
       'backgroundColor' => '', #string;
       'padding' => 0, #number
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
-      'playAndPauseAllowed' => TRUE, #boolean
+      'playAndPauseAllowed' => FALSE, #boolean
       'scale' => 0.1, #float
       'imagesCount' => 3, #number
-      'spaceBetween' => -10, #number
+      'spaceBetween' => -20, #number
     ],
     'cards' => [
-      'width' => 300, #number
-      'height' => 300, #number
-      'perSlideOffset' => 10, #number
+      'width' => 500, #number
+      'height' => 500, #number
+      'perSlideOffset' => 20, #number
       'navigationButton' => TRUE, #boolean
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
@@ -177,11 +177,11 @@ class REACG_Options {
       'imageHeight' => 400, #number
       'imageHeightType' => 'px', #string px | vh | rem | em
       'imagePosition' => 'staggered', #string left | right | staggered | listed
-      'spacing' => 10, #number
+      'spacing' => 0, #number
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
       'imageRadius' => 0, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'showTitle' => TRUE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description
       'titleFontSize' => 36, #number
@@ -189,7 +189,7 @@ class REACG_Options {
       'titleAlignment' => 'left', #string left | center | right
       'showDescription' => TRUE, #boolean
       'descriptionSource' => 'description', #string title | caption | alt | price | description
-      'descriptionFontSize' => 16, #number
+      'descriptionFontSize' => 23, #number
       'descriptionColor' => '#333333', #string
       'descriptionMaxRowsCount' => 4, #number
       'showButton' => TRUE, #boolean
@@ -227,7 +227,7 @@ class REACG_Options {
       'height' => 600, #number
       'areControlButtonsShown' => TRUE, #boolean
       'isInfinite' => TRUE, #boolean
-      'padding' => 0, #number
+      'padding' => 70, #number
       'showCounter' => TRUE, #boolean
       'canShare' => FALSE, #boolean
       'canDownload' => FALSE, #boolean
@@ -237,7 +237,7 @@ class REACG_Options {
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
       'isFullscreenAllowed' => TRUE, #boolean
-      'thumbnailsPosition' => 'bottom', #string top | bottom | start | end | none
+      'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
       'thumbnailWidth' => 120, #number
       'thumbnailHeight' => 90, #number
       'thumbnailBorder' => 0, #number
@@ -245,7 +245,7 @@ class REACG_Options {
       'thumbnailBorderRadius' => 0, #number
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
-      'backgroundColor' => '#000000', #string;
+      'backgroundColor' => 'rgba(0, 0, 0, 0.2)', #string;
       'textPosition' => 'none', #string top | bottom | above | below | none
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
