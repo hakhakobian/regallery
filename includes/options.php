@@ -217,9 +217,14 @@ class REACG_Options {
       'itemsPerPage' => 20, #number
       'activeButtonColor' => '#FFFFFF', #string
       'inactiveButtonColor' => '#D7D7D7', #string
-      'paginationButtonShape' => 'rounded', #string rounded | circular
       'loadMoreButtonColor' => '#D7D7D7', #string
       'paginationTextColor' => '#000000de', #string
+      'paginationButtonTextSize' => 0.875, #float
+      'paginationButtonBorderRadius' => 4, #number
+      'paginationButtonBorderSize' => '', #number
+      'paginationButtonBorderColor' => '', #number
+      'loadMoreButtonText' => '', #string
+      'paginationButtonClass' => '', #string
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
@@ -307,6 +312,8 @@ class REACG_Options {
       'imageRadius',
       'textHorizontalSpacing',
       'textVerticalSpacing',
+      'paginationButtonBorderRadius',
+      'paginationButtonBorderSize',
     ];
     $negative_number = [
       'spaceBetween',
@@ -340,6 +347,7 @@ class REACG_Options {
       'titleFontSize',
       'descriptionFontSize',
       'captionFontSize',
+      'paginationButtonTextSize',
     ];
     $style = [
       'css',
@@ -799,6 +807,9 @@ class REACG_Options {
         unset($options['mosaic']['rowHeight']);
         unset($options['justified']['direction']);
         unset($options['justified']['columns']);
+      }
+      if ( isset($options['general']['paginationButtonShape']) ) {
+        unset($options['general']['paginationButtonShape']);
       }
     }
 
