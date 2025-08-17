@@ -21,7 +21,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -29,7 +29,7 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -46,7 +46,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -54,7 +54,7 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -69,7 +69,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -77,7 +77,7 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -92,7 +92,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'titleVisibility' => 'none', #string alwaysShown | onHover | none
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
       'titleColor' => '#CCCCCC', #string
@@ -100,7 +100,7 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'scroll', #string scroll | loadMore | none
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -128,15 +128,15 @@ class REACG_Options {
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 1.6, #float
       'titleAlignment' => 'left', #string
       'showDescription' => TRUE, #bool
-      'descriptionSource' => 'description', #string title | caption | alt | price | description
+      'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionFontSize' => 1.3, #float
       'descriptionMaxRowsCount' => 1, #number
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 1.5, #float
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -183,12 +183,12 @@ class REACG_Options {
       'imageRadius' => 0, #number
       'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
       'showTitle' => TRUE, #boolean
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 36, #number
       'titleColor' => '#000000', #string
       'titleAlignment' => 'left', #string left | center | right
       'showDescription' => TRUE, #boolean
-      'descriptionSource' => 'description', #string title | caption | alt | price | description
+      'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionFontSize' => 23, #number
       'descriptionColor' => '#333333', #string
       'descriptionMaxRowsCount' => 4, #number
@@ -205,7 +205,7 @@ class REACG_Options {
       'textVerticalSpacing' => 35, #number
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 26, #number
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -256,15 +256,15 @@ class REACG_Options {
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
-      'titleSource' => 'title', #string title | caption | alt | price | description
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 1.6, #float
       'titleAlignment' => 'left', #string
       'showDescription' => TRUE, #bool
-      'descriptionSource' => 'description', #string title | caption | alt | price | description
+      'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionFontSize' => 1.3, #float
       'descriptionMaxRowsCount' => 1, #number
       'showCaption' => FALSE, #boolean
-      'captionSource' => 'caption', #string title | caption | alt | price | description
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 1.5, #float
       'captionFontColor' => '#CCCCCC', #string
     ],
@@ -372,15 +372,15 @@ class REACG_Options {
         'default' => 'bottom',
       ],
       'titleSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
         'default' => 'title',
       ],
       'captionSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
         'default' => 'caption',
       ],
       'descriptionSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
         'default' => 'description',
       ],
       'textVerticalAlignment' => [
