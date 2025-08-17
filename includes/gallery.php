@@ -32,6 +32,7 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
 
+    add_filter('wp_generate_attachment_metadata', [ $this, 'generate_attachment_metadata' ], 10, 2);
     // Add custom field to the media uploader.
     add_filter('attachment_fields_to_edit', [ $this, 'attachment_field' ], 10, 2);
     // Save custom field when an image is updated.
@@ -86,6 +87,53 @@ class REACG_Gallery {
     } );
   }
 
+  public function generate_attachment_metadata($metadata, $attachment_id) {
+    $mime = get_post_mime_type($attachment_id);
+
+    if ( strpos($mime, 'image/') === 0 && !empty($metadata['image_meta']) ) {
+      $exif = $this->get_exif($metadata['image_meta']);
+      if ( !empty($exif) ) {
+        update_post_meta($attachment_id, 'exif', sanitize_textarea_field($exif));
+      }
+    }
+
+    return $metadata;
+  }
+
+  /**
+   * Build a readable summary of EXIF data.
+   *
+   * @param $im
+   *
+   * @return string
+   */
+  private function get_exif($im) {
+    $lines = [];
+    if ( !empty($im['camera']) ) {
+      $lines[] = 'Camera: ' . $im['camera'];
+    }
+    if ( !empty($im['lens']) ) {
+      $lines[] = 'Lens: ' . $im['lens'];
+    }
+    if ( !empty($im['focal_length']) ) {
+      $lines[] = 'Focal Length: ' . rtrim($im['focal_length'], 'mm') . 'mm';
+    }
+    if ( !empty($im['aperture']) ) {
+      $lines[] = 'Aperture: f/' . $im['aperture'];
+    }
+    if ( !empty($im['shutter_speed']) ) {
+      $lines[] = 'Shutter: ' . $im['shutter_speed'] . 's';
+    }
+    if ( !empty($im['iso']) ) {
+      $lines[] = 'ISO: ' . $im['iso'];
+    }
+    if ( !empty($im['copyright']) ) {
+      $lines[] = 'Copyright: ' . $im['copyright'];
+    }
+
+    return implode("\n", $lines);
+  }
+
   /**
    * Add custom field to the media uploader.
    *
@@ -95,12 +143,24 @@ class REACG_Gallery {
    * @return mixed
    */
   public function attachment_field($form_fields, $post) {
-    $action_url = get_post_meta($post->ID, 'action_url', true);
-
     $form_fields['action_url'] = [
       'label' => __('Action URL', 'reacg'),
       'input' => 'text',
-      'value' => $action_url,
+      'value' => get_post_meta($post->ID, 'action_url', TRUE),
+    ];
+
+    $exif = get_post_meta($post->ID, 'exif', TRUE);
+    if ( empty($exif) ) {
+      $metadata = wp_get_attachment_metadata($post->ID);
+      if ( !empty($metadata['image_meta']) ) {
+        $exif = $this->get_exif($metadata['image_meta']);
+      }
+    }
+    $form_fields['exif'] = [
+      'label' => __('Metadata (EXIF)', 'reacg'),
+      'input' => 'textarea',
+      'value' => $exif,
+      'helps' => __('Auto-generated from image metadata on upload. You can edit this text if needed.', 'reacg'),
     ];
 
     return $form_fields;
@@ -117,6 +177,9 @@ class REACG_Gallery {
   public function save_attachment_field($post, $attachment) {
     if ( isset($attachment['action_url']) ) {
       update_post_meta($post['ID'], 'action_url', sanitize_url($attachment['action_url']));
+    }
+    if (isset($attachment['exif'])) {
+      update_post_meta($post['ID'], 'exif', sanitize_textarea_field($attachment['exif']));
     }
 
     return $post;
@@ -432,13 +495,8 @@ class REACG_Gallery {
                 continue;
               }
               $item['id'] = $gallery_id . $images_id . $post->ID;
-              $item['action_url'] = $this->get_action_url($post_type, $post->ID);
-              $item['item_url'] = $this->get_item_url($post_type, $post->ID);
-              $item['checkout_url'] = $this->get_checkout_url($post_type, $post->ID);
+              $item += $this->get_item_extra_data($post_type, $post);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
-              $item['title'] = $this->get_title($post_type, $post->ID);
-              $item['caption'] = $this->get_caption($post_type, $post->ID);
-              $item['price'] = $this->get_price($post_type, $post->ID);
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
               $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
               $item['date'] = $post->post_date;
@@ -451,23 +509,13 @@ class REACG_Gallery {
             $images_id = $matches[2];
             $post = get_post($images_id);
             $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
-            $item['action_url'] = $this->get_action_url($matches[1], $images_id);
-            $item['item_url'] = $this->get_item_url($matches[1], $images_id);
-            $item['checkout_url'] = $this->get_checkout_url($matches[1], $images_id);
-            $item['title'] = $this->get_title($matches[1], $images_id);
-            $item['caption'] = $this->get_caption($matches[1], $images_id);
-            $item['price'] = $this->get_price($matches[1], $images_id);
+            $item += $this->get_item_extra_data($matches[1], $post);
             $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
           }
           else {
             $post = get_post($images_id);
             $description = $post->post_content;
-            $item['action_url'] = $this->get_action_url($item['type'], $images_id);
-            $item['item_url'] = $this->get_item_url($item['type'], $images_id);
-            $item['checkout_url'] = $this->get_checkout_url($item['type'], $images_id);
-            $item['title'] = $this->get_title($item['type'], $images_id);
-            $item['caption'] = $this->get_caption($item['type'], $images_id);
-            $item['price'] = $this->get_price($item['type'], $images_id);
+            $item += $this->get_item_extra_data($item['type'], $post);
           }
           $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
           $item['date'] = $post->post_date;
@@ -542,93 +590,6 @@ class REACG_Gallery {
   }
 
   /**
-   * Return the Title depends on type.
-   *
-   * @param $type
-   * @param $id
-   *
-   * @return string
-   */
-  private function get_title($type, $id) {
-    switch ($type) {
-      case "image":
-      case "video":
-      case "post":
-      case "page":
-      case "product": {
-        $title = get_the_title($id);
-        break;
-      }
-      default: {
-        $title = "";
-        break;
-      }
-    }
-
-    return html_entity_decode($title);
-  }
-
-  /**
-   * Return the Caption depends on type.
-   *
-   * @param $type
-   * @param $id
-   *
-   * @return string
-   */
-  private function get_caption($type, $id) {
-    switch ($type) {
-      case "image":
-      case "video": {
-        $caption = wp_get_attachment_caption($id);
-        break;
-      }
-      case "post":
-      case "page":
-      case "product": {
-        $post = get_post($id);
-        $caption = wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...');
-        break;
-      }
-      default: {
-        $caption = "";
-        break;
-      }
-    }
-
-    return html_entity_decode($caption);
-  }
-
-  /**
-   * Return the Price.
-   *
-   * @param $type
-   * @param $id
-   *
-   * @return string
-   */
-  private function get_price($type, $id) {
-    switch ($type) {
-      case "product": {
-        $price = "";
-        if ( $this->obj->woocommerce_is_active ) {
-          $product = wc_get_product( $id );
-          if ( $product && $product->is_type( 'simple' ) && $product->get_price() ) {
-            $price = $this->get_product_price($product);
-          }
-        }
-        break;
-      }
-      default: {
-        $price = "";
-        break;
-      }
-    }
-
-    return html_entity_decode($price);
-  }
-
-  /**
    * Return the product formatted price based on WooCommerce option.
    *
    * @param $product
@@ -668,89 +629,73 @@ class REACG_Gallery {
    * Return the Action URL depends on type.
    *
    * @param $type
-   * @param $id
+   * @param $post
    *
-   * @return string
+   * @return array
    */
-  private function get_action_url($type, $id) {
+  private function get_item_extra_data($type, $post) {
+    $data = [
+      'title' => '',
+      'caption' => '',
+      'author' => '',
+      'date_created' => '',
+      'exif' => '',
+      'action_url' => '',
+      'item_url' => '',
+      'checkout_url' => '',
+      'price' => '',
+    ];
     switch ($type) {
       case "image":
       case "video": {
-        $action_url = get_post_meta($id, 'action_url', TRUE);
+        $data['title'] = html_entity_decode(get_the_title($post->ID));
+        $data['caption'] = html_entity_decode(wp_get_attachment_caption($post->ID));
+        $data['author'] = html_entity_decode(get_the_author_meta('display_name', get_post_field('post_author', $post->ID)));
+        $data['date_created'] = html_entity_decode(get_the_date( '', $post->ID ));
+        $data['exif'] = html_entity_decode(get_post_meta($post->ID, 'exif', TRUE));
+
+        if ( $type === 'image' ) {
+          $metadata = wp_get_attachment_metadata($post->ID);
+          if ( !empty($metadata['image_meta']) ) {
+            if ( !empty($metadata['image_meta']['credit']) ) {
+              $data['author'] = html_entity_decode($metadata['image_meta']['credit']);
+            }
+            if ( !empty($metadata['image_meta']['created_timestamp']) ) {
+              $data['date_created'] = html_entity_decode(date_i18n(get_option('date_format'), (int) $metadata['image_meta']['created_timestamp']));
+            }
+            if ( empty($data['exif'])) {
+              $data['exif'] = html_entity_decode($this->get_exif($metadata['image_meta']));
+            }
+          }
+        }
+
+        $data['action_url'] = esc_url(get_post_meta($post->ID, 'action_url', TRUE));
+        $data['item_url'] = esc_url(get_attachment_link($post->ID));
         break;
       }
       case "post":
       case "page":
       case "product": {
-        $action_url = get_permalink($id);
-        break;
-      }
-      default: {
-        $action_url = "";
-        break;
-      }
-    }
-
-    return esc_url($action_url);
-  }
-
-  /**
-   * Return the Item URL depends on type.
-   *
-   * @param $type
-   * @param $id
-   *
-   * @return string
-   */
-  private function get_item_url($type, $id) {
-    switch ($type) {
-      case "image":
-      case "video": {
-        $item_url = get_attachment_link($id);
-        break;
-      }
-      case "post":
-      case "page":
-      case "product": {
-        $item_url = get_permalink($id);
-        break;
-      }
-      default: {
-        $item_url = "";
-        break;
-      }
-    }
-
-    return esc_url($item_url);
-  }
-
-  /**
-   * Return checkout URL.
-   *
-   * @param $type
-   * @param $id
-   *
-   * @return string
-   */
-  private function get_checkout_url($type, $id) {
-    switch ($type) {
-      case "product": {
-        $checkout_url = "";
-        if ( $this->obj->woocommerce_is_active ) {
-          $product = wc_get_product( $id );
+        $data['title'] = html_entity_decode(get_the_title($post->ID));
+        $data['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
+        $data['author'] = html_entity_decode(get_the_author_meta('display_name', get_post_field('post_author', $post->ID)));
+        $data['date_created'] = html_entity_decode(get_the_date( '', $post->ID ));
+        $data['action_url'] = esc_url(get_permalink($post->ID));
+        $data['item_url'] = $data['action_url'];
+        if ( $type === 'product' && $this->obj->woocommerce_is_active ) {
+          $product = wc_get_product( $post->ID );
           if ( $product && $product->is_type( 'simple' ) ) {
-            $checkout_url = add_query_arg('add-to-cart', $id, wc_get_cart_url());
+            $data['checkout_url'] = esc_url(add_query_arg('add-to-cart', $post->ID, wc_get_cart_url()));
+            if ( $product->get_price() ) {
+              $data['price'] = html_entity_decode($this->get_product_price($product));
+            }
           }
         }
         break;
       }
-      default: {
-        $checkout_url = "";
-        break;
-      }
     }
 
-    return esc_url($checkout_url);
+    return $data;
   }
 
   /**
@@ -1431,7 +1376,7 @@ class REACG_Gallery {
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $additional_data = get_post_meta( $post_id, 'additional_data', true );
 
-    // Calculate eidts count.
+    // Calculate edits count.
     $edit_count = get_post_meta($post_id, 'edit_count', true);
     $edit_count = $edit_count ? (int) $edit_count + 1 : 1;
     update_post_meta($post_id, 'edit_count', $edit_count);
