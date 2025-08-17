@@ -625,7 +625,7 @@ class REACG_Options {
     // if the gallery options do not exist
     // or fetching direct with gallery ID 0 on selecting Default template.
     if ( $options === FALSE || !$gallery_id ) {
-      $options = get_option($this->name, FALSE);
+      return $this->options;
     }
 
     if ( !empty($options) ) {
