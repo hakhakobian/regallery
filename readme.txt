@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.15.10
+Stable tag: 1.15.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,22 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.15.10: Added option to enable image counter in the lightbox. Enjoy free functionality and add your suggestions via WP forum.
+* 1.15.11: Added option to use image author, creation date, and EXIF data as sources for title, description, and caption. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.15.11 =
+= Updated: 18.08.2025 =
+* **Added:** Option to use image author, creation date, and EXIF data as sources for title, description, and caption.
+* **Added:** Option to set Item URL or WooCommerce product checkout URL as the source for image click action.
+* **Added:** Options to customize pagination buttons border styles.
+* **Added:** Option to adjust pagination buttons text size.
+* **Added:** Option to add custom CSS classes to pagination buttons.
+* **Added:** Option to change the "Load more" button text.
+* **Improved:** Redirect to the Galleries page after activation.
+* **Improved:** Default values for new galleries.
+* **Fixed:** Title spacing issue with the button in Blog view.
+
 = 1.15.10 =
 = Updated: 13.08.2025 =
 * **Added:** Option to enable image counter in the lightbox.
