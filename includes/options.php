@@ -212,6 +212,7 @@ class REACG_Options {
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
       'openUrlInNewTab' => FALSE, #boolean
+      'actionUrlSource' => 'action_url', #string action_url | item_url | checkout_url
       'orderBy' => 'default', #string
       'orderDirection' => 'asc', #string
       'itemsPerPage' => 20, #number
@@ -441,6 +442,10 @@ class REACG_Options {
       'imagePosition' => [
         'allowed' => [ 'left', 'right', 'staggered', 'listed' ],
         'default' => 'staggered',
+      ],
+      'actionUrlSource' => [
+        'allowed' => [ 'action_url', 'item_url', 'checkout_url' ],
+        'default' => 'action_url',
       ],
     ];
     if ( in_array($key, $float) ) {

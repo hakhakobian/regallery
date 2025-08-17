@@ -433,6 +433,8 @@ class REACG_Gallery {
               }
               $item['id'] = $gallery_id . $images_id . $post->ID;
               $item['action_url'] = $this->get_action_url($post_type, $post->ID);
+              $item['item_url'] = $this->get_item_url($post_type, $post->ID);
+              $item['checkout_url'] = $this->get_checkout_url($post_type, $post->ID);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $item['title'] = $this->get_title($post_type, $post->ID);
               $item['caption'] = $this->get_caption($post_type, $post->ID);
@@ -450,6 +452,8 @@ class REACG_Gallery {
             $post = get_post($images_id);
             $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
             $item['action_url'] = $this->get_action_url($matches[1], $images_id);
+            $item['item_url'] = $this->get_item_url($matches[1], $images_id);
+            $item['checkout_url'] = $this->get_checkout_url($matches[1], $images_id);
             $item['title'] = $this->get_title($matches[1], $images_id);
             $item['caption'] = $this->get_caption($matches[1], $images_id);
             $item['price'] = $this->get_price($matches[1], $images_id);
@@ -459,6 +463,8 @@ class REACG_Gallery {
             $post = get_post($images_id);
             $description = $post->post_content;
             $item['action_url'] = $this->get_action_url($item['type'], $images_id);
+            $item['item_url'] = $this->get_item_url($item['type'], $images_id);
+            $item['checkout_url'] = $this->get_checkout_url($item['type'], $images_id);
             $item['title'] = $this->get_title($item['type'], $images_id);
             $item['caption'] = $this->get_caption($item['type'], $images_id);
             $item['price'] = $this->get_price($item['type'], $images_id);
@@ -674,18 +680,9 @@ class REACG_Gallery {
         break;
       }
       case "post":
-      case "page": {
-        $action_url = get_permalink($id);
-        break;
-      }
+      case "page":
       case "product": {
         $action_url = get_permalink($id);
-//        if ( $this->obj->woocommerce_is_active ) {
-//          $product = wc_get_product( $id );
-//          if ( $product && $product->is_type( 'simple' ) ) {
-//            $action_url = add_query_arg('add-to-cart', $id, wc_get_cart_url());
-//          }
-//        }
         break;
       }
       default: {
@@ -695,6 +692,65 @@ class REACG_Gallery {
     }
 
     return esc_url($action_url);
+  }
+
+  /**
+   * Return the Item URL depends on type.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_item_url($type, $id) {
+    switch ($type) {
+      case "image":
+      case "video": {
+        $item_url = get_attachment_link($id);
+        break;
+      }
+      case "post":
+      case "page":
+      case "product": {
+        $item_url = get_permalink($id);
+        break;
+      }
+      default: {
+        $item_url = "";
+        break;
+      }
+    }
+
+    return esc_url($item_url);
+  }
+
+  /**
+   * Return checkout URL.
+   *
+   * @param $type
+   * @param $id
+   *
+   * @return string
+   */
+  private function get_checkout_url($type, $id) {
+    switch ($type) {
+      case "product": {
+        $checkout_url = "";
+        if ( $this->obj->woocommerce_is_active ) {
+          $product = wc_get_product( $id );
+          if ( $product && $product->is_type( 'simple' ) ) {
+            $checkout_url = add_query_arg('add-to-cart', $id, wc_get_cart_url());
+          }
+        }
+        break;
+      }
+      default: {
+        $checkout_url = "";
+        break;
+      }
+    }
+
+    return esc_url($checkout_url);
   }
 
   /**
