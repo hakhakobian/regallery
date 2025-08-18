@@ -208,6 +208,7 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 26, #number
       'captionFontColor' => '#CCCCCC', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
     ],
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
@@ -444,6 +445,10 @@ class REACG_Options {
         'default' => 'staggered',
       ],
       'actionUrlSource' => [
+        'allowed' => [ 'action_url', 'item_url', 'checkout_url' ],
+        'default' => 'action_url',
+      ],
+      'buttonUrlSource' => [
         'allowed' => [ 'action_url', 'item_url', 'checkout_url' ],
         'default' => 'action_url',
       ],
