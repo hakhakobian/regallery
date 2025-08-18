@@ -10,8 +10,8 @@ class REACG_Options {
     'custom_css' => '', #string
     'type' => 'mosaic', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
     'thumbnails' => [
-      'fullWidth' => FALSE, #boolean
-      'ratio' => '1.77', #string
+      'fillContainer' => FALSE, #boolean
+      'aspectRatio' => '1.77', #string
       'width' => 430, #number
       'height' => 380, #number
       'columns' => 3, #number
@@ -345,7 +345,7 @@ class REACG_Options {
       'openInNewTab',
       'isFullCoverImage',
       'showCaption',
-      'fullWidth',
+      'fillContainer',
     ];
     $float = [
       'scale',
@@ -455,7 +455,7 @@ class REACG_Options {
         'allowed' => [ 'action_url', 'item_url', 'checkout_url' ],
         'default' => 'action_url',
       ],
-      'ratio' => [
+      'aspectRatio' => [
         'allowed' => [ '1', '1.33', '1.5', '1.77', '0.75', '0.66', '0.56' ],
         'default' => '1.77',
       ],
