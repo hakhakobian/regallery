@@ -22,7 +22,8 @@ class REACG_Options {
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
       'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
-      'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'showTitle' => FALSE, #boolean
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -31,9 +32,17 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showCaption' => FALSE, #boolean
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
+      'showDescription' => FALSE, #boolean
+      'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
+      'descriptionPosition' => 'below', #string above | below
+      'descriptionFontSize' => 18, #number
+      'descriptionFontColor' => '#CCCCCC', #string
+      'descriptionMaxRowsCount' => 3, #number
     ],
     'mosaic' => [
       'width' => 100, #number
@@ -47,7 +56,8 @@ class REACG_Options {
       'columns' => 3, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
-      'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'showTitle' => FALSE, #boolean
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -56,6 +66,8 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
@@ -70,7 +82,8 @@ class REACG_Options {
       'rowHeight' => 300, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
-      'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'showTitle' => FALSE, #boolean
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -79,6 +92,8 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
@@ -93,7 +108,8 @@ class REACG_Options {
       'columns' => 3, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
-      'titleVisibility' => 'none', #string alwaysShown | onHover | none
+      'showTitle' => FALSE, #boolean
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
@@ -102,6 +118,8 @@ class REACG_Options {
       'titleFontFamily' => 'Inherit', #string
       'paginationType' => 'scroll', #string scroll | loadMore | none
       'showCaption' => FALSE, #boolean
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 10, #number
       'captionFontColor' => '#CCCCCC', #string
@@ -368,12 +386,16 @@ class REACG_Options {
         'default' => 'vertical',
       ],
       'titleVisibility' => [
-        'allowed' => [ 'alwaysShown', 'onHover', 'none' ],
-        'default' => 'onHover',
+        'allowed' => [ 'alwaysShown', 'onHover' ],
+        'default' => 'alwaysShown',
       ],
       'titlePosition' => [
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
+      ],
+      'descriptionPosition' => [
+        'allowed' => [ 'above', 'below' ],
+        'default' => 'below',
       ],
       'titleSource' => [
         'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
@@ -827,6 +849,70 @@ class REACG_Options {
       }
       if ( isset($options['general']['paginationButtonShape']) ) {
         unset($options['general']['paginationButtonShape']);
+      }
+
+      if ( !isset($options['thumbnails']['showTitle']) ) {
+        if ( $options['thumbnails']['titleVisibility'] !== "none" ) {
+          $options['thumbnails']['showTitle'] = TRUE;
+        }
+        else {
+          $options['thumbnails']['showTitle'] = FALSE;
+          $options['thumbnails']['titleVisibility'] = "alwaysShown";
+        }
+      }
+      if ( !isset($options['thumbnails']['captionVisibility']) ) {
+        $options['thumbnails']['captionVisibility'] = $options['thumbnails']['titleVisibility'];
+      }
+      if ( !isset($options['thumbnails']['captionPosition']) ) {
+        $options['thumbnails']['captionPosition'] = $options['thumbnails']['titlePosition'];
+      }
+
+      if ( !isset($options['mosaic']['showTitle']) ) {
+        if ( $options['mosaic']['titleVisibility'] !== "none" ) {
+          $options['mosaic']['showTitle'] = TRUE;
+        }
+        else {
+          $options['mosaic']['showTitle'] = FALSE;
+          $options['mosaic']['titleVisibility'] = "alwaysShown";
+        }
+      }
+      if ( !isset($options['mosaic']['captionVisibility']) ) {
+        $options['mosaic']['captionVisibility'] = $options['mosaic']['titleVisibility'];
+      }
+      if ( !isset($options['mosaic']['captionPosition']) ) {
+        $options['mosaic']['captionPosition'] = $options['mosaic']['titlePosition'];
+      }
+
+      if ( !isset($options['masonry']['showTitle']) ) {
+        if ( $options['masonry']['titleVisibility'] !== "none" ) {
+          $options['masonry']['showTitle'] = TRUE;
+        }
+        else {
+          $options['masonry']['showTitle'] = FALSE;
+          $options['masonry']['titleVisibility'] = "alwaysShown";
+        }
+      }
+      if ( !isset($options['masonry']['captionVisibility']) ) {
+        $options['masonry']['captionVisibility'] = $options['masonry']['titleVisibility'];
+      }
+      if ( !isset($options['masonry']['captionPosition']) ) {
+        $options['masonry']['captionPosition'] = $options['masonry']['titlePosition'];
+      }
+
+      if ( !isset($options['justified']['showTitle']) ) {
+        if ( $options['justified']['titleVisibility'] !== "none" ) {
+          $options['justified']['showTitle'] = TRUE;
+        }
+        else {
+          $options['justified']['showTitle'] = FALSE;
+          $options['justified']['titleVisibility'] = "alwaysShown";
+        }
+      }
+      if ( !isset($options['justified']['captionVisibility']) ) {
+        $options['justified']['captionVisibility'] = $options['justified']['titleVisibility'];
+      }
+      if ( !isset($options['justified']['captionPosition']) ) {
+        $options['justified']['captionPosition'] = $options['justified']['titlePosition'];
       }
     }
 
