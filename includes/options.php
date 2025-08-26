@@ -389,7 +389,17 @@ class REACG_Options {
         'allowed' => [ 'alwaysShown', 'onHover' ],
         'default' => 'alwaysShown',
       ],
+
+      'captionVisibility' => [
+        'allowed' => [ 'alwaysShown', 'onHover' ],
+        'default' => 'alwaysShown',
+      ],
       'titlePosition' => [
+        'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
+        'default' => 'bottom',
+      ],
+
+      'captionPosition' => [
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
       ],
