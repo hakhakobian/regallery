@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.16.0
+Stable tag: 1.16.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.16.0: Added Fill container option in Thumbnails view. Enjoy free functionality and add your suggestions via WP forum.
+* 1.16.1: Fixed warning message appearing on gallery pages. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.16.1 =
+= Updated: 27.08.2025 =
+* **Fixed:** Warning message appearing on gallery pages.
+
 = 1.16.0 =
 = Updated: 27.08.2025 =
 * **Added:** Fill container option in Thumbnails view: thumbnails now automatically resize by aspect ratio to fully fill the container.
