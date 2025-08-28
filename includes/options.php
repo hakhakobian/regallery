@@ -863,7 +863,8 @@ class REACG_Options {
 
       if ( isset($options['thumbnails']) ) {
         if ( !isset($options['thumbnails']['showTitle']) ) {
-          if ( $options['thumbnails']['titleVisibility'] !== "none" ) {
+          if ( isset($options['thumbnails']['titleVisibility'])
+            && $options['thumbnails']['titleVisibility'] !== "none" ) {
             $options['thumbnails']['showTitle'] = TRUE;
           }
           else {
@@ -875,13 +876,14 @@ class REACG_Options {
           $options['thumbnails']['captionVisibility'] = $options['thumbnails']['titleVisibility'];
         }
         if ( !isset($options['thumbnails']['captionPosition']) ) {
-          $options['thumbnails']['captionPosition'] = $options['thumbnails']['titlePosition'];
+          $options['thumbnails']['captionPosition'] = isset($options['thumbnails']['titlePosition']) ? $options['thumbnails']['titlePosition'] : 'bottom';
         }
       }
 
       if ( isset($options['mosaic']) ) {
         if ( !isset($options['mosaic']['showTitle']) ) {
-          if ( $options['mosaic']['titleVisibility'] !== "none" ) {
+          if ( isset($options['mosaic']['titleVisibility'])
+            && $options['mosaic']['titleVisibility'] !== "none" ) {
             $options['mosaic']['showTitle'] = TRUE;
           }
           else {
@@ -893,13 +895,14 @@ class REACG_Options {
           $options['mosaic']['captionVisibility'] = $options['mosaic']['titleVisibility'];
         }
         if ( !isset($options['mosaic']['captionPosition']) ) {
-          $options['mosaic']['captionPosition'] = $options['mosaic']['titlePosition'];
+          $options['mosaic']['captionPosition'] = isset($options['mosaic']['titlePosition']) ? $options['mosaic']['titlePosition'] : 'bottom';
         }
       }
 
       if ( isset($options['masonry']) ) {
         if ( !isset($options['masonry']['showTitle']) ) {
-          if ( $options['masonry']['titleVisibility'] !== "none" ) {
+          if ( isset($options['masonry']['titleVisibility'])
+            && $options['masonry']['titleVisibility'] !== "none" ) {
             $options['masonry']['showTitle'] = TRUE;
           }
           else {
@@ -911,13 +914,14 @@ class REACG_Options {
           $options['masonry']['captionVisibility'] = $options['masonry']['titleVisibility'];
         }
         if ( !isset($options['masonry']['captionPosition']) ) {
-          $options['masonry']['captionPosition'] = $options['masonry']['titlePosition'];
+          $options['masonry']['captionPosition'] = isset($options['masonry']['titlePosition']) ? $options['masonry']['titlePosition'] : 'bottom';
         }
       }
 
       if ( isset($options['justified']) ) {
         if ( !isset($options['justified']['showTitle']) ) {
-          if ( $options['justified']['titleVisibility'] !== "none" ) {
+          if ( isset($options['justified']['titleVisibility'])
+            && $options['justified']['titleVisibility'] !== "none" ) {
             $options['justified']['showTitle'] = TRUE;
           }
           else {
@@ -929,7 +933,7 @@ class REACG_Options {
           $options['justified']['captionVisibility'] = $options['justified']['titleVisibility'];
         }
         if ( !isset($options['justified']['captionPosition']) ) {
-          $options['justified']['captionPosition'] = $options['justified']['titlePosition'];
+          $options['justified']['captionPosition'] = isset($options['justified']['titlePosition']) ? $options['justified']['titlePosition'] : 'bottom';
         }
       }
     }
