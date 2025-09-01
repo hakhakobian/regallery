@@ -669,8 +669,8 @@ class REACG_Gallery {
           }
         }
 
-        $data['action_url'] = esc_url(get_post_meta($post->ID, 'action_url', TRUE));
-        $data['item_url'] = esc_url(get_attachment_link($post->ID));
+        $data['action_url'] = esc_url_raw(get_post_meta($post->ID, 'action_url', TRUE));
+        $data['item_url'] = esc_url_raw(get_attachment_link($post->ID));
         break;
       }
       case "post":
@@ -680,12 +680,12 @@ class REACG_Gallery {
         $data['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
         $data['author'] = html_entity_decode(get_the_author_meta('display_name', get_post_field('post_author', $post->ID)));
         $data['date_created'] = html_entity_decode(get_the_date( '', $post->ID ));
-        $data['action_url'] = esc_url(get_permalink($post->ID));
+        $data['action_url'] = esc_url_raw(get_permalink($post->ID));
         $data['item_url'] = $data['action_url'];
         if ( $type === 'product' && $this->obj->woocommerce_is_active ) {
           $product = wc_get_product( $post->ID );
           if ( $product && $product->is_type( 'simple' ) ) {
-            $data['checkout_url'] = esc_url(add_query_arg('add-to-cart', $post->ID, wc_get_cart_url()));
+            $data['checkout_url'] = esc_url_raw(add_query_arg('add-to-cart', $post->ID, wc_get_cart_url()));
             if ( $product->get_price() ) {
               $data['price'] = html_entity_decode($this->get_product_price($product));
             }
