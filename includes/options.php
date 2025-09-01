@@ -144,7 +144,7 @@ class REACG_Options {
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
       'backgroundColor' => '#000000', #string
-      'textPosition' => 'none', #string top | bottom | above | below | none
+      'textPosition' => 'bottom', #string top | bottom | above | below
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
@@ -273,7 +273,7 @@ class REACG_Options {
       'thumbnailPadding' => 0, #number
       'thumbnailGap' => 5, #number
       'backgroundColor' => 'rgba(0, 0, 0, 0.2)', #string;
-      'textPosition' => 'none', #string top | bottom | above | below | none
+      'textPosition' => 'bottom', #string top | bottom | above | below
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'showTitle' => TRUE, #bool
@@ -444,7 +444,7 @@ class REACG_Options {
         'default' => 'bottom',
       ],
       'textPosition' => [
-        'allowed' => [ 'top', 'bottom', 'above', 'below', 'none' ],
+        'allowed' => [ 'top', 'bottom', 'above', 'below' ],
         'default' => 'bottom',
       ],
       'imageAnimation' => [
@@ -934,6 +934,22 @@ class REACG_Options {
         }
         if ( !isset($options['justified']['captionPosition']) ) {
           $options['justified']['captionPosition'] = isset($options['justified']['titlePosition']) ? $options['justified']['titlePosition'] : 'bottom';
+        }
+      }
+      if ( isset($options['slideshow']) ) {
+        if ( isset($options['slideshow']['textPosition'])
+          && $options['slideshow']['textPosition'] === "none") {
+          $options['slideshow']['showTitle'] = FALSE;
+          $options['slideshow']['showCaption'] = FALSE;
+          $options['slideshow']['showDescription'] = FALSE;
+        }
+      }
+      if ( isset($options['lightbox']) ) {
+        if ( isset($options['lightbox']['textPosition'])
+          && $options['lightbox']['textPosition'] === "none") {
+          $options['lightbox']['showTitle'] = FALSE;
+          $options['lightbox']['showCaption'] = FALSE;
+          $options['lightbox']['showDescription'] = FALSE;
         }
       }
     }
