@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.16.2
+Stable tag: 1.16.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.16.2: Fixed warning message displayed on the edit page. Enjoy free functionality and add your suggestions via WP forum.
+* 1.16.3: Fixed Action URL not working with special characters in the URL. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.16.3 =
+= Updated: 04.09.2025 =
+* **Improved:** Removed the "None" option from Text Position in Slideshow and Lightbox. Now, item title, caption, and description can be enabled/disabled separately.
+* **Fixed:** Action URL not working with special characters in the URL.
+* **Fixed:** Border radius in Thumbnails view.
+
 = 1.16.2 =
 = Updated: 28.08.2025 =
 * **Fixed:** Warning message displayed on the edit page.
