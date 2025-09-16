@@ -6,6 +6,7 @@ class REACG_Options {
     'title' => 'Default', #string
     'template' => false, #boolean
     'template_id' => 0, #number
+    'templateType' => "", #string
     'css' => '', #string
     'custom_css' => '', #string
     'type' => 'mosaic', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog

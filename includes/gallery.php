@@ -59,6 +59,15 @@ class REACG_Gallery {
       ) );
     } );
 
+    // Register a route to get custom templates.
+    add_action( 'rest_api_init', function () {
+      register_rest_route( $this->obj->prefix . '/v1', '/templates', array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [ $this, 'get_custom_templates'],
+        'permission_callback' => [$this, 'privileged_permission'],
+      ) );
+    } );
+
     // Register a route to get/set/delete options for the gallery with the API.
     add_action( 'rest_api_init', function () {
       require_once REACG()->plugin_dir . "/includes/options.php";
@@ -1513,5 +1522,26 @@ class REACG_Gallery {
       }
     }
 
+  }
+
+  public function get_custom_templates(WP_REST_Request $request = null) {
+    if ( !is_null($request) ) {
+      $posts = get_posts(array(
+                           'posts_per_page' => -1,
+                           'post_type' => 'reacg',
+                           'post_status' => 'publish',
+                         ));
+      $data = [];
+      foreach ( $posts as $key => $post ) {
+        $data[$key] = [];
+        $data[$key]['id'] = $post->ID;
+        $data[$key]['type'] = 'custom';
+        $data[$key]['title'] = ($post->post_title ? $post->post_title : __('(no title)', 'reacg')) . ' - ' . __('template', 'reacg');
+      }
+
+      return new WP_REST_Response( wp_send_json($data, 200), 200 );
+    }
+
+    return wp_send_json(new WP_Error( 'wrong_template', __( 'There is no such a template.', 'reacg' ), array( 'status' => 400 ) ), 400);
   }
 }
