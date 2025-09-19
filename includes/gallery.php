@@ -1535,8 +1535,7 @@ class REACG_Gallery {
       foreach ( $posts as $key => $post ) {
         $data[$key] = [];
         $data[$key]['id'] = $post->ID;
-        $data[$key]['type'] = 'custom';
-        $data[$key]['title'] = ($post->post_title ? $post->post_title : __('(no title)', 'reacg')) . ' - ' . __('template', 'reacg');
+        $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
       }
 
       return new WP_REST_Response( wp_send_json($data, 200), 200 );
