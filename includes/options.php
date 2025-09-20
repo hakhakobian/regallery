@@ -4,7 +4,6 @@ defined('ABSPATH') || die('Access Denied');
 class REACG_Options {
   protected $options = [
     'title' => 'Default', #string
-    'template' => false, #boolean
     'template_id' => 0, #number
     'templateType' => "", #string
     'css' => '', #string
@@ -342,7 +341,6 @@ class REACG_Options {
       'spaceBetween',
     ];
     $boolean = [
-      'template',
       'showLightbox',
       'isFullscreen',
       'areControlButtonsShown',

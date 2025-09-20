@@ -85,19 +85,6 @@ class REACGLibrary {
 
     $data = REACGLibrary::get_data($gallery_id);
 
-    // If a custom template is used.
-    if ( isset($data['options'])
-      && isset($data['options']['templateType'])
-      && isset($data['options']['template_id'])
-      && $data['options']['templateType'] === 'custom' ) {
-      $new_data = REACGLibrary::get_data($data['options']['template_id']);
-      if ( isset($new_data['options']) ) {
-        $data['options'] = $new_data['options'];
-        $data['options']['templateType'] = 'custom';
-        $data['options']['template_id'] = $gallery_id;
-      }
-    }
-
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
