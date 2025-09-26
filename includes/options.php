@@ -16,6 +16,9 @@ class REACG_Options {
       'height' => 380, #number
       'columns' => 3, #number
       'gap' => 10, #number
+      'itemBorder' => 0, #number
+      'itemBackgroundColor' => '', #string
+      'itemBorderRadius' => 0, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
@@ -30,6 +33,8 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => 'rgba(0, 0, 0, 0.5)', #string
+      'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -64,6 +69,8 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => 'rgba(0, 0, 0, 0.5)', #string
+      'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -90,6 +97,8 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => 'rgba(0, 0, 0, 0.5)', #string
+      'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -116,6 +125,8 @@ class REACG_Options {
       'titleColor' => '#CCCCCC', #string
       'titleFontSize' => 12, #number
       'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => 'rgba(0, 0, 0, 0.5)', #string
+      'invertTextColor' => FALSE, #boolean
       'paginationType' => 'scroll', #string scroll | loadMore | none
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -324,6 +335,8 @@ class REACG_Options {
     $empty_number = [
       'template_id',
       'gap',
+      'itemBorder',
+      'itemBorderRadius',
       'containerPadding',
       'padding',
       'borderRadius',
@@ -363,6 +376,7 @@ class REACG_Options {
       'isFullCoverImage',
       'showCaption',
       'fillContainer',
+      'invertTextColor',
     ];
     $float = [
       'scale',
