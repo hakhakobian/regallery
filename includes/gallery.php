@@ -45,7 +45,7 @@ class REACG_Gallery {
 
     // Register a route to make the gallery images data available with the API.
     add_action( 'rest_api_init', function () {
-      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>\d+)/images', array(
+      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>-?\d+)/images', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ $this, 'get_images_rout'],
         'args' => array(
@@ -72,7 +72,7 @@ class REACG_Gallery {
     add_action( 'rest_api_init', function () {
       require_once REACG()->plugin_dir . "/includes/options.php";
       $options = new REACG_Options(true);
-      register_rest_route( $this->obj->prefix . '/v1', '/options/(?P<gallery_id>\d+)', array(
+      register_rest_route( $this->obj->prefix . '/v1', '/options/(?P<gallery_id>-?\d+)', array(
         'methods' => WP_REST_Server::READABLE . ", " . WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
         'callback' => [ $options, 'options'],
         'args' => array(
@@ -460,7 +460,21 @@ class REACG_Gallery {
    * @return array
    */
   public function get_images( $gallery_id, $gallery_options = FALSE ) {
-    $images_ids = get_post_meta( $gallery_id, 'images_ids', TRUE );
+    if ( $gallery_id == -1 ) {
+      // To get all galleries images.
+      $gallery_ids = REACGLibrary::get_galleries();
+      $images_ids_arr = [];
+      foreach ( $gallery_ids as $galleryId ) {
+        $gallery_images_ids = get_post_meta($galleryId, 'images_ids', TRUE);
+        if ( !empty($gallery_images_ids) ) {
+          $images_ids_arr = array_merge($images_ids_arr, json_decode($gallery_images_ids, TRUE));
+        }
+      }
+      $images_ids = json_encode($images_ids_arr);
+    }
+    else {
+      $images_ids = get_post_meta($gallery_id, 'images_ids', TRUE);
+    }
 
     $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
     $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
@@ -1536,6 +1550,10 @@ class REACG_Gallery {
         $data[$key] = [];
         $data[$key]['id'] = $post->ID;
         $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+      }
+      if (!empty($data)) {
+        $data[]['id'] = -1;
+        $data[]['title'] = __('All images', 'reacg');
       }
 
       return new WP_REST_Response( wp_send_json($data, 200), 200 );

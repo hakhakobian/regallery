@@ -169,6 +169,11 @@ class REACGLibrary {
         $data[0]['title'] = __('Select gallery', 'reacg');
         $data[0]['shortcode'] = '';
         $key_shifter = 1;
+        $data[-1] = [];
+        $data[-1]['id'] = -1;
+        $data[-1]['title'] = __('All images', 'reacg');
+        $data[-1]['shortcode'] = self::get_shortcode($obj, -1);
+        $key_shifter = 2;
       }
       else {
         $key_shifter = 0;
@@ -185,6 +190,7 @@ class REACGLibrary {
     else {
       if ( $include_empty ) {
         $data[0] = __('Select gallery', 'reacg');
+        $data[-1] = __('All images', 'reacg');
       }
       foreach ( $posts as $key => $post ) {
         $data[$post->ID] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
@@ -210,7 +216,7 @@ class REACGLibrary {
     }
     $gallery_id = (int) $parameters[$param];
 
-    if ( $gallery_id !== 0 && get_post_status( $gallery_id ) === FALSE ) {
+    if ( $gallery_id !== -1 && $gallery_id !== 0 && get_post_status( $gallery_id ) === FALSE ) {
       return wp_send_json(new WP_Error( 'wrong_gallery', __( 'There is no such a gallery.', 'reacg' ), array( 'status' => 400 ) ), 400);
     }
 
