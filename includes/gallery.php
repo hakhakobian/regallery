@@ -233,6 +233,11 @@ class REACG_Gallery {
       return '__return_true';
     }
 
+    // If request comes from Elementor editor iframe.
+    if ( isset( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'elementor' ) !== FALSE ) {
+      return '__return_true';
+    }
+
     return current_user_can( 'edit_posts' );
   }
 
@@ -240,6 +245,11 @@ class REACG_Gallery {
    * @return bool
    */
   public function restricted_permission() {
+    // If request comes from Elementor editor iframe.
+    if ( isset( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'elementor' ) !== FALSE ) {
+      return '__return_true';
+    }
+
     return current_user_can( 'edit_posts' );
   }
 
