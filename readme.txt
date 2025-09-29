@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.16.5
+Stable tag: 1.16.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,19 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.16.5: Added ability to reuse your custom templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.16.6: Added options for item border width, color, and background color. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.16.6 =
+= Updated: 29.09.2025 =
+* **Added:** Options for item border width, color, and background color.
+* **Added:** Overlay text background option to customize the background color of text displayed on images.
+* **Added:** Invert color option to improve text visibility on images.
+* **Improved:** Advanced options section for better usability.
+* **Fixed:** Responsive padding issue for images in the Lightbox.
+* **Fixed:** Empty fonts list and option saving issues in the Elementor editor.
+
 = 1.16.5 =
 = Updated: 24.09.2025 =
 * **Added:** Ability to reuse your custom templates.
