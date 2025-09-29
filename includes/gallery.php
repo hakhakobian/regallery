@@ -91,7 +91,7 @@ class REACG_Gallery {
       register_rest_route( $this->obj->prefix . '/v1', '/google-fonts', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ 'REACGLibrary', 'get_fonts'],
-        'permission_callback' => [$this, 'restricted_permission'],
+        'permission_callback' => [$this, 'privileged_permission'],
       ) );
     } );
   }
@@ -233,18 +233,6 @@ class REACG_Gallery {
       return '__return_true';
     }
 
-    // If request comes from Elementor editor iframe.
-    if ( isset( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'elementor' ) !== FALSE ) {
-      return '__return_true';
-    }
-
-    return current_user_can( 'edit_posts' );
-  }
-
-  /**
-   * @return bool
-   */
-  public function restricted_permission() {
     // If request comes from Elementor editor iframe.
     if ( isset( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'elementor' ) !== FALSE ) {
       return '__return_true';
