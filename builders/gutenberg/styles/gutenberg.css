@@ -52,11 +52,11 @@
 .reacg-gutenberg-controls {
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: center;
 }
 
-.reacg-createButton {
-  margin: 0 auto;
+.reacg-gutenberg-controls:has(> .reacg-list:only-child) {
+  justify-content: left;
 }
 
 .reacg-enable-options__wrapper {
