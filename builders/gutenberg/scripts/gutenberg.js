@@ -1,5 +1,6 @@
 ( function ( blocks, element ) {
   let el = element.createElement;
+  const all_images_id = -1;
   blocks.registerBlockType( "reacg/gallery", {
     title: reacg_gutenberg.title,
     description: reacg_gutenberg.description,
@@ -85,7 +86,7 @@
       document.querySelector(".reacg-gutenberg-controls").classList.remove("reacg-hidden");
     }
 
-    const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id && shortcode_id != -1 ? "" : "reacg-hidden")});
+    const images_cont = el("div", {id: "reacg-gallery-images", class: (shortcode_id && shortcode_id != all_images_id ? "" : "reacg-hidden")});
     const timestamp = Date.now();
     const preview = el('div', {
       'data-options-section': props.attributes.enableOptions,
@@ -157,7 +158,7 @@
     const galleryCont = baseCont.querySelector(".reacg-gallery");
     galleryCont.setAttribute('data-options-section', checkedValue);
     reload_gallery(shortcode_id);
-    if ( shortcode_id != -1 ) {
+    if ( shortcode_id != all_images_id ) {
       baseCont.querySelector("#reacg-gallery-images").classList.toggle("reacg-hidden", checkedValue != "1");
     }
 
@@ -188,7 +189,7 @@
   }
 
   function set_data(baseCont, shortcode_id, props) {
-    if ( shortcode_id != -1 ) {
+    if ( shortcode_id != all_images_id ) {
       baseCont.querySelector("#reacg-gallery-images").classList.toggle("reacg-hidden", props.attributes.enableOptions != "1");
     }
     const galleryCont = baseCont.querySelector(".reacg-gallery");
@@ -218,7 +219,7 @@
       .then(data => {
         const container = baseCont.querySelector("#reacg-gallery-images");
         if ( container ) {
-          if ( shortcode_id != -1 ) {
+          if ( shortcode_id != all_images_id ) {
             container.classList.remove("reacg-hidden");
             container.innerHTML = data;
             /* Make the image items sortable.*/

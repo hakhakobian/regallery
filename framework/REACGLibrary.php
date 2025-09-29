@@ -163,21 +163,22 @@ class REACGLibrary {
                        ));
     $data = [];
     if ( $associative ) {
+      $key_shifter = 0;
       if ( $include_empty ) {
-        $data[0] = [];
-        $data[0]['id'] = 0;
-        $data[0]['title'] = __('Select gallery', 'reacg');
-        $data[0]['shortcode'] = '';
-        $key_shifter = 1;
-        $data[-1] = [];
-        $data[-1]['id'] = -1;
-        $data[-1]['title'] = __('All images', 'reacg');
-        $data[-1]['shortcode'] = self::get_shortcode($obj, -1);
-        $key_shifter = 2;
+        $data[$key_shifter] = [];
+        $data[$key_shifter]['id'] = 0;
+        $data[$key_shifter]['title'] = __('Select Gallery', 'reacg');
+        $data[$key_shifter]['shortcode'] = '';
+        ++$key_shifter;
       }
-      else {
-        $key_shifter = 0;
+      if ( !empty($posts) ) {
+        $data[$key_shifter] = [];
+        $data[$key_shifter]['id'] = -1;
+        $data[$key_shifter]['title'] = __('All Images', 'reacg');
+        $data[$key_shifter]['shortcode'] = self::get_shortcode($obj, -1);
+        ++$key_shifter;
       }
+
       foreach ( $posts as $key => $post ) {
         $data[$key + $key_shifter] = [];
         $data[$key + $key_shifter]['id'] = $post->ID;
@@ -190,7 +191,9 @@ class REACGLibrary {
     else {
       if ( $include_empty ) {
         $data[0] = __('Select gallery', 'reacg');
-        $data[-1] = __('All images', 'reacg');
+      }
+      if ( !empty($posts) ) {
+        $data[-1] = __('All Images', 'reacg');
       }
       foreach ( $posts as $key => $post ) {
         $data[$post->ID] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');

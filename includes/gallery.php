@@ -470,29 +470,30 @@ class REACG_Gallery {
    * @return array
    */
   public function get_images( $gallery_id, $gallery_options = FALSE ) {
+    $data = [];
+    $all_images_count = 0;
+    $images_ids_arr = [];
+
     if ( $gallery_id == -1 ) {
       // To get all galleries images.
       $gallery_ids = REACGLibrary::get_galleries();
-      $images_ids_arr = [];
       foreach ( $gallery_ids as $galleryId ) {
         $gallery_images_ids = get_post_meta($galleryId, 'images_ids', TRUE);
         if ( !empty($gallery_images_ids) ) {
           $images_ids_arr = array_merge($images_ids_arr, json_decode($gallery_images_ids, TRUE));
         }
       }
-      $images_ids = json_encode($images_ids_arr);
     }
     else {
       $images_ids = get_post_meta($gallery_id, 'images_ids', TRUE);
+      if ( !empty($images_ids) ) {
+        $images_ids_arr = json_decode($images_ids, TRUE);
+      }
     }
 
-    $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
-    $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
-
-    $data = [];
-    $all_images_count = 0;
-    if ( !empty($images_ids) ) {
-      $images_ids_arr = json_decode($images_ids, TRUE);
+    if ( !empty($images_ids_arr) ) {
+      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
+      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
       $is_deleted_attachment = FALSE;
       $dynamic_exists = FALSE;
       foreach ( $images_ids_arr as $key => $images_id ) {
@@ -1545,7 +1546,6 @@ class REACG_Gallery {
         }
       }
     }
-
   }
 
   public function get_custom_templates(WP_REST_Request $request = null) {
@@ -1562,8 +1562,10 @@ class REACG_Gallery {
         $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
       }
       if (!empty($data)) {
-        $data[]['id'] = -1;
-        $data[]['title'] = __('All images', 'reacg');
+        $data[] = [
+          'id'    => -1,
+          'title' => __('All Images Template', 'reacg'),
+        ];
       }
 
       return new WP_REST_Response( wp_send_json($data, 200), 200 );
