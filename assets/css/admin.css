@@ -439,3 +439,10 @@ to avoid a bug connected with preview.
   color: white;
   border: none;
 }
+
+#gallery-custom-css h2.hndle {
+  justify-content: normal;
+}
+label[for=gallery-custom-css-hide] svg {
+  display: none;
+}

@@ -30,6 +30,13 @@ jQuery(document).ready(function () {
       const isPro = !!response.responseJSON;
       jQuery(".reacg-pro-not-active").toggle(!isPro);
       jQuery(".reacg-pro-active").toggle(isPro);
+      jQuery("textarea[name=custom_css]").on("input", function () {
+        let text = jQuery(this).val();
+        if ( !isPro && text.length > 100) {
+          jQuery(this).val(text.substring(0, 100));
+          reacg_open_premium_offer_dialog();
+        }
+      });
     }
   });
 
