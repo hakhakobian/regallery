@@ -1039,8 +1039,7 @@ class REACG_Gallery {
     // Metabox to display the available publishing methods.
     add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
-    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg'), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
-    add_filter( 'default_hidden_meta_boxes', [$this, 'hide_custom_css_meta_box_by_default'], 10, 2 );
+    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg') . REACGLibrary::$pro_icon, [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
   }
 
   public function meta_box_preview($post) {
@@ -1205,23 +1204,6 @@ class REACG_Gallery {
     ?>
     <textarea name="custom_css" rows="20"><?php echo esc_attr($css); ?></textarea>
     <?php
-  }
-
-  /**
-   * Hide the Custom CSS metabox by default.
-   * This affects only new users or users who haven't customized their "Screen Options" for the specified screen.
-   * Once a user modifies their "Screen Options" their preferences are stored in the database and won't be overridden.
-   *
-   * @param $hidden
-   * @param $screen
-   *
-   * @return mixed
-   */
-  public function hide_custom_css_meta_box_by_default($hidden, $screen) {
-    if ( $this->post_type === $screen->id) {
-      $hidden[] = 'gallery-custom-css';
-    }
-    return $hidden;
   }
 
   /**
