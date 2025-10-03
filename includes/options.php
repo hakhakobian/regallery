@@ -258,6 +258,11 @@ class REACG_Options {
       'paginationButtonBorderColor' => '', #number
       'loadMoreButtonText' => '', #string
       'paginationButtonClass' => '', #string
+      'enableWatermark' => FALSE, #boolean
+      'watermarkImageURL' => REACG_PLUGIN_URL . '/assets/images/icon.svg', #string
+      'watermarkTransparency' => 20, #number
+      'watermarkSize' => 30, #number
+      'watermarkPosition' => 'middle-center', #string top-left | top-center | top-right | middle-left | middle-center | middle-right | bottom-left | bottom-center | bottom-right
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
@@ -349,6 +354,8 @@ class REACG_Options {
       'textVerticalSpacing',
       'paginationButtonBorderRadius',
       'paginationButtonBorderSize',
+      'watermarkTransparency',
+      'watermarkSize',
     ];
     $negative_number = [
       'spaceBetween',
@@ -377,6 +384,7 @@ class REACG_Options {
       'showCaption',
       'fillContainer',
       'invertTextColor',
+      'enableWatermark',
     ];
     $float = [
       'scale',
@@ -503,6 +511,10 @@ class REACG_Options {
       'aspectRatio' => [
         'allowed' => [ '1', '1.33', '1.5', '1.77', '0.75', '0.66', '0.56' ],
         'default' => '1.77',
+      ],
+      'watermarkPosition' => [
+        'allowed' => [ 'top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right' ],
+        'default' => 'middle-center',
       ],
     ];
     if ( in_array($key, $float) ) {
