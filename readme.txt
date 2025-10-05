@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.16.6
+Stable tag: 1.17.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,24 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.16.6: Added options for item border width, color, and background color. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.0: Added possibility to display all gallery images together. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.0 =
+= Updated: 06.10.2025 =
+* **Added:** Possibility to display all gallery images together.
+* **Added:** Option to add custom CSS to the gallery.
+* **Added:** Ability to apply a non-destructive watermark to images.
+* **Added:** Options to specify watermark position, size, and transparency.
+* **Fixed:** Changes to options not reflected after clicking the gallery Update button.
+* **Fixed:** Thumbnails view breaking when only the caption is enabled and its position is set to above or below.
+* **Fixed:** Caption not visible when the title and caption have the same position and the title is disabled.
+* **Fixed:** Fonts list issue in the Divi builder.
+* **Fixed:** Missing pointer cursor for item titles with the Image Click action enabled.
+* **Fixed:** Cursor pointer for titles of item with set Image click.
+* **Fixed:** Overlay text background not removed when its option value is empty.
+
 = 1.16.6 =
 = Updated: 29.09.2025 =
 * **Added:** Options for item border width, color, and background color.
