@@ -412,6 +412,10 @@ to avoid a bug connected with preview.
   &:hover {
     transform: scale(1.03);
   }
+  svg {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 #gallery-license {
