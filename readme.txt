@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.17.1
+Stable tag: 1.17.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.1: Improved video support in Carousel, Cards, and Cube views. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.2: Added gallery items filter functionality. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.2 =
+= Updated: 20.10.2025 =
+* **Added:** Gallery items filter functionality.
+* **Improved:** Section headers for better visibility in options.
+* **Fixed:** Removed unnecessary frontend call.
+
 = 1.17.1 =
 = Updated: 14.10.2025 =
 * **Fixed:** Drag and drop for video slides in Carousel, Cards, and Cube views.
