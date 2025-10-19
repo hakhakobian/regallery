@@ -263,6 +263,8 @@ class REACG_Options {
       'watermarkTransparency' => 20, #number
       'watermarkSize' => 30, #number
       'watermarkPosition' => 'middle-center', #string top-left | top-center | top-right | middle-left | middle-center | middle-right | bottom-left | bottom-center | bottom-right
+      'enableSearch' => false, #boolean
+      'searchPlaceholderText' => '', #string
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
@@ -385,6 +387,7 @@ class REACG_Options {
       'fillContainer',
       'invertTextColor',
       'enableWatermark',
+      'enableSearch',
     ];
     $float = [
       'scale',

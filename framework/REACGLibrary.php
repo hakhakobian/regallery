@@ -169,7 +169,7 @@ class REACGLibrary {
       if ( $include_empty ) {
         $data[$key_shifter] = [];
         $data[$key_shifter]['id'] = 0;
-        $data[$key_shifter]['title'] = __('Select Gallery', 'reacg');
+        $data[$key_shifter]['title'] = __('Select gallery', 'reacg');
         $data[$key_shifter]['shortcode'] = '';
         ++$key_shifter;
       }

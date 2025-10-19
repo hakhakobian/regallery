@@ -558,11 +558,14 @@ class REACG_Gallery {
         update_post_meta($gallery_id, 'images_ids', json_encode(array_values($images_ids_arr)));
       }
 
-      // Filter the data by title and description.
-      $filter = !empty($gallery_options['general']['filter']) ? sanitize_text_field($gallery_options['general']['filter']) : (isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '');
-      if ( $filter ) {
+      // Filter the data by title, description, alt and caption.
+      $filter = !empty($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+      if ( $filter) {
         $data = array_values(array_filter($data, function( $item ) use ( $filter ) {
-          return stripos($item['title'], $filter) !== FALSE || stripos($item['description'], $filter) !== FALSE;
+          return stripos($item['title'], $filter) !== FALSE
+            || stripos($item['description'], $filter) !== FALSE
+            || stripos($item['alt'], $filter) !== FALSE
+            || stripos($item['caption'], $filter) !== FALSE;
         }));
       }
 
