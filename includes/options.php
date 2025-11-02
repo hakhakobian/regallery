@@ -158,6 +158,8 @@ class REACG_Options {
       'textPosition' => 'bottom', #string top | bottom | above | below
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
+      'textBackground' => 'rgba(0, 0, 0, 0.5)', #string
+      'invertTextColor' => FALSE, #boolean
       'showTitle' => TRUE, #bool
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 1.6, #float
@@ -294,6 +296,8 @@ class REACG_Options {
       'textPosition' => 'bottom', #string top | bottom | above | below
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
+      'textBackground' => '', #string
+      'invertTextColor' => FALSE, #boolean
       'showTitle' => TRUE, #bool
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 1.6, #float
