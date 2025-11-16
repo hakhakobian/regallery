@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.17.6
+Stable tag: 1.17.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.6: Added white labeling functionality. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.7: Fixed conflicts with third-party themes and plugins. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.7 =
+= Updated: 17.11.2025 =
+* **Fixed:** Pagination button height conflicts with third-party themes and plugins.
+* **Fixed:** Text line-height issue in the lightbox and Slideshow views.
+
 = 1.17.6 =
 = Updated: 11.11.2025 =
 * **Added:** White labeling functionality.
