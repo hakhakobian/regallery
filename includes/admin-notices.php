@@ -38,8 +38,8 @@ class REACG_Admin_Notices {
 		], admin_url('admin-ajax.php') ), -1, REACG_NONCE);
 
 		$options = [
-			'title' => __( sprintf("That’s awesome!%s", "🎉"), "reacg" ),
-			'description' => __( sprintf("We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%sYour feedback helps us improve and helps others discover out plugin!", "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />"), "reacg" ),
+			'title' => sprintf( __( "That’s awesome!%s", "reacg" ), "🎉" ),
+			'description' => sprintf( __( "We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%sYour feedback helps us improve and helps others discover out plugin!", "reacg" ), "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />" ),
       'dismiss_url' => add_query_arg( [
                                         'status' => !$second_period_not_passed ? 'dismissed' : 'skipped',
                                       ], $dismiss_url ),
