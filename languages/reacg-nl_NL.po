@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: reacg\n"
-"POT-Creation-Date: 2025-10-19 01:16+0400\n"
-"PO-Revision-Date: 2025-10-19 01:18+0400\n"
+"POT-Creation-Date: 2025-11-24 01:20+0400\n"
+"PO-Revision-Date: 2025-11-24 01:20+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,6 +15,10 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: assets/js/wp-gallery.js\n"
+
+#: assets/js/wp-gallery/wp-gallery.70.fe24d916.chunk.js:1
+msgid "number"
+msgstr ""
 
 #: builders/beaverbuilder/beaverbuilder.php:15 builders/bricks/bricks.php:24
 #: builders/divi/includes/REACGDiviModule.php:44
@@ -196,6 +200,20 @@ msgstr ""
 
 #: gallery.php:378
 msgid "Display images with various visual effects in responsive gallery."
+msgstr ""
+
+#: includes/admin-notices.php:41
+#, php-format
+msgid "That’s awesome!%s"
+msgstr ""
+
+#: includes/admin-notices.php:42
+#, php-format
+msgid ""
+"We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, "
+"we’d really appreciate it if you could share your experience by leaving a "
+"quick review on WordPress.org.%sYour feedback helps us improve and helps "
+"others discover out plugin!"
 msgstr ""
 
 #: includes/admin-notices.php:48
@@ -496,19 +514,19 @@ msgstr ""
 msgid "There is no such a template."
 msgstr ""
 
-#: includes/options.php:652
+#: includes/options.php:656
 msgid "Nothing to save."
 msgstr "Niets op te slaan."
 
-#: includes/options.php:681
+#: includes/options.php:685
 msgid "Nothing saved."
 msgstr "Niets opgeslagen."
 
-#: includes/options.php:1032
+#: includes/options.php:1036
 msgid "Settings successfully reset."
 msgstr ""
 
-#: includes/options.php:1036
+#: includes/options.php:1040
 msgid "Settings already reset."
 msgstr ""
 
