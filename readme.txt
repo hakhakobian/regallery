@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.17.7
+Stable tag: 1.17.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.7: Fixed conflicts with third-party themes and plugins. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.8: Fixed responsiveness of the Options section. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.8 =
+= Updated: 24.11.2025 =
+* **Fixed:** Responsiveness of the Options section.
+* **Fixed:** Layout issues in Mosaic, Masonry, and Justified views when used with Elementor on mobile.
+* **Fixed:** The overlay icon transition in Mosaic, Masonry, and Justified views.
+
 = 1.17.7 =
 = Updated: 17.11.2025 =
 * **Fixed:** Pagination button height conflicts with third-party themes and plugins.
