@@ -24,7 +24,7 @@ class REACG_Options {
       'padding' => 0, #number
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -60,7 +60,7 @@ class REACG_Options {
       'rowHeight' => 200, #number
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -88,7 +88,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'rowHeight' => 300, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
+      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -116,7 +116,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
+      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -214,7 +214,7 @@ class REACG_Options {
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
       'imageRadius' => 0, #number
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => TRUE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 36, #number
@@ -480,7 +480,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
