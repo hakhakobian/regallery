@@ -217,7 +217,7 @@ class REACG_Gallery {
         // Check for the temporary menu slug.
         if ( $menu_item[2] === 'reacg-external-link' ) {
           // Replace with the external URL.
-          $submenu[$parent_slug][$index][2] = $this->obj->public_url;
+          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu'], REACG_WEBSITE_URL_UTM));
         }
       }
     }

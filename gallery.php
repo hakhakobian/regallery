@@ -6,8 +6,8 @@
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
- * Plugin URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
- * Author URI:  https://regallery.team/?utm_source=wordpress&utm_medium=social
+ * Plugin URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=plugin_uri
+ * Author URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=auhor_uri
  * Text Domain: reacg
  * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -28,7 +28,7 @@ final class REACG {
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
   public $author = 'ReGallery Team';
-  public $public_url = 'https://regallery.team';
+  public $website_url = 'https://regallery.team';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
@@ -73,7 +73,8 @@ final class REACG {
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
-    define('REACG_PUBLIC_URL', $this->public_url );
+    define('REACG_WEBSITE_URL', $this->website_url );
+    define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin'], $this->website_url) );
     define('REACG_VERSION', $this->version );
     define('REACG_NONCE', $this->nonce );
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );

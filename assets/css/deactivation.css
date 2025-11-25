@@ -97,3 +97,20 @@
   height: 13px;
   font-size: 13px;
 }
+
+.reacg-upgrade {
+  color: #FFFFFF;
+  background-color: #8ea96e;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 3px 10px 6px;
+}
+
+.reacg-upgrade:focus,
+.reacg-upgrade:hover {
+  color: #FFFFFF;
+  background-color: #8bb659;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
