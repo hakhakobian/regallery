@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.17.8
+Stable tag: 1.17.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -218,10 +218,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.8: Fixed responsiveness of the Options section. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.9: Added Soft Hover pre-built template. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.9 =
+= Updated: 28.11.2025 =
+* **Added:** Soft Hover pre-built template.
+* **Added:** Overlay Fullscreen Icon hover effects.
+* **Added:** Get Discount button to the plugins list.
+* **Fixed:** Save options and Reset buttons styling.
+
 = 1.17.8 =
 = Updated: 24.11.2025 =
 * **Fixed:** Responsiveness of the Options section.
