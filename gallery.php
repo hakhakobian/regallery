@@ -74,8 +74,8 @@ final class REACG {
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
     define('REACG_WEBSITE_URL', $this->website_url );
-    define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin'], $this->website_url) );
     define('REACG_VERSION', $this->version );
+    define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url) );
     define('REACG_NONCE', $this->nonce );
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
