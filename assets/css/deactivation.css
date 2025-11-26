@@ -103,7 +103,9 @@
   background-color: #8ea96e;
   font-weight: 600;
   border-radius: 4px;
-  padding: 3px 10px 6px;
+  padding: 3px 10px 6px !important;
+  margin: 5px 0;
+  display: inline-block;
 }
 
 .reacg-upgrade:focus,
@@ -113,4 +115,9 @@
   border: none;
   outline: none;
   box-shadow: none;
+}
+@media screen and (max-width: 782px) {
+  .reacg-upgrade {
+    margin: 5px 8px;
+  }
 }
