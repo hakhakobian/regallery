@@ -435,13 +435,22 @@ to avoid a bug connected with preview.
   }
 }
 
+.button.reacg-primary-button {
+  background: rgb(147 177 77);
+}
+.button.reacg-primary-button:hover,
+.button.reacg-primary-button:active,
+.button.reacg-primary-button:focus {
+  background: rgb(135 162 71);
+}
 .button.reacg-primary-button,
 .button.reacg-primary-button:hover,
 .button.reacg-primary-button:active,
 .button.reacg-primary-button:focus {
-  background: rgb(167, 201, 87);
   color: white;
   border: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 #gallery-custom-css h2.hndle {

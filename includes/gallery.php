@@ -201,6 +201,7 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
+    add_submenu_page('edit.php?post_type=reacg', __('Get 50% Off Now', 'reacg'), __('Get 50% Off Now', 'reacg'), 'manage_options', 'reacg-upgrade');
   }
 
   /**
@@ -218,6 +219,47 @@ class REACG_Gallery {
         if ( $menu_item[2] === 'reacg-external-link' ) {
           // Replace with the external URL.
           $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'about_us'], REACG_WEBSITE_URL_UTM));
+        }
+        elseif ( $menu_item[2] === 'reacg-upgrade' ) {
+          // Replace with the external URL.
+          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'black_friday'], REACG_WEBSITE_URL_UTM . '/#pricing'));
+          if ( isset( $submenu[ $parent_slug ][ $index ][4] ) ) {
+            $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro';
+          } else {
+            $submenu[ $parent_slug ][ $index ][] = 'reacg-sidebar-upgrade-pro';
+          }
+          echo '<style>
+                  a.reacg-sidebar-upgrade-pro {
+                    background-color: rgb(147 177 77) !important;
+                  }
+                  a.reacg-sidebar-upgrade-pro:focus,
+                  a.reacg-sidebar-upgrade-pro:active,
+                  a.reacg-sidebar-upgrade-pro:hover {
+                    background-color: rgb(135 162 71) !important;
+                  }
+                  a.reacg-sidebar-upgrade-pro,
+                  a.reacg-sidebar-upgrade-pro:focus,
+                  a.reacg-sidebar-upgrade-pro:active,
+                  a.reacg-sidebar-upgrade-pro:hover {
+                    color: #FFFFFF !important;
+                    font-weight: 600 !important;
+                    border-radius: 3px !important;
+                    padding: 3px 10px 5px !important;
+                    margin: 5px 12px !important;
+                    width: max-content !important;
+                    border: none !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                  }
+                  @media only screen and (max-width: 960px) {
+                    .auto-fold #adminmenu li.menu-top .wp-submenu>li>a.reacg-sidebar-upgrade-pro {
+                      margin-left: 12px !important;
+                    }
+                    .auto-fold #adminmenu .wp-has-current-submenu li>a.reacg-sidebar-upgrade-pro {
+                      margin-left: 14px !important;
+                    }
+                }
+                 </style>';
         }
       }
     }
