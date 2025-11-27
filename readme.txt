@@ -17,6 +17,8 @@ Re Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes
 
 https://www.youtube.com/watch?v=RldoAkceHTQ
 
+[See Gallery Views](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=see_gallery_views#gallery_views) | [Pre-built Templates](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_demo)
+
 With features like lightbox viewing, responsive design, and drag-and-drop customization, this plugin redefines ease of use and functionality.
 Whether you're a photographer, blogger, artist, or small business owner, this responsive gallery plugin empowers you to display your work in the most engaging way.
 
@@ -40,7 +42,7 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 == 🎨 Live Demo - See Photo Gallery in Action ==
 
 **Re Gallery** gives you everything you need to build **professional, mobile-friendly, responsive** photo galleries fast and without any coding. Explore our interactive live demo to view stunning examples of responsive gallery layouts, customizable pre-built templates, and modern designs like masonry, carousel, and lightbox galleries. Whether you're updating a blog, portfolio, or eCommerce store, you'll see how easy it is to enhance your WordPress website with Re Gallery.
-🔗 [Click here to view the Re Gallery Demo Page and start designing your perfect gallery today!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=demo_page)
+🔗 [View Re Gallery Demo Page](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=demo_page) and start designing your perfect gallery today!
 
 
 == Why Choose the Re Gallery Photo Gallery Plugin? ==
@@ -90,11 +92,11 @@ Below are some of the most popular Re Gallery tutorials:
 [How to use AI to automate Titles, Descriptions, Alt Text in WordPress galleries](https://www.youtube.com/watch?v=z0bK6SP8jbg)
 
 
-== 🥇 PRO Pre-Built Templates ==
+== 🥇 PRO Pre-built Templates ==
 
 Save time with our customizable pre-built templates! For less than $2.5/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional - get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
 
-🔗 [Click here to see Pro Pre-Built templates now!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=pro_templates)
+🔗 [See Pro Pre-built templates!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=pro_templates)
 
 
 == 🎯 Smarter WordPress Photo Gallery with AI ==
@@ -110,7 +112,7 @@ Just upload your images and let Re Gallery PRO do the work.
 
 Display your WooCommerce products in stunning, customizable galleries with Re Gallery. Automatically pull product images, titles, and prices into beautiful layouts that boost engagement and drive sales, no manual setup needed!
 
-👉 [Upgrade to Re Gallery PRO and create a smarter, faster photo gallery today.](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=upgrade#pricing)
+👉 [Upgrade to Re Gallery PRO](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=upgrade#pricing) and create a smarter, faster photo gallery today.
 
 
 == Important ==
