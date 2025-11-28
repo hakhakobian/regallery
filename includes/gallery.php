@@ -12,7 +12,7 @@ class REACG_Gallery {
     }
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
-    add_action('admin_menu', [ $this, 'modify_external_submenu_url'], 999);
+    add_action('admin_head', [ $this, 'modify_external_submenu_url']);
 
     // Add columns to the custom post list.
     add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'custom_columns' ]);
@@ -201,7 +201,7 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
-    add_submenu_page('edit.php?post_type=reacg', __('Get 50% Off Now', 'reacg'), __('Get 50% Off Now', 'reacg'), 'manage_options', 'reacg-upgrade');
+    add_submenu_page('edit.php?post_type=reacg', __('Get Discount Now', 'reacg'), __('Get Discount Now', 'reacg'), 'manage_options', 'reacg-upgrade');
   }
 
   /**
@@ -258,7 +258,7 @@ class REACG_Gallery {
                     .auto-fold #adminmenu .wp-has-current-submenu li>a.reacg-sidebar-upgrade-pro {
                       margin-left: 14px !important;
                     }
-                }
+                  }
                  </style>';
         }
       }
