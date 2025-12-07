@@ -1074,9 +1074,10 @@ class REACG_Gallery {
 
     // Metabox for adding images.
     add_meta_box( 'gallery-images', __( 'Images', 'reacg' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-settings', __( 'Settings', 'reacg' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-preview', __( 'Preview', 'reacg' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
     // Metabox for live preview.
-    add_meta_box( 'gallery-preview', ' ', [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'high' );
 
     // Metabox to activate/deactivate pro version.
     add_meta_box( 'gallery-license', __( 'License', 'reacg' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
@@ -1405,6 +1406,15 @@ class REACG_Gallery {
     return $data;
   }
 
+  /**
+   * Metabox to show settings separately.
+   *
+   * @return void
+   */
+  public function meta_box_settings() {
+    ?><div class="reacg-gallery reacg-preview" id="reacg_settings"></div>
+    <?php
+  }
   /**
    * Metabox to add and show added images.
    *
