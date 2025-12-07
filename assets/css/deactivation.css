@@ -99,19 +99,23 @@
 }
 
 .reacg-upgrade {
-  color: #FFFFFF;
-  background-color: #8ea96e;
-  font-weight: 600;
-  border-radius: 4px;
-  padding: 3px 10px 6px !important;
-  margin: 5px 0;
-  display: inline-block;
+  background-color: rgb(147 177 77);
 }
-
+.reacg-upgrade:focus,
+.reacg-upgrade:active,
+.reacg-upgrade:hover {
+  background-color: rgb(135 162 71);
+}
+.reacg-upgrade,
+.reacg-upgrade:active,
 .reacg-upgrade:focus,
 .reacg-upgrade:hover {
   color: #FFFFFF;
-  background-color: #8bb659;
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 3px 10px 5px !important;
+  margin: 5px 0;
+  display: inline-block;
   border: none;
   outline: none;
   box-shadow: none;

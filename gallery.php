@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReGallery
  * Description: Photo gallery WordPress plugin lets you create responsive, mobile-friendly image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.17.8
+ * Version: 1.17.10
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: ReGallery Team
@@ -23,7 +23,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.17.8';
+  public $version = '1.17.10';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'ReGallery';
@@ -74,8 +74,8 @@ final class REACG {
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
     define('REACG_WEBSITE_URL', $this->website_url );
-    define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin'], $this->website_url) );
     define('REACG_VERSION', $this->version );
+    define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url) );
     define('REACG_NONCE', $this->nonce );
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
