@@ -1,19 +1,19 @@
-.editor-styles-wrapper .reacg-gallery img,
-.reacg-preview.reacg-gallery img,
-.editor-styles-wrapper .reacg-gallery ul,
-.reacg-preview.reacg-gallery ul,
-.editor-styles-wrapper .reacg-gallery li,
-.reacg-preview.reacg-gallery li {
+.editor-styles-wrapper .reacg-wrapper img,
+.reacg-wrapper img,
+.editor-styles-wrapper .reacg-wrapper ul,
+.reacg-wrapper ul,
+.editor-styles-wrapper .reacg-wrapper li,
+.reacg-wrapper li {
   margin: 0;
   padding: 0;
 }
 
-.reacg-preview.reacg-gallery li::marker {
+.reacg-wrapper li::marker {
   content: "";
 }
 
-.editor-styles-wrapper .reacg-gallery .reacg-settings input,
-.reacg-gallery .reacg-settings input {
+.editor-styles-wrapper .reacg-wrapper .reacg-settings input,
+.reacg-wrapper .reacg-settings input {
   border: none;
   line-height: 1;
   margin: 0;
