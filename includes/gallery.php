@@ -201,7 +201,7 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
-    add_submenu_page('edit.php?post_type=reacg', __('Get Discount Now', 'reacg'), __('Get Discount Now', 'reacg'), 'manage_options', 'reacg-upgrade');
+    add_submenu_page('edit.php?post_type=reacg', __('Upgrade to Pro', 'reacg'), __('Upgrade to Pro', 'reacg'), 'manage_options', 'reacg-upgrade');
   }
 
   /**
@@ -222,7 +222,7 @@ class REACG_Gallery {
         }
         elseif ( $menu_item[2] === 'reacg-upgrade' ) {
           // Replace with the external URL.
-          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'black_friday'], REACG_WEBSITE_URL_UTM . '/#pricing'));
+          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '/#pricing'));
           if ( isset( $submenu[ $parent_slug ][ $index ][4] ) ) {
             $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro';
           } else {
