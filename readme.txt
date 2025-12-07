@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.10
+Stable tag: 1.17.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,8 +14,6 @@ Photo gallery WordPress plugin lets you create responsive, mobile-friendly image
 == Description ==
 
 Re Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes it effortless to create stunning image galleries with advanced layouts like Mosaic, Masonry, Slideshow etc.
-
-https://www.youtube.com/watch?v=RldoAkceHTQ
 
 [See Gallery Views](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=see_gallery_views#gallery_views) | [Pre-built Templates](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_demo)
 
@@ -43,6 +41,9 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 
 **Re Gallery** gives you everything you need to build **professional, mobile-friendly, responsive** photo galleries fast and without any coding. Explore our interactive live demo to view stunning examples of responsive gallery layouts, customizable pre-built templates, and modern designs like masonry, carousel, and lightbox galleries. Whether you're updating a blog, portfolio, or eCommerce store, you'll see how easy it is to enhance your WordPress website with Re Gallery.
 🔗 [View Re Gallery Demo Page](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=demo_page) and start designing your perfect gallery today!
+
+
+https://www.youtube.com/watch?v=RldoAkceHTQ
 
 
 == Why Choose the Re Gallery Photo Gallery Plugin? ==
@@ -220,10 +221,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.10: Fixed image upload issue. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.11: Added Centered Caption pre-built template. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.11 =
+= Updated: 08.12.2025 =
+* **Added:** Centered Caption pre-built template.
+* **Changed:** Options section displayed separately from the preview.
+* **Fixed:** JavaScript error on first load in the admin area.
+
 = 1.17.10 =
 = Updated: 29.11.2025 =
 * **Fixed:** Image upload issue.
