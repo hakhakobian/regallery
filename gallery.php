@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: ReGallery
- * Description: Photo gallery WordPress plugin lets you create responsive, mobile-friendly image gallery with AI generated titles, descriptions & alt text.
+ * Description: Photo Gallery, Image Gallery - lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
  * Version: 1.17.12
  * Requires at least: 4.6
  * Requires PHP: 7.0
@@ -292,7 +292,7 @@ final class REACG {
     $required_scripts = array(
       'jquery',
       'jquery-ui-sortable',
-      );
+    );
     $required_styles = array(
       'wp-admin', // admin styles
       'buttons', // buttons styles

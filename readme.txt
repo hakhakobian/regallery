@@ -1,4 +1,4 @@
-=== Re Gallery - Responsive Photo Gallery Plugin ===
+=== Gallery - Photo Gallery, Responsive Image Gallery ===
 Contributors: regallery, hakhakob, garikharutyunyan
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
@@ -9,21 +9,22 @@ Stable tag: 1.17.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Photo gallery WordPress plugin lets you create responsive, mobile-friendly image gallery with AI generated titles, descriptions & alt text.
+Photo Gallery, Image Gallery - lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
 
 == Description ==
 
-Re Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes it effortless to create stunning image galleries with advanced layouts like Mosaic, Masonry, Slideshow etc.
-
-[See Gallery Views](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=see_gallery_views#gallery_views) | [Pre-built Templates](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_demo)
+Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes it easy to create stunning image gallery with advanced layouts like Mosaic, Masonry, Slideshow etc.
 
 With features like lightbox viewing, responsive design, and drag-and-drop customization, this plugin redefines ease of use and functionality.
 Whether you're a photographer, blogger, artist, or small business owner, this responsive gallery plugin empowers you to display your work in the most engaging way.
 
 🚀 Transform your WordPress site into a visual showcase with Re Gallery.
+
+[Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_views) | [Pre-built Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Landing Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_page_builder)
+
 Improve SEO, increase user engagement, and bring your website to life with Re Gallery - the best photo gallery plugin for WordPress.
 
-🔗 Visit our website for more details and inspiration: [ReGallery.team](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=more_details)
+🔗 Visit the [Image Gallery homepage](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=more_details) for more details and inspiration!
 
 
 == Benefits ==
