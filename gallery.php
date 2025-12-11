@@ -365,6 +365,8 @@ final class REACG {
       $this->prefix . '_thumbnails',
       'wp-blocks',
       'wp-element',
+      'wp-block-editor',
+      'wp-components',
       $this->prefix . '_admin'
     ];
     $required_styles = [
@@ -377,6 +379,8 @@ final class REACG {
     wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
+      'setup_wizard_description' => __("Create new gallery or select the existing one.", "reacg"),
+      'create_button' => __("Create new gallery", "reacg"),
       'plugin_url' => $this->plugin_url,
       'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',

@@ -27,7 +27,7 @@ class REACG_DiviModule extends Component {
   }
 
   render() {
-    return (<div className= {'reacg-gallery reacg-preview'}
+    return (<div className= {'reacg-wrapper reacg-gallery reacg-preview'}
                  key={this.props.post_id + this.props.enable_options}
                  data-options-section={this.props.enable_options === "on" ? 1 : 0}
                  data-plugin-version={Date.now()}
