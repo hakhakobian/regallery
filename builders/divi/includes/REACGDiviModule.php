@@ -19,7 +19,7 @@ class REACG_DiviModule extends ET_Builder_Module {
   protected $module_credits = array(
     'module_uri' => '',
     'author'     => REACG_AUTHOR,
-    'author_uri' => REACG_PUBLIC_URL,
+    'author_uri' => REACG_WEBSITE_URL_UTM . '&utm_medium=divi&utm_campaign=author_uri',
   );
 
   public function init() {
