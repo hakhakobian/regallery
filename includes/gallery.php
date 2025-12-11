@@ -1074,7 +1074,7 @@ class REACG_Gallery {
 
     // Metabox for adding images.
     add_meta_box( 'gallery-images', __( 'Images', 'reacg' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
-    add_meta_box( 'gallery-settings', ' ', [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-settings', __( 'Settings', 'reacg' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-preview', __( 'Preview', 'reacg' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
     // Metabox for live preview.

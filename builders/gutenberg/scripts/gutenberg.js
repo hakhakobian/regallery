@@ -1,7 +1,6 @@
-(function (blocks, element, blockEditor, components) {
+(function (blocks, element, blockEditor) {
   let el = element.createElement;
   const {InspectorControls} = blockEditor;
-  const {PanelBody, SelectControl} = components;
   const all_images_id = -1;
   const parsed = JSON.parse(reacg_gutenberg.data);
   /* If it's an object, convert its values to array.*/
