@@ -1,37 +1,38 @@
-.editor-styles-wrapper select.reacg-gbShortcodesList,
-.editor-styles-wrapper .reacg-createButton button {
-  border: 1px solid #8c8f94;
-  font-weight: revert;
-  min-width: 300px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  line-height: 2;
-  color: #2c3338;
-  box-shadow: none;
-  border-radius: 3px;
-  padding: 0 24px 0 8px;
-  min-height: 30px;
-  max-width: 25rem;
-  -webkit-appearance: none;
-  background-color: #fff;
-  background-size: 16px 16px;
-  cursor: pointer;
-  vertical-align: middle;
+.reacg-setup-wizard {
   text-align: center;
-}
-.editor-styles-wrapper select.reacg-gbShortcodesList option:not(:first-child) {
-  text-align: left;
-}
-.editor-styles-wrapper .reacg-separator {
-  font-weight: revert;
-  font-size: 20px;
-  line-height: 2;
-  color: #2c3338;
-  vertical-align: middle;
-  text-align: center;
-  min-height: 30px;
-  display: inline-block;
-  margin: 0 5px 20px 5px;
+  padding: 10px;
+  img {
+    border-radius: 15px;
+  }
+  .reacg-setup-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    .reacg-create-gallery,
+    .reacg-galleries-list {
+      border: 1px solid #8c8f94;
+      font-weight: revert;
+      width: 230px;
+      font-size: 20px;
+      line-height: 2;
+      color: #2c3338;
+      box-shadow: none;
+      border-radius: 3px;
+      min-height: 30px;
+      -webkit-appearance: none;
+      background-color: #fff;
+      background-size: 16px 16px;
+      cursor: pointer;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .reacg-galleries-list option:not(:first-child) {
+      text-align: left;
+    }
+  }
 }
 
 .reacg-spinner__wrapper {
@@ -45,28 +46,29 @@
   z-index: 1;
 }
 
-.reacg-instruction {
-  text-align: center;
-}
-
-.reacg-gutenberg-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.reacg-gutenberg-controls:has(> .reacg-list:only-child) {
-  justify-content: left;
-}
-
-.reacg-enable-options__wrapper {
-  margin-bottom: 10px;
-  font-size: 20px;
-  label {
-    margin-right: 10px;
-    cursor: pointer;
+.reacg-gutenberg-settings {
+  .reacg_item {
+    width: 69px;
+    height: 69px;
   }
-  label:first-of-type {
-    font-weight: bold;
+  .reacg-cover {
+    width: 60px;
+    height: 60px;
+  }
+  .reacg-cover.dashicons:before,
+  .reacg-cover.reacg-dynamic.dashicons:after {
+    font-size: 35px;
+  }
+  .reacg_item_new .reacg_item_image {
+    background-size: 60px;
+  }
+  .reacg-galleries-list {
+    width: calc(100% - 32px);
+    margin: 16px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  #reacg-gallery-images {
+    margin: 14px;
   }
 }
