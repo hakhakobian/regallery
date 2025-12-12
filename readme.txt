@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.12
+Stable tag: 1.17.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ Whether you're a photographer, blogger, artist, or small business owner, this re
 
 🚀 Transform your WordPress site into a visual showcase with Re Gallery.
 
-[Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_views) | [Pre-built Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Landing Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_page_builder)
+[Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_views) | [Pre-Designed Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Landing Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_page_builder)
 
 Improve SEO, increase user engagement, and bring your website to life with Re Gallery - the best photo gallery plugin for WordPress.
 
@@ -38,13 +38,13 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 *   **Responsive Support & Continuous Improvements:** Our dedicated support team is here to ensure you get the most out of the Re Gallery plugin. We actively listen to user feedback and continuously roll out updates, including upcoming features like lightbox enhancements, gallery animations, and more. Re Gallery is built for long-term use: SEO-optimized, mobile-responsive, and designed to keep your site visually compelling, fast, and easy to navigate.
 
 
-== 🎨 Live Demo - See Photo Gallery in Action ==
-
-**Re Gallery** gives you everything you need to build **professional, mobile-friendly, responsive** photo galleries fast and without any coding. Explore our interactive live demo to view stunning examples of responsive gallery layouts, customizable pre-built templates, and modern designs like masonry, carousel, and lightbox galleries. Whether you're updating a blog, portfolio, or eCommerce store, you'll see how easy it is to enhance your WordPress website with Re Gallery.
-🔗 [View Re Gallery Demo Page](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=demo_page) and start designing your perfect gallery today!
-
-
 https://www.youtube.com/watch?v=RldoAkceHTQ
+
+
+== 🎨 Real-Time Preview - See Photo Gallery in Action ==
+
+**Re Gallery** gives you everything you need to build **professional, mobile-friendly, responsive** photo galleries fast and without any coding. Explore our interactive live preview to view stunning examples of responsive gallery layouts, customizable pre-designed templates, and modern designs like masonry, carousel, and lightbox galleries. Whether you're updating a blog, portfolio, or eCommerce store, you'll see how easy it is to enhance your WordPress website with Re Gallery.
+🔗 [View Re Gallery Demo Page](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=demo_page) and start designing your perfect gallery today!
 
 
 == Why Choose the Re Gallery Photo Gallery Plugin? ==
@@ -81,24 +81,24 @@ Below are some of the most popular Re Gallery tutorials:
 [How to change pagination type](https://www.youtube.com/watch?v=SQawgaxwm1c)
 [How to edit image title](https://www.youtube.com/watch?v=p2LDwCibQhs)
 [How to edit video cover](https://www.youtube.com/watch?v=EsfVm63EnBE)
-[Add gallery with Gutenberg](https://www.youtube.com/watch?v=Ep5L3xKdDH8)
+[Add gallery with Gutenberg](https://www.youtube.com/watch?v=6AVPJ2fjaYs)
 [Add gallery with Elementor](https://www.youtube.com/watch?v=GedxyRxQ02A)
 [Add gallery with Divi Builder](https://www.youtube.com/watch?v=Z69eZOoWJi0)
 [Add gallery with WPBakery Page Builder](https://www.youtube.com/watch?v=FClpKpREzPQ)
 [Add gallery with Beaver Builder](https://www.youtube.com/watch?v=A5U2ghLKYNg)
 [Add gallery with Bricks Builder](https://www.youtube.com/watch?v=aiYdYAn1D_8)
 [How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
-[How to use Pre-Built Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
+[How to use Pre-Designed Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
 [How to create dynamic gallery from your latest posts](https://www.youtube.com/watch?v=IQETfwbUKKg)
 [How to use AI to automate Titles, Descriptions, Alt Text in WordPress galleries](https://www.youtube.com/watch?v=z0bK6SP8jbg)
 
 
-== 🥇 PRO Pre-built Templates ==
+== 🥇 PRO Pre-Designed Templates ==
 
-Save time with our customizable pre-built templates! For less than $2.5/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional - get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
+Save time with our customizable pre-designed templates! For less than $2.5/month, you get not just a ready-made design but also a creative solution to update your website's photo gallery and image presentations. These templates are perfect for building beautiful and responsive galleries. Quick, easy, and professional - get started with an SEO-friendly image gallery that enhances your website's visual appeal and user experience!
 
-🔗 [See Pro Pre-built templates!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=pro_templates)
+🔗 [See Pro Pre-Designed templates!](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=pro_templates)
 
 
 == 🎯 Smarter WordPress Photo Gallery with AI ==
@@ -117,6 +117,29 @@ Display your WooCommerce products in stunning, customizable galleries with Re Ga
 👉 [Upgrade to Re Gallery PRO](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=upgrade#pricing) and create a smarter, faster photo gallery today.
 
 
+== Get more with Re Gallery PRO ==
+
+**40+ Pre-Designed Templates:** Access a rich library of professionally designed gallery templates created specifically for WordPress websites. Each pre-designed template is fully optimized for fast loading, mobile responsiveness, and high-performance image display. Whether you need masonry grids, sliders, product galleries, or clean portfolio layouts, every template helps you show your photos beautifully, without hiring a designer or writing any code.
+[Gallery Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_demo)
+
+**Template Library:** Save time with a ready-to-use template library that helps you keep a consistent style across your whole WordPress website. It's perfect for bloggers, portfolio creators, and WooCommerce store owners who want clean and organized image galleries.
+
+**AI Automation Tools:** Optimize your workflow with built-in AI tools that automatically generate alt text, titles, descriptions, and SEO-friendly captions. Improve your WordPress SEO and accessibility with almost no manual work.
+
+**WooCommerce Gallery:** Improve your product pages with better images, zoom options, and customizable product galleries. Made for WooCommerce store owners, this feature helps your customers see products more clearly and can boost sales with more engaging visuals.
+
+**Custom CSS Editor:** For advanced users, the integrated Custom CSS Editor gives full creative control. Adjust borders, animations, layouts, and any styling detail directly inside the WordPress dashboard, no external tools required.
+
+**Watermarking:** Protect your digital content with automated image watermarking. Ideal for photographers, creators, bloggers, and online store owners who want to secure their visuals from unauthorized use while keeping the design clean and professional.
+
+**White Labeling:** Agencies and freelancers can fully white-label the plugin. Remove branding, customize the interface, and deliver a seamless experience to clients.
+
+**24/7 PRO Support:** Get anytime help from a support team that knows WordPress, WooCommerce, and performance issues. Whether you're new or experienced, PRO support makes sure your problems are solved quickly.
+[Support Forum](https://wordpress.org/support/plugin/regallery/)
+
+**Advanced Customization:** We're here to fully customize your gallery for you. Adjusting layouts, hover effects, animations, captions, and responsive behavior, so it perfectly matches your brand without any coding on your part.
+
+
 == Important ==
 In case you have any questions, suggestions, or if you've found a bug, please check out our [Support Forum](https://wordpress.org/support/plugin/regallery).
 
@@ -129,7 +152,7 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 
 == Screenshots ==
 
-1. Gallery Thumbnails view
+1. Gallery Grid view
 2. Gallery Mosaic view
 3. Gallery Masonry view
 4. Gallery Justified view
@@ -179,7 +202,7 @@ Re Gallery integrates smoothly with WooCommerce, allowing you to create beautifu
 = Which gallery views like masonry, carousel, justified are available in WordPress photo gallery plugin? =
 Re Gallery supports multiple gallery layouts including։
 
-* **Thumbnails view:** Present your photo gallery with clickable thumbnails that open larger versions of the images.
+* **Grid view:** Present your photo gallery with clickable thumbnails that open larger versions of the images.
 * **Mosaic view:** Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
 * **Masonry view:** Show your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
 * **Justified view:** Arrange your images in clean, horizontal rows of equal height, adjusting widths automatically to maintain alignment.
@@ -222,10 +245,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.12: Fixed options section responsiveness. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.13: Improved options section is now displayed outside the gallery container in the Gutenberg editor. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.13 =
+= Updated: 13.12.2025 =
+* **Improved:** Options section is now displayed outside the gallery container in the Gutenberg editor.
+* **Changed:** Upgrade buttons.
+* **Fixed:** Issue with the Divi Builder.
+
 = 1.17.12 =
 = Updated: 09.12.2025 =
 * **Fixed:** Options section responsiveness.
