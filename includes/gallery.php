@@ -222,7 +222,7 @@ class REACG_Gallery {
         }
         elseif ( $menu_item[2] === 'reacg-upgrade' ) {
           // Replace with the external URL.
-          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '/#pricing'));
+          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'));
           if ( isset( $submenu[ $parent_slug ][ $index ][4] ) ) {
             $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro';
           } else {

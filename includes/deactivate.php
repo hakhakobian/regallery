@@ -117,9 +117,9 @@ class REACG_Deactivate {
    */
   function action_links( $links ) {
     $additional_links = [
-      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'faq'], REACG_WEBSITE_URL_UTM . '/#faq')) . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
+      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'faq'], REACG_WEBSITE_URL_UTM . '#faq')) . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
       "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
-      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '/#pricing')) . "' target='_blank' class='reacg-upgrade'>" . REACG_BUY_NOW_TEXT . "</a>",
+      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . "' target='_blank' class='reacg-upgrade'>" . REACG_BUY_NOW_TEXT . "</a>",
     ];
     return array_merge( $links, $additional_links );
   }

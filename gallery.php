@@ -264,7 +264,7 @@ final class REACG {
       'plugin_url' => $this->plugin_url,
       'upgrade' => [
         'text' => REACG_BUY_NOW_TEXT,
-        'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '/#pricing' ),
+        'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
       ],
       'text' => [
         'load_more' => __('Load more', 'reacg'),
