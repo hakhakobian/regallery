@@ -1,4 +1,7 @@
 jQuery(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("reacg-pro"))) {
+    jQuery(".reacg-upgrade").hide();
+  }
   jQuery(document).on("click", "a[id^='deactivate-regallery']", function (e){
     jQuery(".reacg-deactivate-popup-overlay").show();
     jQuery(".reacg-skip").attr("href", jQuery(this).attr("href"));

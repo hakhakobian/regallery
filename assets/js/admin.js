@@ -37,6 +37,7 @@ jQuery(document).ready(function () {
           reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
         }
       });
+      localStorage.setItem("reacg-pro", isPro);
     }
   });
 
@@ -73,6 +74,7 @@ jQuery(document).ready(function () {
           const isPro = !!activate;
           container.find(".reacg-pro-not-active").toggle(!isPro);
           container.find(".reacg-pro-active").toggle(isPro);
+          localStorage.setItem("reacg-pro", isPro);
         }
         else {
           errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);

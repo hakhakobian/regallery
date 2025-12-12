@@ -228,7 +228,11 @@ class REACG_Gallery {
           } else {
             $submenu[ $parent_slug ][ $index ][] = 'reacg-sidebar-upgrade-pro';
           }
-          echo '<style>
+          echo '<script>jQuery(document).ready(function () { if (!JSON.parse(localStorage.getItem("reacg-pro"))) { jQuery(".reacg-sidebar-upgrade-pro").show(); } });</script>
+                <style>
+                  .reacg-sidebar-upgrade-pro {
+                    display: none;
+                  }
                   a.reacg-sidebar-upgrade-pro {
                     background-color: rgb(147 177 77) !important;
                   }
