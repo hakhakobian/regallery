@@ -34,7 +34,7 @@ jQuery(document).ready(function () {
         let text = jQuery(this).val();
         if ( !isPro && text.length > 100) {
           jQuery(this).val(text.substring(0, 100));
-          reacg_open_premium_offer_dialog();
+          reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
         }
       });
     }
@@ -711,7 +711,7 @@ function reacg_add_ai_button(that, field) {
         },
         complete: function (response) {
           if (response.status === 204) {
-            reacg_open_premium_offer_dialog();
+            reacg_open_premium_offer_dialog({utm_medium: 'ai'});
           }
           else if (response.status === 200) {
             /* Create modal if not exist and open.*/
@@ -755,7 +755,7 @@ function reacg_add_ai_button(that, field) {
                     generatedText.removeAttr("disabled");
                     generateButton.removeAttr("disabled");
                     if (response.status === 204) {
-                      reacg_open_premium_offer_dialog();
+                      reacg_open_premium_offer_dialog({utm_medium: 'ai_generate'});
                     }
                     else if (response.status === 200 && response.success && response.responseJSON) {
                       generatedText.removeAttr("disabled").val(response.responseJSON);

@@ -193,7 +193,7 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
           complete: function (response) {
             if (response.status === 204) {
               /* If trying to get Pro post type with free account.*/
-              reacg_open_premium_offer_dialog();
+              reacg_open_premium_offer_dialog({utm_medium: 'woo_products'});
               media_modal.find(".media-frame-content .spinner").removeClass("is-active");
             }
             else if (response.status === 200) {

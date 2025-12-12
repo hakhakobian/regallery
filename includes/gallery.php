@@ -201,7 +201,7 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
-    add_submenu_page('edit.php?post_type=reacg', __('Upgrade to Pro', 'reacg'), __('Upgrade to Pro', 'reacg'), 'manage_options', 'reacg-upgrade');
+    add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
   }
 
   /**

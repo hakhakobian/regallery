@@ -147,6 +147,7 @@ final class REACG {
     }
 
     define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
+    define('REACG_BUY_NOW_TEXT', esc_html__('Upgrade to Pro', 'reacg') );
   }
 
   /**
@@ -261,6 +262,10 @@ final class REACG {
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
+      'upgrade' => [
+        'text' => REACG_BUY_NOW_TEXT,
+        'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '/#pricing' ),
+      ],
       'text' => [
         'load_more' => __('Load more', 'reacg'),
         'search' => __('Search', 'reacg'),
