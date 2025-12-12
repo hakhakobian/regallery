@@ -1202,7 +1202,7 @@ class REACG_Gallery {
         <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
       </p>
       <p>
-        <?php echo sprintf(__( "To unlock more features consider %s.", 'reacg' ), '<strong><a href="https://regallery.team/#pricing?utm_source=plugin&amp;utm_campaign=upgradingtopro" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'reacg') . '</a></strong>'); ?>
+        <?php echo sprintf(__( "To unlock more features consider %s.", 'reacg' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'reacg') . '</a></strong>'); ?>
       </p>
       <label for="reacg-license-key">
         <p class="description">
