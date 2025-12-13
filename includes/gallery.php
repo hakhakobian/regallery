@@ -2,7 +2,6 @@
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_Gallery {
-  private $post_type = "reacg";
   private $obj;
 
   public function __construct($that, $register = TRUE) {
@@ -15,9 +14,9 @@ class REACG_Gallery {
     add_action('admin_head', [ $this, 'modify_external_submenu_url']);
 
     // Add columns to the custom post list.
-    add_filter('manage_' . $this->post_type . '_posts_columns' , [ $this, 'custom_columns' ]);
-    add_action('manage_' . $this->post_type . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
-    add_filter('manage_edit-' . $this->post_type . '_sortable_columns', [ $this, 'make_images_count_column_sortable' ]);
+    add_filter('manage_' . REACG_CUSTOM_POST_TYPE . '_posts_columns' , [ $this, 'custom_columns' ]);
+    add_action('manage_' . REACG_CUSTOM_POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
+    add_filter('manage_edit-' . REACG_CUSTOM_POST_TYPE . '_sortable_columns', [ $this, 'make_images_count_column_sortable' ]);
     add_action('pre_get_posts', [ $this, 'images_count_column_orderby' ]);
 
     // Add duplicate link to the list.
@@ -410,7 +409,7 @@ class REACG_Gallery {
    * @return mixed
    */
   public function duplicate_link( $actions, $post ) {
-    if ( current_user_can( 'edit_posts' ) && $post->post_type === $this->post_type ) {
+    if ( current_user_can( 'edit_posts' ) && $post->post_type === REACG_CUSTOM_POST_TYPE ) {
       $url = wp_nonce_url(
         admin_url( 'admin.php?action=reacg_duplicate_gallery&post=' . $post->ID ),
         -1,
@@ -472,7 +471,7 @@ class REACG_Gallery {
       }
 
       // Redirect to the edit screen.
-      wp_redirect(admin_url('edit.php?post_type=' . $this->post_type));
+      wp_redirect(admin_url('edit.php?post_type=' . REACG_CUSTOM_POST_TYPE));
       exit;
     }
     else {
@@ -1053,7 +1052,7 @@ class REACG_Gallery {
       // Editor is not used, but added to avoid a bug connected with preview. It is hidden with CSS (admin.css)
       'supports' => array('title', 'editor'),
     );
-    register_post_type( 'reacg', $args );
+    register_post_type( REACG_CUSTOM_POST_TYPE, $args );
     add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );
   }
 
@@ -1538,9 +1537,6 @@ class REACG_Gallery {
   public function remove_all_the_metaboxes() {
     global $wp_meta_boxes;
 
-    // This is the post type you want to target. Adjust it to match yours.
-    $post_type = $this->post_type;
-
     // These are the metabox IDs you want to pass over. They don't have to match exactly. preg_match will be run on them.
     $pass_over = [ 'submitdiv' ];
 
@@ -1554,8 +1550,8 @@ class REACG_Gallery {
     foreach ( $contexts as $context ) {
       // Now loop through each priority and start the purging process.
       foreach ( $priorities as $priority ) {
-        if ( isset( $wp_meta_boxes[ $post_type ][ $context ][ $priority ] ) ) {
-          foreach ( (array) $wp_meta_boxes[ $post_type ][ $context ][ $priority ] as $id => $metabox_data ) {
+        if ( isset( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ] ) ) {
+          foreach ( (array) $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ] as $id => $metabox_data ) {
             // If the metabox ID to pass over matches the ID given, remove it from the array and continue.
             if ( in_array( $id, $pass_over, true ) ) {
               unset( $pass_over[ $id ] );
@@ -1570,7 +1566,7 @@ class REACG_Gallery {
             }
 
             // If we reach this point, remove the metabox completely.
-            unset( $wp_meta_boxes[ $post_type ][ $context ][ $priority ][ $id ] );
+            unset( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ][ $id ] );
           }
         }
       }

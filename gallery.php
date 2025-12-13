@@ -71,6 +71,7 @@ final class REACG {
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
     define('REACG_PLUGIN_ASSETS_URL', $this->plugin_url . '/assets/js/' );
+    define('REACG_CUSTOM_POST_TYPE', 'reacg' );
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
@@ -90,6 +91,7 @@ final class REACG {
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
     add_action('init', array($this, 'deactivation'));
+    add_action('init', array($this, 'demo'));
 
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
@@ -239,6 +241,14 @@ final class REACG {
   public function deactivation() {
     require_once($this->plugin_dir . '/includes/deactivate.php');
     new REACG_Deactivate( $this );
+  }
+
+  /**
+   * Add a functional to import demo content.
+   */
+  public function demo($redirect = FALSE) {
+    require_once($this->plugin_dir . '/includes/demo.php');
+    return new REACG_Demo($redirect);
   }
 
   /**
@@ -425,10 +435,6 @@ final class REACG {
       }
     }
     $this->activate();
-    if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
-      require_once REACG_PLUGIN_DIR . '/includes/demo.php';
-      reacg_create_demo_content();
-    }
   }
 
   public function new_blog_added( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
@@ -471,6 +477,15 @@ final class REACG {
 
       // Avoid redirect on bulk activation
       if ( ! isset( $_GET['activate-multi'] ) ) {
+        if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
+          $demo = $this->demo(TRUE);
+          $galleries = $demo->import_data();
+          if ( count($galleries) === 1 ) {
+            // Open the created gallery only if there is only one gallery created, otherwise open the galleries list page.
+            wp_safe_redirect(admin_url('post.php?post=' . $galleries[0] . '&action=edit'));
+            exit;
+          }
+        }
         wp_safe_redirect( admin_url( 'edit.php?post_type=reacg' ) );
         exit;
       }
