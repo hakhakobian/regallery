@@ -70,6 +70,7 @@ final class REACG {
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
+    define('REACG_PLUGIN_ASSETS_URL', $this->plugin_url . '/assets/js/' );
     define('REACG_CUSTOM_POST_TYPE', 'reacg' );
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
@@ -95,8 +96,6 @@ final class REACG {
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
-    // Add data attributes to avoid conflicts with caching plugins.
-    add_filter('script_loader_tag', array($this, 'script_loader_tag'), 10 ,2 );
 
     // Enqueue block editor assets for Gutenberg.
     add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
@@ -243,7 +242,7 @@ final class REACG {
   }
 
   /**
-   * Add a functional to the deactivation.
+   * Add a functional to import demo content.
    */
   public function demo($redirect = FALSE) {
     require_once($this->plugin_dir . '/includes/demo.php');
@@ -272,6 +271,7 @@ final class REACG {
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
+      'plugin_assets_url' => REACG_PLUGIN_ASSETS_URL,
       'upgrade' => [
         'text' => REACG_BUY_NOW_TEXT,
         'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
@@ -282,22 +282,6 @@ final class REACG {
         'no_data' => __('There is not data.', 'reacg'),
       ],
     ) );
-  }
-
-  /**
-   * Add data attributes to avoid conflicts with caching plugins.
-   *
-   * @param $tag
-   * @param $handle
-   *
-   * @return array|mixed|string|string[]
-   */
-  public function script_loader_tag( $tag, $handle ){
-    if ( $handle == $this->prefix . '_thumbnails' ) {
-      return str_replace( '<script', '<script data-no-optimize="1" data-no-defer="1"', $tag );
-    }
-
-    return $tag;
   }
 
   /**
