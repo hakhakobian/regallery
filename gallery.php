@@ -70,6 +70,7 @@ final class REACG {
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
+    define('REACG_PLUGIN_ASSETS_URL', $this->plugin_url . '/assets/js/' );
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
@@ -262,6 +263,7 @@ final class REACG {
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
+      'plugin_assets_url' => REACG_PLUGIN_ASSETS_URL,
       'upgrade' => [
         'text' => REACG_BUY_NOW_TEXT,
         'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
