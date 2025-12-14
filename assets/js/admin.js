@@ -682,7 +682,7 @@ function reacg_add_ai_button(that, field) {
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
     /* Show tooltip for the first field.*/
-    if ( field.name === "alt" ) {
+    if ( field.name === "title" ) {
       if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
         reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
         localStorage.setItem("reacg-highlight-ai-alt-generation", true);
@@ -852,7 +852,7 @@ function reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text) {
     return;
   }
   const containerTop = containerToBeScrolled.offset().top;
-  const targetTop = el.offset().top - 100;
+  const targetTop = el.offset().top;
   const scrollPosition = containerToBeScrolled.scrollTop() + (targetTop - containerTop);
   containerToBeScrolled.animate({ scrollTop: scrollPosition }, 300, () => {
     /* After scroll completes, show tooltip.*/
