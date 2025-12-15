@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.13
+Stable tag: 1.17.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.13: Improved options section is now displayed outside the gallery container in the Gutenberg editor. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.14: Fixed conflict with caching plugins. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.14 =
+= Updated: 16.12.2025 =
+* **Improved:** Import a complete example gallery with images in WordPress Playground.
+* **Fixed:** Conflict with caching plugins.
+* **Fixed:** AI highlighter text and positioning.
+
 = 1.17.13 =
 = Updated: 13.12.2025 =
 * **Improved:** Options section is now displayed outside the gallery container in the Gutenberg editor.
