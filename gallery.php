@@ -8,7 +8,7 @@
  * Author: ReGallery Team
  * Plugin URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=plugin_uri
  * Author URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=auhor_uri
- * Text Domain: reacg
+ * Text Domain: regallery
  * License: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
@@ -379,7 +379,7 @@ final class REACG {
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
       'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
-      'create_button' => __("Create new gallery", "reacg"),
+      'create_button' => __("Create new gallery", "regallery"),
       'plugin_url' => $this->plugin_url,
       'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
