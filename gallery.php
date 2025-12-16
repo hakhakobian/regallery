@@ -9,7 +9,8 @@
  * Plugin URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=plugin_uri
  * Author URI:  https://regallery.team/?utm_source=wordpress_plugin&utm_medium=auhor_uri
  * Text Domain: regallery
- * License: http://www.gnu.org/licenses/gpl-2.0.html
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 defined('ABSPATH') || die('Access Denied');
