@@ -472,7 +472,7 @@ class REACG_Gallery {
       }
 
       // Redirect to the edit screen.
-      wp_redirect(admin_url('edit.php?post_type=' . REACG_CUSTOM_POST_TYPE));
+      wp_safe_redirect(admin_url('edit.php?post_type=' . REACG_CUSTOM_POST_TYPE));
       exit;
     }
     else {

@@ -417,7 +417,7 @@ class REACG_Demo {
 
   function __construct($redirect = FALSE) {
     $this->redirect = $redirect;
-    $this->date_created = date('Y-m-d H:i:s');
+    $this->date_created = gmdate('Y-m-d H:i:s');
     add_action( 'wp_ajax_reacg_import_demo', array( $this, 'import_data' ) );
   }
 
