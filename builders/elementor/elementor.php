@@ -46,7 +46,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'reacg_general',
       [
-        'label' => __('Basic', 'reacg'),
+        'label' => __('Basic', 'regallery'),
       ]
     );
 
@@ -56,7 +56,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       [
         'label_block' => TRUE,
         'show_label' => FALSE,
-        'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
+        'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 0,
         'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
@@ -65,13 +65,13 @@ class REACG_Elementor extends \Elementor\Widget_Base {
     $this->add_control(
       'enable_options',
       [
-        'label' => __('Enable options section', 'reacg'),
+        'label' => __('Enable options section', 'regallery'),
         'label_block' => FALSE,
         'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_yes' => __('Yes', 'reacg'),
-        'label_no' => __('No', 'reacg'),
+        'label_yes' => __('Yes', 'regallery'),
+        'label_no' => __('No', 'regallery'),
         'default' => 'no',
-        'description' => __( 'The options will be visible only in editor mode.', 'reacg' ),
+        'description' => __( 'The options will be visible only in editor mode.', 'regallery' ),
       ]
     );
 

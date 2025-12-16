@@ -41,20 +41,20 @@ class REACG_DiviModule extends ET_Builder_Module {
         'default'         => 0,
         'tab_slug'        => 'general',
         'toggle_slug'     => 'main_content',
-        'description'     => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
+        'description'     => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
       ),
       'enable_options' => array(
-        'label'           => esc_html__( 'Enable options section', 'reacg' ),
+        'label'           => esc_html__( 'Enable options section', 'regallery' ),
         'type'            => 'yes_no_button',
         'option_category' => 'basic_option',
         'options'         => array(
-          'off' => esc_html__( 'No', 'reacg' ),
-          'on'  => esc_html__( 'Yes', 'reacg' ),
+          'off' => esc_html__( 'No', 'regallery' ),
+          'on'  => esc_html__( 'Yes', 'regallery' ),
         ),
         'default'         => 'off',
         'tab_slug'        => 'general',
         'toggle_slug'     => 'main_content',
-        'description'     => esc_html__( 'The options will be visible only in editor mode.', 'reacg' ),
+        'description'     => esc_html__( 'The options will be visible only in editor mode.', 'regallery' ),
       ),
     );
   }

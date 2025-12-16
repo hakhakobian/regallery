@@ -439,13 +439,13 @@ class REACG_Demo {
     }
     else {
       if ( !empty($galleries) ) {
-        echo sprintf(esc_html(_n('%d demo gallery created!', '%d demo galleries created!', count($galleries), 'reacg')), count($galleries));
+        echo sprintf(esc_html(_n('%d demo gallery created!', '%d demo galleries created!', count($galleries), 'regallery')), count($galleries));
         if ( !empty($attachments) ) {
-          echo ' ' . sprintf(esc_html(_n('%d sample image imported!', '%d sample images imported!', count($attachments), 'reacg')), count($attachments));
+          echo ' ' . sprintf(esc_html(_n('%d sample image imported!', '%d sample images imported!', count($attachments), 'regallery')), count($attachments));
         }
       }
       else {
-        esc_html_e('There was a problem with creating the demo galleries!', 'reacg');
+        esc_html_e('There was a problem with creating the demo galleries!', 'regallery');
       }
     }
     die();

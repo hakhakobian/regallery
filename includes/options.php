@@ -653,7 +653,7 @@ class REACG_Options {
     $data = $request->get_body();
 
     if ( empty($data) ) {
-      return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return wp_send_json(new WP_Error( 'nothing_to_save', __( 'Nothing to save.', 'regallery' ), array( 'status' => 400 ) ), 400);
     }
     $data = json_decode($data, TRUE);
 
@@ -682,7 +682,7 @@ class REACG_Options {
       return $this->get(NULL, $gallery_id);
     }
     else {
-      return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'regallery' ), array( 'status' => 400 ) ), 400);
     }
   }
 
@@ -1033,11 +1033,11 @@ class REACG_Options {
       if ( $saved === TRUE ) {
         /* Update the options timestamp on options reset to prevent data from being read from the cache.*/
         update_post_meta($gallery_id, 'options_timestamp', time());
-        return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'reacg' ), 200), 200 );
+        return new WP_REST_Response( wp_send_json(__( 'Settings successfully reset.', 'regallery' ), 200), 200 );
       }
     }
 
-    return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'reacg' ), 200), 200 );
+    return new WP_REST_Response( wp_send_json(__( 'Settings already reset.', 'regallery' ), 200), 200 );
   }
 
   /**

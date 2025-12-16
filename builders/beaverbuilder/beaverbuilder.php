@@ -4,15 +4,15 @@ FLBuilder::register_module(
   'REACGBBModule',
   [
    'general' => [
-     'title' => esc_html__('General', 'reacg'),
+     'title' => esc_html__('General', 'regallery'),
      'sections' => [
        '' => [
          'fields' => [
            'gallery_id' => [
              'type' => 'select',
-             'label' => esc_html__('Select gallery', 'reacg'),
+             'label' => esc_html__('Select gallery', 'regallery'),
              'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
-             'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
+             'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
            ],
          ],
        ],
@@ -26,7 +26,7 @@ class REACGBBModule extends FLBuilderModule {
     parent::__construct([
                           'name'            => REACG_NICENAME,
                           'description'     => '',
-                          'category'        => esc_html__('Media', 'reacg'),
+                          'category'        => esc_html__('Media', 'regallery'),
                           'icon'            => 'reacg-bb-icon',
                           'dir'             => REACG_PLUGIN_DIR . '/builders/beaverbuilder/',
                           'url'             => REACG_PLUGIN_DIR . '/builders/beaverbuilder/',

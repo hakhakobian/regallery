@@ -152,7 +152,7 @@ class REACG_Gallery {
    */
   public function attachment_field($form_fields, $post) {
     $form_fields['action_url'] = [
-      'label' => __('Action URL', 'reacg'),
+      'label' => __('Action URL', 'regallery'),
       'input' => 'text',
       'value' => get_post_meta($post->ID, 'action_url', TRUE),
     ];
@@ -165,10 +165,10 @@ class REACG_Gallery {
       }
     }
     $form_fields['exif'] = [
-      'label' => __('Metadata (EXIF)', 'reacg'),
+      'label' => __('Metadata (EXIF)', 'regallery'),
       'input' => 'textarea',
       'value' => $exif,
-      'helps' => __('Auto-generated from image metadata on upload. You can edit this text if needed.', 'reacg'),
+      'helps' => __('Auto-generated from image metadata on upload. You can edit this text if needed.', 'regallery'),
     ];
 
     return $form_fields;
@@ -199,7 +199,7 @@ class REACG_Gallery {
    * @return void
    */
   public function add_submenu() {
-    add_submenu_page('edit.php?post_type=reacg', __('About Us', 'reacg'), __('About Us', 'reacg'), 'manage_options', 'reacg-external-link');
+    add_submenu_page('edit.php?post_type=reacg', __('About Us', 'regallery'), __('About Us', 'regallery'), 'manage_options', 'reacg-external-link');
     add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
   }
 
@@ -296,8 +296,8 @@ class REACG_Gallery {
   public function custom_columns($columns) {
     wp_enqueue_style($this->obj->prefix . '_admin');
 
-    $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'reacg')), array_slice($columns, 1));
-    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'reacg'), 'reacg_images_count' => __('Images count', 'reacg')), array_slice($columns, 3));
+    $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'regallery')), array_slice($columns, 1));
+    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images count', 'regallery')), array_slice($columns, 3));
 
     return $columns;
   }
@@ -377,7 +377,7 @@ class REACG_Gallery {
           ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
         }
         else {
-          esc_html_e('No image', 'reacg');
+          esc_html_e('No image', 'regallery');
         }
         break;
       }
@@ -416,9 +416,9 @@ class REACG_Gallery {
         REACG_NONCE
       );
 
-      $title = sprintf(__('Duplicate “%s”', 'reacg'), empty( $post->post_title ) ? __('(no title)', 'reacg') : $post->post_title);
+      $title = sprintf(__('Duplicate “%s”', 'regallery'), empty( $post->post_title ) ? __('(no title)', 'regallery') : $post->post_title);
 
-      $actions['duplicate'] = '<a href="' . esc_url( $url ) . '" title="' . esc_html($title) . '" aria-label="' . esc_html($title) . '">' . esc_html__('Duplicate', 'reacg') . '</a>';
+      $actions['duplicate'] = '<a href="' . esc_url( $url ) . '" title="' . esc_html($title) . '" aria-label="' . esc_html($title) . '">' . esc_html__('Duplicate', 'regallery') . '</a>';
     }
 
     return $actions;
@@ -443,7 +443,7 @@ class REACG_Gallery {
     $post = get_post($post_id);
     if ( !empty($post) ) {
       $new_post = array(
-        'post_title' => $post->post_title . ' ' . __('(Copy)', 'reacg'),
+        'post_title' => $post->post_title . ' ' . __('(Copy)', 'regallery'),
         'post_content' => $post->post_content,
         'post_status' => 'draft',
         'post_type' => $post->post_type,
@@ -1014,31 +1014,31 @@ class REACG_Gallery {
     $args = array(
       'label' => $this->obj->nicename,
       'labels' => array(
-        'add_new' => __('Add New Gallery', 'reacg'),
-        'add_new_item' => __('Add New Gallery', 'reacg'),
-        'edit_item' => __('Edit Gallery', 'reacg'),
-        'new_item' => __('New Gallery', 'reacg'),
-        'view_item' => __('View Gallery', 'reacg'),
-        'view_items' => __('View Galleries', 'reacg'),
-        'search_items' => __('Search Galleries', 'reacg'),
-        'not_found' => __('No galleries found', 'reacg'),
-        'not_found_in_trash' => __('No galleries found in Trash', 'reacg'),
-        'all_items' => __('All Galleries', 'reacg'),
-        'filter_items_list' => __('Filter galleries list', 'reacg'),
-        'items_list_navigation' => __('Galleries list navigation', 'reacg'),
-        'items_list' => __('Galleries list', 'reacg'),
-        'archives' => __('Gallery Archives', 'reacg'),
-        'attributes' => __('Gallery Attributes', 'reacg'),
-        'insert_into_item' => __('Insert into gallery', 'reacg'),
-        'uploaded_to_this_item' => __('Uploaded to this gallery', 'reacg'),
-        'item_published' => __('Gallery published.', 'reacg'),
-        'item_published_privately' => __('Gallery published privately.', 'reacg'),
-        'item_reverted_to_draft' => __('Gallery reverted to draft.', 'reacg'),
-        'item_trashed' => __('Gallery trashed.', 'reacg'),
-        'item_scheduled' => __('Gallery scheduled.', 'reacg'),
-        'item_updated' => __('Gallery updated.', 'reacg'),
-        'item_link' => __('Gallery Link', 'reacg'),
-        'item_link_description' => __('A link to a gallery', 'reacg'),
+        'add_new' => __('Add New Gallery', 'regallery'),
+        'add_new_item' => __('Add New Gallery', 'regallery'),
+        'edit_item' => __('Edit Gallery', 'regallery'),
+        'new_item' => __('New Gallery', 'regallery'),
+        'view_item' => __('View Gallery', 'regallery'),
+        'view_items' => __('View Galleries', 'regallery'),
+        'search_items' => __('Search Galleries', 'regallery'),
+        'not_found' => __('No galleries found', 'regallery'),
+        'not_found_in_trash' => __('No galleries found in Trash', 'regallery'),
+        'all_items' => __('All Galleries', 'regallery'),
+        'filter_items_list' => __('Filter galleries list', 'regallery'),
+        'items_list_navigation' => __('Galleries list navigation', 'regallery'),
+        'items_list' => __('Galleries list', 'regallery'),
+        'archives' => __('Gallery Archives', 'regallery'),
+        'attributes' => __('Gallery Attributes', 'regallery'),
+        'insert_into_item' => __('Insert into gallery', 'regallery'),
+        'uploaded_to_this_item' => __('Uploaded to this gallery', 'regallery'),
+        'item_published' => __('Gallery published.', 'regallery'),
+        'item_published_privately' => __('Gallery published privately.', 'regallery'),
+        'item_reverted_to_draft' => __('Gallery reverted to draft.', 'regallery'),
+        'item_trashed' => __('Gallery trashed.', 'regallery'),
+        'item_scheduled' => __('Gallery scheduled.', 'regallery'),
+        'item_updated' => __('Gallery updated.', 'regallery'),
+        'item_link' => __('Gallery Link', 'regallery'),
+        'item_link_description' => __('A link to a gallery', 'regallery'),
       ),
       'public' => TRUE,
       'menu_icon' => $this->obj->plugin_url . '/assets/images/logo.png',
@@ -1076,19 +1076,19 @@ class REACG_Gallery {
     $this->remove_all_the_metaboxes();
 
     // Metabox for adding images.
-    add_meta_box( 'gallery-images', __( 'Images', 'reacg' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
-    add_meta_box( 'gallery-settings', __( 'Settings', 'reacg' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
-    add_meta_box( 'gallery-preview', __( 'Preview', 'reacg' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
+    add_meta_box( 'gallery-images', __( 'Images', 'regallery' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-settings', __( 'Settings', 'regallery' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-preview', __( 'Preview', 'regallery' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
     // Metabox for live preview.
 
     // Metabox to activate/deactivate pro version.
-    add_meta_box( 'gallery-license', __( 'License', 'reacg' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
+    add_meta_box( 'gallery-license', __( 'License', 'regallery' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
 
     // Metabox to display the available publishing methods.
-    add_meta_box( 'gallery-help', __( 'Help', 'reacg' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
+    add_meta_box( 'gallery-help', __( 'Help', 'regallery' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
-    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'reacg') . REACGLibrary::$pro_icon, [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
+    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'regallery') . REACGLibrary::$pro_icon, [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
   }
 
   public function meta_box_preview($post) {
@@ -1106,44 +1106,44 @@ class REACG_Gallery {
     $available_builders = [];
     if ( function_exists( 'register_block_type' ) ) {
       $available_builders['gutenberg'] = [
-        'title' => __('Gutenberg Block', 'reacg'),
+        'title' => __('Gutenberg Block', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=Ep5L3xKdDH8',
       ];
     }
     if ( class_exists( '\Elementor\Plugin' ) ) {
       $available_builders['elementor'] = [
-        'title' => __('Elementor Widget', 'reacg'),
+        'title' => __('Elementor Widget', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
       ];
     }
     if ( class_exists( 'ET_Builder_Module' ) ) {
       $available_builders['divi'] = [
-        'title' => __('Divi Builder Module', 'reacg'),
+        'title' => __('Divi Builder Module', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
       ];
     }
     if ( function_exists( 'vc_map' ) ) {
       $available_builders['wpbakery'] = [
-        'title' => __('WPBakery Builder Element', 'reacg'),
+        'title' => __('WPBakery Builder Element', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
       ];
     }
     if ( class_exists( 'FLBuilder' ) ) {
       $available_builders['beaverbuilder'] = [
-        'title' => __('Beaver Builder Module', 'reacg'),
+        'title' => __('Beaver Builder Module', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=A5U2ghLKYNg',
       ];
     }
     if ( class_exists( '\Bricks\Elements' ) ) {
       $available_builders['bricks'] = [
-        'title' => __('Bricks Builder Element', 'reacg'),
+        'title' => __('Bricks Builder Element', 'regallery'),
         'video' => 'https://www.youtube.com/watch?v=aiYdYAn1D_8',
       ];
     }
     if ( !empty($available_builders) ) {
       ?>
     <p>
-      <?php esc_html_e( 'You can insert the gallery into a post or page using:', 'reacg' ); ?>
+      <?php esc_html_e( 'You can insert the gallery into a post or page using:', 'regallery' ); ?>
     </p>
     <ul>
       <?php
@@ -1153,7 +1153,7 @@ class REACG_Gallery {
         <?php
         if ( !empty($builder['video']) ) {
         ?>
-        <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'reacg' ); ?>">
+        <a href="<?php echo esc_url($builder['video']); ?>" target="_blank" title="<?php esc_html_e( 'How to', 'regallery' ); ?>">
         <?php
         }
         ?>
@@ -1170,11 +1170,11 @@ class REACG_Gallery {
       }
       ?>
     </ul>
-    <?php esc_html_e( 'Or just paste the shortcode into any builder:', 'reacg' ); ?>
+    <?php esc_html_e( 'Or just paste the shortcode into any builder:', 'regallery' ); ?>
       <?php
     }
     else {
-      esc_html_e( 'Paste the shortcode into a post or page to show the gallery:', 'reacg' );
+      esc_html_e( 'Paste the shortcode into a post or page to show the gallery:', 'regallery' );
     }
     ?>
     <p class="reacg_shortcode">
@@ -1197,34 +1197,34 @@ class REACG_Gallery {
     ?>
     <div class="reacg-pro-not-active" style="display: none;">
       <p>
-        <?php echo sprintf(__( "You're using the free version of %s - no license needed. Enjoy!", 'reacg' ), REACG_NICENAME); ?>
+        <?php echo sprintf(__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), REACG_NICENAME); ?>
         <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
       </p>
       <p>
-        <?php echo sprintf(__( "To unlock more features consider %s.", 'reacg' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'reacg') . '</a></strong>'); ?>
+        <?php echo sprintf(__( "To unlock more features consider %s.", 'regallery' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'regallery') . '</a></strong>'); ?>
       </p>
       <label for="reacg-license-key">
         <p class="description">
-          <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'reacg' ), REACG_NICENAME); ?>
+          <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'regallery' ), REACG_NICENAME); ?>
         </p>
       </label>
-      <input placeholder="<?php esc_html_e( "Paste license key here", 'reacg' ); ?>" type="text" id="reacg-license-key" class="reacg-license-key"  />
+      <input placeholder="<?php esc_html_e( "Paste license key here", 'regallery' ); ?>" type="text" id="reacg-license-key" class="reacg-license-key"  />
       <p class="reacg-error description hidden"></p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>
         <button type="button" class="button button-primary button-large reacg-primary-button reacg-license-activate-button" data-activate="true">
-          <?php esc_html_e( "Activate Pro version", 'reacg' ); ?>
+          <?php esc_html_e( "Activate Pro version", 'regallery' ); ?>
         </button>
       </div>
     </div>
     <div class="reacg-pro-active" style="display: none;">
       <p class="reacg-success">
-        <?php echo sprintf(__( "%s PRO version is active!", 'reacg' ), REACG_NICENAME); ?>
+        <?php echo sprintf(__( "%s PRO version is active!", 'regallery' ), REACG_NICENAME); ?>
       </p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>
         <button type="button" class="button button-secondary button-large reacg-license-activate-button" data-activate="false">
-          <?php esc_html_e( "Deactivate Pro version", 'reacg' ); ?>
+          <?php esc_html_e( "Deactivate Pro version", 'regallery' ); ?>
         </button>
       </div>
     </div>
@@ -1520,9 +1520,9 @@ class REACG_Gallery {
       </div>
       <div class="reacg-overlay">
         <div class="reacg-hover-buttons">
-          <span class="reacg-edit-thumbnail dashicons dashicons-cover-image <?php echo esc_attr($thumbnail_edit_btn); ?>" title="<?php esc_html_e('Edit video cover', 'reacg'); ?>"></span>
-          <span class="reacg-edit dashicons dashicons-edit <?php echo esc_attr($edit_btn); ?>" title="<?php esc_html_e('Edit', 'reacg'); ?>"></span>
-          <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'reacg'); ?>"></span>
+          <span class="reacg-edit-thumbnail dashicons dashicons-cover-image <?php echo esc_attr($thumbnail_edit_btn); ?>" title="<?php esc_html_e('Edit video cover', 'regallery'); ?>"></span>
+          <span class="reacg-edit dashicons dashicons-edit <?php echo esc_attr($edit_btn); ?>" title="<?php esc_html_e('Edit', 'regallery'); ?>"></span>
+          <span class="reacg-delete dashicons dashicons-trash" title="<?php esc_html_e('Remove', 'regallery'); ?>"></span>
         </div>
       </div>
     </div>
@@ -1584,18 +1584,18 @@ class REACG_Gallery {
       foreach ( $posts as $key => $post ) {
         $data[$key] = [];
         $data[$key]['id'] = $post->ID;
-        $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+        $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'regallery');
       }
       if (!empty($data)) {
         $data[] = [
           'id'    => -1,
-          'title' => __('All Images Template', 'reacg'),
+          'title' => __('All Images Template', 'regallery'),
         ];
       }
 
       return new WP_REST_Response( wp_send_json($data, 200), 200 );
     }
 
-    return wp_send_json(new WP_Error( 'wrong_template', __( 'There is no such a template.', 'reacg' ), array( 'status' => 400 ) ), 400);
+    return wp_send_json(new WP_Error( 'wrong_template', __( 'There is no such a template.', 'regallery' ), array( 'status' => 400 ) ), 400);
   }
 }

@@ -19,10 +19,10 @@ class REACG_Deactivate {
 
   public function content() {
     $reasons = [
-      "hard_to" => __("It is hard to use", "reacg"),
-      "no_feature" => __("I didn't find the features I needed", "reacg"),
-      "temporary" => __("It's a temporary deactivation", "reacg"),
-      "other" => __("Other", "reacg"),
+      "hard_to" => __("It is hard to use", "regallery"),
+      "no_feature" => __("I didn't find the features I needed", "regallery"),
+      "temporary" => __("It's a temporary deactivation", "regallery"),
+      "other" => __("Other", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
@@ -30,13 +30,13 @@ class REACG_Deactivate {
     <div class="reacg-deactivate-popup-overlay" style="display: none;">
       <div class="reacg-deactivate-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
         <div class="reacg-deactivate-popup-header">
-          <?php esc_html_e("Quick feedback", 'reacg'); ?>
+          <?php esc_html_e("Quick feedback", 'regallery'); ?>
           <span class="reacg-deactivate-popup-close dashicons dashicons-no"></span>
         </div>
         <div class="reacg-deactivate-popup-body">
           <div class="reacg-note-wrapper">
-            <?php esc_html_e("We are sorry to see you go!", 'reacg'); ?>😔
-            <?php esc_html_e("If you have a moment, please share your thoughts: it helps us improve and make things better for everyone.", 'reacg'); ?>
+            <?php esc_html_e("We are sorry to see you go!", 'regallery'); ?>😔
+            <?php esc_html_e("If you have a moment, please share your thoughts: it helps us improve and make things better for everyone.", 'regallery'); ?>
           </div>
           <div class="reacg-reasonType-wrapper">
             <?php
@@ -54,7 +54,7 @@ class REACG_Deactivate {
           </div>
           <div class="reacg-reason-wrapper" style="display: none;">
             <label>
-              <strong><?php esc_html_e("Please describe the deactivation reason:", 'reacg'); ?></strong>
+              <strong><?php esc_html_e("Please describe the deactivation reason:", 'regallery'); ?></strong>
               <textarea class="reacg-reason" rows="4"></textarea>
             </label>
           </div>
@@ -64,16 +64,16 @@ class REACG_Deactivate {
             <label>
               <input type="hidden" name="reacg-email" value="<?php echo sanitize_email($email); ?>" />
               <input type="checkbox" class="reacg-agreement" />
-              <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'reacg'); ?>
+              <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'regallery'); ?>
             </label>
           </div>
           <div class="reacg-buttons-wrapper">
             <a class="button button-secondary reacg-submit">
-              <?php esc_html_e("Submit and Deactivate", 'reacg'); ?>
+              <?php esc_html_e("Submit and Deactivate", 'regallery'); ?>
             </a>
             <span class="spinner"></span>
             <a class="button reacg-skip">
-              <?php esc_html_e("Skip and Deactivate", 'reacg'); ?>
+              <?php esc_html_e("Skip and Deactivate", 'regallery'); ?>
             </a>
           </div>
         </div>
@@ -97,9 +97,9 @@ class REACG_Deactivate {
    */
   public function meta_links($meta_fields, $file) {
     if ( $this->obj->main_file === $file ) {
-      $meta_fields[] = "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Ask a question', 'reacg') . "</a>";
+      $meta_fields[] = "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Ask a question', 'regallery') . "</a>";
 
-      $rating = "<a class='reacg-rating' href='" . esc_url(REACG_WP_PLUGIN_REVIEW_URL) . "' target='_blank' title='" . esc_html__('Rate', 'reacg') . "'>";
+      $rating = "<a class='reacg-rating' href='" . esc_url(REACG_WP_PLUGIN_REVIEW_URL) . "' target='_blank' title='" . esc_html__('Rate', 'regallery') . "'>";
       $rating .= str_repeat("<span class='dashicons dashicons-star-filled'></span>", 5);
       $rating .= "</a>";
       $meta_fields[] = $rating;
@@ -117,8 +117,8 @@ class REACG_Deactivate {
    */
   function action_links( $links ) {
     $additional_links = [
-      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'faq'], REACG_WEBSITE_URL_UTM . '#faq')) . "' target='_blank'>" . esc_html__('FAQ', 'reacg') . "</a>",
-      "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Help', 'reacg') . "</a>",
+      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'faq'], REACG_WEBSITE_URL_UTM . '#faq')) . "' target='_blank'>" . esc_html__('FAQ', 'regallery') . "</a>",
+      "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Help', 'regallery') . "</a>",
       "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . "' target='_blank' class='reacg-upgrade'>" . REACG_BUY_NOW_TEXT . "</a>",
     ];
     return array_merge( $links, $additional_links );

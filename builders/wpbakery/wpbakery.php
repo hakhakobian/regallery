@@ -24,10 +24,10 @@ class REACG_WPBakery {
               'params' => array(
                 array(
                   'type' => 'dropdown',
-                  'heading' => __( 'Select gallery', 'reacg' ),
+                  'heading' => __( 'Select gallery', 'regallery' ),
                   'param_name' => 'id',
                   'value' => $options,
-                  'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
+                  'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
                 ),
               )
             ) );

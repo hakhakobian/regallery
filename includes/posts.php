@@ -63,15 +63,15 @@ class REACG_Posts {
       <div class="reacg_select_type_wrapper">
         <span class="spinner is-active"></span>
         <div>
-          <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "reacg"); ?></button>
-          <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'reacg') : sprintf(__('Select %s dynamically', 'reacg'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "reacg"); ?></button>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'regallery'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "regallery"); ?></button>
+          <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'regallery') : sprintf(__('Select %s dynamically', 'regallery'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "regallery"); ?></button>
         </div>
       </div>
       <?php
       echo ob_get_clean();
     }
     elseif ( $select_type === "dynamic" ) {
-      $relation = ["or" => __("OR", "reacg"), "and" => __("AND", "reacg")];
+      $relation = ["or" => __("OR", "regallery"), "and" => __("AND", "regallery")];
 
       $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0, 'count' => 6];
       if ( !empty($additional_data) ) {
@@ -93,7 +93,7 @@ class REACG_Posts {
       <div class="reacg_dynamic_wrapper">
         <div>
           <div>
-            <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'reacg'); ?></label>
+            <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'regallery'); ?></label>
             <select multiple="multiple" name="reacg_taxanomies[]" id="reacg_taxanomies" class="reacg_searchable_select reacg_change_listener"  style="width: 100%">
               <?php
               foreach ( $taxonomies as $taxonomy => $terms ) {
@@ -116,7 +116,7 @@ class REACG_Posts {
             </select>
           </div>
           <div>
-            <label for="reacg_relation"><?php esc_html_e('Relation', 'reacg'); ?></label>
+            <label for="reacg_relation"><?php esc_html_e('Relation', 'regallery'); ?></label>
             <select name="reacg_relation" id="reacg_relation" class="reacg_change_listener reacg_auto_width">
               <?php
               foreach ( $relation as $value => $name ) {
@@ -129,13 +129,13 @@ class REACG_Posts {
             </select>
           </div>
           <div>
-            <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'reacg'), $type_title); ?></label>
+            <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'regallery'), $type_title); ?></label>
             <select multiple="multiple" name="reacg_exclude" id="reacg_exclude" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
               <?php
               foreach ( $posts as $post ) {
                 $title = get_the_title($post->ID);
                 if ( empty($title) ) {
-                  $title = __('(no title)', 'reacg');
+                  $title = __('(no title)', 'regallery');
                 }
                 ?>
                 <option
@@ -151,18 +151,18 @@ class REACG_Posts {
                    id="reacg_exclude_without_image"
                    class="reacg_change_listener"
               <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?> />
-            <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'reacg'), $type_title); ?></label>
+            <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'regallery'), $type_title); ?></label>
           </div>
           <div>
-            <label><?php echo sprintf(__('%s count', 'reacg'), $type_title); ?></label>
-            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('All', 'reacg'); ?>
+            <label><?php echo sprintf(__('%s count', 'regallery'), $type_title); ?></label>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('All', 'regallery'); ?>
               <input type="radio"
                      name="reacg_count_option"
                      id="reacg_count_all"
                      class="reacg_change_listener"
                 <?php checked(TRUE, empty($additional_data_arr['count'])); ?> />
             </label>
-            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('Custom', 'reacg'); ?>
+            <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('Custom', 'regallery'); ?>
               <input type="radio"
                      name="reacg_count_option"
                      id="reacg_count_custom"
@@ -185,14 +185,14 @@ class REACG_Posts {
       $s = !empty($_POST['s']) ? esc_sql($_POST['s']) : '';
 
       $orderby_defaults = [
-        'date' => __('Date', 'reacg'),
-        'title' => __('Title', 'reacg'),
-        'comment_count' => __('Comment count', 'reacg'),
-        'menu_order' => __('Menu order', 'reacg'),
+        'date' => __('Date', 'regallery'),
+        'title' => __('Title', 'regallery'),
+        'comment_count' => __('Comment count', 'regallery'),
+        'menu_order' => __('Menu order', 'regallery'),
       ];
       $order_defaults = [
-        'ASC' => __('Ascending', 'reacg'),
-        'DESC' => __('Descending', 'reacg'),
+        'ASC' => __('Ascending', 'regallery'),
+        'DESC' => __('Descending', 'regallery'),
       ];
       $orderby = !empty($_POST['orderby']) && array_key_exists($_POST['orderby'], $orderby_defaults) ? esc_sql($_POST['orderby']) : 'date';
       $order = !empty($_POST['order']) && array_key_exists($_POST['order'], $order_defaults) ? esc_sql($_POST['order']) : 'DESC';
@@ -212,8 +212,8 @@ class REACG_Posts {
       ?>
       <div class="media-toolbar">
         <div class="media-toolbar-secondary">
-          <h2 class="media-attachments-filter-heading"><?php echo esc_html__("Order", "reacg"); ?></h2>
-          <label for="media-attachment-order-by" class="screen-reader-text"><?php echo esc_html__("Order by", "reacg"); ?></label>
+          <h2 class="media-attachments-filter-heading"><?php echo esc_html__("Order", "regallery"); ?></h2>
+          <label for="media-attachment-order-by" class="screen-reader-text"><?php echo esc_html__("Order by", "regallery"); ?></label>
           <select id="media-attachment-order-by" class="posts-filters">
             <?php
             foreach ( $orderby_defaults as $key => $value ) {
@@ -235,7 +235,7 @@ class REACG_Posts {
           <span class="spinner"></span>
         </div>
         <div class="media-toolbar-primary search-form">
-          <label for="media-search-input" class="media-search-input-label"><?php echo esc_html__("Search", "reacg"); ?></label>
+          <label for="media-search-input" class="media-search-input-label"><?php echo esc_html__("Search", "regallery"); ?></label>
           <input type="search" id="media-search-input" class="search" value="<?php echo esc_html($s); ?>"/>
         </div>
         <div class="media-bg-overlay" style="display: none;"></div>
@@ -266,7 +266,7 @@ class REACG_Posts {
           </div>
           <button type="button" class="check" tabindex="-1">
             <span class="media-modal-icon"></span>
-            <span class="screen-reader-text"><?php echo esc_html__("Deselect", "reacg"); ?></span>
+            <span class="screen-reader-text"><?php echo esc_html__("Deselect", "regallery"); ?></span>
           </button>
         </li>
         <?php
@@ -279,7 +279,7 @@ class REACG_Posts {
           ?>
           <div class="uploader-inline">
             <div class="uploader-inline-content has-upload-message">
-              <h2 class="upload-message"><?php echo esc_html__("No items found.", "reacg"); ?></h2>
+              <h2 class="upload-message"><?php echo esc_html__("No items found.", "regallery"); ?></h2>
             </div>
           </div>
           <?php

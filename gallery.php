@@ -136,19 +136,19 @@ final class REACG {
    */
   public function define_translatable_constants() {
     $this->allowed_post_types = [
-      'post' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post'],
-      'page' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page'],
-      'postdynamic' => ['title' => __('Posts', 'reacg'), 'class' => 'dashicons-admin-post reacg-dynamic'],
-      'pagedynamic' => ['title' => __('Pages', 'reacg'), 'class' => 'dashicons-admin-page reacg-dynamic'],
+      'post' => ['title' => __('Posts', 'regallery'), 'class' => 'dashicons-admin-post'],
+      'page' => ['title' => __('Pages', 'regallery'), 'class' => 'dashicons-admin-page'],
+      'postdynamic' => ['title' => __('Posts', 'regallery'), 'class' => 'dashicons-admin-post reacg-dynamic'],
+      'pagedynamic' => ['title' => __('Pages', 'regallery'), 'class' => 'dashicons-admin-page reacg-dynamic'],
     ];
     $this->woocommerce_is_active = class_exists( 'WooCommerce' );
     if ( $this->woocommerce_is_active ) {
-      $this->allowed_post_types['product'] = [ 'title' => __('WooCommerce Products', 'reacg'), 'class' => 'dashicons-archive' ];
-      $this->allowed_post_types['productdynamic'] = [ 'title' => __('WooCommerce Products', 'reacg'), 'class' => 'dashicons-archive reacg-dynamic' ];
+      $this->allowed_post_types['product'] = [ 'title' => __('WooCommerce Products', 'regallery'), 'class' => 'dashicons-archive' ];
+      $this->allowed_post_types['productdynamic'] = [ 'title' => __('WooCommerce Products', 'regallery'), 'class' => 'dashicons-archive reacg-dynamic' ];
     }
 
     define('REACG_ALLOWED_POST_TYPES', $this->allowed_post_types);
-    define('REACG_BUY_NOW_TEXT', esc_html__('Upgrade to Pro', 'reacg') );
+    define('REACG_BUY_NOW_TEXT', esc_html__('Upgrade to Pro', 'regallery') );
   }
 
   /**
@@ -277,9 +277,9 @@ final class REACG {
         'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
       ],
       'text' => [
-        'load_more' => __('Load more', 'reacg'),
-        'search' => __('Search', 'reacg'),
-        'no_data' => __('There is not data.', 'reacg'),
+        'load_more' => __('Load more', 'regallery'),
+        'search' => __('Search', 'regallery'),
+        'no_data' => __('There is not data.', 'regallery'),
       ],
     ) );
   }
@@ -309,31 +309,31 @@ final class REACG {
     $required_scripts[] = $this->prefix . '_posts';
     wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_admin', 'reacg', array(
-      'insert' => __('Insert', 'reacg'),
-      'update' => __('Update', 'reacg'),
-      'update_thumbnail' => __('Update video cover', 'reacg'),
-      'edit' => __('Edit', 'reacg'),
-      'edit_thumbnail' => __('Edit video cover', 'reacg'),
-      'choose_images' => __('Choose images', 'reacg'),
-      'generate' => __('Generate', 'reacg'),
-      'regenerate' => __('Regenerate', 'reacg'),
-      'proceed' => __('Proceed', 'reacg'),
-      'ai_title_is_required' => __('Title is required. Make sure it accurately describes the image.', 'reacg'),
-      'ai_popup_additional_notes_label' => __('Additional Notes', 'reacg'),
-      'ai_popup_additional_notes_placeholder' => __('You can add additional notes here to help generate a more accurate text.', 'reacg'),
-      'ai_popup_title_heading' => __('Generative AI Title', 'reacg'),
-      'ai_popup_title_field_label' => __('Generated Title', 'reacg'),
-      'ai_popup_title_notice' => __('The title will be generated based on the image.', 'reacg'),
-      'ai_popup_caption_heading' => __('Generative AI Caption', 'reacg'),
-      'ai_popup_caption_field_label' => __('Generated Caption', 'reacg'),
-      'ai_popup_caption_notice' => __('The caption will be generated based on the image.', 'reacg'),
-      'ai_popup_alt_desc_notice' => __('The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.', 'reacg'),
-      'ai_popup_description_heading' => __('Generative AI Description', 'reacg'),
-      'ai_popup_description_field_label' => __('Generated Description', 'reacg'),
-      'ai_popup_alt_heading' => __('Generative AI Alt', 'reacg'),
-      'ai_popup_alt_field_label' => __('Generated Alt', 'reacg'),
-      'ai_highlight' => __('Use our built-in AI tools to instantly generate a Title, Caption, Description, and Alt text. Ideal for better SEO and accessibility.', 'reacg'),
-      'enter_license_key' => __('Please enter license key.', 'reacg'),
+      'insert' => __('Insert', 'regallery'),
+      'update' => __('Update', 'regallery'),
+      'update_thumbnail' => __('Update video cover', 'regallery'),
+      'edit' => __('Edit', 'regallery'),
+      'edit_thumbnail' => __('Edit video cover', 'regallery'),
+      'choose_images' => __('Choose images', 'regallery'),
+      'generate' => __('Generate', 'regallery'),
+      'regenerate' => __('Regenerate', 'regallery'),
+      'proceed' => __('Proceed', 'regallery'),
+      'ai_title_is_required' => __('Title is required. Make sure it accurately describes the image.', 'regallery'),
+      'ai_popup_additional_notes_label' => __('Additional Notes', 'regallery'),
+      'ai_popup_additional_notes_placeholder' => __('You can add additional notes here to help generate a more accurate text.', 'regallery'),
+      'ai_popup_title_heading' => __('Generative AI Title', 'regallery'),
+      'ai_popup_title_field_label' => __('Generated Title', 'regallery'),
+      'ai_popup_title_notice' => __('The title will be generated based on the image.', 'regallery'),
+      'ai_popup_caption_heading' => __('Generative AI Caption', 'regallery'),
+      'ai_popup_caption_field_label' => __('Generated Caption', 'regallery'),
+      'ai_popup_caption_notice' => __('The caption will be generated based on the image.', 'regallery'),
+      'ai_popup_alt_desc_notice' => __('The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.', 'regallery'),
+      'ai_popup_description_heading' => __('Generative AI Description', 'regallery'),
+      'ai_popup_description_field_label' => __('Generated Description', 'regallery'),
+      'ai_popup_alt_heading' => __('Generative AI Alt', 'regallery'),
+      'ai_popup_alt_field_label' => __('Generated Alt', 'regallery'),
+      'ai_highlight' => __('Use our built-in AI tools to instantly generate a Title, Caption, Description, and Alt text. Ideal for better SEO and accessibility.', 'regallery'),
+      'enter_license_key' => __('Please enter license key.', 'regallery'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
@@ -377,8 +377,8 @@ final class REACG {
     wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
       'title' => $this->nicename,
-      'description' => __("Display images with various visual effects in responsive gallery.", "reacg"),
-      'setup_wizard_description' => __("Create new gallery or select the existing one.", "reacg"),
+      'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
+      'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
       'create_button' => __("Create new gallery", "reacg"),
       'plugin_url' => $this->plugin_url,
       'plugin_version' => $this->version,

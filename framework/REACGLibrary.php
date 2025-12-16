@@ -170,14 +170,14 @@ class REACGLibrary {
       if ( $include_empty ) {
         $data[$key_shifter] = [];
         $data[$key_shifter]['id'] = 0;
-        $data[$key_shifter]['title'] = __('Select gallery', 'reacg');
+        $data[$key_shifter]['title'] = __('Select gallery', 'regallery');
         $data[$key_shifter]['shortcode'] = '';
         ++$key_shifter;
       }
       if ( !empty($posts) ) {
         $data[$key_shifter] = [];
         $data[$key_shifter]['id'] = -1;
-        $data[$key_shifter]['title'] = __('All Images', 'reacg');
+        $data[$key_shifter]['title'] = __('All Images', 'regallery');
         $data[$key_shifter]['shortcode'] = self::get_shortcode($obj, -1);
         ++$key_shifter;
       }
@@ -185,7 +185,7 @@ class REACGLibrary {
       foreach ( $posts as $key => $post ) {
         $data[$key + $key_shifter] = [];
         $data[$key + $key_shifter]['id'] = $post->ID;
-        $data[$key + $key_shifter]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+        $data[$key + $key_shifter]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'regallery');
         $data[$key + $key_shifter]['shortcode'] = self::get_shortcode($obj, $post->ID);
       }
 
@@ -193,13 +193,13 @@ class REACGLibrary {
     }
     else {
       if ( $include_empty ) {
-        $data[0] = __('Select gallery', 'reacg');
+        $data[0] = __('Select gallery', 'regallery');
       }
       if ( !empty($posts) ) {
-        $data[-1] = __('All Images', 'reacg');
+        $data[-1] = __('All Images', 'regallery');
       }
       foreach ( $posts as $key => $post ) {
-        $data[$post->ID] = $post->post_title ? $post->post_title : __('(no title)', 'reacg');
+        $data[$post->ID] = $post->post_title ? $post->post_title : __('(no title)', 'regallery');
       }
 
       return $data;
@@ -218,12 +218,12 @@ class REACGLibrary {
     $parameters = $request->get_url_params();
 
     if ( !isset($parameters[$param]) ) {
-      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return wp_send_json(new WP_Error( 'missing_gallery', __( 'Missing gallery ID.', 'regallery' ), array( 'status' => 400 ) ), 400);
     }
     $gallery_id = (int) $parameters[$param];
 
     if ( $gallery_id !== -1 && $gallery_id !== 0 && get_post_status( $gallery_id ) === FALSE ) {
-      return wp_send_json(new WP_Error( 'wrong_gallery', __( 'There is no such a gallery.', 'reacg' ), array( 'status' => 400 ) ), 400);
+      return wp_send_json(new WP_Error( 'wrong_gallery', __( 'There is no such a gallery.', 'regallery' ), array( 'status' => 400 ) ), 400);
     }
 
     return $gallery_id;

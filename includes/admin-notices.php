@@ -38,14 +38,14 @@ class REACG_Admin_Notices {
 		], admin_url('admin-ajax.php') ), -1, REACG_NONCE);
 
 		$options = [
-			'title' => sprintf( __( "That’s awesome!%s", "reacg" ), "🎉" ),
-			'description' => sprintf( __( "We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%sYour feedback helps us improve and helps others discover out plugin!", "reacg" ), "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />" ),
+			'title' => sprintf( __( "That’s awesome!%s", "regallery" ), "🎉" ),
+			'description' => sprintf( __( "We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%sYour feedback helps us improve and helps others discover out plugin!", "regallery" ), "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />" ),
       'dismiss_url' => add_query_arg( [
                                         'status' => !$second_period_not_passed ? 'dismissed' : 'skipped',
                                       ], $dismiss_url ),
       'classes' => [ 'reacg-notice' . $notice_id ],
       'button' => [
-				'text' => __( "Yes, I’d love to!", "reacg" ),
+				'text' => __( "Yes, I’d love to!", "regallery" ),
         'classes' => [ 'button-primary', 'button' ],
         'redirect_url' => REACG_WP_PLUGIN_REVIEW_URL,
 				'action_url' => add_query_arg( [
@@ -54,7 +54,7 @@ class REACG_Admin_Notices {
         'spinner' => TRUE,
 			],
 			'button_secondary' => [
-				'text' => __( "Maybe later", "reacg" ),
+				'text' => __( "Maybe later", "regallery" ),
 				'action_url' => add_query_arg( [
                                   'status' => !$second_period_not_passed ? 'dismissed' : 'skipped',
                                 ], $dismiss_url ),
@@ -80,7 +80,7 @@ class REACG_Admin_Notices {
       if ( !empty($options['dismiss_url']) ) {
         ?>
         <a data-action-url="<?php echo esc_url_raw( $options['dismiss_url'] ); ?>">
-          <i class="reacg-notice-dismiss dashicons dashicons-no" role="button" aria-label="<?php esc_html__('Dismiss this notice.', 'reacg'); ?>" tabindex="0"></i>
+          <i class="reacg-notice-dismiss dashicons dashicons-no" role="button" aria-label="<?php esc_html__('Dismiss this notice.', 'regallery'); ?>" tabindex="0"></i>
         </a>
         <?php
       }

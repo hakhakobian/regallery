@@ -13,24 +13,24 @@ class REACGBricksElement extends \Bricks\Element {
   public function set_controls() {
     $this->controls['gallery_id'] = [
       'tab' => 'content',
-      'label' => esc_html__('Select gallery', 'reacg'),
+      'label' => esc_html__('Select gallery', 'regallery'),
       'type' => 'select',
       'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
       'inline' => false,
       'clearable' => false,
       'pasteStyles' => false,
       'default' => 0,
-      'placeholder' => esc_html__('Select gallery', 'reacg'),
-      'description' => sprintf(__('Add/edit galleries %shere%s.', 'reacg'), '<a target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
+      'placeholder' => esc_html__('Select gallery', 'regallery'),
+      'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
     ];
 
     $this->controls['enable_options'] = [
       'tab' => 'content',
       'type' => 'checkbox',
-      'label' => esc_html__('Enable options section', 'reacg'),
+      'label' => esc_html__('Enable options section', 'regallery'),
       'small' => true,
       'default' => false,
-      'description' => esc_html__('Visible only in editor mode.', 'reacg'),
+      'description' => esc_html__('Visible only in editor mode.', 'regallery'),
     ];
   }
 
