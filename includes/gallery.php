@@ -530,7 +530,9 @@ class REACG_Gallery {
     }
 
     if ( !empty($images_ids_arr) ) {
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field(wp_unslash($_GET['order_by'])) : '');
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field(wp_unslash($_GET['order'])) : 'asc');
       $is_deleted_attachment = FALSE;
       $dynamic_exists = FALSE;
@@ -609,6 +611,7 @@ class REACG_Gallery {
       }
 
       // Filter the data by title, description, alt and caption.
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       $filter = !empty($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
       if ( $filter) {
         $data = array_values(array_filter($data, function( $item ) use ( $filter ) {
@@ -643,18 +646,23 @@ class REACG_Gallery {
         && $gallery_options[$gallery_options['type']]['paginationType'] !== 'none' ) {
         $per_page = sanitize_text_field($gallery_options['general']['itemsPerPage']);
       }
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       elseif ( !empty($_GET['per_page']) ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
         $per_page = sanitize_text_field(wp_unslash($_GET['per_page']));
       }
       // Run pagination on the data.
       if ( !empty($per_page) ) {
         $per_page = (int) $per_page;
         // We need one of these two parameters (page or offset, where offset is at which element to start).
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
         if ( isset($_GET['page']) ) {
+          // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
           $page = $_GET['page'] > 1 ? (int) $_GET['page'] : 1;
           $offset = ($page - 1) * $per_page;
         }
         else {
+          // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
           $offset = isset($_GET['offset']) && $_GET['offset'] < count($data) ? (int) $_GET['offset'] : 0;
         }
         $data = array_slice($data, $offset, $per_page);
@@ -950,7 +958,9 @@ class REACG_Gallery {
       return;
     }
 
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
     if ( isset($_POST['images_ids']) ) {
+      // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
       $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
       update_post_meta($post_id, 'images_ids', $images_ids);
 
@@ -960,15 +970,19 @@ class REACG_Gallery {
       update_post_meta($post_id, 'images_count', $images_count);
     }
 
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
     if ( isset($_POST['additional_data']) ) {
+      // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
       $additional_data = sanitize_text_field(wp_unslash($_POST['additional_data']));
       update_post_meta($post_id, 'additional_data', $additional_data);
     }
 
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
     if ( isset($_POST['custom_css']) ) {
       $options = get_option('reacg_options' . $post_id, FALSE);
       if ( !empty($options) ) {
         $data = json_decode($options, TRUE);
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is not required.
         $data['custom_css'] = sanitize_text_field(wp_unslash($_POST['custom_css']));
         $data['custom_css'] = preg_replace('/\s+/', ' ', $data['custom_css']);
         update_option('reacg_options' . $post_id, json_encode($data));

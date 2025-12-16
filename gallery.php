@@ -350,6 +350,7 @@ final class REACG {
    */
   public function register_frontend_scripts() {
     $this->register_general_scripts();
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
     if ( isset($_GET['bricks']) && $_GET['bricks'] === 'run' ) {
       wp_enqueue_style($this->prefix . '_bricks', $this->plugin_url . '/builders/bricks/bricks.css', [], '1.0');
     }
@@ -461,6 +462,7 @@ final class REACG {
       delete_option( 'reacg_do_activation_redirect' );
 
       // Avoid redirect on bulk activation
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       if ( !isset( $_GET['activate-multi'] ) ) {
         if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
           $demo = $this->demo(TRUE);
