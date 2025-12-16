@@ -50,13 +50,14 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       ]
     );
 
-    $edit_link = add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php'));
+    $edit_link = add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php'));
     $this->add_control(
       'post_id',
       [
         'label_block' => TRUE,
         'show_label' => FALSE,
-        'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
+        /* translators: 1: opening anchor tag, 2: closing anchor tag */
+        'description' => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 0,
         'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),

@@ -63,8 +63,30 @@ class REACG_Posts {
       <div class="reacg_select_type_wrapper">
         <span class="spinner is-active"></span>
         <div>
-          <button type="button" class="button button-hero reacg_select_type" data-select-type="manual" title="<?php echo esc_html(sprintf(__('Select %s manually', 'regallery'), $type_title)); ?>"><?php echo esc_html__("Manual selection", "regallery"); ?></button>
-          <button type="button" class="button button-hero reacg_select_type" data-select-type="dynamic" <?php disabled(!empty($additional_data)); ?> title="<?php echo esc_html(!empty($additional_data) ? esc_html__('Dynamic gallery already added', 'regallery') : sprintf(__('Select %s dynamically', 'regallery'), $type_title)); ?>"><?php echo esc_html__("Dynamic", "regallery"); ?></button>
+          <button type="button"
+                  class="button button-hero reacg_select_type"
+                  data-select-type="manual"
+                  title="<?php
+                  /* translators: %s: the type name (e.g., Posts, Pages, WooCommerce Products) */
+                  echo sprintf(esc_html('Select %s manually', 'regallery'), esc_html($type_title));
+                  ?>">
+            <?php esc_html_e("Manual selection", "regallery"); ?>
+          </button>
+          <button type="button"
+                  class="button button-hero reacg_select_type"
+                  data-select-type="dynamic"
+                  <?php disabled(!empty($additional_data)); ?>
+                  title="<?php
+                  if ( !empty($additional_data) ) {
+                    esc_html_e('Dynamic gallery already added', 'regallery');
+                  }
+                  else {
+                    /* translators: %s: the type name (e.g., Posts, Pages, WooCommerce Products) */
+                    echo sprintf(esc_html('Select %s dynamically', 'regallery'), esc_html($type_title));
+                  }
+                  ?>">
+            <?php echo esc_html__("Dynamic", "regallery"); ?>
+          </button>
         </div>
       </div>
       <?php
@@ -129,7 +151,12 @@ class REACG_Posts {
             </select>
           </div>
           <div>
-            <label for="reacg_exclude"><?php echo sprintf(__('Exclude %s', 'regallery'), $type_title); ?></label>
+            <label for="reacg_exclude">
+              <?php
+              /* translators: %s: the type name (e.g., Posts, Pages, WooCommerce Products) */
+              echo sprintf(esc_html__('Exclude %s', 'regallery'), esc_html($type_title));
+              ?>
+            </label>
             <select multiple="multiple" name="reacg_exclude" id="reacg_exclude" class="reacg_searchable_select reacg_change_listener" style="width: 100%">
               <?php
               foreach ( $posts as $post ) {
@@ -151,10 +178,20 @@ class REACG_Posts {
                    id="reacg_exclude_without_image"
                    class="reacg_change_listener"
               <?php checked(TRUE, !empty($additional_data_arr['exclude_without_image'])); ?> />
-            <label class="reacg_inline_label" for="reacg_exclude_without_image"><?php echo sprintf(__('Exclude %s without images', 'regallery'), $type_title); ?></label>
+            <label class="reacg_inline_label" for="reacg_exclude_without_image">
+              <?php
+              /* translators: %s: the type name (e.g., Posts, Pages, WooCommerce Products) */
+              echo sprintf(esc_html__('Exclude %s without images', 'regallery'), esc_html($type_title));
+              ?>
+            </label>
           </div>
           <div>
-            <label><?php echo sprintf(__('%s count', 'regallery'), $type_title); ?></label>
+            <label>
+              <?php
+              /* translators: %s: the type name (e.g., Posts, Pages, WooCommerce Products) */
+              echo sprintf(esc_html__('%s count', 'regallery'), esc_html($type_title));
+              ?>
+            </label>
             <label class="reacg_inline_label reacg_small_label"><?php esc_html_e('All', 'regallery'); ?>
               <input type="radio"
                      name="reacg_count_option"

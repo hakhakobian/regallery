@@ -439,8 +439,10 @@ class REACG_Demo {
     }
     else {
       if ( !empty($galleries) ) {
+        /* translators: %d: number of demo galleries created */
         echo sprintf(esc_html(_n('%d demo gallery created!', '%d demo galleries created!', count($galleries), 'regallery')), count($galleries));
         if ( !empty($attachments) ) {
+          /* translators: %d: number of sample images imported */
           echo ' ' . sprintf(esc_html(_n('%d sample image imported!', '%d sample images imported!', count($attachments), 'regallery')), count($attachments));
         }
       }

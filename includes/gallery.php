@@ -416,7 +416,8 @@ class REACG_Gallery {
         REACG_NONCE
       );
 
-      $title = sprintf(__('Duplicate “%s”', 'regallery'), empty( $post->post_title ) ? __('(no title)', 'regallery') : $post->post_title);
+      /* translators: %s: original post title */
+      $title = sprintf(esc_html__('Duplicate “%s”', 'regallery'), empty( $post->post_title ) ? esc_html__('(no title)', 'regallery') : $post->post_title);
 
       $actions['duplicate'] = '<a href="' . esc_url( $url ) . '" title="' . esc_html($title) . '" aria-label="' . esc_html($title) . '">' . esc_html__('Duplicate', 'regallery') . '</a>';
     }
@@ -1157,7 +1158,7 @@ class REACG_Gallery {
         <?php
         }
         ?>
-          <strong><?php esc_html_e($builder['title']); ?></strong>
+          <strong><?php echo esc_html($builder['title']); ?></strong>
           <?php
         if ( !empty($builder['video']) ) {
         ?>
@@ -1197,15 +1198,24 @@ class REACG_Gallery {
     ?>
     <div class="reacg-pro-not-active" style="display: none;">
       <p>
-        <?php echo sprintf(__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), REACG_NICENAME); ?>
+        <?php
+        /* translators: %s: plugin name */
+        echo sprintf(esc_html__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), REACG_NICENAME);
+        ?>
         <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
       </p>
       <p>
-        <?php echo sprintf(__( "To unlock more features consider %s.", 'regallery' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . __('upgrading to PRO', 'regallery') . '</a></strong>'); ?>
+        <?php
+        /* translators: %s: HTML link to upgrade to PRO wrapped in strong tags */
+        echo sprintf(esc_html__( "To unlock more features consider %s.", 'regallery' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('upgrading to PRO', 'regallery') . '</a></strong>');
+        ?>
       </p>
       <label for="reacg-license-key">
         <p class="description">
-          <?php echo sprintf(__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'regallery' ), REACG_NICENAME); ?>
+          <?php
+          /* translators: %s: plugin name */
+          echo sprintf(esc_html__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'regallery' ), REACG_NICENAME);
+          ?>
         </p>
       </label>
       <input placeholder="<?php esc_html_e( "Paste license key here", 'regallery' ); ?>" type="text" id="reacg-license-key" class="reacg-license-key"  />
@@ -1219,7 +1229,10 @@ class REACG_Gallery {
     </div>
     <div class="reacg-pro-active" style="display: none;">
       <p class="reacg-success">
-        <?php echo sprintf(__( "%s PRO version is active!", 'regallery' ), REACG_NICENAME); ?>
+        <?php
+        /* translators: %s: plugin name */
+        echo sprintf(esc_html__( "%s PRO version is active!", 'regallery' ), REACG_NICENAME);
+        ?>
       </p>
       <div class="reacg-activate-action">
         <span class="spinner"></span>

@@ -13,7 +13,7 @@ class REACG_WPBakery {
     foreach ( REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE) as $id => $label ) {
       $options[ $label ] = $id;
     }
-    $edit_link = add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php'));
+    $edit_link = add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php'));
 
     vc_map( array(
               'name' => REACG_NICENAME,
@@ -27,7 +27,8 @@ class REACG_WPBakery {
                   'heading' => __( 'Select gallery', 'regallery' ),
                   'param_name' => 'id',
                   'value' => $options,
-                  'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
+                  /* translators: 1: opening anchor tag, 2: closing anchor tag */
+                  'description' => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
                 ),
               )
             ) );

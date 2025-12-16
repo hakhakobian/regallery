@@ -41,7 +41,8 @@ class REACG_DiviModule extends ET_Builder_Module {
         'default'         => 0,
         'tab_slug'        => 'general',
         'toggle_slug'     => 'main_content',
-        'description'     => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
+        /* translators: 1: opening anchor tag, 2: closing anchor tag */
+        'description'     => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php')) . '">', '</a>'),
       ),
       'enable_options' => array(
         'label'           => esc_html__( 'Enable options section', 'regallery' ),

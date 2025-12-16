@@ -12,7 +12,8 @@ FLBuilder::register_module(
              'type' => 'select',
              'label' => esc_html__('Select gallery', 'regallery'),
              'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
-             'description' => sprintf(__('Add/edit galleries %shere%s.', 'regallery'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => 'reacg' ), admin_url('edit.php')) . '">', '</a>'),
+             /* translators: 1: opening anchor tag, 2: closing anchor tag */
+             'description' => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php')) . '">', '</a>'),
            ],
          ],
        ],
