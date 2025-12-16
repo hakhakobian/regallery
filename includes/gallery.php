@@ -1206,7 +1206,7 @@ class REACG_Gallery {
         /* translators: %s: plugin name */
         echo sprintf(esc_html__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), esc_html(REACG_NICENAME));
         ?>
-        <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
+        🙂
       </p>
       <p>
         <?php
