@@ -62,7 +62,7 @@ class REACG_Deactivate {
         <div class="reacg-deactivate-popup-footer">
           <div class="reacg-agreement-wrapper">
             <label>
-              <input type="hidden" name="reacg-email" value="<?php echo sanitize_email($email); ?>" />
+              <input type="hidden" name="reacg-email" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
               <input type="checkbox" class="reacg-agreement" />
               <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'regallery'); ?>
             </label>

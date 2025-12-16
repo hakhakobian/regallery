@@ -1200,7 +1200,7 @@ class REACG_Gallery {
       <p>
         <?php
         /* translators: %s: plugin name */
-        echo sprintf(esc_html__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), REACG_NICENAME);
+        echo sprintf(esc_html__( "You're using the free version of %s - no license needed. Enjoy!", 'regallery' ), esc_html(REACG_NICENAME));
         ?>
         <img draggable="false" role="img" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/16.0.1/svg/1f642.svg" />
       </p>
@@ -1214,7 +1214,7 @@ class REACG_Gallery {
         <p class="description">
           <?php
           /* translators: %s: plugin name */
-          echo sprintf(esc_html__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'regallery' ), REACG_NICENAME);
+          echo sprintf(esc_html__( "Already purchased? Simply enter your license key below to activate %s PRO!", 'regallery' ), esc_html(REACG_NICENAME));
           ?>
         </p>
       </label>
@@ -1231,7 +1231,7 @@ class REACG_Gallery {
       <p class="reacg-success">
         <?php
         /* translators: %s: plugin name */
-        echo sprintf(esc_html__( "%s PRO version is active!", 'regallery' ), REACG_NICENAME);
+        echo sprintf(esc_html__( "%s PRO version is active!", 'regallery' ), esc_html(REACG_NICENAME));
         ?>
       </p>
       <div class="reacg-activate-action">
