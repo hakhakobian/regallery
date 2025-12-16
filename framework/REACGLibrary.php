@@ -47,12 +47,17 @@ class REACGLibrary {
     $used_fonts = array();
     $google_fonts = self::get_fonts(false);
 
-    global $wpdb;
-    $options = $wpdb->get_results("SELECT * FROM `" . $wpdb->options . "` WHERE `option_name` LIKE 'reacg_options%'");
+    $options = [];
+    $all_options = wp_load_alloptions();
+    foreach ( $all_options as $name => $value ) {
+      if ( strpos( $name, 'reacg_options' ) === 0 ) {
+        $options[ $name ] = maybe_unserialize( $value );
+      }
+    }
     if ( $options ) {
-      foreach ( $options as $row ) {
-        if ( isset($row->option_value) ) {
-          $option = json_decode($row->option_value, TRUE);
+      foreach ( $options as $option_value ) {
+        if ( isset($option_value) ) {
+          $option = json_decode($option_value, TRUE);
           foreach ( $option as $value ) {
             if ( is_array($value) ) {
               foreach ( $value as $val ) {

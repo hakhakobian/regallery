@@ -404,13 +404,15 @@ final class REACG {
     if ( function_exists('is_multisite') && is_multisite() ) {
       // Run the activation function for each blog, if it is a network activation.
       if ( $networkwide ) {
-        global $wpdb;
-        // Get all blog ids.
-        $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-        foreach ( $blogids as $blog_id ) {
-          switch_to_blog($blog_id);
-          $this->activate();
-          restore_current_blog();
+        $sites = get_sites( [
+                              'fields' => 'ids',
+                            ] );
+        if ( !empty( $sites ) ) {
+          foreach ( $sites as $blog_id ) {
+            switch_to_blog($blog_id);
+            $this->activate();
+            restore_current_blog();
+          }
         }
 
         return;
@@ -458,7 +460,7 @@ final class REACG {
       delete_option( 'reacg_do_activation_redirect' );
 
       // Avoid redirect on bulk activation
-      if ( ! isset( $_GET['activate-multi'] ) ) {
+      if ( !isset( $_GET['activate-multi'] ) ) {
         if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
           $demo = $this->demo(TRUE);
           $galleries = $demo->import_data();
@@ -483,13 +485,15 @@ final class REACG {
     if ( function_exists('is_multisite') && is_multisite() ) {
       // Run the deactivation function for each blog, if it is a network deactivation.
       if ( $networkwide ) {
-        global $wpdb;
-        // Get all blog ids.
-        $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-        foreach ( $blogids as $blog_id ) {
-          switch_to_blog($blog_id);
-          $this->activate(false);
-          restore_current_blog();
+        $sites = get_sites( [
+                              'fields' => 'ids',
+                            ] );
+        if ( !empty( $sites ) ) {
+          foreach ( $sites as $blog_id ) {
+            switch_to_blog( $blog_id );
+            $this->activate( false );
+            restore_current_blog();
+          }
         }
 
         return;
