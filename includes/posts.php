@@ -43,13 +43,25 @@ class REACG_Posts {
   }
 
   public function get_posts() {
-    if ( !wp_verify_nonce($_GET[REACG_NONCE]) ) {
+    if ( empty( $_GET[ REACG_NONCE ] ) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[REACG_NONCE]))) ) {
       wp_die();
     }
     $select_type_defaults = ['manual', 'dynamic'];
-    $select_type = !empty($_POST['select_type']) && in_array($_POST['select_type'], $select_type_defaults) ? esc_sql($_POST['select_type']) : '';
+    $select_type = '';
+    if ( !empty( $_POST['select_type'] ) ) {
+      $select_type_input = sanitize_text_field( wp_unslash( $_POST['select_type'] ) );
+      if ( in_array( $select_type_input, $select_type_defaults ) ) {
+        $select_type = $select_type_input;
+      }
+    }
 
-    $type = !empty($_POST['type']) && array_key_exists($_POST['type'], REACG_ALLOWED_POST_TYPES) ? esc_sql($_POST['type']) : 'post';
+    $type = 'post';
+    if ( !empty( $_POST['type'] ) ) {
+      $type_input = sanitize_key( wp_unslash( $_POST['type'] ) );
+      if ( array_key_exists( $type_input, REACG_ALLOWED_POST_TYPES ) ) {
+        $type = $type_input;
+      }
+    }
     $type_title = REACG_ALLOWED_POST_TYPES[$type]['title'];
 
     $gallery_id = !empty($_POST['gallery_id']) ? intval($_POST['gallery_id']) : 0;
@@ -221,7 +233,7 @@ class REACG_Posts {
       echo ob_get_clean();
     }
     elseif ( $select_type === "manual" ) {
-      $s = !empty($_POST['s']) ? esc_sql($_POST['s']) : '';
+      $s = !empty($_POST['s']) ? sanitize_text_field(wp_unslash($_POST['s'])) : '';
 
       $orderby_defaults = [
         'date' => __('Date', 'regallery'),
@@ -229,12 +241,25 @@ class REACG_Posts {
         'comment_count' => __('Comment count', 'regallery'),
         'menu_order' => __('Menu order', 'regallery'),
       ];
+      $orderby = 'date';
+      if ( !empty( $_POST['orderby'] ) ) {
+        $orderby_input = sanitize_text_field(wp_unslash($_POST['orderby']));
+        if ( array_key_exists( $orderby_input, $orderby_defaults ) ) {
+          $orderby = $orderby_input;
+        }
+      }
+
       $order_defaults = [
         'ASC' => __('Ascending', 'regallery'),
         'DESC' => __('Descending', 'regallery'),
       ];
-      $orderby = !empty($_POST['orderby']) && array_key_exists($_POST['orderby'], $orderby_defaults) ? esc_sql($_POST['orderby']) : 'date';
-      $order = !empty($_POST['order']) && array_key_exists($_POST['order'], $order_defaults) ? esc_sql($_POST['order']) : 'DESC';
+      $order = 'DESC';
+      if ( !empty( $_POST['order'] ) ) {
+        $order_input = strtoupper(sanitize_text_field(wp_unslash($_POST['order'])));
+        if ( array_key_exists( $order_input, $order_defaults ) ) {
+          $order = $order_input;
+        }
+      }
 
       $args = [
         'post_type' => $type,

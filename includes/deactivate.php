@@ -7,7 +7,8 @@ class REACG_Deactivate {
   public function __construct($that) {
     $this->obj = $that;
 
-    if ( strpos(esc_url($_SERVER['REQUEST_URI']), "plugins.php") !== FALSE ) {
+    $request_uri = !empty($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    if ( strpos($request_uri, "plugins.php") !== FALSE ) {
       $this->enqueue_scripts();
       add_action('admin_footer', array( $this, 'content' ));
     }

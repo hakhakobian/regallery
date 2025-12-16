@@ -150,11 +150,20 @@ class REACG_Admin_Notices {
    * @return void
    */
   public function dismiss_notice() {
-    if ( !empty($_GET['notice_id'])
-      && in_array($_GET['notice_id'], $this->notices )
-      && wp_verify_nonce($_GET[REACG_NONCE])) {
-      $status = !empty($_GET['status']) && in_array($_GET['status'], $this->allowed_statuses) ? esc_html($_GET['status']) : '';
-      update_option('reacg_notice_' . esc_sql($_GET['notice_id']) . '_status', $status);
+    if ( !empty( $_GET['notice_id'] )
+      && !empty( $_GET[ REACG_NONCE ] )
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[ REACG_NONCE ]))) ) {
+      $notice_id = sanitize_key( wp_unslash( $_GET['notice_id'] ) );
+      if ( ! in_array( $notice_id, $this->notices ) ) {
+        return;
+      }
+      if ( !empty( $_GET['status'] ) ) {
+        $status = sanitize_key( wp_unslash( $_GET['status'] ) );
+        if ( !in_array( $status, $this->allowed_statuses ) ) {
+          return;
+        }
+        update_option('reacg_notice_' . $notice_id . '_status', $status);
+      }
     }
   }
 

@@ -64,11 +64,11 @@ class REACGBricksElement extends \Bricks\Element {
       return true;
     }
     // Bricks-related REST/AJAX calls.
-    if (
-      isset($_SERVER['HTTP_REFERER']) &&
-      strpos($_SERVER['HTTP_REFERER'], 'bricks=run') !== false
-    ) {
-      return true;
+    if ( !empty($_SERVER['HTTP_REFERER']) ) {
+      $referer = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
+      if ( FALSE !== strpos( $referer, 'bricks=run' ) ) {
+        return true;
+      }
     }
 
     return false;

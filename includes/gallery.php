@@ -279,8 +279,12 @@ class REACG_Gallery {
     }
 
     // If request comes from Elementor editor iframe.
-    if ( isset( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'elementor' ) !== FALSE ) {
-      return '__return_true';
+    if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+      $referer = sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER']));
+
+      if ( strpos( $referer, 'elementor' ) !== FALSE ) {
+        return '__return_true';
+      }
     }
 
     return current_user_can( 'edit_posts' );
@@ -431,7 +435,7 @@ class REACG_Gallery {
    * @return void
    */
   public function duplicate_gallery() {
-    if ( !isset($_GET[REACG_NONCE]) || !wp_verify_nonce($_GET[REACG_NONCE]) ) {
+    if ( !isset($_GET[REACG_NONCE]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[REACG_NONCE]))) ) {
       return;
     }
 
@@ -526,8 +530,8 @@ class REACG_Gallery {
     }
 
     if ( !empty($images_ids_arr) ) {
-      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field($_GET['order_by']) : '');
-      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'asc');
+      $order_by = !empty($gallery_options['general']['orderBy']) ? sanitize_text_field($gallery_options['general']['orderBy']) : (isset($_GET['order_by']) ? sanitize_text_field(wp_unslash($_GET['order_by'])) : '');
+      $order = !empty($gallery_options['general']['orderDirection']) ? sanitize_text_field($gallery_options['general']['orderDirection']) : (isset($_GET['order']) ? sanitize_text_field(wp_unslash($_GET['order'])) : 'asc');
       $is_deleted_attachment = FALSE;
       $dynamic_exists = FALSE;
       foreach ( $images_ids_arr as $key => $images_id ) {
@@ -605,7 +609,7 @@ class REACG_Gallery {
       }
 
       // Filter the data by title, description, alt and caption.
-      $filter = !empty($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+      $filter = !empty($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
       if ( $filter) {
         $data = array_values(array_filter($data, function( $item ) use ( $filter ) {
           return stripos($item['title'], $filter) !== FALSE
@@ -640,7 +644,7 @@ class REACG_Gallery {
         $per_page = sanitize_text_field($gallery_options['general']['itemsPerPage']);
       }
       elseif ( !empty($_GET['per_page']) ) {
-        $per_page = sanitize_text_field($_GET['per_page']);
+        $per_page = sanitize_text_field(wp_unslash($_GET['per_page']));
       }
       // Run pagination on the data.
       if ( !empty($per_page) ) {
@@ -842,7 +846,7 @@ class REACG_Gallery {
    */
   public function save_images() {
     if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
       if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
         $post_id = (int) $_POST['post_id'];
         $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
@@ -855,7 +859,7 @@ class REACG_Gallery {
 
         /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
         if ( isset($_POST['gallery_timestamp']) ) {
-          $timestamp = sanitize_text_field($_POST['gallery_timestamp']);
+          $timestamp = sanitize_text_field(wp_unslash($_POST['gallery_timestamp']));
           update_post_meta($post_id, 'gallery_timestamp', $timestamp);
         }
 
@@ -875,7 +879,7 @@ class REACG_Gallery {
    */
   public function save_thumbnail() {
     if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
       if ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
         $id = (int) $_POST['id'];
         $thumbnail_id = (int) $_POST['thumbnail_id'];
@@ -895,7 +899,7 @@ class REACG_Gallery {
    */
   public function delete_thumbnail() {
     if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
       if ( isset($_POST['id']) ) {
         $id = (int) $_POST['id'];
         $metadata = wp_get_attachment_metadata($id);
@@ -914,7 +918,7 @@ class REACG_Gallery {
    */
   public function save_gallery() {
     if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce]) ) {
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
       $new_post = [
         'post_title' => '(no title)',
         'post_status' => 'publish',
@@ -947,7 +951,7 @@ class REACG_Gallery {
     }
 
     if ( isset($_POST['images_ids']) ) {
-      $images_ids = sanitize_text_field($_POST['images_ids']);
+      $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
       update_post_meta($post_id, 'images_ids', $images_ids);
 
       // Save images count as a separate meta to make it possible to order galleries by images count.
@@ -965,7 +969,7 @@ class REACG_Gallery {
       $options = get_option('reacg_options' . $post_id, FALSE);
       if ( !empty($options) ) {
         $data = json_decode($options, TRUE);
-        $data['custom_css'] = stripslashes(sanitize_text_field($_POST['custom_css']));
+        $data['custom_css'] = sanitize_text_field(wp_unslash($_POST['custom_css']));
         $data['custom_css'] = preg_replace('/\s+/', ' ', $data['custom_css']);
         update_option('reacg_options' . $post_id, json_encode($data));
       }
@@ -1441,10 +1445,10 @@ class REACG_Gallery {
   public function meta_box_images($post) {
     // Verify if the request is an AJAX call and ensure its validity.
     $valid_ajax_call = isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce( $_GET[$this->obj->nonce])
+      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce])))
       && isset($_GET['id'])
       && isset($_GET['action'])
-      && $_GET['action'] === 'reacg_get_images';
+      && sanitize_text_field(wp_unslash($_GET['action'])) === 'reacg_get_images';
 
     // Get the ID depending on whether it is called from builders or the custom post.
     $post_id = isset($_GET['id']) ? (int) $_GET['id'] : $post->ID;
