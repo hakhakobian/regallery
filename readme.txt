@@ -13,7 +13,7 @@ Photo Gallery, Image Gallery - lets you create responsive, SEO-optimized image g
 
 == Description ==
 
-Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes it easy to create stunning image gallery with advanced layouts like Mosaic, Masonry, Slideshow etc.
+Gallery is a FREE, SEO-friendly photo gallery plugin for WordPress that makes it easy to create stunning image gallery with advanced layouts like Mosaic, Masonry, Slider etc.
 
 With features like lightbox viewing, responsive design, and drag-and-drop customization, this plugin redefines ease of use and functionality.
 Whether you're a photographer, blogger, artist, or small business owner, this responsive gallery plugin empowers you to display your work in the most engaging way.
@@ -30,7 +30,7 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 == Benefits ==
 
 *   **Ultra-Lightweight Performance & Mobile-Optimized Design:** Re Gallery Photo Gallery WordPress Plugin is engineered for lightning-fast performance, making it one of the most ultra-lightweight gallery plugins available. Enjoy reduced load times, improved Core Web Vitals, and a seamless browsing experience across all devices. Whether you're creating a responsive photo gallery, mobile-friendly image gallery, or WordPress gallery with lightbox, Re Gallery ensures your site stays fast and smooth.
-*   **Increased User Engagement & Visual Impact:** Boost user interaction with beautifully styled WordPress image galleries and photo albums. Re Gallery supports slideshow galleries, thumbnail navigation, masonry layouts, and custom gallery blocks that drive engagement. These interactive gallery features help improve page views, reduce bounce rate, and increase user retention, making your site more dynamic and SEO-effective.
+*   **Increased User Engagement & Visual Impact:** Boost user interaction with beautifully styled WordPress image galleries and photo albums. Re Gallery supports slider galleries with thumbnails navigation, masonry layouts, and custom gallery blocks that drive engagement. These interactive gallery features help improve page views, reduce bounce rate, and increase user retention, making your site more dynamic and SEO-effective.
 *   **Interactive Live Demo & Intuitive UI:** Experience real-time customization with Re Gallery's interactive live demo feature. Instantly preview your photo gallery settings including carousel, mosaic, cards, cube, and grid gallery layouts to find the perfect visual style for your site. This hands-on approach makes it easy to design galleries that match your brand. Built with a WordPress-native UI, Re Gallery offers a user-friendly gallery interface that blends seamlessly with both the Classic and Gutenberg editors. Whether you're a beginner or an advanced user, managing your WordPress image gallery plugin has never been more intuitive.
 *   **SEO-Optimized Image Galleries:** Drive more traffic from search engines with Re Gallery's built-in SEO features. Optimize your gallery images, titles, and descriptions to improve Google visibility and site performance. From lightbox galleries to image browsers, every element of Re Gallery is crafted to be SEO-friendly, helping your WordPress photo galleries rank higher and load faster without sacrificing design.
 *   **User-Friendly Interface for All Skill Levels:** Re Gallery offers a simple and intuitive dashboard that makes it easy to create and manage WordPress photo galleries, even for beginners. Whether you're building image galleries, organizing photo albums, or adding video galleries, this image gallery plugin streamlines the process with drag-and-drop ease and visual clarity.
@@ -156,7 +156,7 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 2. Gallery Mosaic view
 3. Gallery Masonry view
 4. Gallery Justified view
-5. Gallery Slideshow view
+5. Gallery Slider view
 6. Gallery Cube view
 7. Gallery Carousel view
 8. Gallery Cards view
@@ -185,7 +185,7 @@ Go to Re Gallery > Add New Gallery in your WordPress dashboard. Upload images us
 Re Gallery works seamlessly with Gutenberg, Elementor, Divi, Bricks, Beaver Builder and WPBakery Page Builder, allowing for flexible gallery integration across different platforms.
 
 = Is Re Gallery WordPress gallery plugin optimized for mobile devices? =
-Yes, Re Gallery is fully mobile-optimized. All responsive photo galleries automatically adjust to fit any screen size, ensuring a smooth user experience on smartphones, tablets, and desktops. Gallery views like mosaic, justified, masonry, thumbnails, cards, carousel, cube, blog and slideshow are designed to be fully responsive, making Re Gallery perfect for creating mobile-friendly WordPress sites.
+Yes, Re Gallery is fully mobile-optimized. All responsive photo galleries automatically adjust to fit any screen size, ensuring a smooth user experience on smartphones, tablets, and desktops. Gallery views like mosaic, justified, masonry, grid/thumbnails, cards, carousel, cube, blog and slider are designed to be fully responsive, making Re Gallery perfect for creating mobile-friendly WordPress sites.
 
 = What are Generative AI Captions in Re Gallery photo gallery plugin? =
 Generative AI Captions in Re Gallery automatically create image titles, descriptions, and alt text using AI. This feature helps improve SEO, accessibility, and user engagement. It's built into the plugin and works seamlessly with your responsive photo gallery, pre-designed templates, and is fully compatible with WordPress page builders.
@@ -197,7 +197,7 @@ Yes, you can fully edit the AI-generated image captions in Re Gallery. After gen
 Yes, Re Gallery is highly SEO friendly. Its AI-generated image captions automatically create descriptive titles, alt text, and descriptions for your images, which improves search engine visibility. Combined with responsive photo galleries and optimized mobile galleries, this helps your WordPress site rank better.
 
 = How does Re Gallery photo gallery plugin integrate with WooCommerce for photo galleries? =
-Re Gallery integrates smoothly with WooCommerce, allowing you to create beautiful, responsive photo galleries for your products. It includes features like lightbox viewing, hover effects, AI-generated image captions, and customizable gallery layouts such as masonry, mosaic, justified, thumbnails, carousel, cards, slideshow, blog and cube. These tools help make your product galleries more engaging, mobile-optimized, and SEO-friendly, delivering a better shopping experience for your customers.
+Re Gallery integrates smoothly with WooCommerce, allowing you to create beautiful, responsive photo galleries for your products. It includes features like lightbox viewing, hover effects, AI-generated image captions, and customizable gallery layouts such as masonry, mosaic, justified, grid/thumbnails, carousel, cards, slider, blog and cube. These tools help make your product galleries more engaging, mobile-optimized, and SEO-friendly, delivering a better shopping experience for your customers.
 
 = Which gallery views like masonry, carousel, justified are available in WordPress photo gallery plugin? =
 Re Gallery supports multiple gallery layouts including։
@@ -206,7 +206,7 @@ Re Gallery supports multiple gallery layouts including։
 * **Mosaic view:** Create visually appealing galleries with images arranged in a beautiful mosaic pattern.
 * **Masonry view:** Show your images in a dynamic masonry layout that adjusts seamlessly to different screen sizes.
 * **Justified view:** Arrange your images in clean, horizontal rows of equal height, adjusting widths automatically to maintain alignment.
-* **Slideshow view:** Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
+* **Slider view:** Display your images beautifully with smooth transitions, customizable settings, and full-screen mode.
 * **Cube view:** A 3D photo gallery with an interactive, rotating cube design. Great for displaying images in a unique way.
 * **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space.
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
