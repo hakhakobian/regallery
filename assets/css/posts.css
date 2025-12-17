@@ -1,8 +1,12 @@
 .reacg-posts-wrapper {
   overflow-y: auto !important;
   .spinner {
+    display: none;
     float: none;
     margin: 10px 0 0 10px;
+  }
+  .spinner.is-active {
+    display: inline-block;
   }
 
   .posts-filters {
@@ -32,9 +36,10 @@
   }
   .reacg_dynamic_wrapper>div {
     width: 700px;
+    max-width: 700px;
   }
   .reacg_dynamic_wrapper>div>div {
-    margin: 25px 0;
+    margin: 25px 16px;
   }
   .reacg_dynamic_wrapper select {
     width: 100%;

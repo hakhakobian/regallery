@@ -1,6 +1,7 @@
 function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_id) {
   let wrapper = jQuery(that).find(".reacg-posts-wrapper");
   wrapper.find(".spinner").addClass("is-active");
+  wrapper.find(".reacg_select_type").addClass("hidden");
   jQuery.ajax({
     url: reacg.ajax_url,
     type: "POST",
@@ -16,6 +17,7 @@ function reacg_get_posts(media_uploader, that, select_type, images_ids, gallery_
     success: function (response) {
       wrapper.html(response);
       wrapper.find(".spinner").removeClass("is-active");
+      wrapper.find(".reacg_select_type").removeClass("hidden");
       if ( select_type === "" ) {
         /* Bind events to the buttons.*/
         wrapper.find(".reacg_select_type").off("click").on("click", function () {
