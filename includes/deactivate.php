@@ -120,7 +120,7 @@ class REACG_Deactivate {
     $additional_links = [
       "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'faq'], REACG_WEBSITE_URL_UTM . '#faq')) . "' target='_blank'>" . esc_html__('FAQ', 'regallery') . "</a>",
       "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Help', 'regallery') . "</a>",
-      "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . "' target='_blank' class='reacg-upgrade'>" . REACG_BUY_NOW_TEXT . "</a>",
+      !REACG_PLAYGROUND ? "<a href='" . esc_url(add_query_arg(['utm_medium' => 'plugins_list', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . "' target='_blank' class='reacg-upgrade reacg-hidden'>" . REACG_BUY_NOW_TEXT . "</a>" : "",
     ];
     return array_merge( $links, $additional_links );
   }

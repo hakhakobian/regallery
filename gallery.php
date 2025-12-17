@@ -83,6 +83,7 @@ final class REACG {
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
+    define('REACG_PLAYGROUND', strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE );
   }
 
   /**
@@ -464,7 +465,7 @@ final class REACG {
       // Avoid redirect on bulk activation
       // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       if ( !isset( $_GET['activate-multi'] ) ) {
-        if ( strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE ) {
+        if ( REACG_PLAYGROUND ) {
           $demo = $this->demo(TRUE);
           $galleries = $demo->import_data();
           if ( count($galleries) === 1 ) {

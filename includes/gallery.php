@@ -200,7 +200,9 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'regallery'), __('About Us', 'regallery'), 'manage_options', 'reacg-external-link');
-    add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
+    if ( !REACG_PLAYGROUND ) {
+      add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
+    }
   }
 
   /**
@@ -223,14 +225,14 @@ class REACG_Gallery {
           // Replace with the external URL.
           $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'));
           if ( isset( $submenu[ $parent_slug ][ $index ][4] ) ) {
-            $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro';
+            $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro reacg-hidden';
           } else {
-            $submenu[ $parent_slug ][ $index ][] = 'reacg-sidebar-upgrade-pro';
+            $submenu[ $parent_slug ][ $index ][] = 'reacg-sidebar-upgrade-pro reacg-hidden';
           }
-          echo '<script>jQuery(document).ready(function () { if (!JSON.parse(localStorage.getItem("reacg-pro"))) { jQuery(".reacg-sidebar-upgrade-pro").show(); } });</script>
+          echo '<script>jQuery(document).ready(function () { if (!JSON.parse(localStorage.getItem("reacg-pro"))) { jQuery(".reacg-sidebar-upgrade-pro").removeClass("reacg-hidden"); } });</script>
                 <style>
-                  .reacg-sidebar-upgrade-pro {
-                    display: none;
+                  .reacg-hidden {
+                    display: none !important;
                   }
                   a.reacg-sidebar-upgrade-pro {
                     background-color: rgb(147 177 77) !important;
@@ -1099,10 +1101,13 @@ class REACG_Gallery {
     add_meta_box( 'gallery-settings', __( 'Settings', 'regallery' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-preview', __( 'Preview', 'regallery' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
-    // Metabox for live preview.
-
-    // Metabox to activate/deactivate pro version.
-    add_meta_box( 'gallery-license', __( 'License', 'regallery' ), [ $this, 'meta_box_license' ], 'reacg', 'side', 'low' );
+    if ( !REACG_PLAYGROUND ) {
+      // Metabox to activate/deactivate pro version.
+      add_meta_box('gallery-license', __('License', 'regallery'), [
+        $this,
+        'meta_box_license'
+      ],           'reacg', 'side', 'low');
+    }
 
     // Metabox to display the available publishing methods.
     add_meta_box( 'gallery-help', __( 'Help', 'regallery' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );

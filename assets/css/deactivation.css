@@ -125,3 +125,6 @@
     margin: 5px 8px;
   }
 }
+.reacg-hidden {
+  display: none !important;
+}
