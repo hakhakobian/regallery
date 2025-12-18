@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.14
+Stable tag: 1.17.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,22 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.14: Fixed conflict with caching plugins. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.15: Improved naming consistency, refined plugin descriptions, and addressed WordPress.org review feedback. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.15 =
+= Updated: 18.12.2025 =
+* **Improved:** Updated plugin branding to be consistent across the plugin header, readme, and WordPress.org listing.
+* **Improved:** User-facing copy for clarity, consistency, and better readability.
+* **Improved:** Sanitization and validation of inputs.
+* **Improved:** Translators’ comments for strings with placeholders to improve localization quality.
+* **Fixed:** Keyword repetition and overly generic wording in plugin descriptions.
+* **Fixed:** Removed external emoji image dependency to comply with WordPress.org asset guidelines.
+* **Fixed:** Nonce handling and input validation warnings where applicable.
+* **Fixed:** Corrected redirect handling using WordPress-recommended safe redirect functions.
+* **Fixed:** Resolved timezone-related date handling warnings.
+
 = 1.17.14 =
 = Updated: 16.12.2025 =
 * **Improved:** Import a complete example gallery with images in WordPress Playground.
