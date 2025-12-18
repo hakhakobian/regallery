@@ -251,15 +251,13 @@ Customize your website easily! Just upload images with the standard WordPress me
 == Changelog ==
 = 1.17.15 =
 = Updated: 18.12.2025 =
-* **Improved:** Updated plugin branding to be consistent across the plugin header, readme, and WordPress.org listing.
-* **Improved:** User-facing copy for clarity, consistency, and better readability.
+* **Improved:** Updated plugin branding to be consistent across the plugin header, and description.
 * **Improved:** Sanitization and validation of inputs.
-* **Improved:** Translators’ comments for strings with placeholders to improve localization quality.
+* **Improved:** Translators' comments for strings with placeholders to improve localization quality.
 * **Fixed:** Keyword repetition and overly generic wording in plugin descriptions.
 * **Fixed:** Removed external emoji image dependency to comply with WordPress.org asset guidelines.
-* **Fixed:** Nonce handling and input validation warnings where applicable.
-* **Fixed:** Corrected redirect handling using WordPress-recommended safe redirect functions.
-* **Fixed:** Resolved timezone-related date handling warnings.
+* **Fixed:** Corrected redirect handling using recommended safe redirect functions.
+* **Fixed:** Resolved timezone-related date handling warning.
 
 = 1.17.14 =
 = Updated: 16.12.2025 =
