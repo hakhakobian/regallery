@@ -84,17 +84,18 @@ class REACGLibrary {
    *
    * @param $gallery_id
    * @param $enable_options
+   * @param $id
    *
    * @return void
    */
-  public static function get_rest_routs($gallery_id, $enable_options = FALSE) {
+  public static function get_rest_routs($gallery_id, $enable_options = FALSE, $id = 0) {
     REACGLibrary::enqueue_scripts();
 
     $data = REACGLibrary::get_data($gallery_id);
 
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
-    <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
+    <div id="reacg-root<?php echo esc_attr($id ? $id : $gallery_id); ?>"
          class="reacg-wrapper reacg-gallery reacg-preview"
          data-options-section="<?php echo esc_attr( (int) ($enable_options || is_admin())); ?>"
          data-options-container="<?php echo esc_attr('#reacg_settings'); ?>"
