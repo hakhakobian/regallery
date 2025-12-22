@@ -20,7 +20,7 @@ function images_cont(baseCont, shortcode_id, widget_id, first_load, selectGaller
           document.querySelector(reacg_list_element).classList.add("reacg-hidden");
         }
 
-        reacg_reload_gallery(widget_id, {gallery_id: shortcode_id})
+        reacg_reload_gallery(widget_id, {gallery_id: shortcode_id});
       }
       baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
     })
@@ -47,18 +47,22 @@ function showPreview(shortcode_id, widget_id = null) {
   }
 }
 
-function reacg_reload_gallery(id, data = {}) {
+function reacg_reload_gallery(id, data = {}, initial = false, ) {
   let innerDoc;
-  if ( document.getElementById("reacg-root" + id) ) {
-    innerDoc = document;
+  const iframe = document.getElementById('elementor-preview-iframe');
+  if ( iframe ) {
+    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
   }
   else {
-    const iframe = document.getElementById('elementor-preview-iframe');
-    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    innerDoc = document;
   }
   const gallery = innerDoc.getElementById("reacg-root" + id);
   if ( gallery ) {
-    gallery.setAttribute('data-options-section', 1);
+    gallery.setAttribute('data-options-section', initial ? 0 : 1);
+    const fake_container = document.querySelector(".reacg-fake-container");
+    if (fake_container) {
+      fake_container.setAttribute('data-gallery-id', data.gallery_id);
+    }
     if ( data.gallery_id ) {
       gallery.setAttribute('data-gallery-id', data.gallery_id);
     }
@@ -72,7 +76,7 @@ function reacg_reload_gallery(id, data = {}) {
 
 (function ($) {
   'use strict';
-  // Fired when a widget is selected and its panel is opened
+  // Fired when a widget is selected and its panel is opened.
   elementor.channels.editor.on('section:activated', function (sectionName, editor) {
     if (!editor || !editor.model) {
       return;
@@ -87,22 +91,16 @@ function reacg_reload_gallery(id, data = {}) {
     if (typeof reacg_reload_gallery === 'function') {
       reacg_reload_gallery(widgetId);
     }
-    //const create_button = document.querySelector('.reacg-create-gallery');
-    //if (create_button) {
-    //  create_button.addEventListener('click', function () {
-    //    showPreview(0, widgetId);
-    //  });
-    //}
+
     waitForControl('.reacg-create-gallery', function (btn) {
       btn.addEventListener('click', function () {
         window.showPreview(0, widgetId);
       });
     });
-    waitForRawHtmlChange('#reacg-gallery-images', function (el, mutations) {
-      console.log('Settings RAW_HTML changed');
-      //reacg_reload_gallery(widgetId);
-    });
-
+    //waitForRawHtmlChange('#reacg-gallery-images', function (el, mutations) {
+    //  console.log('Settings RAW_HTML changed');
+    //  reacg_reload_gallery(widgetId);
+    //});
 
     const settingsModel = editor.model.get('settings');
 

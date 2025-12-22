@@ -551,18 +551,28 @@ function reacg_save_images(galleryItemsContainer) {
  * Trigger hidden button click to reload the preview.
  */
 function reacg_reload_preview() {
+  let innerDoc;
+  const iframe = document.getElementById('elementor-preview-iframe');
+  if ( iframe ) {
+    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+  }
+  else {
+    innerDoc = document;
+  }
   /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
-  document.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
+  innerDoc.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
 
   /* Remove all containers with the same ID except the last one. */
-  let containers = document.querySelectorAll("#reacg-reloadData");
+  let containers = innerDoc.querySelectorAll("#reacg-reloadData");
   if ( containers.length > 1 ) {
     for (let i = 0; i < containers.length - 1; i++) {
       containers[i].remove()
     }
   }
-
-  jQuery("#reacg-reloadData").trigger("click");
+  const button = innerDoc.getElementById("reacg-reloadData");
+  if ( button ) {
+    button.click();
+  }
 }
 
 /**
