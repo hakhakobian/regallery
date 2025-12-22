@@ -1613,8 +1613,8 @@ class REACG_Gallery {
     if ( !is_null($request) ) {
       $posts = get_posts(array(
                            'posts_per_page' => -1,
-                           'post_type' => 'reacg',
-                           'post_status' => 'publish',
+                           'post_type' => REACG_CUSTOM_POST_TYPE,
+                           'post_status' => [ 'publish', 'private', 'draft', 'pending' ],
                          ));
       $data = [];
       foreach ( $posts as $key => $post ) {
