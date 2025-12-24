@@ -105,7 +105,7 @@ final class REACG {
     // Register widget for Elementor.
     add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
     // Fires after elementor editor styles are enqueued.
-    add_action('elementor/editor/after_enqueue_scripts', array($this, 'enqueue_elementor_styles'));
+    add_action('elementor/editor/after_enqueue_scripts', array($this, 'enqueue_elementor_scripts'));
 
     // Register Divi module.
     add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
@@ -175,34 +175,15 @@ final class REACG {
   }
 
   /**
-   * Enqueue Elementor widget styles.
+   * Enqueue Elementor widget scripts.
    *
    * @return void
    */
-  public function enqueue_elementor_styles() {
+  public function enqueue_elementor_scripts() {
     $this->register_admin_scripts();
-    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/styles/elementor.css', [], $this->version);
-    wp_enqueue_script($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/scripts/elementor.js', ['elementor-editor', 'jquery'], $this->version, true);
-    wp_localize_script($this->prefix . '_elementor', 'reacg_gutenberg', array(
-      'title' => $this->nicename,
-      'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
-      'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
-      'create_button' => __("Create new gallery", "regallery"),
-      'plugin_url' => $this->plugin_url,
-      'plugin_version' => $this->version,
-      'icon' => $this->plugin_url . '/assets/images/icon.svg',
-      'data' => REACGLibrary::get_shortcodes($this, TRUE),
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
-    ));
-    $gallery_ids = REACGLibrary::get_galleries();
-    $data = [];
-    foreach ( $gallery_ids as $galleryId ) {
-      $data[$galleryId] = REACGLibrary::get_data($galleryId);
-    }
-    wp_localize_script(REACG_PREFIX . '_elementor', 'reacg_data', $data);
+    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/styles/elementor.css', [$this->prefix . '_admin'], $this->version);
+    wp_enqueue_script($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/scripts/elementor.js', ['elementor-editor', $this->prefix . '_admin'], $this->version, true);
 
-    wp_enqueue_script($this->prefix . '_admin');
-    wp_enqueue_style($this->prefix . '_admin');
     REACGLibrary::enqueue_scripts();
   }
 

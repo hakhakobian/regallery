@@ -46,55 +46,43 @@ class REACG_Elementor extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'reacg_general',
       [
-        'label' => __('Basic', 'regallery'),
+        'label' => __('Settings', 'regallery'),
       ]
     );
-
-    $edit_link = add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php'));
 
     $this->add_control(
       'setup_wizard_html',
       [
         'type' => \Elementor\Controls_Manager::RAW_HTML,
-        'raw' => '
-<div class="reacg-spinner__wrapper reacg-hidden"><span class="spinner is-active"></span></div>
-<div class="reacg-setup-wizard">
+        'raw' => '<div class="reacg-spinner__wrapper reacg-hidden"><span class="spinner is-active"></span></div>
+<div class="reacg-setup-wizard reacg-hidden">
   <img width="50" height="50" src="' . esc_url(REACG_PLUGIN_URL . '/assets/images/icon.svg') . '" />
   <p>' . esc_html__("Create new gallery or select the existing one.", "regallery") . '</p>
   <div class="reacg-setup-controls">
     <button class="reacg-create-gallery">' . esc_html__("Create new gallery", "regallery") . '</button>
   </div>
 </div>',
-        'content_classes' => 'reacg-elementor-options',
       ]
     );
+    $galleries = REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE);
     $this->add_control(
       'post_id',
       [
         'label_block' => TRUE,
         'show_label' => FALSE,
-        /* translators: 1: opening anchor tag, 2: closing anchor tag */
-        'description' => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a target="_blank" href="' . $edit_link . '">', '</a>'),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 0,
-        'options' => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
-        'content_classes' => 'reacg-galleries-list',
+        'options' => $galleries,
+        'content_classes' => (count($galleries) > 1 ? '' : 'reacg-hidden ') . 'reacg-elementor-options',
       ]
     );
     $this->add_control(
-      'gallery_images_html',
+      'gallery_options_html',
       [
         'type' => \Elementor\Controls_Manager::RAW_HTML,
-        'raw' => '<div id="reacg-gallery-images"></div>',
-        'content_classes' => 'reacg-elementor-options',
-      ]
-    );
-    $this->add_control(
-      'settings_html',
-      [
-        'type' => \Elementor\Controls_Manager::RAW_HTML,
-        'raw' => '<div id="reacg_settings" class="reacg-wrapper"></div>',
-        'content_classes' => 'reacg-elementor-options',
+        'raw' => '<div class="reacg-spinner__wrapper reacg-hidden"><span class="spinner is-active"></span></div>
+<div id="reacg-gallery-images" class="reacg-elementor-options"></div>
+<div id="reacg_settings" class="reacg-elementor-options reacg-wrapper"></div>',
       ]
     );
     $this->add_control(

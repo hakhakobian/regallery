@@ -1,48 +1,49 @@
 const all_images_id = -1;
-const reacg_list_element = ".elementor-control-post_id";
-function images_cont(baseCont, shortcode_id, widget_id, first_load, selectGallery) {
-  fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
+function images_cont(baseCont, shortcode_id, widget_id) {
+  fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
     .then(response => response.json())
     .then(data => {
-      const container = document.querySelector("#reacg-gallery-images");
-      if (container && (!first_load || !container.innerHTML)) {
+      const container = baseCont.find("#reacg-gallery-images");
+      if (container) {
         if (shortcode_id != all_images_id) {
-          container.classList.remove("reacg-hidden");
-          container.innerHTML = data;
+          container.removeClass("reacg-hidden");
+          container.html(data);
           /* Make the image items sortable.*/
           reacg_make_items_sortable(container);
         }
         else {
-          container.classList.add("reacg-hidden");
-          container.innerHTML = "";
-        }
-        if (!selectGallery) {
-          document.querySelector(reacg_list_element).classList.add("reacg-hidden");
+          container.addClass("reacg-hidden");
+          container.html('');
         }
 
         reacg_reload_gallery(widget_id, {gallery_id: shortcode_id});
       }
-      baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
+      baseCont.find(".reacg-spinner__wrapper").addClass("reacg-hidden");
+      baseCont.find(".reacg-elementor-options").removeClass("reacg-hidden");
     })
     .catch(error => console.error("Error fetching data:", error));
 }
 
 function showPreview(shortcode_id, widget_id = null) {
-  const baseCont = document.querySelector("#elementor-controls");
+  const baseCont = jQuery("#elementor-controls");
   if (baseCont) {
-    baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
+    baseCont.find(".reacg-elementor-options").addClass("reacg-hidden");
     if (shortcode_id === 0) {
-      fetch(reacg_gutenberg.ajax_url + '&action=reacg_save_gallery')
+      baseCont.find(".elementor-control-setup_wizard_html .reacg-spinner__wrapper").removeClass("reacg-hidden");
+      baseCont.find(".reacg-setup-wizard").addClass("reacg-hidden");
+      baseCont.find(".elementor-control-post_id").addClass("reacg-hidden");
+
+      fetch(reacg.ajax_url + '&action=reacg_save_gallery')
         .then(response => response.json())
         .then(data => {
           shortcode_id = data;
-          baseCont.querySelector(".reacg-setup-wizard").classList.add("reacg-hidden");
-          images_cont(baseCont, shortcode_id, widget_id, false, false);
+          images_cont(baseCont, shortcode_id, widget_id);
         })
         .catch(error => console.error("Error fetching data:", error));
     }
     else {
-      images_cont(baseCont, shortcode_id, widget_id, false, true);
+      baseCont.find(".elementor-control-gallery_options_html .reacg-spinner__wrapper").removeClass("reacg-hidden");
+      images_cont(baseCont, shortcode_id, widget_id);
     }
   }
 }
@@ -59,11 +60,11 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
   const gallery = innerDoc.getElementById("reacg-root" + id);
   if ( gallery ) {
     gallery.setAttribute('data-options-section', initial ? 0 : 1);
-    const fake_container = document.querySelector(".reacg-fake-container");
-    if (fake_container) {
-      fake_container.setAttribute('data-gallery-id', data.gallery_id);
-    }
     if ( data.gallery_id ) {
+      const fake_container = document.querySelector(".reacg-fake-container");
+      if (fake_container) {
+        fake_container.setAttribute('data-gallery-id', data.gallery_id);
+      }
       gallery.setAttribute('data-gallery-id', data.gallery_id);
     }
   }
@@ -86,30 +87,37 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
     if (widgetName !== 'reacg-elementor') {
       return;
     }
+
     const widgetId = editor.model.get('id');
 
-    if (typeof reacg_reload_gallery === 'function') {
-      reacg_reload_gallery(widgetId);
-    }
+    reacg_reload_gallery(widgetId);
+    const settingsModel = editor.model.get('settings');
+
+    if (!settingsModel) return;
+    const shortcode_id = settingsModel.get('post_id');
 
     waitForControl('.reacg-create-gallery', function (btn) {
       btn.addEventListener('click', function () {
         window.showPreview(0, widgetId);
       });
+
+      if ( shortcode_id == 0 ) {
+        const baseCont = jQuery("#elementor-controls");
+        if (baseCont) {
+          baseCont.find(".reacg-setup-wizard").removeClass("reacg-hidden");
+          baseCont.find(".elementor-control-gallery_options_html .reacg-elementor-options").addClass("reacg-hidden");
+        }
+      }
     });
-    //waitForRawHtmlChange('#reacg-gallery-images', function (el, mutations) {
-    //  console.log('Settings RAW_HTML changed');
-    //  reacg_reload_gallery(widgetId);
-    //});
-
-    const settingsModel = editor.model.get('settings');
-
-    if (!settingsModel) return;
+    waitForControl('#reacg-gallery-images', function (btn) {
+      if ( shortcode_id != 0 ) {
+        showPreview(shortcode_id, widgetId);
+      }
+    });
 
     // Listen to galleries list change.
     settingsModel.on('change:post_id', function (settings) {
-      const shortcode_id = settings.get('post_id');
-      showPreview(shortcode_id, widgetId);
+      showPreview(settings.get('post_id'), widgetId);
     });
   });
   function waitForControl(selector, callback) {
@@ -124,27 +132,6 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-    });
-  }
-  function waitForRawHtmlChange(selector, callback) {
-    const target = document.querySelector(selector);
-
-    if (!target) {
-      // Wait until it exists first
-      waitForControl(selector, () => {
-        waitForRawHtmlChange(selector, callback);
-      });
-      return;
-    }
-
-    const observer = new MutationObserver((mutations) => {
-      callback(target, mutations);
-    });
-
-    observer.observe(target, {
-      childList: true,
-      subtree: true,
-      characterData: true,
     });
   }
 

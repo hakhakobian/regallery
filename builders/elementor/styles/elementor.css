@@ -1,3 +1,69 @@
 .reacg-elementor-icon:before {
   content: url("../../../assets/images/icon.svg");
 }
+
+.reacg-setup-wizard {
+  text-align: center;
+  padding: 10px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  img {
+    border-radius: 15px;
+  }
+  .reacg-setup-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    .reacg-create-gallery,
+    .reacg-galleries-list {
+      border: 1px solid #8c8f94;
+      font-weight: revert;
+      width: 230px;
+      font-size: 20px;
+      line-height: 2;
+      color: #2c3338;
+      box-shadow: none;
+      border-radius: 3px;
+      min-height: 30px;
+      -webkit-appearance: none;
+      background-color: #fff;
+      background-size: 16px 16px;
+      cursor: pointer;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+.reacg-spinner__wrapper {
+  width: calc(100% - 40px);
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+#elementor-controls {
+  .reacg_items {
+    max-height: unset;
+  }
+  .reacg_item {
+    width: 90px;
+    height: 90px;
+  }
+  .reacg-cover {
+    width: 70px;
+    height: 70px;
+  }
+  .reacg-cover.dashicons:before,
+  .reacg-cover.reacg-dynamic.dashicons:after {
+    font-size: 35px;
+  }
+  .reacg_item_new .reacg_item_image {
+    background-size: 80px;
+  }
+}
