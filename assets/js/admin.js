@@ -1,8 +1,8 @@
 jQuery(document).ready(function () {
   reacg_track_unsaved_changes();
 
-  const max_edit_count = 7;
-  const max_minutes_spent = 10;
+  const max_edit_count = 3;
+  const max_minutes_spent = 2;
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
       if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
