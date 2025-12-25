@@ -1609,7 +1609,7 @@ class REACG_Gallery {
     }
   }
 
-  public function get_custom_templates(WP_REST_Request $request = null) {
+  public function get_custom_templates( WP_REST_Request $request ) {
     if ( !is_null($request) ) {
       $posts = get_posts(array(
                            'posts_per_page' => -1,
