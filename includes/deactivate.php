@@ -62,7 +62,7 @@ class REACG_Deactivate {
         </div>
         <div class="reacg-deactivate-popup-footer">
           <div class="reacg-email-wrapper">
-            <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email address", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
+            <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
           </div>
           <div class="reacg-agreement-wrapper">
             <label>
@@ -71,7 +71,7 @@ class REACG_Deactivate {
             </label>
           </div>
           <div class="reacg-buttons-wrapper">
-            <a class="button button-secondary reacg-submit">
+            <a class="button button-primary reacg-submit" disabled="disabled">
               <?php esc_html_e("Submit and Deactivate", 'regallery'); ?>
             </a>
             <span class="spinner"></span>

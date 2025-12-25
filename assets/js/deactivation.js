@@ -15,7 +15,6 @@ jQuery(document).ready(function () {
       return false;
     }
     jQuery(".spinner").addClass("is-active");
-    jQuery(this).addClass("button-primary");
     let reason = "";
     if ( jQuery(".reacg-reasonType:checked").val() === "other"
       && jQuery(".reacg-reason").val() !== "" ) {
@@ -47,10 +46,10 @@ jQuery(document).ready(function () {
     if ( jQuery(".reacg-agreement").prop("checked") &&
       jQuery(".reacg-reasonType:checked").length &&
       jQuery("input[name='reacg-email']").val() !== "" ) {
-      jQuery(".reacg-submit").addClass('button-primary');
+      jQuery(".reacg-submit").removeAttr('disabled');
     }
     else {
-      jQuery(".reacg-submit").removeClass('button-primary');
+      jQuery(".reacg-submit").attr('disabled', 'disabled');
     }
   });
   jQuery(document).on("click", ".reacg-deactivate-popup-close", function () {
