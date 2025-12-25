@@ -10,7 +10,8 @@ jQuery(document).ready(function () {
   });
   jQuery(document).on("click", ".reacg-submit", function (e){
     if ( !jQuery(".reacg-agreement").prop("checked") ||
-      !jQuery(".reacg-reasonType:checked").length ) {
+      !jQuery(".reacg-reasonType:checked").length ||
+      jQuery("input[name='reacg-email']").val() === "" ) {
       return false;
     }
     jQuery(".spinner").addClass("is-active");
@@ -42,8 +43,10 @@ jQuery(document).ready(function () {
 
     return false;
   });
-  jQuery(document).on("change", ".reacg-reasonType, .reacg-agreement", function () {
-    if ( jQuery(".reacg-agreement").prop("checked") && jQuery(".reacg-reasonType:checked").length ) {
+  jQuery(document).on("change", ".reacg-reasonType, .reacg-agreement, input[name='reacg-email']", function () {
+    if ( jQuery(".reacg-agreement").prop("checked") &&
+      jQuery(".reacg-reasonType:checked").length &&
+      jQuery("input[name='reacg-email']").val() !== "" ) {
       jQuery(".reacg-submit").addClass('button-primary');
     }
     else {
