@@ -679,7 +679,7 @@ class REACG_Options {
     if ( $saved === TRUE || $old_options === $new_options ) {
       /* Update the options timestamp on options save to prevent data from being read from the cache.*/
       update_post_meta($gallery_id, 'options_timestamp', time());
-      return $this->get(NULL, $gallery_id);
+      return $this->get($request, $gallery_id);
     }
     else {
       return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'regallery' ), array( 'status' => 400 ) ), 400);
@@ -742,7 +742,7 @@ class REACG_Options {
   }
 
   /**
-   * If an option is missing add it's default value.
+   * If an option is missing add its default value.
    *
    * @param $default_options
    * @param $options
