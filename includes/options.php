@@ -570,11 +570,11 @@ class REACG_Options {
   /**
    * To check the method.
    *
-   * @param WP_REST_Request|NULL $request
+   * @param WP_REST_Request $request
    *
    * @return void
    */
-  public function options(WP_REST_Request $request = null) {
+  public function options(WP_REST_Request $request) {
     if ( !is_null($request) ) {
       switch ( $request->get_method() ) {
         case "GET": {
@@ -726,12 +726,12 @@ class REACG_Options {
   /**
    * Get options rout.
    *
-   * @param WP_REST_Request|NULL $request
+   * @param WP_REST_Request $request
    * @param int                  $gallery_id
    *
    * @return WP_REST_Response
    */
-  private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
+  private function get( WP_REST_Request $request, int $gallery_id = 0 ) {
     if ( $gallery_id === 0 ) {
       $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
     }
