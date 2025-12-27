@@ -48,6 +48,9 @@
 }
 
 #elementor-controls {
+  .reacg-gallery-images {
+    padding-bottom: 15px;
+  }
   .reacg_items {
     max-height: unset;
   }
@@ -89,6 +92,14 @@
     border-color: #135e96;
     color: #fff;
   }
+  /*.reacg-section__body,*/
+  /*.reacg-section__header,*/
+  /*input, select, textarea, fieldset {*/
+  /*  background: none;*/
+  /*  background-color: var(--e-a-bg-default);*/
+  /*  border-color: #3f444b;*/
+  /*  color: var(--e-a-color-txt);*/
+  /*}*/
 }
 
 .reacg-section__body {
