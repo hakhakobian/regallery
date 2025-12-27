@@ -570,11 +570,11 @@ class REACG_Options {
   /**
    * To check the method.
    *
-   * @param WP_REST_Request|NULL $request
+   * @param WP_REST_Request $request
    *
    * @return void
    */
-  public function options(WP_REST_Request $request = null) {
+  public function options(WP_REST_Request $request) {
     if ( !is_null($request) ) {
       switch ( $request->get_method() ) {
         case "GET": {
@@ -679,7 +679,7 @@ class REACG_Options {
     if ( $saved === TRUE || $old_options === $new_options ) {
       /* Update the options timestamp on options save to prevent data from being read from the cache.*/
       update_post_meta($gallery_id, 'options_timestamp', time());
-      return $this->get(NULL, $gallery_id);
+      return $this->get($request, $gallery_id);
     }
     else {
       return wp_send_json(new WP_Error( 'nothing_saved', __( 'Nothing saved.', 'regallery' ), array( 'status' => 400 ) ), 400);
@@ -726,12 +726,12 @@ class REACG_Options {
   /**
    * Get options rout.
    *
-   * @param WP_REST_Request|NULL $request
+   * @param WP_REST_Request $request
    * @param int                  $gallery_id
    *
    * @return WP_REST_Response
    */
-  private function get( WP_REST_Request $request = null, int $gallery_id = 0 ) {
+  private function get( WP_REST_Request $request, int $gallery_id = 0 ) {
     if ( $gallery_id === 0 ) {
       $gallery_id = REACGLibrary::get_gallery_id($request, 'gallery_id');
     }
@@ -742,7 +742,7 @@ class REACG_Options {
   }
 
   /**
-   * If an option is missing add it's default value.
+   * If an option is missing add its default value.
    *
    * @param $default_options
    * @param $options

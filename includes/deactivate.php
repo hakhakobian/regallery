@@ -23,7 +23,7 @@ class REACG_Deactivate {
       "hard_to" => __("It is hard to use", "regallery"),
       "no_feature" => __("I didn't find the features I needed", "regallery"),
       "temporary" => __("It's a temporary deactivation", "regallery"),
-      "other" => __("Other", "regallery"),
+      "other" => __("I'm open to a quick call to fix this together", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
@@ -61,15 +61,17 @@ class REACG_Deactivate {
           </div>
         </div>
         <div class="reacg-deactivate-popup-footer">
+          <div class="reacg-email-wrapper">
+            <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
+          </div>
           <div class="reacg-agreement-wrapper">
             <label>
-              <input type="hidden" name="reacg-email" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
               <input type="checkbox" class="reacg-agreement" />
               <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'regallery'); ?>
             </label>
           </div>
           <div class="reacg-buttons-wrapper">
-            <a class="button button-secondary reacg-submit">
+            <a class="button button-primary reacg-submit" disabled="disabled">
               <?php esc_html_e("Submit and Deactivate", 'regallery'); ?>
             </a>
             <span class="spinner"></span>

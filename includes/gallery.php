@@ -1609,12 +1609,12 @@ class REACG_Gallery {
     }
   }
 
-  public function get_custom_templates(WP_REST_Request $request = null) {
+  public function get_custom_templates( WP_REST_Request $request ) {
     if ( !is_null($request) ) {
       $posts = get_posts(array(
                            'posts_per_page' => -1,
-                           'post_type' => 'reacg',
-                           'post_status' => 'publish',
+                           'post_type' => REACG_CUSTOM_POST_TYPE,
+                           'post_status' => [ 'publish', 'private', 'draft', 'pending' ],
                          ));
       $data = [];
       foreach ( $posts as $key => $post ) {
