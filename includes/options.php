@@ -182,6 +182,7 @@ class REACG_Options {
       'backgroundColor' => '#FFFFFF', #string;
       'padding' => 0, #number;
       'shadow' => TRUE, #boolean
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
     ],
     'carousel' => [
       'width' => 600, #number
@@ -194,6 +195,7 @@ class REACG_Options {
       'scale' => 0.1, #float
       'imagesCount' => 3, #number
       'spaceBetween' => -20, #number
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
     ],
     'cards' => [
       'width' => 500, #number
@@ -203,6 +205,7 @@ class REACG_Options {
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
     ],
     'blog' => [
       'imageWidth' => 50, #number
