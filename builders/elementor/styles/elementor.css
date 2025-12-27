@@ -48,6 +48,13 @@
 }
 
 #elementor-controls {
+  .elementor-control-setup_wizard_html,
+  .elementor-control-post_id,
+  .elementor-control-post_id select,
+  .elementor-control-gallery_options_html{
+    background-color: #FFFFFF;
+    color: #515962;
+  }
   .reacg-gallery-images {
     padding-bottom: 15px;
   }
