@@ -66,4 +66,37 @@
   .reacg_item_new .reacg_item_image {
     background-size: 80px;
   }
+  .button-primary {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+  }
+  .button-secondary {
+    color: #2271b1;
+    border-color: #2271b1;
+    background: #f6f7f7;
+    vertical-align: top;
+  }
+  .button-secondary:hover {
+    background: #f0f0f1;
+    border-color: #0a4b78;
+    color: #0a4b78;
+  }
+  .button-primary:hover {
+    background: #135e96;
+    border-color: #135e96;
+    color: #fff;
+  }
+}
+
+.reacg-section__body {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+ul[class*="reacg-settings-"] {
+  padding-right: unset !important;
+  width: unset !important;
 }

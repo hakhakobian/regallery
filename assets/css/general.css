@@ -12,14 +12,18 @@
   content: "";
 }
 
-.editor-styles-wrapper .reacg-wrapper .reacg-settings input,
 .reacg-wrapper .reacg-settings input {
-  border: none;
-  line-height: 1;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
-  outline: none;
+  &,
+  &:active,
+  &:focus,
+  &:hover {
+    border: none;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    outline: none;
+  }
 }
 
 .editor-styles-wrapper .MuiSwitch-switchBase input[type=checkbox] {
