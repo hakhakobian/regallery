@@ -76,49 +76,41 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
 }
 
 (function ($) {
-  'use strict';
   // Fired when a widget is selected and its panel is opened.
   elementor.channels.editor.on('section:activated', function (sectionName, editor) {
-    if (!editor || !editor.model) {
-      return;
-    }
-
-    const widgetName = editor.model.get('widgetType');
-    if (widgetName !== 'reacg-elementor') {
-      return;
-    }
-
-    const widgetId = editor.model.get('id');
-
-    reacg_reload_gallery(widgetId);
-    const settingsModel = editor.model.get('settings');
-
-    if (!settingsModel) return;
-    const shortcode_id = settingsModel.get('post_id');
-
-    waitForControl('.reacg-create-gallery', function (btn) {
-      btn.addEventListener('click', function () {
-        window.showPreview(0, widgetId);
-      });
-
-      if ( shortcode_id == 0 ) {
-        const baseCont = jQuery("#elementor-controls");
-        if (baseCont) {
-          baseCont.find(".reacg-setup-wizard").removeClass("reacg-hidden");
-          baseCont.find(".elementor-control-gallery_options_html .reacg-elementor-options").addClass("reacg-hidden");
+      if (!editor || !editor.model) {
+        return;
+      }
+      const widgetName = editor.model.get('widgetType');
+      if (widgetName !== 'reacg-elementor') {
+        return;
+      }
+      const settingsModel = editor.model.get('settings');
+      if (!settingsModel) return;
+      const widgetId = editor.model.get('id');
+      reacg_reload_gallery(widgetId);
+      const shortcode_id = settingsModel.get('post_id');
+      waitForControl('.reacg-create-gallery', function (btn) {
+        btn.addEventListener('click', function () {
+          window.showPreview(0, widgetId);
+        });
+        if (shortcode_id == 0) {
+          const baseCont = jQuery("#elementor-controls");
+          if (baseCont) {
+            baseCont.find(".reacg-setup-wizard").removeClass("reacg-hidden");
+            baseCont.find(".elementor-control-gallery_options_html .reacg-elementor-options").addClass("reacg-hidden");
+          }
         }
-      }
-    });
-    waitForControl('#reacg-gallery-images', function (btn) {
-      if ( shortcode_id != 0 ) {
-        showPreview(shortcode_id, widgetId);
-      }
-    });
-
-    // Listen to galleries list change.
-    settingsModel.on('change:post_id', function (settings) {
-      showPreview(settings.get('post_id'), widgetId);
-    });
+      });
+      waitForControl('#reacg-gallery-images', function (btn) {
+        if (shortcode_id != 0) {
+          showPreview(shortcode_id, widgetId);
+        }
+      });
+      // Listen to galleries list change.
+      settingsModel.on('change:post_id', function (settings) {
+        showPreview(settings.get('post_id'), widgetId);
+      });
   });
   function waitForControl(selector, callback) {
     const observer = new MutationObserver(() => {
