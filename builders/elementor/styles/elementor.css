@@ -28,6 +28,9 @@ ul[class*="reacg-settings-"] {
     background: linear-gradient(to top, var(--e-a-bg-default), var(--e-a-border-color));
     box-shadow: 0px 14px 10px -10px var(--e-a-border-color);
   }
+  .reacg-section__container-inherit {
+    background: none;
+  }
   .Mui-selected svg path,
   .MuiSelect-outlined svg path,
   .MuiSvgIcon-root {
