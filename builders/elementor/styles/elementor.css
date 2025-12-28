@@ -1,18 +1,67 @@
 .reacg-elementor-icon:before {
   content: url("../../../assets/images/icon.svg");
 }
-
+ul[class*="reacg-settings-"] {
+  background-color: var(--e-a-bg-default);
+  color: var(--e-a-color-txt);
+}
+.MuiSvgIcon-root[class*="reacg-settings-"] {
+  fill: var(--e-a-color-txt);
+}
 #elementor-controls {
-  .elementor-control-setup_wizard_html,
-  .elementor-control-post_id,
-  .elementor-control-post_id select,
-  .elementor-control-gallery_options_html,
-  .elementor-control-preview_html {
-    background-color: #FFFFFF;
+
+  .reacg-section__body,
+  .reacg-section__header,
+  input, select, textarea,
+  .MuiPaper-outlined,
+  .MuiList-root,
+  .reacg-section__container-inherit,
+  .MuiInputBase-input,
+  .MuiPaper-root,
+  .MuiSlider-mark,
+  .reacg-create-gallery {
+    background-color: var(--e-a-bg-default);
+    border-color: var(--e-a-border-color);
+    color: var(--e-a-color-txt);
   }
-  .elementor-control-post_id select {
-    color: #515962;
+  .reacg-section__header {
+    background: linear-gradient(to top, var(--e-a-bg-default), var(--e-a-border-color));
+    box-shadow: 0px 14px 10px -10px var(--e-a-border-color);
   }
+  .Mui-selected svg path,
+  .MuiSelect-outlined svg path,
+  .MuiSvgIcon-root {
+    fill: var(--e-a-color-txt);
+  }
+  .type-panel-select__title,
+  .MuiTab-textColorPrimary[aria-selected="false"],
+  .MuiInputLabel-formControl,
+  .MuiTypography-root,
+  .MuiSlider-markLabel,
+  .MuiFormLabel-root,
+  .reacg-setup-wizard p {
+    color: var(--e-a-color-txt);
+  }
+  .reacg_item,
+  .MuiPaper-outlined,
+  .MuiDivider-root,
+  .MuiInput-underline:before,
+  .MuiOutlinedInput-notchedOutline {
+    border-color: var(--e-a-border-color);
+  }
+  .reacg-section__header {
+    box-shadow: none;
+  }
+  /*.elementor-control-setup_wizard_html,*/
+  /*.elementor-control-post_id,*/
+  /*.elementor-control-post_id select,*/
+  /*.elementor-control-gallery_options_html,*/
+  /*.elementor-control-preview_html {*/
+  /*  background-color: #FFFFFF;*/
+  /*}*/
+  /*.elementor-control-post_id select {*/
+  /*  color: #515962;*/
+  /*}*/
   .elementor-control-setup_wizard_html {
     padding-top: 15px;
   }
@@ -31,17 +80,16 @@
       flex-wrap: wrap;
       .reacg-create-gallery,
       .reacg-galleries-list {
-        border: 1px solid #8c8f94;
+        border-width: 1px;
+        border-style: solid;
         font-weight: revert;
         width: 230px;
         font-size: 20px;
         line-height: 2;
-        color: #2c3338;
         box-shadow: none;
         border-radius: 3px;
         min-height: 30px;
         -webkit-appearance: none;
-        background-color: #fff;
         background-size: 16px 16px;
         cursor: pointer;
         text-align: center;
