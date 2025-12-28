@@ -2,59 +2,65 @@
   content: url("../../../assets/images/icon.svg");
 }
 
-.reacg-setup-wizard {
-  text-align: center;
-  padding: 10px;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-  img {
-    border-radius: 15px;
-  }
-  .reacg-setup-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    .reacg-create-gallery,
-    .reacg-galleries-list {
-      border: 1px solid #8c8f94;
-      font-weight: revert;
-      width: 230px;
-      font-size: 20px;
-      line-height: 2;
-      color: #2c3338;
-      box-shadow: none;
-      border-radius: 3px;
-      min-height: 30px;
-      -webkit-appearance: none;
-      background-color: #fff;
-      background-size: 16px 16px;
-      cursor: pointer;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-  }
-}
-
-.reacg-spinner__wrapper {
-  width: calc(100% - 40px);
-  height: 100%;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-}
-
 #elementor-controls {
   .elementor-control-setup_wizard_html,
   .elementor-control-post_id,
   .elementor-control-post_id select,
-  .elementor-control-gallery_options_html{
+  .elementor-control-gallery_options_html,
+  .elementor-control-preview_html {
     background-color: #FFFFFF;
+  }
+  .elementor-control-post_id select {
     color: #515962;
   }
+  .elementor-control-setup_wizard_html {
+    padding-top: 15px;
+  }
+  .reacg-setup-wizard {
+    text-align: center;
+    padding: 10px;
+    color: #000;
+    img {
+      border-radius: 15px;
+    }
+    .reacg-setup-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      .reacg-create-gallery,
+      .reacg-galleries-list {
+        border: 1px solid #8c8f94;
+        font-weight: revert;
+        width: 230px;
+        font-size: 20px;
+        line-height: 2;
+        color: #2c3338;
+        box-shadow: none;
+        border-radius: 3px;
+        min-height: 30px;
+        -webkit-appearance: none;
+        background-color: #fff;
+        background-size: 16px 16px;
+        cursor: pointer;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  .reacg-spinner__wrapper {
+    width: calc(100% - 40px);
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
   .reacg-gallery-images {
     padding-bottom: 15px;
   }
@@ -62,8 +68,8 @@
     max-height: unset;
   }
   .reacg_item {
-    width: 90px;
-    height: 90px;
+    width: 82px;
+    height: 82px;
   }
   .reacg-cover {
     width: 70px;
@@ -74,7 +80,7 @@
     font-size: 35px;
   }
   .reacg_item_new .reacg_item_image {
-    background-size: 80px;
+    background-size: 74px;
   }
   .button-primary {
     background: #2271b1;
@@ -83,30 +89,26 @@
     text-decoration: none;
     text-shadow: none;
   }
-  .button-secondary {
-    color: #2271b1;
-    border-color: #2271b1;
-    background: #f6f7f7;
-    vertical-align: top;
+  .reacg-settings {
+    .button-secondary {
+      color: #2271B1;
+      border-color: #2271B1;
+      background: #F6F7F7;
+      vertical-align: top;
+    }
+
+    .button-secondary:hover {
+      background: #F0F0F1;
+      border-color: #0A4B78;
+      color: #0A4B78;
+    }
+
+    .button-primary:hover {
+      background: #135E96;
+      border-color: #135E96;
+      color: #FFF;
+    }
   }
-  .button-secondary:hover {
-    background: #f0f0f1;
-    border-color: #0a4b78;
-    color: #0a4b78;
-  }
-  .button-primary:hover {
-    background: #135e96;
-    border-color: #135e96;
-    color: #fff;
-  }
-  /*.reacg-section__body,*/
-  /*.reacg-section__header,*/
-  /*input, select, textarea, fieldset {*/
-  /*  background: none;*/
-  /*  background-color: var(--e-a-bg-default);*/
-  /*  border-color: #3f444b;*/
-  /*  color: var(--e-a-color-txt);*/
-  /*}*/
 }
 
 .reacg-section__body {
