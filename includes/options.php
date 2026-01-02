@@ -395,6 +395,7 @@ class REACG_Options {
       'invertTextColor',
       'enableWatermark',
       'enableSearch',
+      'enableWhiteLabel',
     ];
     $float = [
       'scale',
