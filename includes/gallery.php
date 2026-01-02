@@ -616,11 +616,30 @@ class REACG_Gallery {
       // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       $filter = !empty($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
       if ( $filter) {
-        $data = array_values(array_filter($data, function( $item ) use ( $filter ) {
-          return stripos($item['title'], $filter) !== FALSE
-            || stripos($item['description'], $filter) !== FALSE
-            || stripos($item['alt'], $filter) !== FALSE
-            || stripos($item['caption'], $filter) !== FALSE;
+        // Normalize input: lowercase and remove punctuation.
+        $normalized = preg_replace('/[^\p{L}\p{N}\s,]/u', '', strtolower($filter));
+
+        // Split by commas or spaces.
+        $keywords = preg_split('/[\s,]+/', $normalized, -1, PREG_SPLIT_NO_EMPTY);
+
+        $data = array_values(array_filter($data, function ($item) use ($keywords) {
+
+          // Combine searchable fields.
+          $haystack = strtolower(
+            (!empty($item['title']) ? $item['title'] : '') . ' ' .
+            (!empty($item['description']) ? $item['description'] : '') . ' ' .
+            (!empty($item['alt']) ? $item['alt'] : '') . ' ' .
+            (!empty($item['caption']) ? $item['caption'] : '')
+          );
+
+          // ANY keyword can match.
+          foreach ($keywords as $keyword) {
+            if (preg_match('/\b' . preg_quote($keyword, '/') . '\b/u', $haystack)) {
+              return true;
+            }
+          }
+
+          return false;
         }));
       }
 
