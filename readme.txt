@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.16
+Stable tag: 1.17.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.16: Fixed warnings connected with PHP v8.2. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.17: Added image hover effects for Card, Carousel, and Cube layouts. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.17 =
+= Updated: 03.01.2026 =
+* **Added:** Drag-and-drop support for the Carousel layout.
+* **Added:** Image hover effects for Card, Carousel, and Cube layouts.
+* **Improved:** Search now supports multiple keywords with whole-word matching.
+* **Fixed:** White labeling functionality.
+
 = 1.17.16 =
 = Updated: 26.12.2025 =
 * **Fixed:** Warnings connected with PHP v8.2.
