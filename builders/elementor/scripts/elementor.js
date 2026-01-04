@@ -1,5 +1,5 @@
 const all_images_id = -1;
-function images_cont(baseCont, shortcode_id, widget_id) {
+function images_cont(baseCont, shortcode_id, widget_id, load_only_settings = false) {
   fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
     .then(response => response.json())
     .then(data => {
@@ -16,7 +16,7 @@ function images_cont(baseCont, shortcode_id, widget_id) {
           container.html('');
         }
 
-        reacg_reload_gallery(widget_id, {gallery_id: shortcode_id});
+        reacg_reload_gallery(widget_id, shortcode_id, load_only_settings);
       }
       baseCont.find(".reacg-spinner__wrapper").addClass("reacg-hidden");
       baseCont.find(".reacg-elementor-options").removeClass("reacg-hidden");
@@ -24,7 +24,7 @@ function images_cont(baseCont, shortcode_id, widget_id) {
     .catch(error => console.error("Error fetching data:", error));
 }
 
-function showPreview(shortcode_id, widget_id = null) {
+function showPreview(shortcode_id, widget_id = null, load_only_settings = false) {
   const baseCont = jQuery("#elementor-controls");
   if (baseCont) {
     baseCont.find(".reacg-elementor-options").addClass("reacg-hidden");
@@ -37,38 +37,51 @@ function showPreview(shortcode_id, widget_id = null) {
         .then(response => response.json())
         .then(data => {
           shortcode_id = data;
-          images_cont(baseCont, shortcode_id, widget_id);
+          images_cont(baseCont, shortcode_id, widget_id, load_only_settings);
         })
         .catch(error => console.error("Error fetching data:", error));
     }
     else {
       baseCont.find(".elementor-control-gallery_options_html .reacg-spinner__wrapper").removeClass("reacg-hidden");
-      images_cont(baseCont, shortcode_id, widget_id);
+      images_cont(baseCont, shortcode_id, widget_id, load_only_settings);
     }
   }
 }
 
-function reacg_reload_gallery(id, data = {}, initial = false, ) {
-  let innerDoc;
+function reacg_reload_gallery(id, shortcode_id, load_only_settings = false, initial_load = false) {
+  let previewDocument;
+  let previewWindow;
   const iframe = document.getElementById('elementor-preview-iframe');
   if ( iframe ) {
-    innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    previewDocument = iframe.contentDocument || iframe.contentWindow.document;
+    previewWindow = iframe.contentWindow;
   }
   else {
-    innerDoc = document;
+    previewDocument = document;
+    previewWindow = window;
   }
-  const gallery = innerDoc.getElementById("reacg-root" + id);
+
+  const gallery = previewDocument.getElementById("reacg-root" + id);
   if ( gallery ) {
-    gallery.setAttribute('data-options-section', initial ? 0 : 1);
-    if ( data.gallery_id ) {
+    gallery.setAttribute('data-options-section', initial_load ? 0 : 1);
+    if ( shortcode_id ) {
       const fake_container = document.querySelector(".reacg-fake-container");
       if (fake_container) {
-        fake_container.setAttribute('data-gallery-id', data.gallery_id);
+        fake_container.setAttribute('data-gallery-id', shortcode_id);
       }
-      gallery.setAttribute('data-gallery-id', data.gallery_id);
+      gallery.setAttribute('data-gallery-id', shortcode_id);
     }
   }
-  const button = innerDoc.getElementById("reacg-loadApp");
+
+  if (load_only_settings) {
+    previewWindow.postMessage(
+      {type: "reacg-root" + id + "-show-controls", show: true},
+      "*"
+    );
+    return;
+  }
+
+  const button = previewDocument.getElementById("reacg-loadApp");
   if ( button ) {
     button.setAttribute('data-id', 'reacg-root' + id);
     button.click();
@@ -88,8 +101,8 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
       const settingsModel = editor.model.get('settings');
       if (!settingsModel) return;
       const widgetId = editor.model.get('id');
-      reacg_reload_gallery(widgetId);
       const shortcode_id = settingsModel.get('post_id');
+      reacg_reload_gallery(widgetId, shortcode_id);
       waitForControl('.reacg-create-gallery', function (btn) {
         btn.addEventListener('click', function () {
           window.showPreview(0, widgetId);
@@ -104,12 +117,12 @@ function reacg_reload_gallery(id, data = {}, initial = false, ) {
       });
       waitForControl('#reacg-gallery-images', function (btn) {
         if (shortcode_id != 0) {
-          showPreview(shortcode_id, widgetId);
+          showPreview(shortcode_id, widgetId, true);
         }
       });
       // Listen to galleries list change.
       settingsModel.on('change:post_id', function (settings) {
-        showPreview(settings.get('post_id'), widgetId);
+        showPreview(settings.get('post_id'), widgetId, true);
       });
   });
   function waitForControl(selector, callback) {

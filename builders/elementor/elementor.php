@@ -112,7 +112,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
 
     if ( is_admin() ) {
       echo '<script type="text/javascript">';
-      echo 'parent.reacg_reload_gallery("' . esc_js($widget_id) . '", {gallery_id: ' . esc_js($post_id) . '}, true);';
+      echo 'parent.reacg_reload_gallery("' . esc_js($widget_id) . '", "' . esc_js($post_id) . '", false, true);';
       echo '</script>';
     }
   }
