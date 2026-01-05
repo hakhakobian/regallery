@@ -15,9 +15,9 @@ class REACG_Form {
 
   public function content() {
     $reasons = [
-      __("Learn about Pro features", "regallery"),
-      __("Technical question", "regallery"),
-      __("Plugin demo", "regallery"),
+      __("Explore Re Gallery Pro with an Expert", "regallery"),
+      __("Technical Question", "regallery"),
+      __("Plugin Demo", "regallery"),
       "other" => __("I have an issue", "regallery"),
     ];
     $current_user = wp_get_current_user();
@@ -26,7 +26,7 @@ class REACG_Form {
     <div class="reacg-form-popup-overlay" style="display: none;">
       <div class="reacg-form-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
         <div class="reacg-form-popup-header">
-          <?php esc_html_e("Book a Call", 'regallery'); ?>
+          <?php esc_html_e("Talk to a Gallery Expert", 'regallery'); ?>
           <span class="reacg-form-popup-close dashicons dashicons-no"></span>
         </div>
         <div class="reacg-form-popup-body">
@@ -61,12 +61,15 @@ class REACG_Form {
           <div class="reacg-agreement-wrapper">
             <label>
               <input type="checkbox" class="reacg-agreement" />
-              <?php esc_html_e("By submitting this form your email and website URL will be collected!", 'regallery'); ?>
+              <?php
+              /* translators: 1: opening anchor tag, 2: closing anchor tag */
+              echo sprintf(esc_html__('I agree to the %1$sprivacy policy%2$s and allow Re Gallery to contact me regarding this request.', 'regallery'), '<a target="_blank" href="https://regallery.team/core/privacy-policy/">', '</a>')
+              ?>
             </label>
           </div>
           <div class="reacg-buttons-wrapper">
             <a class="button button-primary reacg-submit" disabled="disabled">
-              <?php esc_html_e("Book a Call", 'regallery'); ?>
+              <?php esc_html_e("Schedule My Demo", 'regallery'); ?>
             </a>
             <span class="spinner"></span>
             <a class="button reacg-skip">

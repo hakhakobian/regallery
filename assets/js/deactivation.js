@@ -1,4 +1,8 @@
 jQuery(document).ready(function () {
+  function reacgIsValidEmail(email) {
+    // Simple email regex
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
   if (!JSON.parse(localStorage.getItem("reacg-pro"))) {
     jQuery(".reacg-upgrade").removeClass("reacg-hidden");
   }
@@ -9,9 +13,11 @@ jQuery(document).ready(function () {
     return false;
   });
   jQuery(document).on("click", ".reacg-deactivate-popup .reacg-submit", function (e){
-    if ( !jQuery(".reacg-deactivate-popup .reacg-agreement").prop("checked") ||
-      !jQuery(".reacg-deactivate-popup .reacg-reasonType:checked").length ||
-      jQuery(".reacg-deactivate-popup input[name='reacg-email']").val() === "" ) {
+    const email = jQuery(".reacg-deactivate-popup input[name='reacg-email']").val();
+    const agreementChecked = jQuery(".reacg-deactivate-popup .reacg-agreement").prop("checked");
+    const reasonChecked = jQuery(".reacg-deactivate-popup .reacg-reasonType:checked").length;
+
+    if (!agreementChecked || !reasonChecked || email === "" || !reacgIsValidEmail(email)) {
       return false;
     }
     jQuery(".reacg-deactivate-popup .spinner").addClass("is-active");
@@ -28,9 +34,9 @@ jQuery(document).ready(function () {
       url: "https://regallery.team/core/wp-json/reacgcore/v2/deactivate",
       contentType: "application/json",
       data: JSON.stringify({
-        "reason": reason,
-        "email": jQuery(".reacg-deactivate-popup input[name='reacg-email']").val(),
-        "version": jQuery(".reacg-deactivate-popup").data("version"),
+        reason: reason,
+        email: email,
+        version: jQuery(".reacg-deactivate-popup").data("version"),
       }),
       complete: function (data) {
         jQuery(".reacg-deactivate-popup .spinner").removeClass("is-active");
@@ -43,9 +49,11 @@ jQuery(document).ready(function () {
     return false;
   });
   jQuery(document).on("change", ".reacg-deactivate-popup .reacg-reasonType, .reacg-deactivate-popup .reacg-agreement, .reacg-deactivate-popup input[name='reacg-email']", function () {
-    if ( jQuery(".reacg-deactivate-popup .reacg-agreement").prop("checked") &&
-      jQuery(".reacg-deactivate-popup .reacg-reasonType:checked").length &&
-      jQuery(".reacg-deactivate-popup input[name='reacg-email']").val() !== "" ) {
+    const email = jQuery(".reacg-deactivate-popup input[name='reacg-email']").val();
+    const agreementChecked = jQuery(".reacg-deactivate-popup .reacg-agreement").prop("checked");
+    const reasonChecked = jQuery(".reacg-deactivate-popup .reacg-reasonType:checked").length;
+
+    if (agreementChecked && reasonChecked && email !== "" && reacgIsValidEmail(email)) {
       jQuery(".reacg-deactivate-popup .reacg-submit").removeAttr('disabled');
     }
     else {
