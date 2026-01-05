@@ -93,6 +93,7 @@ final class REACG {
     add_action('init', array($this, 'post_type_gallery'), 9);
     add_action('init', array($this, 'shortcode'));
     add_action('init', array($this, 'deactivation'));
+    add_action('init', array($this, 'form'));
     add_action('init', array($this, 'demo'));
 
     // Register scripts/styles.
@@ -241,6 +242,11 @@ final class REACG {
   public function deactivation() {
     require_once($this->plugin_dir . '/includes/deactivate.php');
     new REACG_Deactivate( $this );
+  }
+
+  public function form() {
+    require_once($this->plugin_dir . '/includes/form.php');
+    new REACG_Form( $this );
   }
 
   /**
