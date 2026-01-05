@@ -102,7 +102,7 @@ function reacg_reload_gallery(id, shortcode_id, load_only_settings = false, init
       if (!settingsModel) return;
       const widgetId = editor.model.get('id');
       const shortcode_id = settingsModel.get('post_id');
-      reacg_reload_gallery(widgetId, shortcode_id);
+      //reacg_reload_gallery(widgetId, shortcode_id);
       waitForControl('.reacg-create-gallery', function (btn) {
         btn.addEventListener('click', function () {
           window.showPreview(0, widgetId);
