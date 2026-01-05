@@ -87,7 +87,7 @@ Below are some of the most popular Re Gallery tutorials:
 [Add gallery with WPBakery Page Builder](https://www.youtube.com/watch?v=FClpKpREzPQ)
 [Add gallery with Beaver Builder](https://www.youtube.com/watch?v=A5U2ghLKYNg)
 [Add gallery with Bricks Builder](https://www.youtube.com/watch?v=aiYdYAn1D_8)
-[How to use Playground](https://www.youtube.com/watch?v=W_WZetI2eDw)
+[How to use Playground](https://www.youtube.com/watch?v=nPJHaukHyEE)
 [How to use Pre-Designed Templates](https://www.youtube.com/watch?v=FVJbXOmu2TA)
 [How to set image click action](https://www.youtube.com/watch?v=u_AAWKQuaTA)
 [How to create dynamic gallery from your latest posts](https://www.youtube.com/watch?v=IQETfwbUKKg)
