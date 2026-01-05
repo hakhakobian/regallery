@@ -130,6 +130,8 @@ jQuery(document).ready(function () {
 
   /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
+    wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
+    wp.Uploader.defaults.multipart_params.reacg = 'gallery';
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
@@ -153,7 +155,8 @@ jQuery(document).ready(function () {
         reacg_save_images(galleryItemsContainer);
         media_uploader.remove();
       });
-      media_uploader.on("close", function () {
+      media_uploader.on('close', function () {
+        delete wp.Uploader.defaults.multipart_params.reacg;
         media_uploader.remove();
       });
       media_uploader.open();
@@ -220,6 +223,7 @@ jQuery(document).ready(function () {
           }
         });
         media_uploader.on('close', function () {
+          delete wp.Uploader.defaults.multipart_params.reacg;
           media_uploader.remove();
         });
         media_uploader.open();
@@ -229,6 +233,8 @@ jQuery(document).ready(function () {
 
   /* Bind an edit thumbnail event to the every video item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit-thumbnail", function () {
+    wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
+    wp.Uploader.defaults.multipart_params.reacg = 'gallery';
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
@@ -240,7 +246,8 @@ jQuery(document).ready(function () {
       button: { text: reacg.update_thumbnail },
       multiple: false
     } );
-    media_uploader.on("close", function () {
+    media_uploader.on('close', function () {
+      delete wp.Uploader.defaults.multipart_params.reacg;
       media_uploader.remove();
     });
     media_uploader.open();
@@ -410,7 +417,8 @@ function reacg_check_image(images_ids) {
  */
 function reacg_media_uploader( e, that ) {
   e.preventDefault();
-
+  wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
+  wp.Uploader.defaults.multipart_params.reacg = 'gallery';
   const galleryItemsContainer = jQuery(that).closest(".reacg_items");
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
@@ -444,6 +452,7 @@ function reacg_media_uploader( e, that ) {
   });
 
   media_uploader.on("close", function () {
+    delete wp.Uploader.defaults.multipart_params.reacg;
     media_uploader.remove();
   });
 
