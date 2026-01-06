@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.17
+Stable tag: 1.17.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.17: Added image hover effects for Card, Carousel, and Cube layouts. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.18: Added ability to book a call with a gallery expert. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.18 =
+= Updated: 07.01.2026 =
+* **Added:** Ability to book a call with a gallery expert.
+* **Improved:** Prevent HEIC image uploads when the Imagick PHP extension is missing to avoid broken images.
+* **Fixed:** Carousel issue when the configured image count exceeds the actual number of images.
+
 = 1.17.17 =
 = Updated: 03.01.2026 =
 * **Added:** Drag-and-drop support for the Carousel layout.
