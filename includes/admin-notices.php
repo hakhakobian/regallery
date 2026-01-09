@@ -1,5 +1,5 @@
 <?php
-
+defined('ABSPATH') || die('Access Denied');
 class REACG_Admin_Notices {
   private $excluded_pages = [ 'plugin-install.php', 'theme-install.php', 'plugin-editor.php', 'theme-editor.php' ];
 
@@ -174,7 +174,7 @@ class REACG_Admin_Notices {
    */
   public function enqueue_scripts() {
     wp_enqueue_style(REACG_PREFIX . '_notice', REACG_PLUGIN_URL . '/assets/css/notice.css', [], REACG_VERSION);
-    wp_enqueue_script(REACG_PREFIX . '_notice', REACG_PLUGIN_URL . '/assets/js/notice.js', ['jquery'], REACG_VERSION);
+    wp_enqueue_script(REACG_PREFIX . '_notice', REACG_PLUGIN_URL . '/assets/js/notice.js', ['jquery'], REACG_VERSION, TRUE);
   }
 
 	public function __construct() {

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || die('Access Denied');
 
 if ( isset($settings->gallery_id) ) {
   ob_start();

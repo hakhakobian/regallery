@@ -84,6 +84,6 @@ class REACG_Form {
 
   public function enqueue_scripts() {
     wp_enqueue_style($this->obj->prefix . '_form', $this->obj->plugin_url . '/assets/css/form.css', [], $this->obj->version);
-    wp_enqueue_script($this->obj->prefix . '_form', $this->obj->plugin_url . '/assets/js/form.js', ['jquery'], $this->obj->version);
+    wp_enqueue_script($this->obj->prefix . '_form', $this->obj->plugin_url . '/assets/js/form.js', ['jquery'], $this->obj->version, TRUE);
   }
 }
