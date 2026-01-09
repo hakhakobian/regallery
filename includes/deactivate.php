@@ -87,7 +87,7 @@ class REACG_Deactivate {
 
   public function enqueue_scripts() {
     wp_enqueue_style($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/css/deactivation.css', [], $this->obj->version);
-    wp_enqueue_script($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/js/deactivation.js', ['jquery'], $this->obj->version);
+    wp_enqueue_script($this->obj->prefix . '_deactive', $this->obj->plugin_url . '/assets/js/deactivation.js', ['jquery'], $this->obj->version, TRUE);
   }
 
   /**

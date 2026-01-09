@@ -103,22 +103,22 @@ class REACG_Gallery {
    * @return mixed
    */
   public function handle_upload_prefilter( $file ) {
-    // Only for gallery uploads.
-    if ( empty( $_REQUEST['reacg'] ) || $_REQUEST['reacg'] !== 'gallery' ) {
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- wp_handle_upload_prefilter: Runs before WordPress validates nonce and is used by core Media Uploader.
+    if ( empty( $_REQUEST['reacg'] ) || sanitize_text_field(wp_unslash($_REQUEST['reacg'])) !== 'gallery' ) {
       return $file;
     }
 
+    // Only for gallery uploads.
     $ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
     // Check HEIC/HEIF.
-    if ( in_array( $ext, [ 'heic', 'heif' ], true ) ) {
+    if ( in_array( $ext, [ 'heic', 'heif' ], TRUE ) ) {
       // Imagick extension missing.
       if ( !extension_loaded( 'imagick' ) || !class_exists( 'Imagick' ) ) {
         $file['error'] = __('HEIC images cannot be uploaded because the Imagick PHP extension is not installed on this server. Please contact your hosting provider.', 'regallery');
         return $file;
       }
-
       //  HEIC not supported.
-      if ( ! in_array( 'HEIC', Imagick::queryFormats(), true ) ) {
+      if ( ! in_array( 'HEIC', Imagick::queryFormats(), TRUE ) ) {
         $file['error'] = __('HEIC images are not supported by the server’s ImageMagick configuration. Please contact your hosting provider.', 'regallery');
       }
     }
