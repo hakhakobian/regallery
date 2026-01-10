@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.18
+Stable tag: 1.17.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.18: Added ability to book a call with a gallery expert. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.19: Improved hardened request handling and permissions validation. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.19 =
+= Updated: 11.01.2026 =
+* **Improved:** Hardened request handling and permissions validation.
+* **Fixed:** Text position (Above/Below) not working when the Description source is set to a value other than “Description” in Slider and Lightbox.
+* **Fixed:** Unwanted spacing between images in Slider and Lightbox.
+
 = 1.17.18 =
 = Updated: 07.01.2026 =
 * **Added:** Ability to book a call with a gallery expert.
