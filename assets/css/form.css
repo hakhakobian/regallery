@@ -1,0 +1,95 @@
+.reacg-form-popup-overlay {
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  overflow: auto;
+}
+
+.reacg-form-popup {
+  background: #FFF;
+  max-width: 600px;
+  margin: auto;
+  box-sizing: border-box;
+  top: 20%;
+  position: absolute;
+  left: calc(50% - 300px);
+}
+
+@media screen and (max-width: 600px) {
+  .reacg-form-popup {
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+
+.reacg-form-popup>div {
+  padding: 18px 40px;
+  border-top: 1px solid #fbfbfb;
+}
+
+.reacg-form-popup-header {
+  font-size: 18px;
+  font-weight: 500;
+  background: #fbfbfb;
+  box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.1);
+}
+
+.reacg-reasonType-wrapper div,
+.reacg-reason-wrapper {
+  margin-top: 7px;
+}
+
+.reacg-form-popup-body textarea {
+  width: 100%;
+}
+
+.reacg-form-popup .reacg-form-popup-footer {
+  padding-top: 10px;
+  border-top: 1px solid #CCCCCC;
+}
+
+.reacg-agreement-wrapper,
+.reacg-buttons-wrapper {
+  padding-top: 10px;
+}
+
+.reacg-buttons-wrapper {
+  text-align: right;
+}
+
+.reacg-note-wrapper {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reacg-form-popup-close {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  cursor: pointer;
+}
+
+.reacg-form-popup label {
+  cursor: pointer;
+}
+
+.reacg-skip.button,
+.reacg-skip.button:hover,
+.reacg-skip.button:focus {
+  background: none;
+  border: none;
+}
+
+.reacg-submit,
+.reacg-form-popup .spinner {
+  float: left;
+}
+
+.reacg-hidden {
+  display: none !important;
+}

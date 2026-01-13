@@ -93,6 +93,37 @@ class REACG_Gallery {
         'permission_callback' => [$this, 'privileged_permission'],
       ) );
     } );
+
+    add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_upload_prefilter' ] );
+  }
+
+  /**
+   * @param $file
+   *
+   * @return mixed
+   */
+  public function handle_upload_prefilter( $file ) {
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- wp_handle_upload_prefilter: Runs before WordPress validates nonce and is used by core Media Uploader.
+    if ( empty( $_REQUEST['reacg'] ) || sanitize_text_field(wp_unslash($_REQUEST['reacg'])) !== 'gallery' ) {
+      return $file;
+    }
+
+    // Only for gallery uploads.
+    $ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+    // Check HEIC/HEIF.
+    if ( in_array( $ext, [ 'heic', 'heif' ], TRUE ) ) {
+      // Imagick extension missing.
+      if ( !extension_loaded( 'imagick' ) || !class_exists( 'Imagick' ) ) {
+        $file['error'] = __('HEIC images cannot be uploaded because the Imagick PHP extension is not installed on this server. Please contact your hosting provider.', 'regallery');
+        return $file;
+      }
+      //  HEIC not supported.
+      if ( ! in_array( 'HEIC', Imagick::queryFormats(), TRUE ) ) {
+        $file['error'] = __('HEIC images are not supported by the server’s ImageMagick configuration. Please contact your hosting provider.', 'regallery');
+      }
+    }
+
+    return $file;
   }
 
   public function generate_attachment_metadata($metadata, $attachment_id) {
@@ -199,6 +230,7 @@ class REACG_Gallery {
    * @return void
    */
   public function add_submenu() {
+    add_submenu_page('edit.php?post_type=reacg', __('Talk to a Gallery Expert', 'regallery'), __('Talk to a Gallery Expert', 'regallery'), 'manage_options', 'reacg-book-a-call');
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'regallery'), __('About Us', 'regallery'), 'manage_options', 'reacg-external-link');
     if ( !REACG_PLAYGROUND ) {
       add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
