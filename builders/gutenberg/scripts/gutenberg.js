@@ -90,7 +90,7 @@
       // Show settings for the selected gallery.
       const baseCont = document.getElementById("reacg-gutenberg" + props.clientId);
       if (baseCont) {
-        images_cont(baseCont, shortcode_id, props, true, true);
+        images_cont(baseCont, shortcode_id, props, true, true, true);
       }
     }
 
@@ -179,15 +179,24 @@
     }
   }
 
-  function reload_gallery(props) {
+  function reload_gallery(props, load_only_settings = false) {
+    if (load_only_settings) {
+      window.postMessage(
+        {type: "reacg-root" + props.clientId + "-show-controls", show: true},
+        "*"
+      );
+      return;
+    }
+
     const button = document.getElementById("reacg-loadApp");
     if (button) {
       button.setAttribute('data-id', 'reacg-root' + props.clientId);
       button.click();
     }
+
   }
 
-  function images_cont(baseCont, shortcode_id, props, first_load, selectGallery) {
+  function images_cont(baseCont, shortcode_id, props, first_load, selectGallery, load_only_settings = false) {
     fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
@@ -208,14 +217,14 @@
           }
 
           set_data(baseCont, shortcode_id, props);
-          reload_gallery(props);
+          reload_gallery(props, load_only_settings);
         }
         baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
       })
       .catch(error => console.error("Error fetching data:", error));
   }
 
-  function showPreview(shortcode_id, props) {
+  function showPreview(shortcode_id, props, load_only_settings = false) {
     const baseCont = document.querySelector("#reacg-gutenberg" + props.clientId);
     if (baseCont) {
       baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
@@ -229,12 +238,12 @@
               shortcode_id: shortcode_id,
             });
             baseCont.querySelector(".reacg-setup-controls").classList.add("reacg-hidden");
-            images_cont(baseCont, shortcode_id, props, false, false);
+            images_cont(baseCont, shortcode_id, props, false, false, load_only_settings);
           })
           .catch(error => console.error("Error fetching data:", error));
       }
       else {
-        images_cont(baseCont, shortcode_id, props, false, true);
+        images_cont(baseCont, shortcode_id, props, false, true, load_only_settings);
       }
     }
   }
