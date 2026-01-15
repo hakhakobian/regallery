@@ -12,6 +12,7 @@ class REACG_Gallery {
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_head', [ $this, 'modify_external_submenu_url']);
+    add_action('admin_footer', [ $this, 'opt_in' ]);
 
     // Add columns to the custom post list.
     add_filter('manage_' . REACG_CUSTOM_POST_TYPE . '_posts_columns' , [ $this, 'custom_columns' ]);
@@ -1684,5 +1685,60 @@ class REACG_Gallery {
     }
 
     return wp_send_json(new WP_Error( 'wrong_template', __( 'There is no such a template.', 'regallery' ), array( 'status' => 400 ) ), 400);
+  }
+
+  /**
+   * Show the opt-in popup to collect email.
+   *
+   * @return void
+   */
+  public function opt_in() {
+    // Do not show the popup in the playground mode.
+    if ( REACG_PLAYGROUND ) {
+      return;
+    }
+    $screen = get_current_screen();
+    // Show the popup only on the Re Gallery edit and list screens.
+    if ( $screen->id !== 'edit-reacg' && $screen->id !== 'reacg' ) {
+      return;
+    }
+    // If the popup was already shown, do not show it again.
+    if ( get_option('reacg_optin_shown', false) ) {
+      return;
+    }
+    $current_user = wp_get_current_user();
+    $email = $current_user->exists() ? $current_user->user_email : "";
+    ?>
+    <div id="reacg-optin-popup-overlay" class="reacg-form-popup-overlay reacg-optin-popup-overlay" style="display: none;">
+      <div class="reacg-popup">
+        <span class="reacg-popup-close dashicons dashicons-no"></span>
+        <div class="reacg-popup-body">
+          <div class="reacg-logo"></div>
+          <div class="reacg-popup-title">
+            <?php esc_html_e("Important updates & improvements", 'regallery'); ?>
+          </div>
+          <div class="reacg-popup-description">
+            <?php esc_html_e("Opt in to receive email notifications about security and feature updates, helpful tips, and occasional offers. Sharing basic WordPress environment info helps us improve compatibility and deliver a better gallery experience.", 'regallery'); ?>
+          </div>
+        </div>
+        <div class="reacg-popup-footer">
+          <div class="reacg-email-wrapper">
+            <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
+          </div>
+          <div class="reacg-buttons-wrapper">
+            <a class="button button-primary reacg-submit">
+              <?php esc_html_e("Allow & Continue", 'regallery'); ?>
+            </a>
+            <span class="spinner"></span>
+            <a class="button reacg-skip">
+              <?php esc_html_e("Skip", 'regallery'); ?>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php
+    // Mark that the popup was shown to avoid showing it again.
+    update_option('reacg_optin_shown', true);
   }
 }
