@@ -15,10 +15,10 @@ class REACG_Form {
 
   public function content() {
     $reasons = [
-      __("Explore Re Gallery Pro with an Expert", "regallery"),
-      __("Technical Question", "regallery"),
-      __("Plugin Demo", "regallery"),
-      "other" => __("I have an issue", "regallery"),
+      1 => __("Explore Re Gallery Pro with an Expert", "regallery"),
+      2 => __("Technical Question", "regallery"),
+      3 => __("Plugin Demo", "regallery"),
+      4 => __("I have an issue", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";

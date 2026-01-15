@@ -21,17 +21,19 @@ function reacg_bind_form_events(modal, submitAction, reasonExist = true, agreeme
     }
     modal.find(".spinner").addClass("is-active");
     let reason = "";
+    let reasonKey = 0;
     if ( reasonExist ) {
-      if (modal.find(".reacg-reasonType:checked").val() === "other"
+      if (modal.find(".reacg-reasonType:checked").val() == 4
         && modal.find(".reacg-reason").val() !== "") {
         reason = modal.find(".reacg-reason").val();
       }
       else {
         reason = modal.find(".reacg-reasonType:checked").attr("alt");
+        reasonKey = modal.find(".reacg-reasonType:checked").val();
       }
     }
 
-    submitAction(email, reason);
+    submitAction(email, reason, reasonKey);
 
     return false;
   });
@@ -60,7 +62,7 @@ function reacg_bind_form_events(modal, submitAction, reasonExist = true, agreeme
   }
 
   modal.find(".reacg-reasonType").on("click", function () {
-    if ( jQuery(this).val() === "other" ) {
+    if ( jQuery(this).val() == 4 ) {
       modal.find(".reacg-reason-wrapper").show();
     }
     else {
