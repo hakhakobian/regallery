@@ -28,13 +28,13 @@ class REACG_Deactivate {
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
     ?>
-    <div class="reacg-deactivate-popup-overlay" style="display: none;">
-      <div class="reacg-deactivate-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
-        <div class="reacg-deactivate-popup-header">
+    <div id="reacg-deactivate-popup-overlay" class="reacg-form-popup-overlay" style="display: none;">
+      <div class="reacg-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
+        <div class="reacg-popup-header">
           <?php esc_html_e("Quick feedback", 'regallery'); ?>
-          <span class="reacg-deactivate-popup-close dashicons dashicons-no"></span>
+          <span class="reacg-popup-close dashicons dashicons-no"></span>
         </div>
-        <div class="reacg-deactivate-popup-body">
+        <div class="reacg-popup-body">
           <div class="reacg-note-wrapper">
             <?php esc_html_e("We are sorry to see you go!", 'regallery'); ?>😔
             <?php esc_html_e("If you have a moment, please share your thoughts: it helps us improve and make things better for everyone.", 'regallery'); ?>
@@ -60,7 +60,7 @@ class REACG_Deactivate {
             </label>
           </div>
         </div>
-        <div class="reacg-deactivate-popup-footer">
+        <div class="reacg-popup-footer">
           <div class="reacg-email-wrapper">
             <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
           </div>

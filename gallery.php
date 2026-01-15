@@ -462,6 +462,9 @@ final class REACG {
       require_once REACG()->plugin_dir . "/includes/options.php";
       new REACG_Options(TRUE);
     }
+    else {
+      delete_option('reacg_optin_shown');
+    }
   }
 
   public function do_activation_redirect() {
