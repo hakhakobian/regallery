@@ -69,27 +69,46 @@
     font-size: 20px;
   }
 
+  .reacg-box__button-wrapper {
+    margin: 12px auto 0;
+    .spinner {
+      float: none;
+      margin-top: 5px;
+      margin-left: -20px;
+      margin-right: 0;
+    }
+  }
+  .reacg-box__button {
+    width: 100%;
+    max-width: 220px;
+    text-transform: uppercase;
+  }
   .reacg-box__button,
   .button.reacg-box__button:hover,
   .button.reacg-box__button:active,
   .button.reacg-box__button:focus {
-    margin: 12px auto 0;
-    display: block;
-    min-width: 220px;
-    text-transform: uppercase;
-    color: white;
     border: none;
     outline: none !important;
     box-shadow: none !important;
-    max-width: 300px;
   }
-  .reacg-box__button {
+  .reacg-box__button.reacg-box__upgrade-button {
     background: rgb(147 177 77);
+    color: white;
   }
-  .button.reacg-box__button:hover,
-  .button.reacg-box__button:active,
-  .button.reacg-box__button:focus {
+  .button.reacg-box__button.reacg-box__upgrade-button:hover,
+  .button.reacg-box__button.reacg-box__upgrade-button:active,
+  .button.reacg-box__button.reacg-box__upgrade-button:focus {
     background: rgb(135 162 71);
+    color: white;
+  }
+  .reacg-box__note {
+    text-align: left;
+    display: block;
+    margin: 0 !important;
+  }
+  a.reacg-box__note {
+    text-align: center;
+    margin-top: 5px !important;
   }
 }
 
@@ -100,6 +119,9 @@
   }
   .reacg-box__item .dashicons {
     color: #2271b1;
+  }
+  .reacg-box__button {
+    width: calc(100% - 40px);
   }
 }
 

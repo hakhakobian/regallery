@@ -1780,6 +1780,7 @@ class REACG_Gallery {
         'title' => esc_html__('Drag-and-Drop Simplicity', 'regallery'),
       ],
     ];
+    wp_enqueue_script($this->obj->prefix . '_widget_box');
     wp_enqueue_style($this->obj->prefix . '_widget_box');
     ?>
     <div class="reacg-widget-main-features reacg-box">
@@ -1800,6 +1801,12 @@ class REACG_Gallery {
           <?php
         }
         ?>
+      </div>
+      <div class="reacg-box__button-wrapper">
+        <span class="spinner"></span>
+        <a id="reacg-box__create-demo" class="button button-primary button-large reacg-box__button">
+          <?php esc_html_e('Create demo gallery', 'regallery'); ?>
+        </a>
       </div>
     </div>
     <?php
@@ -1850,9 +1857,11 @@ class REACG_Gallery {
         }
         ?>
       </div>
-      <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')); ?>" target="_blank" class="button button-primary button-large reacg-box__button">
-        <?php echo esc_html(REACG_BUY_NOW_TEXT); ?>
-      </a>
+      <div class="reacg-box__button-wrapper">
+        <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')); ?>" target="_blank" class="button button-primary button-large reacg-box__button reacg-box__upgrade-button">
+          <?php echo esc_html(REACG_BUY_NOW_TEXT); ?>
+        </a>
+      </div>
     </div>
     <?php
   }

@@ -312,6 +312,7 @@ final class REACG {
     $required_styles[] = $this->prefix . '_posts';
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
     wp_register_style($this->prefix . '_widget_box', $this->plugin_url . '/assets/css/widget_box.css', [], $this->version);
+    wp_register_script($this->prefix . '_widget_box', $this->plugin_url . '/assets/js/widget_box.js', ['jquery'], $this->version);
 
     wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3');
     wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version);
@@ -477,14 +478,13 @@ final class REACG {
       if ( !isset( $_GET['activate-multi'] ) ) {
         if ( REACG_PLAYGROUND ) {
           $demo = $this->demo(TRUE);
-          $galleries = $demo->import_data();
-          if ( count($galleries) === 1 ) {
-            // Open the created gallery only if there is only one gallery created, otherwise open the galleries list page.
-            wp_safe_redirect(admin_url('post.php?post=' . $galleries[0] . '&action=edit'));
+          $link = $demo->import_data();
+          if ( !empty($link) ) {
+            wp_safe_redirect($link);
             exit;
           }
         }
-        wp_safe_redirect( admin_url( 'edit.php?post_type=reacg' ) );
+        wp_safe_redirect( admin_url( 'edit.php?post_type=' . REACG_CUSTOM_POST_TYPE ) );
         exit;
       }
     }
