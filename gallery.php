@@ -311,6 +311,7 @@ final class REACG {
     wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [$this->prefix . '_select2'], $this->version);
     $required_styles[] = $this->prefix . '_posts';
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
+    wp_register_style($this->prefix . '_widget_box', $this->plugin_url . '/assets/css/widget_box.css', [], $this->version);
 
     wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3');
     wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version);
