@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: regallery\n"
-"POT-Creation-Date: 2025-11-24 01:20+0400\n"
-"PO-Revision-Date: 2025-12-16 16:26+0400\n"
+"POT-Creation-Date: 2026-01-16 17:18+0400\n"
+"PO-Revision-Date: 2026-01-16 17:18+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja_JP\n"
@@ -10,9 +10,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_x;esc_html_e\n"
+"X-Poedit-KeywordsList: __;_e;_x;esc_html_e;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: assets/js/wp-gallery.js\n"
 
@@ -20,585 +20,744 @@ msgstr ""
 msgid "number"
 msgstr ""
 
-#: builders/beaverbuilder/beaverbuilder.php:15 builders/bricks/bricks.php:24
-#: builders/divi/includes/REACGDiviModule.php:44
-#: builders/elementor/elementor.php:59 builders/wpbakery/wpbakery.php:30
+#: builders/beaverbuilder/beaverbuilder.php:7
+msgid "General"
+msgstr ""
+
+#: builders/beaverbuilder/beaverbuilder.php:13 builders/bricks/bricks.php:16
+#: builders/bricks/bricks.php:23 builders/wpbakery/wpbakery.php:27
+#: framework/REACGLibrary.php:178 framework/REACGLibrary.php:201
+msgid "Select gallery"
+msgstr ""
+
+#: builders/beaverbuilder/beaverbuilder.php:16 builders/bricks/bricks.php:25
+#: builders/divi/includes/REACGDiviModule.php:45
+#: builders/elementor/elementor.php:60 builders/wpbakery/wpbakery.php:31
 #, php-format
-msgid "Add/edit galleries %shere%s."
+msgid "Add/edit galleries %1$shere%2$s."
+msgstr ""
+
+#: builders/beaverbuilder/beaverbuilder.php:30
+msgid "Media"
+msgstr ""
+
+#: builders/bricks/bricks.php:31 builders/divi/includes/REACGDiviModule.php:48
+#: builders/elementor/elementor.php:69
+msgid "Enable options section"
+msgstr ""
+
+#: builders/bricks/bricks.php:34
+msgid "Visible only in editor mode."
+msgstr ""
+
+#: builders/divi/includes/REACGDiviModule.php:52
+#: builders/elementor/elementor.php:73
+msgid "No"
+msgstr ""
+
+#: builders/divi/includes/REACGDiviModule.php:53
+#: builders/elementor/elementor.php:72
+msgid "Yes"
+msgstr ""
+
+#: builders/divi/includes/REACGDiviModule.php:58
+#: builders/elementor/elementor.php:75
+msgid "The options will be visible only in editor mode."
 msgstr ""
 
 #: builders/elementor/elementor.php:49
 msgid "Basic"
 msgstr ""
 
-#: builders/elementor/elementor.php:68
-msgid "Enable options section"
-msgstr ""
-
-#: builders/elementor/elementor.php:71
-msgid "Yes"
-msgstr ""
-
-#: builders/elementor/elementor.php:72
-msgid "No"
-msgstr ""
-
-#: builders/elementor/elementor.php:74
-msgid "The options will be visible only in editor mode."
-msgstr ""
-
-#: builders/wpbakery/wpbakery.php:27 framework/REACGLibrary.php:172
-#: framework/REACGLibrary.php:195
-msgid "Select gallery"
-msgstr ""
-
-#: framework/REACGLibrary.php:179 framework/REACGLibrary.php:198
+#: framework/REACGLibrary.php:185 framework/REACGLibrary.php:204
 msgid "All Images"
 msgstr ""
 
-#: framework/REACGLibrary.php:187 framework/REACGLibrary.php:201
-#: includes/gallery.php:374 includes/gallery.php:1535 includes/posts.php:138
+#: framework/REACGLibrary.php:193 framework/REACGLibrary.php:207
+#: includes/gallery.php:459 includes/gallery.php:1675 includes/posts.php:178
 msgid "(no title)"
 msgstr ""
 
-#: framework/REACGLibrary.php:220
+#: framework/REACGLibrary.php:226
 msgid "Missing gallery ID."
 msgstr ""
 
-#: framework/REACGLibrary.php:225
+#: framework/REACGLibrary.php:231
 msgid "There is no such a gallery."
 msgstr ""
 
-#: gallery.php:137 gallery.php:139
+#: gallery.php:142 gallery.php:144
 msgid "Posts"
 msgstr ""
 
-#: gallery.php:138 gallery.php:140
+#: gallery.php:143 gallery.php:145
 msgid "Pages"
 msgstr ""
 
-#: gallery.php:144 gallery.php:145
+#: gallery.php:149 gallery.php:150
 msgid "WooCommerce Products"
 msgstr ""
 
-#: gallery.php:264
+#: gallery.php:154
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: gallery.php:288
 msgid "Load more"
 msgstr "もっと読み込む"
 
-#: gallery.php:265
+#: gallery.php:289 includes/posts.php:302
 msgid "Search"
 msgstr "検索"
 
-#: gallery.php:266
+#: gallery.php:290
 msgid "There is not data."
 msgstr "データがありません。"
 
-#: gallery.php:312
+#: gallery.php:320
 msgid "Insert"
 msgstr ""
 
-#: gallery.php:313
+#: gallery.php:321
 msgid "Update"
 msgstr ""
 
-#: gallery.php:314
+#: gallery.php:322
 msgid "Update video cover"
 msgstr ""
 
-#: gallery.php:315 includes/gallery.php:1469
+#: gallery.php:323 includes/gallery.php:1612
 msgid "Edit"
 msgstr ""
 
-#: gallery.php:316 includes/gallery.php:1468
+#: gallery.php:324 includes/gallery.php:1611
 msgid "Edit video cover"
 msgstr ""
 
-#: gallery.php:317
+#: gallery.php:325
 msgid "Choose images"
 msgstr ""
 
-#: gallery.php:318
+#: gallery.php:326
 msgid "Generate"
 msgstr ""
 
-#: gallery.php:319
+#: gallery.php:327
 msgid "Regenerate"
 msgstr ""
 
-#: gallery.php:320
+#: gallery.php:328
 msgid "Proceed"
 msgstr ""
 
-#: gallery.php:321
+#: gallery.php:329
 msgid "Title is required. Make sure it accurately describes the image."
 msgstr ""
 
-#: gallery.php:322
+#: gallery.php:330
 msgid "Additional Notes"
 msgstr ""
 
-#: gallery.php:323
+#: gallery.php:331
 msgid ""
 "You can add additional notes here to help generate a more accurate text."
 msgstr ""
 
-#: gallery.php:324
+#: gallery.php:332
 msgid "Generative AI Title"
 msgstr ""
 
-#: gallery.php:325
+#: gallery.php:333
 msgid "Generated Title"
 msgstr ""
 
-#: gallery.php:326
+#: gallery.php:334
 msgid "The title will be generated based on the image."
 msgstr ""
 
-#: gallery.php:327
+#: gallery.php:335
 msgid "Generative AI Caption"
 msgstr ""
 
-#: gallery.php:328
+#: gallery.php:336
 msgid "Generated Caption"
 msgstr ""
 
-#: gallery.php:329
+#: gallery.php:337
 msgid "The caption will be generated based on the image."
 msgstr ""
 
-#: gallery.php:330
+#: gallery.php:338
 msgid ""
 "The text will be generated based on the image title. Please ensure that the "
 "title is not empty and accurately describes the image."
 msgstr ""
 
-#: gallery.php:331
+#: gallery.php:339
 msgid "Generative AI Description"
 msgstr ""
 
-#: gallery.php:332
+#: gallery.php:340
 msgid "Generated Description"
 msgstr ""
 
-#: gallery.php:333
+#: gallery.php:341
 msgid "Generative AI Alt"
 msgstr ""
 
-#: gallery.php:334
+#: gallery.php:342
 msgid "Generated Alt"
 msgstr ""
 
-#: gallery.php:335
+#: gallery.php:343
 msgid ""
-"Use our built-in AI tools to instantly generate a Description text and Alt "
-"text - ideal for better SEO and accessibility."
+"Use our built-in AI tools to instantly generate a Title, Caption, "
+"Description, and Alt text. Ideal for better SEO and accessibility."
 msgstr ""
 
-#: gallery.php:336
+#: gallery.php:344
 msgid "Please enter license key."
 msgstr ""
 
-#: gallery.php:378
+#: gallery.php:389
 msgid "Display images with various visual effects in responsive gallery."
 msgstr ""
 
-#: includes/admin-notices.php:41
-#, php-format
-msgid "That’s awesome!%s"
+#: gallery.php:390
+msgid "Create new gallery or select the existing one."
+msgstr ""
+
+#: gallery.php:391
+msgid "Create new gallery"
 msgstr ""
 
 #: includes/admin-notices.php:42
 #, php-format
+msgid "That’s awesome!%s"
+msgstr ""
+
+#: includes/admin-notices.php:44
+#, php-format
 msgid ""
-"We noticed you’ve been using %s for a while now.%sIf you’re enjoying it, "
+"We noticed you’ve been using %1$s for a while now.%2$sIf you’re enjoying it, "
 "we’d really appreciate it if you could share your experience by leaving a "
-"quick review on WordPress.org.%sYour feedback helps us improve and helps "
+"quick review on WordPress.org.%3$sYour feedback helps us improve and helps "
 "others discover out plugin!"
 msgstr ""
 
-#: includes/admin-notices.php:48
+#: includes/admin-notices.php:50
 msgid "Yes, I’d love to!"
 msgstr ""
 
-#: includes/admin-notices.php:57
+#: includes/admin-notices.php:59
 msgid "Maybe later"
 msgstr ""
 
-#: includes/deactivate.php:22
-msgid "It is hard to use"
+#: includes/admin-notices.php:85
+msgid "Dismiss this notice."
 msgstr ""
 
 #: includes/deactivate.php:23
-msgid "I didn't find the features I needed"
+msgid "It is hard to use"
 msgstr ""
 
 #: includes/deactivate.php:24
-msgid "It's a temporary deactivation"
+msgid "I didn't find the features I needed"
 msgstr ""
 
 #: includes/deactivate.php:25
-msgid "Other"
+msgid "It's a temporary deactivation"
 msgstr ""
 
-#: includes/deactivate.php:33
+#: includes/deactivate.php:26
+msgid "I'm open to a quick call to fix this together"
+msgstr ""
+
+#: includes/deactivate.php:34
 msgid "Quick feedback"
 msgstr ""
 
-#: includes/deactivate.php:38
+#: includes/deactivate.php:39
 msgid "We are sorry to see you go!"
 msgstr ""
 
-#: includes/deactivate.php:39
+#: includes/deactivate.php:40
 msgid ""
 "If you have a moment, please share your thoughts: it helps us improve and "
 "make things better for everyone."
 msgstr ""
 
-#: includes/deactivate.php:57
+#: includes/deactivate.php:58
 msgid "Please describe the deactivation reason:"
 msgstr ""
 
-#: includes/deactivate.php:67
+#: includes/deactivate.php:65 includes/form.php:59 includes/gallery.php:1726
+msgid "Please enter your email"
+msgstr ""
+
+#: includes/deactivate.php:70
 msgid "By submitting this form your email and website URL will be collected!"
 msgstr ""
 
-#: includes/deactivate.php:72
+#: includes/deactivate.php:75
 msgid "Submit and Deactivate"
 msgstr ""
 
-#: includes/deactivate.php:76
+#: includes/deactivate.php:79
 msgid "Skip and Deactivate"
 msgstr ""
 
-#: includes/gallery.php:156
+#: includes/deactivate.php:103
+msgid "Ask a question"
+msgstr ""
+
+#: includes/deactivate.php:105
+msgid "Rate"
+msgstr ""
+
+#: includes/deactivate.php:123
+msgid "FAQ"
+msgstr ""
+
+#: includes/deactivate.php:124 includes/gallery.php:1165
+msgid "Help"
+msgstr ""
+
+#: includes/demo.php:450
+msgid "There was a problem with creating the demo galleries!"
+msgstr ""
+
+#: includes/form.php:18
+msgid "Explore Re Gallery Pro with an Expert"
+msgstr ""
+
+#: includes/form.php:19
+msgid "Technical Question"
+msgstr ""
+
+#: includes/form.php:20
+msgid "Plugin Demo"
+msgstr ""
+
+#: includes/form.php:21
+msgid "I have an issue"
+msgstr ""
+
+#: includes/form.php:29 includes/gallery.php:234
+msgid "Talk to a Gallery Expert"
+msgstr ""
+
+#: includes/form.php:34
+msgid ""
+"Choose the reason for your call so we can prepare in advance and help you "
+"faster."
+msgstr ""
+
+#: includes/form.php:52
+msgid "Please describe the issue:"
+msgstr ""
+
+#: includes/form.php:66
+#, php-format
+msgid ""
+"I agree to the %1$sprivacy policy%2$s and allow Re Gallery to contact me "
+"regarding this request."
+msgstr ""
+
+#: includes/form.php:72
+msgid "Schedule My Demo"
+msgstr ""
+
+#: includes/form.php:76
+msgid "Cancel"
+msgstr ""
+
+#: includes/gallery.php:118
+msgid ""
+"HEIC images cannot be uploaded because the Imagick PHP extension is not "
+"installed on this server. Please contact your hosting provider."
+msgstr ""
+
+#: includes/gallery.php:123
+msgid ""
+"HEIC images are not supported by the server’s ImageMagick configuration. "
+"Please contact your hosting provider."
+msgstr ""
+
+#: includes/gallery.php:187
 msgid "Action URL"
 msgstr ""
 
-#: includes/gallery.php:169
+#: includes/gallery.php:200
 msgid "Metadata (EXIF)"
 msgstr ""
 
-#: includes/gallery.php:172
+#: includes/gallery.php:203
 msgid ""
 "Auto-generated from image metadata on upload. You can edit this text if "
 "needed."
 msgstr ""
 
-#: includes/gallery.php:203
+#: includes/gallery.php:235
 msgid "About Us"
 msgstr ""
 
-#: includes/gallery.php:254
+#: includes/gallery.php:338
 msgid "Thumbnail"
 msgstr ""
 
-#: includes/gallery.php:255
+#: includes/gallery.php:339
 msgid "Shortcode"
 msgstr ""
 
-#: includes/gallery.php:255
+#: includes/gallery.php:339
 msgid "Images count"
 msgstr ""
 
-#: includes/gallery.php:335
+#: includes/gallery.php:419
 msgid "No image"
 msgstr ""
 
-#: includes/gallery.php:374
+#: includes/gallery.php:459
 #, php-format
 msgid "Duplicate “%s”"
 msgstr ""
 
-#: includes/gallery.php:401
+#: includes/gallery.php:461
+msgid "Duplicate"
+msgstr ""
+
+#: includes/gallery.php:486
 msgid "(Copy)"
 msgstr ""
 
-#: includes/gallery.php:972 includes/gallery.php:973
+#: includes/gallery.php:1090 includes/gallery.php:1091
 msgid "Add New Gallery"
 msgstr ""
 
-#: includes/gallery.php:974
+#: includes/gallery.php:1092
 msgid "Edit Gallery"
 msgstr ""
 
-#: includes/gallery.php:975
+#: includes/gallery.php:1093
 msgid "New Gallery"
 msgstr ""
 
-#: includes/gallery.php:976
+#: includes/gallery.php:1094
 msgid "View Gallery"
 msgstr ""
 
-#: includes/gallery.php:977
+#: includes/gallery.php:1095
 msgid "View Galleries"
 msgstr ""
 
-#: includes/gallery.php:978
+#: includes/gallery.php:1096
 msgid "Search Galleries"
 msgstr ""
 
-#: includes/gallery.php:979
+#: includes/gallery.php:1097
 msgid "No galleries found"
 msgstr ""
 
-#: includes/gallery.php:980
+#: includes/gallery.php:1098
 msgid "No galleries found in Trash"
 msgstr ""
 
-#: includes/gallery.php:981
+#: includes/gallery.php:1099
 msgid "All Galleries"
 msgstr ""
 
-#: includes/gallery.php:982
+#: includes/gallery.php:1100
 msgid "Filter galleries list"
 msgstr ""
 
-#: includes/gallery.php:983
+#: includes/gallery.php:1101
 msgid "Galleries list navigation"
 msgstr ""
 
-#: includes/gallery.php:984
+#: includes/gallery.php:1102
 msgid "Galleries list"
 msgstr ""
 
-#: includes/gallery.php:985
+#: includes/gallery.php:1103
 msgid "Gallery Archives"
 msgstr ""
 
-#: includes/gallery.php:986
+#: includes/gallery.php:1104
 msgid "Gallery Attributes"
 msgstr ""
 
-#: includes/gallery.php:987
+#: includes/gallery.php:1105
 msgid "Insert into gallery"
 msgstr ""
 
-#: includes/gallery.php:988
+#: includes/gallery.php:1106
 msgid "Uploaded to this gallery"
 msgstr ""
 
-#: includes/gallery.php:989
+#: includes/gallery.php:1107
 msgid "Gallery published."
 msgstr ""
 
-#: includes/gallery.php:990
+#: includes/gallery.php:1108
 msgid "Gallery published privately."
 msgstr ""
 
-#: includes/gallery.php:991
+#: includes/gallery.php:1109
 msgid "Gallery reverted to draft."
 msgstr ""
 
-#: includes/gallery.php:992
+#: includes/gallery.php:1110
 msgid "Gallery trashed."
 msgstr ""
 
-#: includes/gallery.php:993
+#: includes/gallery.php:1111
 msgid "Gallery scheduled."
 msgstr ""
 
-#: includes/gallery.php:994
+#: includes/gallery.php:1112
 msgid "Gallery updated."
 msgstr ""
 
-#: includes/gallery.php:995
+#: includes/gallery.php:1113
 msgid "Gallery Link"
 msgstr ""
 
-#: includes/gallery.php:996
+#: includes/gallery.php:1114
 msgid "A link to a gallery"
 msgstr ""
 
-#: includes/gallery.php:1034
+#: includes/gallery.php:1152
 msgid "Images"
 msgstr ""
 
-#: includes/gallery.php:1040
-msgid "License"
-msgstr ""
-
-#: includes/gallery.php:1043
-msgid "Help"
-msgstr ""
-
-#: includes/gallery.php:1045
-msgid "Custom CSS"
-msgstr ""
-
-#: includes/gallery.php:1063
-msgid "Gutenberg Block"
-msgstr ""
-
-#: includes/gallery.php:1069
-msgid "Elementor Widget"
-msgstr ""
-
-#: includes/gallery.php:1075
-msgid "Divi Builder Module"
-msgstr ""
-
-#: includes/gallery.php:1081
-msgid "WPBakery Builder Element"
-msgstr ""
-
-#: includes/gallery.php:1087
-msgid "Beaver Builder Module"
-msgstr ""
-
-#: includes/gallery.php:1093
-msgid "Bricks Builder Element"
-msgstr ""
-
-#: includes/gallery.php:1100
-msgid "You can insert the gallery into a post or page using:"
-msgstr ""
-
-#: includes/gallery.php:1110
-msgid "How to"
-msgstr ""
-
-#: includes/gallery.php:1127
-msgid "Or just paste the shortcode into any builder:"
-msgstr ""
-
-#: includes/gallery.php:1131
-msgid "Paste the shortcode into a post or page to show the gallery:"
+#: includes/gallery.php:1153
+msgid "Settings"
 msgstr ""
 
 #: includes/gallery.php:1154
+msgid "Preview"
+msgstr ""
+
+#: includes/gallery.php:1158
+msgid "License"
+msgstr ""
+
+#: includes/gallery.php:1167
+msgid "Custom CSS"
+msgstr ""
+
+#: includes/gallery.php:1185
+msgid "Gutenberg Block"
+msgstr ""
+
+#: includes/gallery.php:1191
+msgid "Elementor Widget"
+msgstr ""
+
+#: includes/gallery.php:1197
+msgid "Divi Builder Module"
+msgstr ""
+
+#: includes/gallery.php:1203
+msgid "WPBakery Builder Element"
+msgstr ""
+
+#: includes/gallery.php:1209
+msgid "Beaver Builder Module"
+msgstr ""
+
+#: includes/gallery.php:1215
+msgid "Bricks Builder Element"
+msgstr ""
+
+#: includes/gallery.php:1222
+msgid "You can insert the gallery into a post or page using:"
+msgstr ""
+
+#: includes/gallery.php:1232
+msgid "How to"
+msgstr ""
+
+#: includes/gallery.php:1249
+msgid "Or just paste the shortcode into any builder:"
+msgstr ""
+
+#: includes/gallery.php:1253
+msgid "Paste the shortcode into a post or page to show the gallery:"
+msgstr ""
+
+#: includes/gallery.php:1278
 #, php-format
 msgid "You're using the free version of %s - no license needed. Enjoy!"
 msgstr ""
 
-#: includes/gallery.php:1158
+#: includes/gallery.php:1285
 #, php-format
 msgid "To unlock more features consider %s."
 msgstr ""
 
-#: includes/gallery.php:1158
+#: includes/gallery.php:1285
 msgid "upgrading to PRO"
 msgstr ""
 
-#: includes/gallery.php:1162
+#: includes/gallery.php:1292
 #, php-format
 msgid ""
 "Already purchased? Simply enter your license key below to activate %s PRO!"
 msgstr ""
 
-#: includes/gallery.php:1165
+#: includes/gallery.php:1296
 msgid "Paste license key here"
 msgstr ""
 
-#: includes/gallery.php:1170
+#: includes/gallery.php:1301
 msgid "Activate Pro version"
 msgstr ""
 
-#: includes/gallery.php:1176
+#: includes/gallery.php:1309
 #, php-format
 msgid "%s PRO version is active!"
 msgstr ""
 
-#: includes/gallery.php:1181
+#: includes/gallery.php:1315
 msgid "Deactivate Pro version"
 msgstr ""
 
-#: includes/gallery.php:1470
+#: includes/gallery.php:1613
 msgid "Remove"
 msgstr ""
 
-#: includes/gallery.php:1540
+#: includes/gallery.php:1680
 msgid "All Images Template"
 msgstr ""
 
-#: includes/gallery.php:1547
+#: includes/gallery.php:1687
 msgid "There is no such a template."
 msgstr ""
 
-#: includes/options.php:656
+#: includes/gallery.php:1718
+msgid "Important updates & improvements"
+msgstr ""
+
+#: includes/gallery.php:1721
+msgid ""
+"Opt in to receive email notifications about security and feature updates, "
+"helpful tips, and occasional offers. Sharing basic WordPress environment "
+"info helps us improve compatibility and deliver a better gallery experience."
+msgstr ""
+
+#: includes/gallery.php:1730
+msgid "Allow & Continue"
+msgstr ""
+
+#: includes/gallery.php:1734
+msgid "Skip"
+msgstr ""
+
+#: includes/options.php:660
 msgid "Nothing to save."
 msgstr ""
 
-#: includes/options.php:685
+#: includes/options.php:689
 msgid "Nothing saved."
 msgstr ""
 
-#: includes/options.php:1036
+#: includes/options.php:1040
 msgid "Settings successfully reset."
 msgstr ""
 
-#: includes/options.php:1040
+#: includes/options.php:1044
 msgid "Settings already reset."
 msgstr ""
 
-#: includes/posts.php:66
-#, php-format
-msgid "Select %s manually"
+#: includes/posts.php:85
+msgid "Manual selection"
 msgstr ""
 
-#: includes/posts.php:67
-#, php-format
-msgid "Select %s dynamically"
+#: includes/posts.php:93
+msgid "Dynamic gallery already added"
 msgstr ""
 
-#: includes/posts.php:74
+#: includes/posts.php:100
+msgid "Dynamic"
+msgstr ""
+
+#: includes/posts.php:109
 msgid "OR"
 msgstr ""
 
-#: includes/posts.php:74
+#: includes/posts.php:109
 msgid "AND"
 msgstr ""
 
-#: includes/posts.php:96
+#: includes/posts.php:131
 msgid "Taxanomies"
 msgstr ""
 
-#: includes/posts.php:119
+#: includes/posts.php:154
 msgid "Relation"
 msgstr ""
 
-#: includes/posts.php:132
+#: includes/posts.php:170
 #, php-format
 msgid "Exclude %s"
 msgstr ""
 
-#: includes/posts.php:154
+#: includes/posts.php:197
 #, php-format
 msgid "Exclude %s without images"
 msgstr ""
 
-#: includes/posts.php:157
+#: includes/posts.php:205
 #, php-format
 msgid "%s count"
 msgstr ""
 
-#: includes/posts.php:158
+#: includes/posts.php:208
 msgid "All"
 msgstr ""
 
-#: includes/posts.php:165
+#: includes/posts.php:215
 msgid "Custom"
 msgstr ""
 
-#: includes/posts.php:188
+#: includes/posts.php:239
 msgid "Date"
 msgstr ""
 
-#: includes/posts.php:189
+#: includes/posts.php:240
 msgid "Title"
 msgstr ""
 
-#: includes/posts.php:190
+#: includes/posts.php:241
 msgid "Comment count"
 msgstr ""
 
-#: includes/posts.php:191
+#: includes/posts.php:242
 msgid "Menu order"
 msgstr ""
 
-#: includes/posts.php:194
+#: includes/posts.php:253
 msgid "Ascending"
 msgstr ""
 
-#: includes/posts.php:195
+#: includes/posts.php:254
 msgid "Descending"
+msgstr ""
+
+#: includes/posts.php:279
+msgid "Order"
+msgstr ""
+
+#: includes/posts.php:280
+msgid "Order by"
+msgstr ""
+
+#: includes/posts.php:333
+msgid "Deselect"
+msgstr ""
+
+#: includes/posts.php:346
+msgid "No items found."
 msgstr ""
