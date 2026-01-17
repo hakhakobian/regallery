@@ -131,3 +131,22 @@
 #reacg-metabox-widget-why-upgrade h2 {
   opacity: 0;
 }
+
+.reacg-dashboard-widget {
+  .reacg-dashboard-widget-footer {
+    border-top: 1px solid #F0F0F1;
+    color: #DCDCDE;
+    border-block-start: 1px solid #EEE;
+    margin: 12px -12px 0;
+    padding: 12px 12px 0;
+
+    a {
+      text-decoration: none;
+    }
+
+    a:not(:last-of-type)::after {
+      content: "|";
+      color: #DCDCDE;
+    }
+  }
+}

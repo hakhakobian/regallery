@@ -30,6 +30,7 @@ final class REACG {
   public $nicename = 'Re Gallery';
   public $author = 'Re Gallery Team';
   public $website_url = 'https://regallery.team';
+  public $blog_url = 'https://regallery.team/core/blog/';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
@@ -77,8 +78,10 @@ final class REACG {
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
     define('REACG_WEBSITE_URL', $this->website_url );
-    define('REACG_VERSION', $this->version );
     define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url) );
+    define('REACG_BLOG_URL', $this->blog_url );
+    define('REACG_BLOG_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->blog_url) );
+    define('REACG_VERSION', $this->version );
     define('REACG_NONCE', $this->nonce );
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
@@ -312,7 +315,7 @@ final class REACG {
     $required_styles[] = $this->prefix . '_posts';
     wp_register_style($this->prefix . '_admin', $this->plugin_url . '/assets/css/admin.css', $required_styles, $this->version);
     wp_register_style($this->prefix . '_widget_box', $this->plugin_url . '/assets/css/widget_box.css', [], $this->version);
-    wp_register_script($this->prefix . '_widget_box', $this->plugin_url . '/assets/js/widget_box.js', ['jquery'], $this->version);
+    wp_register_script($this->prefix . '_widget_box', $this->plugin_url . '/assets/js/widget_box.js', ['jquery'], $this->version, true);
 
     wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3');
     wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version);

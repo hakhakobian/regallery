@@ -1173,8 +1173,47 @@ class REACG_Gallery {
   }
 
   public function register_dashboard_widgets() {
-    wp_add_dashboard_widget( 'reacg-dashboard-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'widget_main_features' ] );
+    wp_add_dashboard_widget( 'reacg-dashboard-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'render_dashboard_widget_main_features' ] );
     wp_add_dashboard_widget( 'reacg-dashboard-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_dashboard_widget_why_upgrade' ] );
+  }
+
+  public function render_dashboard_widget_main_features() {
+    $links = [
+      [
+        'title' => __('Blog', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'gallery_layouts'], REACG_BLOG_URL_UTM),
+      ],
+      [
+        'title' => __('Gallery layouts', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'gallery_layouts'], REACG_WEBSITE_URL_UTM . '#gallery_layouts'),
+      ],
+      [
+        'title' => __('Support', 'regallery'),
+        'url' => REACG_WP_PLUGIN_SUPPORT_URL,
+      ],
+      [
+        'title' => __('Upgrade', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'),
+      ],
+    ];
+    ?>
+    <div class="reacg-dashboard-widget">
+      <?php $this->widget_main_features(); ?>
+      <div class="reacg-dashboard-widget-footer">
+        <?php
+        foreach ( $links as $link ) {
+          ?>
+          <a href="<?php echo esc_url($link['url']); ?>" target="_blank">
+            <?php echo esc_html($link['title']); ?>
+            <span class="screen-reader-text"> (opens in a new tab)</span>
+            <span class="dashicons dashicons-external"></span>
+          </a>
+          <?php
+        }
+        ?>
+      </div>
+    </div>
+    <?php
   }
 
   public function render_metabox_widget_why_upgrade() {
