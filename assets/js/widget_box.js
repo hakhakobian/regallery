@@ -1,4 +1,8 @@
 jQuery(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("reacg-pro"))) {
+    jQuery("#reacg-dashboard-upgrade-link").remove();
+    jQuery("#reacg-dashboard-widget-why-upgrade").remove();
+  }
   jQuery("#reacg-box__create-demo").on("click", function () {
     const button = jQuery(this);
     const parent = button.parent();

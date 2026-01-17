@@ -1192,6 +1192,7 @@ class REACG_Gallery {
         'url' => REACG_WP_PLUGIN_SUPPORT_URL,
       ],
       [
+        'id' => 'reacg-dashboard-upgrade-link',
         'title' => __('Upgrade', 'regallery'),
         'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'),
       ],
@@ -1203,7 +1204,7 @@ class REACG_Gallery {
         <?php
         foreach ( $links as $link ) {
           ?>
-          <a href="<?php echo esc_url($link['url']); ?>" target="_blank">
+          <a <?php if (!empty($link["id"])) { ?>id="<?php echo esc_attr($link["id"]); ?>"<?php } ?> href="<?php echo esc_url($link['url']); ?>" target="_blank">
             <?php echo esc_html($link['title']); ?>
             <span class="screen-reader-text"> (opens in a new tab)</span>
             <span class="dashicons dashicons-external"></span>
