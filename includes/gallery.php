@@ -14,6 +14,8 @@ class REACG_Gallery {
     add_action('admin_head', [ $this, 'modify_external_submenu_url']);
     add_action('admin_footer', [ $this, 'opt_in' ]);
 
+    add_action( 'wp_dashboard_setup', [ $this, 'register_dashboard_widgets' ] );
+
     // Add columns to the custom post list.
     add_filter('manage_' . REACG_CUSTOM_POST_TYPE . '_posts_columns' , [ $this, 'custom_columns' ]);
     add_action('manage_' . REACG_CUSTOM_POST_TYPE . '_posts_custom_column', [ $this, 'custom_columns_content' ], 10, 2);
@@ -1165,6 +1167,61 @@ class REACG_Gallery {
     add_meta_box( 'gallery-help', __( 'Help', 'regallery' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
     add_meta_box( 'gallery-custom-css', __('Custom CSS', 'regallery') . REACGLibrary::$pro_icon, [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
+
+    add_meta_box( 'reacg-metabox-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'widget_main_features' ], 'reacg', 'side', 'low' );
+    add_meta_box( 'reacg-metabox-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_metabox_widget_why_upgrade' ], 'reacg', 'side', 'low' );
+  }
+
+  public function register_dashboard_widgets() {
+    wp_add_dashboard_widget( 'reacg-dashboard-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'render_dashboard_widget_main_features' ] );
+    wp_add_dashboard_widget( 'reacg-dashboard-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_dashboard_widget_why_upgrade' ] );
+  }
+
+  public function render_dashboard_widget_main_features() {
+    $links = [
+      [
+        'title' => __('Blog', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'gallery_layouts'], REACG_BLOG_URL_UTM),
+      ],
+      [
+        'title' => __('Gallery layouts', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'gallery_layouts'], REACG_WEBSITE_URL_UTM . '#gallery_layouts'),
+      ],
+      [
+        'title' => __('Support', 'regallery'),
+        'url' => REACG_WP_PLUGIN_SUPPORT_URL,
+      ],
+      [
+        'id' => 'reacg-dashboard-upgrade-link',
+        'title' => __('Upgrade', 'regallery'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'),
+      ],
+    ];
+    ?>
+    <div class="reacg-dashboard-widget">
+      <?php $this->widget_main_features(); ?>
+      <div class="reacg-dashboard-widget-footer">
+        <?php
+        foreach ( $links as $link ) {
+          ?>
+          <a <?php if (!empty($link["id"])) { ?>id="<?php echo esc_attr($link["id"]); ?>"<?php } ?> href="<?php echo esc_url($link['url']); ?>" target="_blank">
+            <?php echo esc_html($link['title']); ?>
+            <span class="screen-reader-text"> (opens in a new tab)</span>
+            <span class="dashicons dashicons-external"></span>
+          </a>
+          <?php
+        }
+        ?>
+      </div>
+    </div>
+    <?php
+  }
+
+  public function render_metabox_widget_why_upgrade() {
+    $this->widget_why_upgrade( 'metabox' );
+  }
+  public function render_dashboard_widget_why_upgrade() {
+    $this->widget_why_upgrade( 'dashboard' );
   }
 
   public function meta_box_preview($post) {
@@ -1740,5 +1797,112 @@ class REACG_Gallery {
     <?php
     // Mark that the popup was shown to avoid showing it again.
     update_option('reacg_optin_shown', true);
+  }
+
+  public function widget_main_features() {
+    $features = [
+      [
+        'title' => esc_html__('Responsive & Mobile-Optimized Galleries', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Multiple Gallery Layouts', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Live Preview Builder', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Lightbox Viewing Experience', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('SEO-Friendly & Performance-Focused', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Drag-and-Drop Simplicity', 'regallery'),
+      ],
+    ];
+    wp_enqueue_script($this->obj->prefix . '_widget_box');
+    wp_enqueue_style($this->obj->prefix . '_widget_box');
+    ?>
+    <div class="reacg-widget-main-features reacg-box">
+      <div class="reacg-box__logo">
+        <img src="<?php echo esc_url(REACG_PLUGIN_URL . "/assets/images/icon.svg"); ?>" />
+      </div>
+      <div class="reacg-box__heading">
+        <?php esc_html_e('Main Features & Solutions', 'regallery'); ?>
+      </div>
+      <div class="reacg-box__details">
+        <?php
+        foreach ( $features as $feature ) {
+        ?>
+        <a <?php if (!empty($feature["url"])) { ?>href="<?php echo esc_url($feature["url"]); ?>"<?php } ?> target="_blank" class="reacg-box__item">
+          <span class="dashicons dashicons-yes"></span>
+          <span><?php echo esc_html($feature["title"]); ?></span>
+        </a>
+          <?php
+        }
+        ?>
+      </div>
+      <div class="reacg-box__button-wrapper">
+        <span class="spinner"></span>
+        <a id="reacg-box__create-demo" class="button button-primary button-large reacg-box__button">
+          <?php esc_html_e('Create demo gallery', 'regallery'); ?>
+        </a>
+      </div>
+    </div>
+    <?php
+  }
+
+  public function widget_why_upgrade($utm_medium) {
+    $features = [
+      [
+        'title' => esc_html__('Pre-Built Templates & Template Library', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('AI Automation for Text & Metadata', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Advanced Lightbox Options', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('eCommerce & Mixed Galleries', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Branding, Watermarks & White Labeling', 'regallery'),
+      ],
+      [
+        'title' => esc_html__('Advanced Customization & Premium Support', 'regallery'),
+      ],
+    ];
+    wp_enqueue_style($this->obj->prefix . '_widget_box');
+    ?>
+    <div class="reacg-widget-why-upgrade reacg-box">
+      <div class="reacg-box__logo">
+        <?php echo REACGLibrary::$pro_icon; ?>
+      </div>
+      <div class="reacg-box__heading">
+        <?php
+        /* translators: %s: the plugin name */
+        echo sprintf(esc_html__('Why upgrade to %s Pro?', 'regallery'), esc_html(REACG_NICENAME));
+        ?>
+      </div>
+      <div class="reacg-box__details">
+        <?php
+        foreach ( $features as $feature ) {
+        ?>
+        <a <?php if (!empty($feature["url"])) { ?>href="<?php echo esc_url($feature["url"]); ?>"<?php } ?> target="_blank" class="reacg-box__item">
+          <span class="dashicons dashicons-yes"></span>
+          <span><?php echo esc_html($feature["title"]); ?></span>
+        </a>
+          <?php
+        }
+        ?>
+      </div>
+      <div class="reacg-box__button-wrapper">
+        <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')); ?>" target="_blank" class="button button-primary button-large reacg-box__button reacg-box__upgrade-button">
+          <?php echo esc_html(REACG_BUY_NOW_TEXT); ?>
+        </a>
+      </div>
+    </div>
+    <?php
   }
 }

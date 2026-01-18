@@ -1,0 +1,157 @@
+.reacg-box {
+  padding: 12px;
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  text-align: center;
+  container-type: inline-size;
+
+  .reacg-box__logo,
+  .reacg-box__logo svg,
+  .reacg-box__logo img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .reacg-box__logo {
+    background: rgb(209, 218, 232);
+    border-radius: 50%;
+    padding: 12px;
+    margin: 0 auto;
+  }
+
+  .reacg-box__heading {
+    margin-top: 9px;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .reacg-box__details {
+    text-align: left;
+    margin: 12px auto 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  @container (min-width: 360px) {
+    .reacg-box__details {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @supports not (container-type: inline-size) {
+    .reacg-box__details {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+  }
+
+  .reacg-box__item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    text-decoration: none;
+    color: #1F2937;
+    margin-bottom: 6px;
+  }
+  .reacg-box__item,
+  .reacg-box__item:hover,
+  .reacg-box__item:active,
+  .reacg-box__item:focus {
+    border: none;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .reacg-box__item .dashicons {
+    color: rgb(147 177 77);
+    font-size: 20px;
+  }
+
+  .reacg-box__button-wrapper {
+    margin: 12px auto 0;
+    .spinner {
+      float: none;
+      margin-top: 5px;
+      margin-left: -20px;
+      margin-right: 0;
+    }
+  }
+  .reacg-box__button {
+    width: 100%;
+    max-width: 220px;
+    text-transform: uppercase;
+  }
+  .reacg-box__button,
+  .button.reacg-box__button:hover,
+  .button.reacg-box__button:active,
+  .button.reacg-box__button:focus {
+    border: none;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .reacg-box__button.reacg-box__upgrade-button {
+    background: rgb(147 177 77);
+    color: white;
+  }
+  .button.reacg-box__button.reacg-box__upgrade-button:hover,
+  .button.reacg-box__button.reacg-box__upgrade-button:active,
+  .button.reacg-box__button.reacg-box__upgrade-button:focus {
+    background: rgb(135 162 71);
+    color: white;
+  }
+  .reacg-box__note {
+    text-align: left;
+    display: block;
+    margin: 0 !important;
+  }
+  a.reacg-box__note {
+    text-align: center;
+    margin-top: 5px !important;
+  }
+}
+
+.reacg-widget-main-features {
+  .reacg-box__logo {
+    background: none;
+    border: none;
+  }
+  .reacg-box__item .dashicons {
+    color: #2271b1;
+  }
+  .reacg-box__button {
+    width: calc(100% - 40px);
+  }
+}
+
+#reacg-metabox-widget-main-features h2,
+#reacg-dashboard-widget-main-features h2,
+#reacg-dashboard-widget-why-upgrade h2,
+#reacg-metabox-widget-why-upgrade h2 {
+  opacity: 0;
+}
+
+#reacg-dashboard-upgrade-link {
+  color: rgb(147 177 77);
+  font-weight: bold;
+}
+
+.reacg-dashboard-widget {
+  .reacg-dashboard-widget-footer {
+    border-top: 1px solid #F0F0F1;
+    color: #DCDCDE;
+    border-block-start: 1px solid #EEE;
+    margin: 12px -12px 0;
+    padding: 12px 12px 0;
+
+    a {
+      text-decoration: none;
+    }
+
+    a:not(:last-of-type)::after {
+      content: "|";
+      color: #DCDCDE;
+    }
+  }
+}

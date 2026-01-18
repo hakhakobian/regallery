@@ -422,9 +422,7 @@ class REACG_Demo {
   }
 
   /**
-   * @param bool $redirect
-   *
-   * @return array|void
+   * @return mixed|string|void|null
    */
   public function import_data() {
     $galleries = [];
@@ -434,20 +432,43 @@ class REACG_Demo {
       $galleries = $this->import_galleries($attachments);
     }
 
-    if ( $this->redirect ) {
-      return $galleries;
-    }
-    else {
-      if ( !empty($galleries) ) {
-        /* translators: %d: number of demo galleries created */
-        echo sprintf(esc_html(_n('%d demo gallery created!', '%d demo galleries created!', count($galleries), 'regallery')), count($galleries));
-        if ( !empty($attachments) ) {
-          /* translators: %d: number of sample images imported */
-          echo ' ' . sprintf(esc_html(_n('%d sample image imported!', '%d sample images imported!', count($attachments), 'regallery')), count($attachments));
-        }
+    if ( !empty($galleries) ) {
+      if ( count($galleries) === 1 ) {
+        $link = [
+          'url'  => get_edit_post_link( $galleries[0], 'raw' ),
+          'title'=> esc_html__( 'View created gallery', 'regallery' ),
+        ];
       }
       else {
-        esc_html_e('There was a problem with creating the demo galleries!', 'regallery');
+        $link = [
+          'url'  => admin_url( 'edit.php?post_type=' . REACG_CUSTOM_POST_TYPE ),
+          'title'=> esc_html__( 'View created galleries', 'regallery' ),
+        ];
+      }
+      if ( $this->redirect ) {
+        return $link['url'];
+      }
+      else {
+        /* translators: %d: number of demo galleries created */
+        $message = sprintf(esc_html(_n('%d demo gallery created!', '%d demo galleries created!', count($galleries), 'regallery')), count($galleries));
+        if ( !empty($attachments) ) {
+          /* translators: %d: number of sample images imported */
+          $message .= ' ' . sprintf(esc_html(_n('%d sample image imported!', '%d sample images imported!', count($attachments), 'regallery')), count($attachments));
+        }
+        wp_send_json_success([
+                               'gallery' => $link,
+                               'message' => $message,
+                             ]);
+      }
+    }
+    else {
+      if ( $this->redirect ) {
+        return admin_url( 'edit.php?post_type=' . REACG_CUSTOM_POST_TYPE );
+      }
+      else {
+        wp_send_json_error([
+                             'message' => __('There was a problem with creating the demo galleries!', 'regallery'),
+                           ]);
       }
     }
     die();
