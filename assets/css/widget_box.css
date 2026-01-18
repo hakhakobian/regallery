@@ -132,6 +132,11 @@
   opacity: 0;
 }
 
+#reacg-dashboard-upgrade-link {
+  color: rgb(147 177 77);
+  font-weight: bold;
+}
+
 .reacg-dashboard-widget {
   .reacg-dashboard-widget-footer {
     border-top: 1px solid #F0F0F1;
