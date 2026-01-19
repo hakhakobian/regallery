@@ -28,9 +28,9 @@ function showPreview(shortcode_id, widget_id = null, load_only_settings = false)
   const baseCont = jQuery("#elementor-controls");
   if (baseCont) {
     baseCont.find(".reacg-elementor-options").addClass("reacg-hidden");
+    baseCont.find(".reacg-setup-wizard").addClass("reacg-hidden");
     if (shortcode_id === 0) {
       baseCont.find(".elementor-control-setup_wizard_html .reacg-spinner__wrapper").removeClass("reacg-hidden");
-      baseCont.find(".reacg-setup-wizard").addClass("reacg-hidden");
       baseCont.find(".elementor-control-post_id").addClass("reacg-hidden");
 
       fetch(reacg.ajax_url + '&action=reacg_save_gallery')
@@ -48,7 +48,7 @@ function showPreview(shortcode_id, widget_id = null, load_only_settings = false)
   }
 }
 
-function reacg_reload_gallery(id, shortcode_id, load_only_settings = false, initial_load = false) {
+function reacg_reload_gallery(id, shortcode_id, load_only_settings = false) {
   let previewDocument;
   let previewWindow;
   const iframe = document.getElementById('elementor-preview-iframe');
@@ -63,7 +63,6 @@ function reacg_reload_gallery(id, shortcode_id, load_only_settings = false, init
 
   const gallery = previewDocument.getElementById("reacg-root" + id);
   if ( gallery ) {
-    gallery.setAttribute('data-options-section', initial_load ? 0 : 1);
     if ( shortcode_id ) {
       const fake_container = document.querySelector(".reacg-fake-container");
       if (fake_container) {
