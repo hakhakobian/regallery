@@ -40,10 +40,6 @@
         return block_preview();
       }
 
-      // Auto-open block settings when the block becomes selected.
-      if (props.isSelected) {
-        wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
-      }
       const selected = wp.data.select('core/block-editor').getSelectedBlock();
       const selectedBlockShortcodeId = selected?.attributes?.shortcode_id;
 

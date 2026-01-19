@@ -27,17 +27,7 @@ jQuery(document).ready(function () {
     url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
     contentType: "application/json",
     complete: function (response) {
-      const isPro = !!response.responseJSON;
-      jQuery(".reacg-pro-not-active").toggle(!isPro);
-      jQuery(".reacg-pro-active").toggle(isPro);
-      jQuery("textarea[name=custom_css]").on("input", function () {
-        let text = jQuery(this).val();
-        if ( !isPro && text.length > 100) {
-          jQuery(this).val(text.substring(0, 100));
-          reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
-        }
-      });
-      localStorage.setItem("reacg-pro", isPro);
+      reacg_isPro(!!response.responseJSON);
     }
   });
 
@@ -71,10 +61,7 @@ jQuery(document).ready(function () {
         button.removeAttr("disabled");
         if (response.status === 200 && response.success && response.responseJSON) {
           container.find(".reacg-success").html(response.responseJSON.message);
-          const isPro = !!activate;
-          container.find(".reacg-pro-not-active").toggle(!isPro);
-          container.find(".reacg-pro-active").toggle(isPro);
-          localStorage.setItem("reacg-pro", isPro);
+          reacg_isPro(!!activate);
         }
         else {
           errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
@@ -273,6 +260,22 @@ jQuery(document).ready(function () {
 
   reacg_add_ai_button_to_uploader();
 });
+
+function reacg_isPro(isPro) {
+  if (isPro) {
+    jQuery("#reacg-metabox-widget-why-upgrade").remove();
+  }
+  jQuery(".reacg-pro-not-active").toggle(!isPro);
+  jQuery(".reacg-pro-active").toggle(isPro);
+  jQuery("textarea[name=custom_css]").on("input", function () {
+    let text = jQuery(this).val();
+    if ( !isPro && text.length > 100) {
+      jQuery(this).val(text.substring(0, 100));
+      reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
+    }
+  });
+  localStorage.setItem("reacg-pro", isPro);
+}
 
 /**
  * Make the image items sortable.

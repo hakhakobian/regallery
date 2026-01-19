@@ -1,32 +1,88 @@
 jQuery(document).ready(function () {
+  reacg_bind_book_a_call_modal_events();
 
-  function reacgIsValidEmail(email) {
-    // Simple email regex
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
+  reacg_bind_optin_modal_events();
+});
 
-  jQuery(document).on("click", "a[href='reacg-book-a-call']", function (e){
-    jQuery(".reacg-form-popup-overlay").show();
+function reacgIsValidEmail(email) {
+  // Simple email regex
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-    return false;
-  });
-  jQuery(document).on("click", ".reacg-form-popup .reacg-submit", function (e){
-    const email = jQuery(".reacg-form-popup input[name='reacg-email']").val();
-    const agreementChecked = jQuery(".reacg-form-popup .reacg-agreement").prop("checked");
-    const reasonChecked = jQuery(".reacg-form-popup .reacg-reasonType:checked").length;
+function reacg_bind_form_events(modal, submitAction, reasonExist = true, agreementExist = true, closeOnModalOverlayClick = true) {
+  modal.find(".reacg-submit").on("click", function (e){
+    const email = modal.find("input[name='reacg-email']").val();
+
+    const agreementChecked = agreementExist ? modal.find(".reacg-agreement").prop("checked") : true;
+    const reasonChecked = reasonExist ? modal.find(".reacg-reasonType:checked").length : true;
 
     if (!agreementChecked || !reasonChecked || email === "" || !reacgIsValidEmail(email)) {
       return false;
     }
-    jQuery(".reacg-form-popup .spinner").addClass("is-active");
+    modal.find(".spinner").addClass("is-active");
     let reason = "";
-    if ( jQuery(".reacg-form-popup .reacg-reasonType:checked").val() === "other"
-      && jQuery(".reacg-form-popup .reacg-reason").val() !== "" ) {
-      reason = jQuery(".reacg-form-popup .reacg-reason").val();
+    let reasonKey = 0;
+    if ( reasonExist ) {
+      if (modal.find(".reacg-reasonType:checked").val() == 4
+        && modal.find(".reacg-reason").val() !== "") {
+        reason = modal.find(".reacg-reason").val();
+      }
+      else {
+        reason = modal.find(".reacg-reasonType:checked").attr("alt");
+        reasonKey = modal.find(".reacg-reasonType:checked").val();
+      }
+    }
+
+    submitAction(email, reason, reasonKey);
+
+    return false;
+  });
+  modal.find(".reacg-reasonType, .reacg-agreement, input[name='reacg-email']").on("change", function () {
+    const email = modal.find("input[name='reacg-email']").val();
+    const agreementChecked = agreementExist ? modal.find(".reacg-agreement").prop("checked") : true;
+    const reasonChecked = reasonExist ? modal.find(".reacg-reasonType:checked").length : true;
+
+    if (agreementChecked && reasonChecked && email !== "" && reacgIsValidEmail(email)) {
+      modal.find(".reacg-submit").removeAttr('disabled');
     }
     else {
-      reason = jQuery(".reacg-form-popup .reacg-reasonType:checked").attr("alt");
+      modal.find(".reacg-submit").attr('disabled', 'disabled');
     }
+  });
+  modal.find(".reacg-popup-close, .reacg-skip").on("click", function () {
+    modal.hide();
+  });
+  if ( closeOnModalOverlayClick ) {
+    modal.on("click", function () {
+      modal.hide();
+    });
+    modal.find(".reacg-popup").on("click", function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  modal.find(".reacg-reasonType").on("click", function () {
+    if ( jQuery(this).val() == 4 ) {
+      modal.find(".reacg-reason-wrapper").show();
+    }
+    else {
+      modal.find(".reacg-reason-wrapper").hide();
+    }
+  });
+}
+function reacg_bind_book_a_call_modal_events() {
+  const modal = jQuery("#reacg-form-popup-overlay");
+  if (!modal.length) {
+    return;
+  }
+
+  jQuery(document).on("click", "a[href='reacg-book-a-call']", function (e){
+    modal.show();
+
+    return false;
+  });
+
+  const submitAction = function (email, reason) {
     jQuery.ajax({
       type: "POST",
       url: "https://regallery.team/core/wp-json/reacgcore/v2/form",
@@ -35,37 +91,39 @@ jQuery(document).ready(function () {
         action: "bookacall",
         reason: reason,
         email: email,
-        version: jQuery(".reacg-form-popup").data("version"),
+        version: modal.find(".reacg-popup").data("version"),
       }),
       complete: function (data) {
-        jQuery(".reacg-form-popup .spinner").removeClass("is-active");
-        jQuery(".reacg-form-popup-overlay").hide();
+        modal.find(".spinner").removeClass("is-active");
+        modal.hide();
       }
     });
+  }
 
-    return false;
-  });
-  jQuery(document).on("change", ".reacg-form-popup .reacg-reasonType, .reacg-form-popup .reacg-agreement, .reacg-form-popup input[name='reacg-email']", function () {
-    const email = jQuery(".reacg-form-popup input[name='reacg-email']").val();
-    const agreementChecked = jQuery(".reacg-form-popup .reacg-agreement").prop("checked");
-    const reasonChecked = jQuery(".reacg-form-popup .reacg-reasonType:checked").length;
+  reacg_bind_form_events(modal, submitAction);
+}
 
-    if (agreementChecked && reasonChecked && email !== "" && reacgIsValidEmail(email)) {
-      jQuery(".reacg-form-popup .reacg-submit").removeAttr('disabled');
-    }
-    else {
-      jQuery(".reacg-form-popup .reacg-submit").attr('disabled', 'disabled');
-    }
-  });
-  jQuery(document).on("click", ".reacg-form-popup-close, .reacg-form-popup .reacg-skip", function () {
-    jQuery(".reacg-form-popup-overlay").hide();
-  });
-  jQuery(document).on("click", ".reacg-form-popup .reacg-reasonType", function () {
-    if ( jQuery(this).val() === "other" ) {
-      jQuery(".reacg-form-popup .reacg-reason-wrapper").show();
-    }
-    else {
-      jQuery(".reacg-form-popup .reacg-reason-wrapper").hide();
-    }
-  });
-});
+function reacg_bind_optin_modal_events() {
+  const modal = jQuery("#reacg-optin-popup-overlay");
+  if (!modal.length) {
+    return;
+  }
+
+  modal.show();
+
+  const submitAction = function (email, reason) {
+    jQuery.ajax({
+      type: "POST",
+      url: "https://regallery.team/core/wp-json/reacgcore/v2/optin",
+      contentType: "application/json",
+      data: JSON.stringify({
+        email: email,
+      }),
+    }).complete(function () {
+      modal.find(".spinner").removeClass("is-active");
+      modal.hide();
+    });
+  }
+
+  reacg_bind_form_events(modal, submitAction, false, false, false);
+}

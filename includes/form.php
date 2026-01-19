@@ -15,21 +15,21 @@ class REACG_Form {
 
   public function content() {
     $reasons = [
-      __("Explore Re Gallery Pro with an Expert", "regallery"),
-      __("Technical Question", "regallery"),
-      __("Plugin Demo", "regallery"),
-      "other" => __("I have an issue", "regallery"),
+      1 => __("Explore Re Gallery Pro with an Expert", "regallery"),
+      2 => __("Technical Question", "regallery"),
+      3 => __("Plugin Demo", "regallery"),
+      4 => __("I have an issue", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
     ?>
-    <div class="reacg-form-popup-overlay" style="display: none;">
-      <div class="reacg-form-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
-        <div class="reacg-form-popup-header">
+    <div id="reacg-form-popup-overlay" class="reacg-form-popup-overlay" style="display: none;">
+      <div class="reacg-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
+        <div class="reacg-popup-header">
           <?php esc_html_e("Talk to a Gallery Expert", 'regallery'); ?>
-          <span class="reacg-form-popup-close dashicons dashicons-no"></span>
+          <span class="reacg-popup-close dashicons dashicons-no"></span>
         </div>
-        <div class="reacg-form-popup-body">
+        <div class="reacg-popup-body">
           <div class="reacg-note-wrapper">
             <?php esc_html_e("Choose the reason for your call so we can prepare in advance and help you faster.", 'regallery'); ?>
           </div>
@@ -54,7 +54,7 @@ class REACG_Form {
             </label>
           </div>
         </div>
-        <div class="reacg-form-popup-footer">
+        <div class="reacg-popup-footer">
           <div class="reacg-email-wrapper">
             <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
           </div>

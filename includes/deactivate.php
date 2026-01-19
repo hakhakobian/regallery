@@ -20,21 +20,21 @@ class REACG_Deactivate {
 
   public function content() {
     $reasons = [
-      "hard_to" => __("It is hard to use", "regallery"),
-      "no_feature" => __("I didn't find the features I needed", "regallery"),
-      "temporary" => __("It's a temporary deactivation", "regallery"),
-      "other" => __("I'm open to a quick call to fix this together", "regallery"),
+      1 => __("It is hard to use", "regallery"),
+      2 => __("I didn't find the features I needed", "regallery"),
+      3 => __("It's a temporary deactivation", "regallery"),
+      4 => __("I'm open to a quick call to fix this together", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
     ?>
-    <div class="reacg-deactivate-popup-overlay" style="display: none;">
-      <div class="reacg-deactivate-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
-        <div class="reacg-deactivate-popup-header">
+    <div id="reacg-deactivate-popup-overlay" class="reacg-form-popup-overlay" style="display: none;">
+      <div class="reacg-popup" data-version="<?php echo esc_attr($this->obj->version); ?>">
+        <div class="reacg-popup-header">
           <?php esc_html_e("Quick feedback", 'regallery'); ?>
-          <span class="reacg-deactivate-popup-close dashicons dashicons-no"></span>
+          <span class="reacg-popup-close dashicons dashicons-no"></span>
         </div>
-        <div class="reacg-deactivate-popup-body">
+        <div class="reacg-popup-body">
           <div class="reacg-note-wrapper">
             <?php esc_html_e("We are sorry to see you go!", 'regallery'); ?>😔
             <?php esc_html_e("If you have a moment, please share your thoughts: it helps us improve and make things better for everyone.", 'regallery'); ?>
@@ -60,7 +60,7 @@ class REACG_Deactivate {
             </label>
           </div>
         </div>
-        <div class="reacg-deactivate-popup-footer">
+        <div class="reacg-popup-footer">
           <div class="reacg-email-wrapper">
             <input type="email" name="reacg-email" placeholder="<?php esc_html_e("Please enter your email", 'regallery'); ?>" value="<?php echo esc_attr(sanitize_email($email)); ?>" />
           </div>
