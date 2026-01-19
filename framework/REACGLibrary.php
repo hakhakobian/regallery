@@ -168,6 +168,7 @@ class REACGLibrary {
     $posts = get_posts(array(
                          'posts_per_page' => -1,
                          'post_type' => 'reacg',
+                         'post_status' => [ 'publish', 'private' ],
                        ));
     $data = [];
     if ( $associative ) {
