@@ -82,7 +82,7 @@ function reacg_bind_book_a_call_modal_events() {
     return false;
   });
 
-  const submitAction = function (email, reason) {
+  const submitAction = function (email, reason, reasonKey) {
     jQuery.ajax({
       type: "POST",
       url: "https://regallery.team/core/wp-json/reacgcore/v2/form",
@@ -90,6 +90,7 @@ function reacg_bind_book_a_call_modal_events() {
       data: JSON.stringify({
         action: "bookacall",
         reason: reason,
+        reasonKey: reasonKey,
         email: email,
         version: modal.find(".reacg-popup").data("version"),
       }),
