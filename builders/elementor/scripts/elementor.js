@@ -1,8 +1,8 @@
-const all_images_id = -1;
 function images_cont(baseCont, shortcode_id, widget_id, load_only_settings = false) {
   fetch(reacg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
     .then(response => response.json())
     .then(data => {
+      const all_images_id = -1;
       const container = baseCont.find("#reacg-gallery-images");
       if (container) {
         if (shortcode_id != all_images_id) {
@@ -72,13 +72,13 @@ function reacg_reload_gallery(id, shortcode_id, load_only_settings = false) {
     }
   }
 
-  if (load_only_settings) {
-    previewWindow.postMessage(
-      {type: "reacg-root" + id + "-show-controls", show: true},
-      "*"
-    );
-    return;
-  }
+  //if (load_only_settings) {
+  //  previewWindow.postMessage(
+  //    {type: "reacg-root" + id + "-show-controls", show: true},
+  //    "*"
+  //  );
+  //  return;
+  //}
 
   const button = previewDocument.getElementById("reacg-loadApp");
   if ( button ) {

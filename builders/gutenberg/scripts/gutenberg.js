@@ -86,7 +86,7 @@
       // Show settings for the selected gallery.
       const baseCont = document.getElementById("reacg-gutenberg" + props.clientId);
       if (baseCont) {
-        images_cont(baseCont, shortcode_id, props, true, true, true);
+        images_cont(baseCont, shortcode_id, props, true, true);
       }
     }
 
@@ -136,7 +136,6 @@
     const timestamp = Date.now();
 
     return el('div', {
-      'data-options-section': 0,
       'data-options-container': "#reacg_settings",
       'data-gallery-id': shortcode_id,
       'data-plugin-version': reacg_gutenberg.plugin_version,
@@ -165,7 +164,6 @@
     if (galleryCont) {
       const timestamp = Date.now();
       galleryCont.classList.remove("reacg-hidden");
-      galleryCont.setAttribute('data-options-section', 1);
       galleryCont.setAttribute('data-options-container', "#reacg_settings");
       galleryCont.setAttribute('data-gallery-id', shortcode_id);
       galleryCont.setAttribute('data-plugin-version', reacg_gutenberg.plugin_version);
@@ -175,24 +173,15 @@
     }
   }
 
-  function reload_gallery(props, load_only_settings = false) {
-    if (load_only_settings) {
-      window.postMessage(
-        {type: "reacg-root" + props.clientId + "-show-controls", show: true},
-        "*"
-      );
-      return;
-    }
-
+  function reload_gallery(props) {
     const button = document.getElementById("reacg-loadApp");
     if (button) {
       button.setAttribute('data-id', 'reacg-root' + props.clientId);
       button.click();
     }
-
   }
 
-  function images_cont(baseCont, shortcode_id, props, first_load, selectGallery, load_only_settings = false) {
+  function images_cont(baseCont, shortcode_id, props, first_load, selectGallery) {
     fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
       .then(response => response.json())
       .then(data => {
@@ -213,14 +202,14 @@
           }
 
           set_data(baseCont, shortcode_id, props);
-          reload_gallery(props, load_only_settings);
+          reload_gallery(props);
         }
         baseCont.querySelector(".reacg-spinner__wrapper").classList.add("reacg-hidden");
       })
       .catch(error => console.error("Error fetching data:", error));
   }
 
-  function showPreview(shortcode_id, props, load_only_settings = false) {
+  function showPreview(shortcode_id, props) {
     const baseCont = document.querySelector("#reacg-gutenberg" + props.clientId);
     if (baseCont) {
       baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
@@ -234,12 +223,12 @@
               shortcode_id: shortcode_id,
             });
             baseCont.querySelector(".reacg-setup-controls").classList.add("reacg-hidden");
-            images_cont(baseCont, shortcode_id, props, false, false, load_only_settings);
+            images_cont(baseCont, shortcode_id, props, false, false);
           })
           .catch(error => console.error("Error fetching data:", error));
       }
       else {
-        images_cont(baseCont, shortcode_id, props, false, true, load_only_settings);
+        images_cont(baseCont, shortcode_id, props, false, true);
       }
     }
   }

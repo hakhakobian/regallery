@@ -83,12 +83,11 @@ class REACGLibrary {
    * Container with necessary rest routs.
    *
    * @param $gallery_id
-   * @param $enable_options
    * @param $id
    *
    * @return void
    */
-  public static function get_rest_routs($gallery_id, $enable_options = FALSE, $id = 0) {
+  public static function get_rest_routs($gallery_id, $id = 0) {
     REACGLibrary::enqueue_scripts();
 
     $data = REACGLibrary::get_data($gallery_id);
@@ -97,7 +96,6 @@ class REACGLibrary {
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr($id ? $id : $gallery_id); ?>"
          class="reacg-wrapper reacg-gallery reacg-preview"
-         data-options-section="<?php echo esc_attr( (int) ($enable_options)); ?>"
          data-options-container="<?php echo esc_attr('#reacg_settings'); ?>"
          data-plugin-version="<?php echo esc_attr(REACG_VERSION); ?>"
          data-gallery-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'gallery_timestamp', TRUE )); ?>"

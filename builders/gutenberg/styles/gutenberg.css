@@ -11,6 +11,9 @@
     justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
+    .reacg-create-gallery {
+      padding: 0;
+    }
     .reacg-create-gallery,
     .reacg-galleries-list {
       border: 1px solid #8c8f94;
@@ -28,7 +31,6 @@
       cursor: pointer;
       text-align: center;
       margin: 0;
-      padding: 0;
     }
     .reacg-galleries-list option:not(:first-child) {
       text-align: left;
