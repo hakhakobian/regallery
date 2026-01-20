@@ -278,7 +278,7 @@ class REACG_Options {
       'areControlButtonsShown' => TRUE, #boolean
       'isInfinite' => TRUE, #boolean
       'padding' => 70, #number
-      'showCounter' => TRUE, #boolean
+      'showCounter' => FALSE, #boolean
       'canShare' => FALSE, #boolean
       'canDownload' => FALSE, #boolean
       'canZoom' => TRUE, #boolean
