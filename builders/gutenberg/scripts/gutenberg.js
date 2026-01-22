@@ -1,6 +1,7 @@
 (function (blocks, element, blockEditor) {
   let el = element.createElement;
   const {InspectorControls} = blockEditor;
+  const { useEffect } = element;
   const all_images_id = -1;
   const parsed = JSON.parse(reacg_gutenberg.data);
   /* If it's an object, convert its values to array.*/
@@ -20,6 +21,13 @@
       customClassName: false
     },
     example: {},
+    keywords: [
+      'gallery',
+      'photo gallery',
+      'image gallery',
+      're gallery',
+      'media',
+    ],
     attributes: {
       shortcode: {
         type: "string",
@@ -35,6 +43,21 @@
       },
     },
     edit: function (props) {
+      const shortcode_id = props.attributes.shortcode_id;
+      // Load gallery preview on block mount (paste, duplicate, undo).
+      useEffect(() => {
+        if (!shortcode_id) {
+          return;
+        }
+
+        const baseCont = document.getElementById(
+          "reacg-gutenberg" + props.clientId
+        );
+
+        if (baseCont) {
+          images_cont(baseCont, shortcode_id, props, true, true);
+        }
+      }, []);
       // Display block preview only on the block hover.
       if (!props.attributes.hidePreview && !props.isSelected) {
         return block_preview();
