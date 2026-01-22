@@ -1166,7 +1166,7 @@ class REACG_Gallery {
     // Metabox to display the available publishing methods.
     add_meta_box( 'gallery-help', __( 'Help', 'regallery' ), [ $this, 'meta_box_help' ], 'reacg', 'side', 'low' );
 
-    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'regallery') . REACGLibrary::$pro_icon, [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
+    add_meta_box( 'gallery-custom-css', __('Custom CSS', 'regallery') . wp_kses( REACGLibrary::$pro_icon, REACGLibrary::allowed_svg() ), [$this, 'meta_box_custom_css'], 'reacg', 'side', 'low' );
 
     add_meta_box( 'reacg-metabox-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'widget_main_features' ], 'reacg', 'side', 'low' );
     add_meta_box( 'reacg-metabox-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_metabox_widget_why_upgrade' ], 'reacg', 'side', 'low' );
@@ -1877,7 +1877,7 @@ class REACG_Gallery {
     ?>
     <div class="reacg-widget-why-upgrade reacg-box">
       <div class="reacg-box__logo">
-        <?php echo REACGLibrary::$pro_icon; ?>
+        <?php echo wp_kses( REACGLibrary::$pro_icon, REACGLibrary::allowed_svg() ); ?>
       </div>
       <div class="reacg-box__heading">
         <?php

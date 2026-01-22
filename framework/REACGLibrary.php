@@ -1,8 +1,34 @@
 <?php
 
 class REACGLibrary {
+  public static function allowed_svg() {
+    return [
+      'svg' => [
+        'width'   => true,
+        'height'  => true,
+        'viewbox' => true,
+        'xmlns'   => true,
+      ],
+      'g' => [],
+      'polygon' => [
+        'fill'   => true,
+        'points' => true,
+      ],
+      'circle' => [
+        'fill' => true,
+        'cx'   => true,
+        'cy'   => true,
+        'r'    => true,
+      ],
+      'path' => [
+        'fill' => true,
+        'd'    => true,
+      ],
+    ];
+  }
 
   public static $pro_icon = '<svg width="30px" height="30px" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><g><polygon fill="#285FFF" points="75.7,107.4 60,97.5 44.3,107.4 44.3,41.1 75.7,41.1  "></polygon><circle fill="#FFC54D" cx="60" cy="44.8" r="32.2"></circle><circle fill="#E8B04B" cx="60" cy="44.8" r="25.3"></circle><path fill="#FFFFFF" d="M61.2,29.7l4.2,8.4c0.2,0.4,0.6,0.7,1,0.8l9.3,1.4c1.1,0.2,1.6,1.5,0.8,2.3l-6.7,6.6c-0.3,0.3-0.5,0.8-0.4,1.2   l1.6,9.3c0.2,1.1-1,2-2,1.4l-8.3-4.4c-0.4-0.2-0.9-0.2-1.3,0L51,61.1c-1,0.5-2.2-0.3-2-1.4l1.6-9.3c0.1-0.4-0.1-0.9-0.4-1.2   l-6.7-6.6c-0.8-0.8-0.4-2.2,0.8-2.3l9.3-1.4c0.4-0.1,0.8-0.3,1-0.8l4.2-8.4C59.3,28.7,60.7,28.7,61.2,29.7z"></path></g></svg>';
+
   /**
    * Get ABSPATH from WP_CONTENT_DIR.
    *
