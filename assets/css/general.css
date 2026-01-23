@@ -1,9 +1,12 @@
 .editor-styles-wrapper .reacg-wrapper img,
 .reacg-wrapper img,
+.reacg-wrapper .reacg-gallery-wrapper img,
 .editor-styles-wrapper .reacg-wrapper ul,
 .reacg-wrapper ul,
+.reacg-wrapper .reacg-gallery-wrapper ul,
 .editor-styles-wrapper .reacg-wrapper li,
-.reacg-wrapper li {
+.reacg-wrapper li,
+.reacg-wrapper .reacg-gallery-wrapper li {
   margin: 0;
   padding: 0;
 }
