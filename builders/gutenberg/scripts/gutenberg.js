@@ -58,9 +58,30 @@
           images_cont(baseCont, shortcode_id, props, true, true);
         }
       }, []);
+      useEffect(() => {
+        if (!wp.data.select('core/edit-widgets')) return;
+        if (!props.isSelected) return;
+
+        // Force BLOCK tab
+        wp.data.dispatch('core/interface').enableComplementaryArea(
+          'core/edit-widgets',
+          'edit-widgets/block'
+        );
+        setTimeout(() => {
+          const tab = document.getElementById(
+            'tabs-0-edit-widgets/block-inspector'
+          );
+          tab?.click();
+        }, 50);
+      }, [props.isSelected]);
       // Display block preview only on the block hover.
       if (!props.attributes.hidePreview && !props.isSelected) {
         return block_preview();
+      }
+      if (props.isSelected
+        && typeof wp.data.select('core/edit-post') !== "undefined"
+        && typeof wp.data.dispatch('core/edit-post').openGeneralSidebar !== 'undefined') {
+        wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
       }
 
       const selected = wp.data.select('core/block-editor').getSelectedBlock();
