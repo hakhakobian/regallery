@@ -94,3 +94,7 @@
 .vc_element-icon.reacg-icon {
   background-image: url(../images/icon.svg);
 }
+
+.reacg-hidden {
+  display: none;
+}
