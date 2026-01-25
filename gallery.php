@@ -108,6 +108,7 @@ final class REACG {
 
     // Enqueue block editor assets for Gutenberg.
     add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
+    add_action('enqueue_block_assets', array($this, 'enqueue_block_assets'));
 
     // Register widget for Elementor.
     add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
@@ -372,6 +373,17 @@ final class REACG {
     if ( isset($_GET['bricks']) && $_GET['bricks'] === 'run' ) {
       wp_enqueue_style($this->prefix . '_bricks', $this->plugin_url . '/builders/bricks/bricks.css', [], '1.0');
     }
+  }
+
+  /**
+   * Enqueue scripts/styles for Gutenberg.
+   *
+   * @return void
+   */
+  public function enqueue_block_assets() {
+    $this->register_frontend_scripts();
+    // Need to correctly enqueue frontend scripts/styles in iframe for changing between Tablet/Mobile views.
+    REACGLibrary::enqueue_scripts();
   }
 
   /**
