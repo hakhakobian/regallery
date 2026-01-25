@@ -32,9 +32,11 @@ ul[class*="reacg-settings-"] {
     background: none;
   }
   .Mui-selected svg path,
-  .MuiSelect-outlined svg path,
   .MuiSvgIcon-root {
     fill: var(--e-a-color-txt);
+  }
+  .MuiSelect-outlined svg path {
+    fill: #155c92;
   }
   .type-panel-select__title,
   .MuiTab-textColorPrimary[aria-selected="false"],

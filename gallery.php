@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Re Gallery - Responsive Image & Photo Gallery
  * Description: Photo gallery plugin lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.17.20
+ * Version: 1.17.21
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,12 +24,13 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.17.20';
+  public $version = '1.17.21';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
   public $author = 'Re Gallery Team';
   public $website_url = 'https://regallery.team';
+  public $demo_url = 'https://regallery.team/core/demo/';
   public $blog_url = 'https://regallery.team/core/blog/';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
   public $nonce = 'reacg_nonce';
@@ -81,10 +82,12 @@ final class REACG {
     define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url) );
     define('REACG_BLOG_URL', $this->blog_url );
     define('REACG_BLOG_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->blog_url) );
+    define('REACG_DEMO_URL', $this->demo_url );
+    define('REACG_DEMO_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->demo_url) );
     define('REACG_VERSION', $this->version );
     define('REACG_NONCE', $this->nonce );
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
-    define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-post' );
+    define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-topic-0' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
     define('REACG_PLAYGROUND', strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE );
   }
@@ -291,6 +294,9 @@ final class REACG {
         'text' => REACG_BUY_NOW_TEXT,
         'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
       ],
+      'demo_url' => add_query_arg( ['utm_campaign' => 'view_demo'], REACG_DEMO_URL_UTM ),
+      'compare_plans_url' => add_query_arg( ['utm_campaign' => 'compare'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
+      'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'text' => [
         'load_more' => __('Load more', 'regallery'),
         'search' => __('Search', 'regallery'),

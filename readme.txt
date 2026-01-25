@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.20
+Stable tag: 1.17.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.20: Added possibility to import a demo gallery. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.21: Added view demo and compare features links to the upgrade popup. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.21 =
+= Updated: 23.01.2026 =
+* **Added:** View demo and compare features links to the upgrade popup.
+* **Fixed:** Ability to select private and protected galleries in builders.
+* **Fixed:** Gutenberg block duplicate and copy issues.
+
 = 1.17.20 =
 = Updated: 19.01.2026 =
 * **Added:** Widgets to the WordPress dashboard.

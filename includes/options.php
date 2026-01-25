@@ -278,7 +278,7 @@ class REACG_Options {
       'areControlButtonsShown' => TRUE, #boolean
       'isInfinite' => TRUE, #boolean
       'padding' => 70, #number
-      'showCounter' => TRUE, #boolean
+      'showCounter' => FALSE, #boolean
       'canShare' => FALSE, #boolean
       'canDownload' => FALSE, #boolean
       'canZoom' => TRUE, #boolean
@@ -885,7 +885,7 @@ class REACG_Options {
         unset($options['lightbox']['showLightbox']);
       }
       if ( !empty($options['type']) && $options['type'] === "mosaic"
-        && !empty($options['mosaic']) && $options['mosaic']['direction'] === "horizontal" ) {
+        && !empty($options['mosaic']) && !empty($options['mosaic']['direction']) && $options['mosaic']['direction'] === "horizontal" ) {
         $options['type'] = "justified";
         $options['justified'] = $options['mosaic'];
         unset($options['mosaic']['direction']);
