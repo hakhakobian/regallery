@@ -3,10 +3,10 @@ jQuery(document).ready(function () {
 
   const max_edit_count = 3;
   const max_minutes_spent = 2;
+  const max_minutes_spent_for_special_offer = 3;
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
-      if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
-        && jQuery(".reacg_items").data("edit-count") > max_edit_count ) {
+      if ( jQuery(".reacg_items").data("edit-count") > max_edit_count ) {
         const reacg_open_need_help_dialog_exist = setInterval(function () {
           if ( typeof reacg_open_need_help_dialog !== "undefined" ) {
             reacg_open_need_help_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
@@ -15,6 +15,17 @@ jQuery(document).ready(function () {
         }, 100);
       }
     }, 5 * 1000);
+  }
+  if (!JSON.parse(localStorage.getItem("reacg-pro"))
+    && !localStorage.getItem("reacg-opened-special-offer-dialog")) {
+    setTimeout(function () {
+      if (typeof reacg_open_special_offer_dialog !== "undefined") {
+        reacg_open_special_offer_dialog({
+          utm_medium: 'promo_code',
+          onClose: () => localStorage.setItem("reacg-opened-special-offer-dialog", true)
+        });
+      }
+    }, max_minutes_spent_for_special_offer * 60 * 1000);
   }
 
   jQuery(document).on("click", ".reacg_help_icon", function () {
@@ -72,8 +83,7 @@ jQuery(document).ready(function () {
 
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
-      if ( !localStorage.getItem("reacg-opened-contact-us-dialog")
-        && typeof reacg_open_new_here_dialog !== "undefined" ) {
+      if ( typeof reacg_open_new_here_dialog !== "undefined" ) {
         reacg_open_new_here_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
       }
     }, max_minutes_spent * 60 * 1000);
