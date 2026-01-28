@@ -381,9 +381,12 @@ final class REACG {
    * @return void
    */
   public function enqueue_block_assets() {
-    $this->register_frontend_scripts();
-    // Need to correctly enqueue frontend scripts/styles in iframe for changing between Tablet/Mobile views.
-    REACGLibrary::enqueue_scripts();
+    // Always load inside editor iframe (Need to correctly enqueue frontend scripts/styles in iframe for changing between Tablet/Mobile views.)
+    // Frontend: load ONLY if block exists․
+    if ( is_admin() || ( function_exists( 'has_block' ) && has_block( 'reacg/gallery' ) ) ) {
+      $this->register_frontend_scripts();
+      REACGLibrary::enqueue_scripts();
+    }
   }
 
   /**
