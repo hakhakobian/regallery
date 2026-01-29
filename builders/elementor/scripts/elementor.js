@@ -24,7 +24,7 @@ function images_cont(baseCont, shortcode_id, widget_id, load_only_settings = fal
     .catch(error => console.error("Error fetching data:", error));
 }
 
-function showPreview(shortcode_id, widget_id = null, load_only_settings = false) {
+function showPreview(shortcode_id, widget_id = null, load_only_settings = false, settingsModel = null) {
   const baseCont = jQuery("#elementor-controls");
   if (baseCont) {
     baseCont.find(".reacg-elementor-options").addClass("reacg-hidden");
@@ -37,6 +37,9 @@ function showPreview(shortcode_id, widget_id = null, load_only_settings = false)
         .then(response => response.json())
         .then(data => {
           shortcode_id = data;
+          if (settingsModel) {
+            settingsModel.set('post_id', shortcode_id);
+          }
           images_cont(baseCont, shortcode_id, widget_id, load_only_settings);
         })
         .catch(error => console.error("Error fetching data:", error));
@@ -104,7 +107,7 @@ function reacg_reload_gallery(id, shortcode_id, load_only_settings = false) {
       reacg_reload_gallery(widgetId, shortcode_id);
       waitForControl('.reacg-create-gallery', function (btn) {
         btn.addEventListener('click', function () {
-          window.showPreview(0, widgetId);
+          window.showPreview(0, widgetId, false, settingsModel);
         });
         if (shortcode_id == 0) {
           const baseCont = jQuery("#elementor-controls");
