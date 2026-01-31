@@ -186,7 +186,7 @@ class REACG_Options {
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'titlePosition' => 'bottom', #string bottom | top | center
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
       'titleColor' => '#FFFFFF', #string
       'titleAlignment' => 'left', #string left | center | right
@@ -196,7 +196,7 @@ class REACG_Options {
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'captionPosition' => 'bottom', #string bottom | top | center
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
     ],
@@ -215,7 +215,7 @@ class REACG_Options {
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'titlePosition' => 'bottom', #string bottom | top | center
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
       'titleColor' => '#FFFFFF', #string
       'titleAlignment' => 'left', #string left | center | right
@@ -225,7 +225,7 @@ class REACG_Options {
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'captionPosition' => 'bottom', #string bottom | top | center
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
     ],
@@ -241,7 +241,7 @@ class REACG_Options {
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'titlePosition' => 'bottom', #string bottom | top | center
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
       'titleColor' => '#FFFFFF', #string
       'titleAlignment' => 'left', #string left | center | right
@@ -251,7 +251,7 @@ class REACG_Options {
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
-      'captionPosition' => 'bottom', #string bottom | top | center
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
     ],
