@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.22
+Stable tag: 1.17.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,24 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.22: Added titles and captions support for Cube, Cards, and Carousel layouts. Enjoy free functionality and add your suggestions via WP forum.
+* 1.17.23: Added new pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.17.23 =
+= Updated: 02.02.2026 =
+* **Added:** Swipeflow pre-built template.
+* **Added:** Travel Agency pre-built template.
+* **Added:** Video Cube pre-built template.
+* **Added:** Advertisement pre-built template.
+* **Added:** Border Hover pre-built template.
+* **Added:** Above/Below options for Title and Caption positioning in Cube, Cards, and Carousel layouts.
+* **Improved:** Carousel layout responsiveness.
+* **Improved:** Text visibility on images.
+* **Changed:** Text default options.
+* **Fixed:** Lightbox opening issue in Gutenberg editor when switching to mobile or tablet view.
+* **Fixed:** Load required JS/CSS files only on pages containing galleries.
+
 = 1.17.22 =
 = Updated: 27.01.2026 =
 * **Added:** Titles and captions support for Cube, Cards, and Carousel layouts.
