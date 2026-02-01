@@ -201,16 +201,16 @@ class REACG_Options {
       'captionFontColor' => '#FFFFFF', #string
     ],
     'carousel' => [
-      'width' => 600, #number
-      'height' => 420, #number
+      'width' => 300, #number
+      'height' => 400, #number
       'backgroundColor' => '', #string;
       'padding' => 0, #number
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
       'playAndPauseAllowed' => FALSE, #boolean
-      'scale' => 0.1, #float
+      'scale' => 1, #float
       'imagesCount' => 3, #number
-      'spaceBetween' => -20, #number
+      'spaceBetween' => 20, #number
       'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
