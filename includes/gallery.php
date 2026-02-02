@@ -1502,7 +1502,7 @@ class REACG_Gallery {
       $data['type'] = $matches[1];
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the post featured image alt as image alt.
-      $data['alt'] = html_entity_decode(get_post_meta($post_thumbnail_id, '_wp_attachment_image_alt', TRUE));
+      $data['alt'] = html_entity_decode($this->get_the_alt($post_thumbnail_id));
 
       return $data;
     }
@@ -1536,7 +1536,7 @@ class REACG_Gallery {
       $data['type'] = "video";
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the video cover image alt as video alt.
-      $data['alt'] = html_entity_decode(get_post_meta($thumbnail_id, '_wp_attachment_image_alt', TRUE));
+      $data['alt'] = html_entity_decode($this->get_the_alt($thumbnail_id));
     }
     else {
       $data = $this->get_image_urls($id);
@@ -1547,11 +1547,42 @@ class REACG_Gallery {
       }
 
       $data['type'] = "image";
-      $data['alt'] = html_entity_decode(get_post_meta($id, '_wp_attachment_image_alt', TRUE));
+      $data['alt'] = html_entity_decode($this->get_the_alt($id));
       $data['title'] = html_entity_decode(get_the_title($id));
     }
 
     return $data;
+  }
+
+  /**
+   * Get image ALT text with WPML support.
+   *
+   * - Retrieves ALT text from the translated attachment when WPML is active.
+   * - Falls back to the original attachment ALT if the translated one is empty.
+   * - Safe to use even when WPML is not installed.
+   *
+   * @param int $id Original attachment ID.
+   * @return string Image ALT text.
+   */
+  private function get_the_alt($id) {
+    // Get translated attachment ID if WPML is active.
+    // If WPML is not installed, this returns the original ID.
+    $attachment_id  = apply_filters(
+      'wpml_object_id',
+      $id,
+      'attachment',
+      TRUE
+    );
+
+    // Try to get ALT text from the translated attachment.
+    $alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', TRUE );
+
+    // Fallback: if translated ALT is empty, use the original attachment ALT.
+    if ( empty( $alt ) && $attachment_id !== $id ) {
+      $alt = get_post_meta( $id, '_wp_attachment_image_alt', TRUE );
+    }
+
+    return $alt;
   }
 
   /**
