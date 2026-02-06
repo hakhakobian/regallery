@@ -179,6 +179,7 @@ class REACG_Options {
       'isInfinite' => TRUE, #boolean
       'autoplay' => TRUE, #boolean
       'slideDuration' => 3000, #number
+      'playAndPauseAllowed' => FALSE, #boolean
       'backgroundColor' => '#FFFFFF', #string;
       'padding' => 0, #number;
       'shadow' => TRUE, #boolean
@@ -199,6 +200,15 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
+      'navigation' => 'none', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'carousel' => [
       'width' => 300, #number
@@ -228,12 +238,20 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
+      'navigation' => 'arrows', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'cards' => [
       'width' => 500, #number
       'height' => 500, #number
       'perSlideOffset' => 20, #number
-      'navigationButton' => TRUE, #boolean
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
@@ -254,6 +272,15 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
       'captionFontColor' => '#FFFFFF', #string
+      'navigation' => 'arrows', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'blog' => [
       'imageWidth' => 50, #number
@@ -393,6 +420,9 @@ class REACG_Options {
       'imageWidth',
       'imageHeight',
       'captionFontSize',
+      'arrowsSize',
+      'dotsSize',
+      'dotsGap',
     ];
     $empty_number = [
       'template_id',
@@ -430,7 +460,6 @@ class REACG_Options {
       'isSlideshowAllowed',
       'isFullscreenAllowed',
       'shadow',
-      'navigationButton',
       'playAndPauseAllowed',
       'openUrlInNewTab',
       'showTitle',
@@ -444,6 +473,7 @@ class REACG_Options {
       'enableWatermark',
       'enableSearch',
       'enableWhiteLabel',
+      'showVideoControls',
     ];
     $float = [
       'scale',
@@ -571,9 +601,13 @@ class REACG_Options {
         'allowed' => [ '1', '1.33', '1.5', '1.77', '0.75', '0.66', '0.56' ],
         'default' => '1.77',
       ],
-      'watermarkPosition' => [
-        'allowed' => [ 'top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right' ],
-        'default' => 'middle-center',
+      'navigation' => [
+        'allowed' => [ 'none', 'arrows', 'dots', 'arrowsAndDots' ],
+        'default' => 'arrows',
+      ],
+      'dotsPosition' => [
+        'allowed' => [ 'outside', 'outside' ],
+        'default' => 'outside',
       ],
     ];
     if ( in_array($key, $float) ) {
