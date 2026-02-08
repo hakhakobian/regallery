@@ -3,7 +3,8 @@ jQuery(document).ready(function () {
 
   const max_edit_count = 3;
   const max_minutes_spent = 1;
-  const max_minutes_spent_for_special_offer = 1.5;
+  const max_minutes_spent_for_special_offer = 0.7;
+  const max_edit_count_for_special_offer = 1;
   if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
     setTimeout(function () {
       if ( jQuery(".reacg_items").data("edit-count") > max_edit_count ) {
@@ -18,7 +19,7 @@ jQuery(document).ready(function () {
   }
   if (!JSON.parse(localStorage.getItem("reacg-pro"))
     && !localStorage.getItem("reacg-opened-special-offer-dialog")
-    && jQuery(".reacg_items").data("edit-count") > max_edit_count) {
+    && jQuery(".reacg_items").data("edit-count") > max_edit_count_for_special_offer) {
     setTimeout(function () {
       if (typeof reacg_open_special_offer_dialog !== "undefined") {
         reacg_open_special_offer_dialog({
