@@ -31,7 +31,7 @@ class REACG_Options {
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 25, #number
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -41,12 +41,12 @@ class REACG_Options {
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 20, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
       'showDescription' => FALSE, #boolean
       'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionPosition' => 'below', #string above | below
       'descriptionFontSize' => 18, #number
-      'descriptionFontColor' => '#CCCCCC', #string
+      'descriptionFontColor' => '#DDDDDD', #string
       'descriptionMaxRowsCount' => 3, #number
     ],
     'mosaic' => [
@@ -66,7 +66,7 @@ class REACG_Options {
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -77,7 +77,7 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
     ],
     'justified' => [
       'width' => 100, #number
@@ -94,7 +94,7 @@ class REACG_Options {
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -105,7 +105,7 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
     ],
     'masonry' => [
       'width' => 100, #number
@@ -122,7 +122,7 @@ class REACG_Options {
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleAlignment' => 'left', #string left | center | right
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -133,7 +133,7 @@ class REACG_Options {
       'captionPosition' => 'bottom', #string bottom | top | center
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
     ],
     'slideshow' => [
       'width' => 1080, #number
@@ -157,7 +157,7 @@ class REACG_Options {
       'backgroundColor' => '#000000', #string
       'textPosition' => 'bottom', #string top | bottom | above | below
       'textFontFamily' => 'Inherit', #string
-      'textColor' => '#FFFFFF', #string
+      'textColor' => '#DDDDDD', #string
       'textBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showTitle' => TRUE, #bool
@@ -171,7 +171,7 @@ class REACG_Options {
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 1.5, #float
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
     ],
     'cube' => [
       'width' => 300, #number
@@ -179,6 +179,7 @@ class REACG_Options {
       'isInfinite' => TRUE, #boolean
       'autoplay' => TRUE, #boolean
       'slideDuration' => 3000, #number
+      'playAndPauseAllowed' => FALSE, #boolean
       'backgroundColor' => '#FFFFFF', #string;
       'padding' => 0, #number;
       'shadow' => TRUE, #boolean
@@ -188,7 +189,7 @@ class REACG_Options {
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -198,7 +199,16 @@ class REACG_Options {
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
+      'navigation' => 'none', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'carousel' => [
       'width' => 300, #number
@@ -217,7 +227,7 @@ class REACG_Options {
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -227,13 +237,21 @@ class REACG_Options {
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
+      'navigation' => 'arrows', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'cards' => [
       'width' => 500, #number
       'height' => 500, #number
       'perSlideOffset' => 20, #number
-      'navigationButton' => TRUE, #boolean
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
@@ -243,7 +261,7 @@ class REACG_Options {
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titlePosition' => 'bottom', #string bottom | top | center | above | below
       'titleFontSize' => 20, #number
-      'titleColor' => '#FFFFFF', #string
+      'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
       'overlayTextBackground' => '', #string
@@ -253,7 +271,16 @@ class REACG_Options {
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center | above | below
       'captionFontSize' => 18, #number
-      'captionFontColor' => '#FFFFFF', #string
+      'captionFontColor' => '#DDDDDD', #string
+      'navigation' => 'arrows', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 15, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
+      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'showVideoControls' => false,
     ],
     'blog' => [
       'imageWidth' => 50, #number
@@ -393,6 +420,9 @@ class REACG_Options {
       'imageWidth',
       'imageHeight',
       'captionFontSize',
+      'arrowsSize',
+      'dotsSize',
+      'dotsGap',
     ];
     $empty_number = [
       'template_id',
@@ -430,7 +460,6 @@ class REACG_Options {
       'isSlideshowAllowed',
       'isFullscreenAllowed',
       'shadow',
-      'navigationButton',
       'playAndPauseAllowed',
       'openUrlInNewTab',
       'showTitle',
@@ -444,6 +473,7 @@ class REACG_Options {
       'enableWatermark',
       'enableSearch',
       'enableWhiteLabel',
+      'showVideoControls',
     ];
     $float = [
       'scale',
@@ -571,9 +601,13 @@ class REACG_Options {
         'allowed' => [ '1', '1.33', '1.5', '1.77', '0.75', '0.66', '0.56' ],
         'default' => '1.77',
       ],
-      'watermarkPosition' => [
-        'allowed' => [ 'top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right' ],
-        'default' => 'middle-center',
+      'navigation' => [
+        'allowed' => [ 'none', 'arrows', 'dots', 'arrowsAndDots' ],
+        'default' => 'arrows',
+      ],
+      'dotsPosition' => [
+        'allowed' => [ 'outside', 'inside' ],
+        'default' => 'outside',
       ],
     ];
     if ( in_array($key, $float) ) {
