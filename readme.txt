@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.17.23
+Stable tag: 1.18.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,10 +245,23 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.17.23: Added new pre-built templates. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.0: Added navigation options in Cube, Carousel, and Cards layouts. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.0 =
+= Updated: 09.02.2026 =
+* **Added:** Dots as navigation with the ability to change their position, color, and size on Cube, Carousel, and Cards layouts.
+* **Added:** Option to disable navigation on Cube, Carousel, and Cards layouts.
+* **Added:** Option to change navigation color on Cube, Carousel, and Cards layouts.
+* **Added:** Option to hide video controls on Cube, Carousel, and Cards layouts.
+* **Added:** Animation speed option for slide transitions on Cube, Carousel, and Cards layouts.
+* **Improved:** Carousel layout on mobile devices.
+* **Fixed:** Autoplay of visible videos in Carousel layout.
+* **Fixed:** Automatic translation of Alt texts with WPML.
+* **Fixed:** Prevent page from scrolling to top when closing the lightbox.
+* **Fixed:** Video titles on Cube, Carousel, Cards layouts with position top, center, bottom.
+
 = 1.17.23 =
 = Updated: 02.02.2026 =
 * **Added:** Swipeflow pre-built template.
