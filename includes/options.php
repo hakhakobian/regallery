@@ -209,6 +209,7 @@ class REACG_Options {
       'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
       'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
       'showVideoControls' => false,
+      'animationSpeed' => 500, #number
     ],
     'carousel' => [
       'width' => 300, #number
@@ -247,6 +248,7 @@ class REACG_Options {
       'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
       'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
       'showVideoControls' => false,
+      'animationSpeed' => 500, #number
     ],
     'cards' => [
       'width' => 500, #number
@@ -281,6 +283,7 @@ class REACG_Options {
       'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
       'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
       'showVideoControls' => false,
+      'animationSpeed' => 500, #number
     ],
     'blog' => [
       'imageWidth' => 50, #number
@@ -423,6 +426,7 @@ class REACG_Options {
       'arrowsSize',
       'dotsSize',
       'dotsGap',
+      'animationSpeed',
     ];
     $empty_number = [
       'template_id',
