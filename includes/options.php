@@ -204,10 +204,10 @@ class REACG_Options {
       'arrowsSize' => 26, #number
       'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
       'dotsPosition' => 'outside', #string inside | outside
-      'dotsSize' => 15, #number
+      'dotsSize' => 13, #number
       'dotsGap' => 4, #number
-      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
-      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'activeDotColor' => '#aaaaaa', #string
+      'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
     ],
@@ -243,10 +243,10 @@ class REACG_Options {
       'arrowsSize' => 26, #number
       'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
       'dotsPosition' => 'outside', #string inside | outside
-      'dotsSize' => 15, #number
+      'dotsSize' => 13, #number
       'dotsGap' => 4, #number
-      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
-      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'activeDotColor' => '#aaaaaa', #string
+      'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
     ],
@@ -278,10 +278,10 @@ class REACG_Options {
       'arrowsSize' => 26, #number
       'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
       'dotsPosition' => 'outside', #string inside | outside
-      'dotsSize' => 15, #number
+      'dotsSize' => 13, #number
       'dotsGap' => 4, #number
-      'activeDotColor' => 'rgba(0, 0, 0, 1)', #string
-      'inactiveDotsColor' => 'rgba(0, 0, 0, 0.5)', #string
+      'activeDotColor' => '#aaaaaa', #string
+      'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
     ],
