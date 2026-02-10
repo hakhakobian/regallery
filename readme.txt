@@ -20,7 +20,7 @@ Whether you're a photographer, blogger, artist, or small business owner, this re
 
 🚀 Transform your WordPress site into a visual showcase with Re Gallery.
 
-[Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_views) | [Pre-Designed Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Landing Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_page_builder)
+[Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_layouts) | [Pre-Designed Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo) | [Landing Page Builder](https://regallery.team/core/landing-pages/?utm_source=wordpress&utm_medium=details&utm_campaign=landing_page_builder)
 
 Improve SEO, increase user engagement, and bring your website to life with Re Gallery - a powerful, lightweight, and easy-to-use WordPress photo gallery plugin.
 
