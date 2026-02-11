@@ -728,7 +728,7 @@ msgid "AND"
 msgstr "E"
 
 #: includes/posts.php:131
-msgid "Taxanomies"
+msgid "Taxonomies"
 msgstr "Tassonomie"
 
 #: includes/posts.php:154

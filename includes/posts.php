@@ -128,7 +128,7 @@ class REACG_Posts {
       <div class="reacg_dynamic_wrapper">
         <div>
           <div>
-            <label for="reacg_taxanomies"><?php esc_html_e('Taxanomies', 'regallery'); ?></label>
+            <label for="reacg_taxanomies"><?php esc_html_e('Taxonomies', 'regallery'); ?></label>
             <select multiple="multiple" name="reacg_taxanomies[]" id="reacg_taxanomies" class="reacg_searchable_select reacg_change_listener"  style="width: 100%">
               <?php
               foreach ( $taxonomies as $taxonomy => $terms ) {
