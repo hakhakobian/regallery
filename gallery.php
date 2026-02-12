@@ -290,9 +290,10 @@ final class REACG {
       'upgrade' => [
         'text' => REACG_BUY_NOW_TEXT,
         'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
+        'discount_url' => add_query_arg( ['utm_campaign' => 'upgrade_with_discount'], REACG_WEBSITE_URL_UTM . '#pricing' ),
       ],
       'demo_url' => add_query_arg( ['utm_campaign' => 'view_demo'], REACG_DEMO_URL_UTM ),
-      'compare_plans_url' => add_query_arg( ['utm_campaign' => 'compare'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
+      'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'text' => [
         'load_more' => __('Load more', 'regallery'),
