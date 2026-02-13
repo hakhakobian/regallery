@@ -163,14 +163,15 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 9. Gallery Blog view
 10. Image Gallery Lightbox
 11. Gallery Chaos template
-12. Gallery Circle template
+12. Gallery Products template
 13. Gallery Modern template
 14. Gallery Prism Pattern template
 15. Gallery Dynamic template
 16. Gallery Grid template
-17. Add Image to the Gallery
-18. Gallery Options with Live Preview
-19. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
+17. Gallery Border Hover template
+18. Add Image to the Gallery
+19. Gallery Options with Live Preview
+20. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
 
 
 == Frequently Asked Questions ==
