@@ -135,6 +135,7 @@ class REACGLibrary {
    */
   public static function enqueue_scripts() {
     wp_enqueue_style(REACG_PREFIX . '_general');
+    wp_enqueue_style(REACG_PREFIX . '_thumbnails');
     wp_enqueue_script(REACG_PREFIX . '_thumbnails');
   }
 

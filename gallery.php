@@ -282,6 +282,7 @@ final class REACG {
     }
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
+    wp_register_style($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery/wp-gallery.css', [], $this->version);
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
