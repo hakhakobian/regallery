@@ -135,8 +135,18 @@ final class REACG {
     add_action('init', array($this, 'load_string'), 8);
     add_action('admin_init', array($this, 'do_activation_redirect'));
 
+    add_filter('body_class', [$this, 'add_body_class']);
+
     require_once ($this->plugin_dir . '/includes/admin-notices.php');
     new REACG_Admin_Notices();
+  }
+
+  public function add_body_class($classes) {
+    if (defined('REACG_VERSION')) {
+      $classes[] = 'reacg';
+    }
+
+    return $classes;
   }
 
   /**
