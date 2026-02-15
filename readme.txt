@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.0
+Stable tag: 1.18.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,23 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.0: Added navigation options in Cube, Carousel, and Cards layouts. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.1: Added right click protection. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.1 =
+= Updated: 16.02.2026 =
+* **Added:** Right click protection.
+* **Added:** Product Cards pre-built template.
+* **Added:** Portfolio pre-built template.
+* **Added:** Service Blocks pre-built template.
+* **Added:** Detail Grid pre-built template.
+* **Added:** Detail Grid pre-built template.
+* **Added:** CTA Cards pre-built template.
+* **Fixed:** Lightbox no longer scrolls to the top on close.
+* **Fixed:** Number input with empty value now saves correctly.
+* **Fixed:** Texts no longer disappear when changing hover effects.
+
 = 1.18.0 =
 = Updated: 09.02.2026 =
 * **Added:** Dots as navigation with the ability to change their position, color, and size on Cube, Carousel, and Cards layouts.
