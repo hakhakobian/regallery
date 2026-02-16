@@ -25,6 +25,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
+      'showAllItems' => TRUE, #boolean
       'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -72,6 +73,7 @@ class REACG_Options {
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
+      'showAllItems' => TRUE, #boolean
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center
@@ -100,6 +102,7 @@ class REACG_Options {
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
+      'showAllItems' => TRUE, #boolean
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center
@@ -128,6 +131,7 @@ class REACG_Options {
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'scroll', #string scroll | loadMore | none
+      'showAllItems' => TRUE, #boolean
       'showCaption' => FALSE, #boolean
       'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'captionPosition' => 'bottom', #string bottom | top | center
@@ -318,6 +322,7 @@ class REACG_Options {
       'textHorizontalSpacing' => 35, #number
       'textVerticalSpacing' => 35, #number
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
+      'showAllItems' => TRUE, #boolean
       'showCaption' => FALSE, #boolean
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 26, #number
@@ -480,6 +485,7 @@ class REACG_Options {
       'enableWhiteLabel',
       'showVideoControls',
       'enableRightClickProtection',
+      'showAllItems',
     ];
     $float = [
       'scale',
