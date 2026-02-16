@@ -225,6 +225,7 @@ class REACG_Options {
       'playAndPauseAllowed' => FALSE, #boolean
       'scale' => 1, #float
       'imagesCount' => 3, #number
+      'enableScrollByImagesCount' => FALSE, #boolean
       'spaceBetween' => 20, #number
       'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
@@ -486,6 +487,7 @@ class REACG_Options {
       'showVideoControls',
       'enableRightClickProtection',
       'showAllItems',
+      'enableScrollByImagesCount',
     ];
     $float = [
       'scale',
