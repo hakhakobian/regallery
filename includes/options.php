@@ -49,6 +49,7 @@ class REACG_Options {
       'descriptionFontSize' => 18, #number
       'descriptionFontColor' => '#DDDDDD', #string
       'descriptionMaxRowsCount' => 3, #number
+      'showVideoCover' => TRUE, #boolean
     ],
     'mosaic' => [
       'width' => 100, #number
@@ -80,6 +81,7 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
+      'showVideoCover' => TRUE, #boolean
     ],
     'justified' => [
       'width' => 100, #number
@@ -109,6 +111,7 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
+      'showVideoCover' => TRUE, #boolean
     ],
     'masonry' => [
       'width' => 100, #number
@@ -138,6 +141,7 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
+      'showVideoCover' => TRUE, #boolean
     ],
     'slideshow' => [
       'width' => 1080, #number
@@ -214,6 +218,7 @@ class REACG_Options {
       'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
+      'showVideoCover' => FALSE, #boolean
     ],
     'carousel' => [
       'width' => 300, #number
@@ -254,6 +259,7 @@ class REACG_Options {
       'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
+      'showVideoCover' => FALSE, #boolean
     ],
     'cards' => [
       'width' => 500, #number
@@ -289,6 +295,7 @@ class REACG_Options {
       'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
+      'showVideoCover' => FALSE, #boolean
     ],
     'blog' => [
       'imageWidth' => 50, #number
@@ -329,6 +336,7 @@ class REACG_Options {
       'captionFontSize' => 26, #number
       'captionFontColor' => '#CCCCCC', #string
       'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'showVideoCover' => FALSE, #boolean
     ],
     'general' => [
       'clickAction' => 'lightbox', #string none | lightbox | url
@@ -488,6 +496,7 @@ class REACG_Options {
       'enableRightClickProtection',
       'showAllItems',
       'enableScrollByImagesCount',
+      'showVideoCover',
     ];
     $float = [
       'scale',
