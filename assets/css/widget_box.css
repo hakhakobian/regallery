@@ -11,12 +11,10 @@
   .reacg-box__logo img {
     width: 60px;
     height: 60px;
+    margin: 0;
   }
 
   .reacg-box__logo {
-    background: rgb(209, 218, 232);
-    border-radius: 50%;
-    padding: 12px;
     margin: 0 auto;
   }
 
@@ -65,7 +63,7 @@
   }
 
   .reacg-box__item .dashicons {
-    color: rgb(147 177 77);
+    color: #8769ff;
     font-size: 20px;
   }
 
@@ -91,15 +89,17 @@
     outline: none !important;
     box-shadow: none !important;
   }
-  .reacg-box__button.reacg-box__upgrade-button {
-    background: rgb(147 177 77);
+  .reacg-box__button.reacg-box__upgrade-button,
+  .button.reacg-box__button.reacg-box__upgrade-button:hover,
+  .button.reacg-box__button.reacg-box__upgrade-button:active,
+  .button.reacg-box__button.reacg-box__upgrade-button:focus {
+    background: #8769ff;
     color: white;
   }
   .button.reacg-box__button.reacg-box__upgrade-button:hover,
   .button.reacg-box__button.reacg-box__upgrade-button:active,
   .button.reacg-box__button.reacg-box__upgrade-button:focus {
-    background: rgb(135 162 71);
-    color: white;
+    opacity: .85;
   }
   .reacg-box__note {
     text-align: left;
@@ -114,8 +114,7 @@
 
 .reacg-widget-main-features {
   .reacg-box__logo {
-    background: none;
-    border: none;
+    padding: 12px;
   }
   .reacg-box__item .dashicons {
     color: #2271b1;
