@@ -1930,7 +1930,7 @@ class REACG_Gallery {
       </div>
       <div class="reacg-box__button-wrapper">
         <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')); ?>" target="_blank" class="button button-primary button-large reacg-box__button reacg-box__upgrade-button">
-          <?php echo esc_html(REACG_BUY_NOW_TEXT); ?>
+          <?php esc_html_e('Upgrade', 'regallery'); ?>
         </a>
       </div>
     </div>
