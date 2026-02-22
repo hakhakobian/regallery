@@ -246,7 +246,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.1: Added video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.2: Added video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
