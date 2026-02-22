@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.1
+Stable tag: 1.18.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,17 +246,26 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.1: Added right click protection. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.1: Added video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.2 =
+= Updated: 23.02.2026 =
+* **Added:** Video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover.
+* **Added:** Possibility to display video cover in Blog, Carousel, Cube, and Cards layouts.
+* **Added:** "Scroll by images count" option to the Carousel layout.
+* **Added:** Possibility to hide pagination with specified images count.
+* **Added:** Liquid Glass pre-built template.
+* **Improved:** Paged pagination design on mobile devices.
+* **Fixed:** Pagination issue in the Blog layout.
+
 = 1.18.1 =
 = Updated: 16.02.2026 =
 * **Added:** Right click protection.
 * **Added:** Product Cards pre-built template.
 * **Added:** Portfolio pre-built template.
 * **Added:** Service Blocks pre-built template.
-* **Added:** Detail Grid pre-built template.
 * **Added:** Detail Grid pre-built template.
 * **Added:** CTA Cards pre-built template.
 * **Fixed:** Lightbox no longer scrolls to the top on close.
