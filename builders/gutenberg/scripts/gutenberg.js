@@ -325,6 +325,38 @@
     });
     event.preventDefault();
   }
+
+  wp.domReady(function () {
+    const { select, subscribe } = wp.data;
+
+    let wasSaving = false;
+
+    subscribe(function () {
+      const editor = select('core/editor');
+
+      const blocks = editor.getBlocks();
+      const hasGalleryBlock = blocks.some(
+        block => block.name === 'reacg/gallery'
+      );
+
+      if (!hasGalleryBlock) {
+        return; /* Exit early if block not present.*/
+      }
+
+      const isSaving = editor.isSavingPost();
+      const isAutosaving = editor.isAutosavingPost();
+
+      if (isSaving && !isAutosaving && !wasSaving) {
+        wasSaving = true;
+        /* Save options on saving the gallery.*/
+        jQuery('.save-settings-button').trigger('click');
+      }
+
+      if (!isSaving) {
+        wasSaving = false;
+      }
+    });
+  });
 })(
   window.wp.blocks,
   window.wp.element,
