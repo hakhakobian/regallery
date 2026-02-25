@@ -119,7 +119,7 @@ class REACGLibrary {
     REACGLibrary::enqueue_scripts();
 
     $data = REACGLibrary::get_data($gallery_id);
-
+    ob_start();
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
     <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
@@ -130,6 +130,7 @@ class REACGLibrary {
          data-gallery-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'gallery_timestamp', TRUE )); ?>"
          data-options-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'options_timestamp', TRUE )); ?>"
          data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
+    return ob_get_clean();
   }
 
   /**

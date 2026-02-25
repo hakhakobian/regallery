@@ -16,9 +16,7 @@ class REACG_Shortcode {
     }
 
     $id = (int) $params['id'];
-    ob_start();
-    REACGLibrary::get_rest_routs($id);
 
-    return str_replace(array( "\r\n", "\n", "\r" ), '', ob_get_clean());
+    return str_replace(array( "\r\n", "\n", "\r" ), '', REACGLibrary::get_rest_routs($id));
   }
 }
