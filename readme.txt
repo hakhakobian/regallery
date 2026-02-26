@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.2
+Stable tag: 1.18.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,19 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.2: Added video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.3: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.3 =
+= Updated: 26.02.2026 =
+* **Added:** Motion View pre-built template.
+* **Improved:** Removed the even-number image count restriction in the Carousel layout.
+* **Fixed:** Divi Module rendering order issue.
+* **Fixed:** Save gallery options on publishing post with Gutenberg editor.
+* **Fixed:** Image and video loading animation.
+* **Fixed:** Video hover effect in the Grid layout.
+
 = 1.18.2 =
 = Updated: 23.02.2026 =
 * **Added:** Video playback support for Grid, Mosaic, Masonry, and Justified layouts instead of showing video cover.
