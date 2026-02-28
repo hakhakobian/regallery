@@ -367,6 +367,7 @@ final class REACG {
       'enter_license_key' => __('Please enter license key.', 'regallery'),
       'no_image' => $this->plugin_url . $this->no_image,
       'rest_nonce' => $this->rest_nonce,
+      'nonce' => wp_create_nonce( $this->nonce ),
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
       'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
     ));

@@ -117,6 +117,7 @@ jQuery(document).ready(function () {
   jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
     wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
     wp.Uploader.defaults.multipart_params.reacg = 'gallery';
+    wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
@@ -142,6 +143,7 @@ jQuery(document).ready(function () {
       });
       media_uploader.on('close', function () {
         delete wp.Uploader.defaults.multipart_params.reacg;
+        delete wp.Uploader.defaults.multipart_params.reacg_nonce;
         media_uploader.remove();
       });
       media_uploader.open();
@@ -209,6 +211,7 @@ jQuery(document).ready(function () {
         });
         media_uploader.on('close', function () {
           delete wp.Uploader.defaults.multipart_params.reacg;
+          delete wp.Uploader.defaults.multipart_params.reacg_nonce;
           media_uploader.remove();
         });
         media_uploader.open();
@@ -220,6 +223,7 @@ jQuery(document).ready(function () {
   jQuery(document).on("click", ".reacg_item .reacg-edit-thumbnail", function () {
     wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
     wp.Uploader.defaults.multipart_params.reacg = 'gallery';
+    wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
@@ -233,6 +237,7 @@ jQuery(document).ready(function () {
     } );
     media_uploader.on('close', function () {
       delete wp.Uploader.defaults.multipart_params.reacg;
+      delete wp.Uploader.defaults.multipart_params.reacg_nonce;
       media_uploader.remove();
     });
     media_uploader.open();
@@ -421,6 +426,7 @@ function reacg_media_uploader( e, that ) {
   e.preventDefault();
   wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
   wp.Uploader.defaults.multipart_params.reacg = 'gallery';
+  wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
   const galleryItemsContainer = jQuery(that).closest(".reacg_items");
 
   let media_uploader = wp.media.frames.file_frame = wp.media( {
@@ -455,6 +461,7 @@ function reacg_media_uploader( e, that ) {
 
   media_uploader.on("close", function () {
     delete wp.Uploader.defaults.multipart_params.reacg;
+    delete wp.Uploader.defaults.multipart_params.reacg_nonce;
     media_uploader.remove();
   });
 
