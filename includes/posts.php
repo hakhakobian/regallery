@@ -108,6 +108,7 @@ class REACG_Posts {
     elseif ( $select_type === "dynamic" ) {
       $relation = ["or" => __("OR", "regallery"), "and" => __("AND", "regallery")];
 
+      // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- User-defined exclusion required for post filtering.
       $additional_data_arr = ['taxonomies' => [], 'relation' => '', 'exclude' => [], 'exclude_without_image' => 0, 'count' => 6];
       if ( !empty($additional_data) ) {
         $additional_data_arr = json_decode($additional_data, TRUE);
