@@ -1580,8 +1580,7 @@ class REACG_Gallery {
     // Get translated attachment ID if WPML is active.
     // If WPML is not installed, this returns the original ID.
     $attachment_id  = apply_filters(
-      /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound - not defining a hook — calling a hook provided by WPML.*/
-      'wpml_object_id',
+      'wpml_object_id', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- not defining a hook — calling a hook provided by WPML.
       $id,
       'attachment',
       TRUE
