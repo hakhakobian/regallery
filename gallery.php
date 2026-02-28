@@ -287,12 +287,13 @@ final class REACG {
 
       $url = 'https://fonts.googleapis.com/css?family=' . $query;
       $url .= '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
-      wp_register_style($this->prefix . '_fonts', $url, null, null);
+      $version = md5( $url ); // Cache bust when fonts change
+      wp_register_style($this->prefix . '_fonts', $url, [], $version);
       $required_styles[] = $this->prefix . '_fonts';
     }
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
-    wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version);
+    wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version, TRUE);
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
       'plugin_url' => $this->plugin_url,
@@ -335,10 +336,10 @@ final class REACG {
     wp_register_style($this->prefix . '_widget_box', $this->plugin_url . '/assets/css/widget_box.css', [], $this->version);
     wp_register_script($this->prefix . '_widget_box', $this->plugin_url . '/assets/js/widget_box.js', ['jquery'], $this->version, true);
 
-    wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3');
-    wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version);
+    wp_register_script($this->prefix . '_select2', $this->plugin_url . '/assets/js/select2.min.js', ['jquery'], '4.0.3', TRUE);
+    wp_register_script($this->prefix . '_posts', $this->plugin_url . '/assets/js/posts.js', [$this->prefix . '_select2'], $this->version, TRUE);
     $required_scripts[] = $this->prefix . '_posts';
-    wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version);
+    wp_register_script($this->prefix . '_admin', $this->plugin_url . '/assets/js/admin.js', $required_scripts, $this->version, TRUE);
     wp_localize_script($this->prefix . '_admin', 'reacg', array(
       'insert' => __('Insert', 'regallery'),
       'update' => __('Update', 'regallery'),
@@ -421,7 +422,7 @@ final class REACG {
       $this->prefix . '_admin'
     ];
 
-    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version);
+    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version, TRUE);
     wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
