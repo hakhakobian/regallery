@@ -106,12 +106,20 @@ class REACG_Gallery {
    * @return mixed
    */
   public function handle_upload_prefilter( $file ) {
-    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- wp_handle_upload_prefilter: Runs before WordPress validates nonce and is used by core Media Uploader.
-    if ( empty( $_REQUEST['reacg'] ) || sanitize_text_field(wp_unslash($_REQUEST['reacg'])) !== 'gallery' ) {
+    // Only for gallery uploads.
+    if (
+      empty( $_POST['reacg_nonce'] )
+      || ! wp_verify_nonce(sanitize_text_field( wp_unslash( $_POST['reacg_nonce'] ) ), REACG_NONCE) ) {
+      return $file;
+    }
+    if ( empty( $_POST['reacg'] )
+      || sanitize_text_field(wp_unslash($_POST['reacg'])) !== 'gallery' ) {
+      return $file;
+    }
+    if ( ! current_user_can( 'upload_files' ) ) {
       return $file;
     }
 
-    // Only for gallery uploads.
     $ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
     // Check HEIC/HEIF.
     if ( in_array( $ext, [ 'heic', 'heif' ], TRUE ) ) {
