@@ -381,6 +381,40 @@ class REACG_Gallery {
     }
   }
 
+  private function get_preview_url($post_id) {
+    $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
+    $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+    $url = "";
+    if ( !empty($images_ids_arr) ) {
+      $is_deleted_attachment = FALSE;
+      foreach ( $images_ids_arr as $key => $images_id ) {
+        $item = $this->get_item_data($images_id);
+        // The post type is disabled.
+        if ( !$item ) {
+          // The attachment doesn't exist.
+          if ( $item === FALSE ) {
+            unset($images_ids_arr[$key]);
+            $is_deleted_attachment = TRUE;
+          }
+        }
+        elseif ( $url === "" ) {
+          // Get first existing thumbnail.
+          $url = $item['thumbnail']['url'];
+        }
+      }
+
+      // Remove attachment ID from the gallery if it doesn't exist anymore.
+      if ( $is_deleted_attachment ) {
+        update_post_meta($post_id, 'images_ids', json_encode(array_values($images_ids_arr)));
+      }
+    }
+
+    if ( $url === "" ) {
+      $url = $this->obj->plugin_url . $this->obj->no_image;
+    }
+
+    return $url;
+  }
   /**
    * Add columns content to the custom post list.
    *
@@ -392,37 +426,8 @@ class REACG_Gallery {
   public function custom_columns_content($column_id, $post_id) {
     switch ( $column_id ) {
       case 'reacg_thumbnail': {
-        $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
-        $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
-        if ( !empty($images_ids_arr) ) {
-          $url = "";
-          $is_deleted_attachment = FALSE;
-          foreach ( $images_ids_arr as $key => $images_id ) {
-            $item = $this->get_item_data($images_id);
-
-            // The post type is disabled.
-            if ( !$item ) {
-              // The attachment doesn't exist.
-              if ( $item === FALSE ) {
-                unset($images_ids_arr[$key]);
-                $is_deleted_attachment = TRUE;
-              }
-            }
-            elseif ( $url === "" ) {
-              // Get first existing thumbnail.
-              $url = $item['thumbnail']['url'];
-            }
-          }
-
-          if ( $url === "" ) {
-            $url = $this->obj->plugin_url . $this->obj->no_image;
-          }
-
-          // Remove attachment ID from the gallery if it doesn't exist anymore.
-          if ( $is_deleted_attachment ) {
-            update_post_meta($post_id, 'images_ids', json_encode(array_values($images_ids_arr)));
-          }
-
+        $url = $this->get_preview_url($post_id);
+        if ( $url ) {
           ?><div style='background-image: url("<?php echo esc_url($url); ?>")'></div><?php
         }
         else {
@@ -1773,11 +1778,16 @@ class REACG_Gallery {
         $data[$key] = [];
         $data[$key]['id'] = $post->ID;
         $data[$key]['title'] = $post->post_title ? $post->post_title : __('(no title)', 'regallery');
+        $data[$key]['thumbnail'] = $this->get_preview_url($post->ID);
+
+        $data[$key]['type'] = $this->get_gallery_type($post->ID);
       }
       if (!empty($data)) {
         $data[] = [
           'id'    => -1,
           'title' => __('All Images Template', 'regallery'),
+          'thumbnail' => $this->obj->plugin_url . $this->obj->no_image,
+          'type' => $this->get_gallery_type(-1),
         ];
       }
 
@@ -1785,6 +1795,31 @@ class REACG_Gallery {
     }
 
     return wp_send_json(new WP_Error( 'wrong_template', __( 'There is no such a template.', 'regallery' ), array( 'status' => 400 ) ), 400);
+  }
+
+  /**
+   * @param $id
+   *
+   * @return mixed|string
+   */
+  private function get_gallery_type($id) {
+    $options = new REACG_Options(TRUE);
+    $gallery_options = $options->get_options($id);
+
+    $type = '';
+    if ( !empty($gallery_options['type']) ) {
+      if ( $gallery_options['type'] === 'thumbnails' ) {
+        $type = 'grid';
+      }
+      elseif ( $gallery_options['type'] === 'slideshow' ) {
+        $type = 'slider';
+      }
+      else {
+        $type = $gallery_options['type'];
+      }
+    }
+
+    return $type;
   }
 
   /**

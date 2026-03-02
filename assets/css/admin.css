@@ -351,7 +351,7 @@ to avoid a bug connected with preview.
   font-weight: 500;
   padding: 16px;
   overflow: visible;
-  background-color: rgb(26, 118, 210);
+  background-color: #5A558C;
   font-size: 0.875rem;
   line-height: 1.43;
   letter-spacing: 0.01071em;
@@ -381,7 +381,7 @@ to avoid a bug connected with preview.
     top: calc(50% - 12px);
     overflow: hidden;
     box-sizing: border-box;
-    color: rgb(26, 118, 210);
+    color: #5A558C;
   }
   .reacg-tooltip-arrow[data-popper-placement*="left"]::before {
     content: "";
@@ -389,7 +389,7 @@ to avoid a bug connected with preview.
     display: block;
     width: 100%;
     height: 100%;
-    background-color: rgb(26, 118, 210);
+    background-color: #5A558C;
     transform: rotate(45deg);
     transform-origin: 0 0;
   }
