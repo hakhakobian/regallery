@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.3
+Stable tag: 1.18.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.3: Fixed minor bugs. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.4: Improved redesigned the Templates Library. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.4 =
+= Updated: 04.03.2026 =
+* **Improved:** Redesigned the Templates Library for better usability and navigation.
+* **Fixed:** A broken access control vulnerability.
+* **Fixed:** Minor vulnerabilities.
+
 = 1.18.3 =
 = Updated: 26.02.2026 =
 * **Added:** Motion View pre-built template.
