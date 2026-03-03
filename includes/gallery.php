@@ -1257,7 +1257,7 @@ class REACG_Gallery {
     if ( function_exists( 'register_block_type' ) ) {
       $available_builders['gutenberg'] = [
         'title' => __('Gutenberg Block', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=Ep5L3xKdDH8',
+        'video' => 'https://www.youtube.com/watch?v=6AVPJ2fjaYs',
       ];
     }
     if ( class_exists( '\Elementor\Plugin' ) ) {
