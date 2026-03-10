@@ -272,42 +272,7 @@ class REACG_Gallery {
           } else {
             $submenu[ $parent_slug ][ $index ][] = 'reacg-sidebar-upgrade-pro reacg-hidden';
           }
-          echo '<script>jQuery(document).ready(function () { if (!JSON.parse(localStorage.getItem("reacg-pro"))) { jQuery(".reacg-sidebar-upgrade-pro").removeClass("reacg-hidden"); } });</script>
-                <style>
-                  .reacg-hidden {
-                    display: none !important;
-                  }
-                  a.reacg-sidebar-upgrade-pro {
-                    background-color: rgb(147 177 77) !important;
-                  }
-                  a.reacg-sidebar-upgrade-pro:focus,
-                  a.reacg-sidebar-upgrade-pro:active,
-                  a.reacg-sidebar-upgrade-pro:hover {
-                    background-color: rgb(135 162 71) !important;
-                  }
-                  a.reacg-sidebar-upgrade-pro,
-                  a.reacg-sidebar-upgrade-pro:focus,
-                  a.reacg-sidebar-upgrade-pro:active,
-                  a.reacg-sidebar-upgrade-pro:hover {
-                    color: #FFFFFF !important;
-                    font-weight: 600 !important;
-                    border-radius: 3px !important;
-                    padding: 3px 10px 5px !important;
-                    margin: 5px 12px !important;
-                    width: max-content !important;
-                    border: none !important;
-                    outline: none !important;
-                    box-shadow: none !important;
-                  }
-                  @media only screen and (max-width: 960px) {
-                    .auto-fold #adminmenu li.menu-top .wp-submenu>li>a.reacg-sidebar-upgrade-pro {
-                      margin-left: 12px !important;
-                    }
-                    .auto-fold #adminmenu .wp-has-current-submenu li>a.reacg-sidebar-upgrade-pro {
-                      margin-left: 14px !important;
-                    }
-                  }
-                 </style>';
+          echo '<script>jQuery(document).ready(function () { if (!JSON.parse(localStorage.getItem("reacg-pro"))) { jQuery(".reacg-sidebar-upgrade-pro").removeClass("reacg-hidden"); } });</script>';
         }
       }
     }
@@ -1132,7 +1097,6 @@ class REACG_Gallery {
         'item_link_description' => __('A link to a gallery', 'regallery'),
       ),
       'public' => TRUE,
-      'menu_icon' => $this->obj->plugin_url . '/assets/images/logo.png',
       'exclude_from_search' => TRUE,
       'publicly_queryable' => TRUE,
       'show_ui' => TRUE,

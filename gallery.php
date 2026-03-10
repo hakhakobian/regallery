@@ -375,6 +375,15 @@ final class REACG {
 
     // Register general styles/scripts.
     $this->register_general_scripts();
+
+    $this->enqueue_common_assets();
+  }
+
+  /**
+   * Enqueue common assets for admin.
+   */
+  private function enqueue_common_assets() {
+    wp_enqueue_style( $this->prefix . '_common_admin', $this->plugin_url . '/assets/css/common.css', [], $this->version );
   }
 
   /**
