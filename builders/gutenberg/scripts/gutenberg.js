@@ -260,7 +260,7 @@
     if (baseCont) {
       baseCont.querySelector(".reacg-spinner__wrapper").classList.remove("reacg-hidden");
       if (shortcode_id === 0) {
-        fetch(reacg_gutenberg.ajax_url + '&action=reacg_save_gallery')
+        fetch(reacg_gutenberg.ajax_url + '&action=reacg_save_gallery&gallery_title=' + baseCont.querySelector(".reacg-gallery-title-input").value)
           .then(response => response.json())
           .then(data => {
             shortcode_id = data;
@@ -280,10 +280,17 @@
   }
 
   function create_gallery_button(props) {
-    return  el('button', {
-      class: "reacg-create-gallery",
+    const create_button = el('button', {
+      class: "reacg-create-gallery button button-primary button-large",
       onClick: (event) => showPreview(0, props),
     }, reacg_gutenberg.create_button);
+    const gallery_title_input = el('input', {
+      type: "text",
+      class: "reacg-gallery-title-input",
+      name: "reacg_gallery_title",
+      placeholder: reacg_gutenberg.gallery_title_placeholder,
+    });
+    return  el('div', '', gallery_title_input, create_button);
   }
 
   function galleries_list(props) {

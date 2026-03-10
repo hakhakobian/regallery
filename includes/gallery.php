@@ -965,7 +965,7 @@ class REACG_Gallery {
     if ( isset( $_GET[$this->obj->nonce] )
       && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
       $new_post = [
-        'post_title' => '(no title)',
+        'post_title' => !empty($_GET['gallery_title']) ? sanitize_text_field(wp_unslash($_GET['gallery_title'])) : '(no title)',
         'post_status' => 'publish',
         'post_type' => 'reacg',
       ];
