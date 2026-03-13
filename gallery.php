@@ -308,6 +308,7 @@ final class REACG {
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'text' => [
         'load_more' => __('Load more', 'regallery'),
+        'view_more' => __('View more', 'regallery'),
         'search' => __('Search', 'regallery'),
         'no_data' => __('There is not data.', 'regallery'),
       ],

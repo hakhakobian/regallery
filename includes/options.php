@@ -50,6 +50,19 @@ class REACG_Options {
       'descriptionFontColor' => '#DDDDDD', #string
       'descriptionMaxRowsCount' => 3, #number
       'showVideoCover' => TRUE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'mosaic' => [
       'width' => 100, #number
@@ -82,6 +95,19 @@ class REACG_Options {
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
       'showVideoCover' => TRUE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'justified' => [
       'width' => 100, #number
@@ -112,6 +138,19 @@ class REACG_Options {
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
       'showVideoCover' => TRUE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'masonry' => [
       'width' => 100, #number
@@ -142,6 +181,19 @@ class REACG_Options {
       'captionFontSize' => 20, #number
       'captionFontColor' => '#DDDDDD', #string
       'showVideoCover' => TRUE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'slideshow' => [
       'width' => 1080, #number
@@ -180,6 +232,17 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 1.5, #float
       'captionFontColor' => '#DDDDDD', #string
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 1.3, #float
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
     ],
     'cube' => [
       'width' => 300, #number
@@ -219,6 +282,19 @@ class REACG_Options {
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
       'showVideoCover' => FALSE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'carousel' => [
       'width' => 300, #number
@@ -260,6 +336,19 @@ class REACG_Options {
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
       'showVideoCover' => FALSE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'cards' => [
       'width' => 500, #number
@@ -296,6 +385,19 @@ class REACG_Options {
       'showVideoControls' => false,
       'animationSpeed' => 500, #number
       'showVideoCover' => FALSE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
     ],
     'blog' => [
       'imageWidth' => 50, #number
@@ -325,6 +427,9 @@ class REACG_Options {
       'buttonFontSize' => 20, #number
       'buttonColor' => '#afafaf80', #string
       'buttonTextColor' => '#000000de', #string
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
       'textFontFamily' => 'Inherit', #string
       'textVerticalAlignment' => 'center', #string bottom | top | center
       'textHorizontalSpacing' => 35, #number
@@ -406,6 +511,17 @@ class REACG_Options {
       'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
       'captionFontSize' => 1.5, #float
       'captionFontColor' => '#FFFFFF', #string
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 1.3, #float
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
     ],
   ];
   protected $name = "reacg_options";
@@ -462,6 +578,8 @@ class REACG_Options {
       'paginationButtonBorderSize',
       'watermarkTransparency',
       'watermarkSize',
+      'buttonBorderSize',
+      'buttonBorderRadius',
     ];
     $negative_number = [
       'spaceBetween',
@@ -504,6 +622,7 @@ class REACG_Options {
       'descriptionFontSize',
       'captionFontSize',
       'paginationButtonTextSize',
+      'buttonFontSize',
     ];
     $style = [
       'css',
@@ -522,8 +641,11 @@ class REACG_Options {
         'allowed' => [ 'alwaysShown', 'onHover' ],
         'default' => 'alwaysShown',
       ],
-
       'captionVisibility' => [
+        'allowed' => [ 'alwaysShown', 'onHover' ],
+        'default' => 'alwaysShown',
+      ],
+      'buttonVisibility' => [
         'allowed' => [ 'alwaysShown', 'onHover' ],
         'default' => 'alwaysShown',
       ],
@@ -531,8 +653,11 @@ class REACG_Options {
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
       ],
-
       'captionPosition' => [
+        'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
+        'default' => 'bottom',
+      ],
+      'buttonPosition' => [
         'allowed' => [ 'bottom', 'top', 'center', 'above', 'below' ],
         'default' => 'bottom',
       ],
