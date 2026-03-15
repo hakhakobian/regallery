@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.5
+Stable tag: 1.18.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.5: Added ability to set a gallery title when inserting a gallery via the Gutenberg block. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.6: Added possibility to add a button with editable styles to the all layouts. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.6 =
+= Updated: 16.03.2026 =
+* **Added:** Possibility to add a button with editable styles to Grid, Mosaic, Masonry, Justified, Slider, Cube, Carousel, and Cards layouts.
+* **Added:** Button border options for the Blog layout.
+* **Fixed:** Conflict with certain caching mechanisms.
+* **Fixed:** Play/Pause button display for the Cube layout.
+
 = 1.18.5 =
 = Updated: 11.03.2026 =
 * **Added:** Ability to set a gallery title when inserting a gallery via the Gutenberg block.
