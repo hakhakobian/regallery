@@ -73,7 +73,13 @@ final class REACG {
 
     define('REACG_PLUGIN_DIR', $this->plugin_dir );
     define('REACG_PLUGIN_URL', $this->plugin_url );
-    define('REACG_PLUGIN_ASSETS_URL', $this->plugin_url . '/assets/js/' );
+    $plugin_assets_base_url = $this->plugin_url;
+    // Some hosts inject query tokens before the real path.
+    // Remove only that token while keeping the path segment.
+    $plugin_assets_base_url = preg_replace('/\?[^\/]+(?=\/)/', '', $plugin_assets_base_url);
+    // Also strip any regular trailing query/hash if present.
+    $plugin_assets_base_url = preg_replace('/[?#].*$/', '', $plugin_assets_base_url);
+    define('REACG_PLUGIN_ASSETS_URL', rtrim($plugin_assets_base_url, '/') . '/assets/js/' );
     define('REACG_CUSTOM_POST_TYPE', 'reacg' );
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
