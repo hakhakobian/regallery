@@ -107,6 +107,7 @@ final class REACG {
     add_action('init', array($this, 'deactivation'));
     add_action('init', array($this, 'form'));
     add_action('init', array($this, 'demo'));
+    add_action('init', array($this, 'migration'));
 
     // Register scripts/styles.
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
@@ -278,6 +279,14 @@ final class REACG {
   public function demo($redirect = FALSE) {
     require_once($this->plugin_dir . '/includes/demo.php');
     return new REACG_Demo($redirect);
+  }
+
+  /**
+   * Register universal migration engine.
+   */
+  public function migration() {
+    require_once($this->plugin_dir . '/includes/migration.php');
+    new REACG_Migration($this);
   }
 
   /**

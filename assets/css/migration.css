@@ -1,0 +1,62 @@
+.reacg-migration-page #reacg-migration-source,
+.reacg-migration-page #reacg-migration-search {
+  min-width: 220px;
+}
+
+.reacg-migration-page .reacg-migration-force-new {
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reacg-migration-page .reacg-migration-table {
+  margin-top: 12px;
+}
+
+.reacg-migration-page .reacg-migration-table th.sortable a,
+.reacg-migration-page .reacg-migration-table th.sorted a {
+  cursor: pointer;
+}
+
+.reacg-migration-page .tablenav {
+  margin: 8px 0;
+}
+
+.reacg-migration-page .reacg-migration-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.reacg-migration-page .reacg-migration-progress .spinner {
+  float: none;
+  margin: 0;
+}
+
+.reacg-migration-page .reacg-migration-progress-bar {
+  width: 260px;
+  height: 8px;
+  border-radius: 999px;
+  background: #dcdcde;
+  overflow: hidden;
+}
+
+.reacg-migration-page .reacg-migration-progress-fill {
+  width: 0;
+  height: 100%;
+  background: #2271b1;
+  transition: width 0.2s ease;
+}
+
+.reacg-migration-page #reacg-migration-results ul {
+  margin: 8px 0 0 18px;
+  list-style: disc;
+}
+
+.reacg-migration-page #reacg-migration-import-spinner {
+  float: none;
+  margin: 0;
+  vertical-align: middle;
+}
