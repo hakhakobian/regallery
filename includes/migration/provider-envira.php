@@ -149,17 +149,16 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
 
     $columns = $this->get_int($config, ['columns']);
     if ($columns !== null) {
-        if ($columns === 0) {
-            $layout = 'justified';
-            $overrides['type'] = $layout;
-            $overrides[$layout] = [];
-        }
-        else {
-            $layout = 'masonry';
-            $overrides['type'] = $layout;
-            $overrides[$layout] = [];
-            $overrides[$layout]['columns'] = max(1, $columns);
-        }
+      if ($columns === 0) {
+        $layout = 'justified';
+        $overrides['type'] = $layout;
+        $overrides[$layout] = [];
+      } else {
+        $layout = 'masonry';
+        $overrides['type'] = $layout;
+        $overrides[$layout] = [];
+        $overrides[$layout]['columns'] = max(1, $columns);
+      }
     }
 
     $gap = $this->get_int($config, ['gutter']);
@@ -246,8 +245,7 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
 
     if ($hover_enabled === false || $hover_disabled === true) {
       $hover_effect = 'none';
-    }
-    elseif ($hover_effect === null) {
+    } elseif ($hover_effect === null) {
       // Do not inherit Re Gallery default hover effect when Envira does not define one.
       $hover_effect = 'none';
     }
@@ -289,54 +287,54 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
     $lightbox_image_size = $this->get_string($config, ['lightbox_image_size']);
     var_dump($lightbox_image_size);
     if ($lightbox_image_size !== null) {
-        $overrides['lightbox']['isFullscreen'] = false;
-        switch (strtolower($lightbox_image_size)) {
-          case 'thumbnail':
-            $overrides['lightbox']['width'] = 150;
-            $overrides['lightbox']['height'] = 150;
-            break;
-          case 'medium':
-            $overrides['lightbox']['width'] = 300;
-            $overrides['lightbox']['height'] = 300;
-            break;
+      $overrides['lightbox']['isFullscreen'] = false;
+      switch (strtolower($lightbox_image_size)) {
+        case 'thumbnail':
+          $overrides['lightbox']['width'] = 150;
+          $overrides['lightbox']['height'] = 150;
+          break;
+        case 'medium':
+          $overrides['lightbox']['width'] = 300;
+          $overrides['lightbox']['height'] = 300;
+          break;
         case 'medium_large':
-            $overrides['lightbox']['width'] = 768;
-            $overrides['lightbox']['height'] = 400;
-            break;
-          case 'large':
-            $overrides['lightbox']['width'] = 1024;
-            $overrides['lightbox']['height'] = 1024;
-            break;
-          case 'default':
-          case 'envira_gallery_random':
-          case 'full':
-          default:
-            $overrides['lightbox']['isFullscreen'] = true;
-            break;
-        }
+          $overrides['lightbox']['width'] = 768;
+          $overrides['lightbox']['height'] = 400;
+          break;
+        case 'large':
+          $overrides['lightbox']['width'] = 1024;
+          $overrides['lightbox']['height'] = 1024;
+          break;
+        case 'default':
+        case 'envira_gallery_random':
+        case 'full':
+        default:
+          $overrides['lightbox']['isFullscreen'] = true;
+          break;
+      }
     }
     $title_display = $this->get_string($config, ['title_display']);
     if ($title_display !== null) {
-        $overrides['lightbox']['showTitle'] = true;
-        $overrides['lightbox']['showDescription'] = false;
-        $overrides['lightbox']['showCaption'] = false;
-        $overrides['lightbox']['showButton'] = false;
-        switch (strtolower($title_display)) {
-          case 'over':
-            $overrides['lightbox']['textPosition'] = 'bottom';
-            $overrides['lightbox']['titleAlignment'] = 'left';
-            break;
-          case 'outside':
-          case 'inside':
-            $overrides['lightbox']['textPosition'] = 'below';
-            $overrides['lightbox']['titleAlignment'] = 'left';
-            break;
-          case 'float':
-          case 'float_wrap':
-            $overrides['lightbox']['textPosition'] = 'below';
-            $overrides['lightbox']['titleAlignment'] = 'center';
-            break;
-        }
+      $overrides['lightbox']['showTitle'] = true;
+      $overrides['lightbox']['showDescription'] = false;
+      $overrides['lightbox']['showCaption'] = false;
+      $overrides['lightbox']['showButton'] = false;
+      switch (strtolower($title_display)) {
+        case 'over':
+          $overrides['lightbox']['textPosition'] = 'bottom';
+          $overrides['lightbox']['titleAlignment'] = 'left';
+          break;
+        case 'outside':
+        case 'inside':
+          $overrides['lightbox']['textPosition'] = 'below';
+          $overrides['lightbox']['titleAlignment'] = 'left';
+          break;
+        case 'float':
+        case 'float_wrap':
+          $overrides['lightbox']['textPosition'] = 'below';
+          $overrides['lightbox']['titleAlignment'] = 'center';
+          break;
+      }
     }
 
     $autoplay = $this->get_bool($config, ['slideshow_autoplay', 'lightbox_autoplay', 'autoplay']);

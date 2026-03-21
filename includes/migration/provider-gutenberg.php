@@ -388,7 +388,7 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
       $layout_type => [],
       'general' => [],
     ];
-    $layout_ref =& $overrides[$layout_type];
+    $layout_ref = & $overrides[$layout_type];
 
     if ($columns > 0) {
       $layout_ref['columns'] = max(1, min(8, $columns));
@@ -451,7 +451,7 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
     }
 
     if (!empty($image_style['color'])) {
-        $layout_ref['paddingColor'] = $image_style['color'];
+      $layout_ref['paddingColor'] = $image_style['color'];
     }
 
     if (!empty($image_style['radius']) || $image_style['radius'] === 0.0) {

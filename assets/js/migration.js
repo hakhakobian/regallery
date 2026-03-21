@@ -28,6 +28,12 @@
   var $searchSubmitBtn = $("#reacg-migration-search-submit");
   var $pagesTop = $("#reacg-migration-pages-top");
   var $pagesBottom = $("#reacg-migration-pages-bottom");
+  var $forceNewInput = $("#reacg-migration-force-new");
+  var $alert = $("#reacg-migration-alert");
+  var $alertMessage = $("#reacg-migration-alert-message");
+  var $alertConfirm = $("#reacg-migration-alert-confirm");
+  var $alertCancel = $("#reacg-migration-alert-cancel");
+  var $alertClose = $("#reacg-migration-alert-close");
 
   function getPayload(extra) {
     var payload = {};
@@ -139,7 +145,7 @@
         return (
           '<a href="' +
           escHtml(href) +
-          '">' +
+          '" target="_blank" rel="noopener noreferrer">' +
           escHtml(reacg_migration.i18n.status_migrated) +
           "</a>"
         );
@@ -169,6 +175,17 @@
   function getReplaceAction(item) {
     if (!item || !item.migrated) {
       return "&mdash;";
+    }
+
+    if (item.replaced) {
+      return (
+        '<span class="reacg-migration-replaced">' +
+        escHtml(
+          reacg_migration.i18n.replace_already_replaced ||
+            reacg_migration.i18n.replace_replaced,
+        ) +
+        "</span>"
+      );
     }
 
     return (
@@ -278,6 +295,8 @@
           checkboxId +
           '" class="reacg-migration-item" data-source="' +
           escHtml(gallery.source) +
+          '" data-migrated="' +
+          (gallery.migrated ? "1" : "0") +
           '" value="' +
           escHtml(gallery.id) +
           '"></th>',
@@ -398,99 +417,113 @@
     $pagesBottom.html(getPaginationHtml("bottom"));
   }
 
-  function updateImportState() {
-    var total = $(".reacg-migration-item").length;
-    var selected = $(".reacg-migration-item:checked").length;
-    $importBtn.prop("disabled", selected === 0);
-    $("#reacg-migration-toggle-all").prop(
-      "checked",
-      total > 0 && selected === total,
-    );
-  }
-
-  function fetchSourcesAndGalleries() {
-    setBusy(true);
-    setLoading(reacg_migration.i18n.loading_sources);
-    showProgress(reacg_migration.i18n.loading_sources);
-
-    $.post(
-      reacg_migration.ajax_url,
-      getPayload({ action: "reacg_migration_sources" }),
-    )
-      .done(function (response) {
-        if (!response || !response.success) {
-          showStatus(
-            "error",
-            (response && response.data && response.data.message) ||
-              reacg_migration.i18n.error,
-          );
-          return;
-        }
-
-        renderSources(response.data.sources || []);
-      })
-      .fail(function () {
-        showStatus("error", reacg_migration.i18n.error);
-      })
-      .always(function () {
-        setLoading(reacg_migration.i18n.loading_galleries);
-        showProgress(reacg_migration.i18n.loading_galleries);
-
-        $.post(
-          reacg_migration.ajax_url,
-          getPayload({
-            action: "reacg_migration_galleries",
-            source: "",
-            search: "",
-            page: 1,
-            per_page: 9999,
-          }),
-        )
-          .done(function (response) {
-            if (!response || !response.success) {
-              showStatus(
-                "error",
-                (response && response.data && response.data.message) ||
-                  reacg_migration.i18n.error,
-              );
-              return;
-            }
-
-            state.galleries = response.data.items || [];
-            state.page = 1;
-            clearStatus();
-            applyFilters();
-          })
-          .fail(function () {
-            showStatus("error", reacg_migration.i18n.error);
-          })
-          .always(function () {
-            setBusy(false);
-            hideProgress();
-          });
-      });
-  }
-
-  function importSelected() {
-    var selected = $(".reacg-migration-item:checked")
+  function getSelectedGalleries() {
+    return $(".reacg-migration-item:checked")
       .map(function () {
+        var $item = $(this);
+
         return {
-          id: $(this).val(),
-          source: $(this).data("source"),
+          id: $item.val(),
+          source: $item.data("source"),
+          migrated: String($item.attr("data-migrated")) === "1",
         };
       })
       .get();
+  }
 
-    if (!selected.length) {
-      showStatus("warning", reacg_migration.i18n.select_galleries);
-      return;
+  function getForceNewValue(selected) {
+    var hasMigratedSelection = selected.some(function (item) {
+      return item.migrated;
+    });
+
+    if (!hasMigratedSelection) {
+      return {
+        selected: selected,
+        forceNew: parseInt($forceNewInput.val(), 10) === 1 ? 1 : 0,
+        showAlert: false,
+      };
     }
 
+    return {
+      selected: selected,
+      forceNew: 1,
+      showAlert: true,
+    };
+  }
+
+  function showForceNewAlert(onConfirm, onSkipMigrated, onClose) {
+    $alertMessage.text(reacg_migration.i18n.force_new_alert || "");
+    $alert.show().attr("aria-hidden", "false");
+    $alertConfirm.trigger("focus");
+
+    function hideAlert() {
+      $alert.hide().attr("aria-hidden", "true");
+      $alertConfirm.off("click.reacgMigrationAlert");
+      $alertCancel.off("click.reacgMigrationAlert");
+      $alertClose.off("click.reacgMigrationAlert");
+      $alert.off("click.reacgMigrationAlert");
+      $(document).off("keydown.reacgMigrationAlert");
+    }
+
+    $alertConfirm
+      .off("click.reacgMigrationAlert")
+      .on("click.reacgMigrationAlert", function () {
+        hideAlert();
+        if (typeof onConfirm === "function") {
+          onConfirm();
+        }
+      });
+
+    $alertCancel
+      .off("click.reacgMigrationAlert")
+      .on("click.reacgMigrationAlert", function () {
+        hideAlert();
+        if (typeof onSkipMigrated === "function") {
+          onSkipMigrated();
+        }
+      });
+
+    $alertClose
+      .off("click.reacgMigrationAlert")
+      .on("click.reacgMigrationAlert", function () {
+        hideAlert();
+        if (typeof onClose === "function") {
+          onClose();
+        }
+      });
+
+    $alert
+      .off("click.reacgMigrationAlert")
+      .on("click.reacgMigrationAlert", function (event) {
+        if (!$(event.target).is(".reacg-migration-alert__backdrop")) {
+          return;
+        }
+
+        hideAlert();
+        if (typeof onClose === "function") {
+          onClose();
+        }
+      });
+
+    $(document)
+      .off("keydown.reacgMigrationAlert")
+      .on("keydown.reacgMigrationAlert", function (event) {
+        if (event.key !== "Escape") {
+          return;
+        }
+
+        hideAlert();
+        if (typeof onClose === "function") {
+          onClose();
+        }
+      });
+  }
+
+  function startImport(selected, forceNew) {
     setBusy(true);
     setImportLoading(true);
     setLoading(reacg_migration.i18n.importing);
 
-    var forceNew = $("#reacg-migration-force-new").is(":checked") ? 1 : 0;
     var total = selected.length;
     var processed = 0;
     var imported = 0;
@@ -517,7 +550,7 @@
           escHtml(item.message) +
           ' <a href="' +
           escHtml(editLink) +
-          '">#' +
+          '" target="_blank" rel="noopener noreferrer">#' +
           escHtml(item.gallery_id) +
           "</a></li>",
       );
@@ -636,6 +669,117 @@
 
     showProgress(reacg_migration.i18n.importing + " (1/" + total + ")", 0);
     runNext();
+  }
+
+  function updateImportState() {
+    var total = $(".reacg-migration-item").length;
+    var selected = $(".reacg-migration-item:checked").length;
+    $importBtn.prop("disabled", selected === 0);
+    $("#reacg-migration-toggle-all").prop(
+      "checked",
+      total > 0 && selected === total,
+    );
+  }
+
+  function fetchSourcesAndGalleries() {
+    setBusy(true);
+    setLoading(reacg_migration.i18n.loading_sources);
+    showProgress(reacg_migration.i18n.loading_sources);
+
+    $.post(
+      reacg_migration.ajax_url,
+      getPayload({ action: "reacg_migration_sources" }),
+    )
+      .done(function (response) {
+        if (!response || !response.success) {
+          showStatus(
+            "error",
+            (response && response.data && response.data.message) ||
+              reacg_migration.i18n.error,
+          );
+          return;
+        }
+
+        renderSources(response.data.sources || []);
+      })
+      .fail(function () {
+        showStatus("error", reacg_migration.i18n.error);
+      })
+      .always(function () {
+        setLoading(reacg_migration.i18n.loading_galleries);
+        showProgress(reacg_migration.i18n.loading_galleries);
+
+        $.post(
+          reacg_migration.ajax_url,
+          getPayload({
+            action: "reacg_migration_galleries",
+            source: "",
+            search: "",
+            page: 1,
+            per_page: 9999,
+          }),
+        )
+          .done(function (response) {
+            if (!response || !response.success) {
+              showStatus(
+                "error",
+                (response && response.data && response.data.message) ||
+                  reacg_migration.i18n.error,
+              );
+              return;
+            }
+
+            state.galleries = response.data.items || [];
+            state.page = 1;
+            clearStatus();
+            applyFilters();
+          })
+          .fail(function () {
+            showStatus("error", reacg_migration.i18n.error);
+          })
+          .always(function () {
+            setBusy(false);
+            hideProgress();
+          });
+      });
+  }
+
+  function importSelected() {
+    var selected = getSelectedGalleries();
+
+    if (!selected.length) {
+      showStatus("warning", reacg_migration.i18n.select_galleries);
+      return;
+    }
+
+    var importOptions = getForceNewValue(selected);
+
+    if (importOptions.showAlert) {
+      showForceNewAlert(
+        function () {
+          startImport(importOptions.selected, importOptions.forceNew);
+        },
+        function () {
+          var notMigrated = importOptions.selected.filter(function (item) {
+            return !item.migrated;
+          });
+
+          if (!notMigrated.length) {
+            showStatus("warning", reacg_migration.i18n.select_not_migrated);
+            return;
+          }
+
+          startImport(
+            notMigrated,
+            parseInt($forceNewInput.val(), 10) === 1 ? 1 : 0,
+          );
+        },
+        function () {},
+      );
+      return;
+    }
+
+    startImport(importOptions.selected, importOptions.forceNew);
   }
 
   $(document).on("click", "#reacg-migration-load", function () {

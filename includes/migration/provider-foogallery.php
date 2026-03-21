@@ -114,104 +114,89 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       str_replace('_', '-', $template),
     ])));
 
-    $layout_ref =& $overrides[$layout_type];
+    $layout_ref = & $overrides[$layout_type];
 
     $this->apply_template_preset($template, $layout_type, $overrides, $layout_ref);
 
     if ( isset($settings[$template . '_thumbnail_dimensions'])) {
-        if ( isset($settings[$template . '_thumbnail_dimensions']['width']) ) {
-            $layout_ref['width'] = intval($settings[$template . '_thumbnail_dimensions']['width']);
-        }
-        if ( isset($settings[$template . '_thumbnail_dimensions']['height']) ) {
-            $layout_ref['height'] = intval($settings[$template . '_thumbnail_dimensions']['height']);
-        }
+      if ( isset($settings[$template . '_thumbnail_dimensions']['width']) ) {
+        $layout_ref['width'] = intval($settings[$template . '_thumbnail_dimensions']['width']);
+      }
+      if ( isset($settings[$template . '_thumbnail_dimensions']['height']) ) {
+        $layout_ref['height'] = intval($settings[$template . '_thumbnail_dimensions']['height']);
+      }
     }
 
     if ( isset($settings[$template . '_thumbnail_link'])) {
-        if ( $settings[$template . '_thumbnail_link'] === 'image' ) {
-            $overrides['general']['clickAction'] = 'lightbox';
-        }
-        elseif ( $settings[$template . '_thumbnail_link'] === 'page' || $settings[$template . '_thumbnail_link'] === 'custom' ) {
-            $overrides['general']['clickAction'] = 'url';
-        }
-        elseif ( $settings[$template . '_thumbnail_link'] === 'none' ) {
-            $overrides['general']['clickAction'] = 'none';
-        }
+      if ( $settings[$template . '_thumbnail_link'] === 'image' ) {
+        $overrides['general']['clickAction'] = 'lightbox';
+      } elseif ( $settings[$template . '_thumbnail_link'] === 'page' || $settings[$template . '_thumbnail_link'] === 'custom' ) {
+        $overrides['general']['clickAction'] = 'url';
+      } elseif ( $settings[$template . '_thumbnail_link'] === 'none' ) {
+        $overrides['general']['clickAction'] = 'none';
+      }
     }
     if ( isset($settings[$template . '_spacing']) ) {
-        $layout_ref['gap'] = intval($settings[$template . '_spacing']);
+      $layout_ref['gap'] = intval($settings[$template . '_spacing']);
     }
 
     if ( isset($settings[$template . '_theme']) ) {
-        if ( $settings[$template . '_theme'] === 'fg-light' ) {
-            $layout_ref['paddingColor'] = '#ffffff';
-        }
-        elseif ( $settings[$template . '_theme'] === 'fg-dark' ) {
-            $layout_ref['paddingColor'] = '#333333';
-        }
+      if ( $settings[$template . '_theme'] === 'fg-light' ) {
+        $layout_ref['paddingColor'] = '#ffffff';
+      } elseif ( $settings[$template . '_theme'] === 'fg-dark' ) {
+        $layout_ref['paddingColor'] = '#333333';
+      }
     }
     if ( isset($settings[$template . '_border_size']) ) {
-        if ( $settings[$template . '_border_size'] === '' ) {
-            $layout_ref['padding'] = 0;
-        }
-        elseif ( $settings[$template . '_border_size'] === 'fg-border-thin' ) {
-            $layout_ref['padding'] = 4;
-        }
-        elseif ( $settings[$template . '_border_size'] === 'fg-border-medium' ) {
-            $layout_ref['padding'] = 10;
-        }
-        elseif ( $settings[$template . '_border_size'] === 'fg-border-thick' ) {
-            $layout_ref['padding'] = 16;
-        }
+      if ( $settings[$template . '_border_size'] === '' ) {
+        $layout_ref['padding'] = 0;
+      } elseif ( $settings[$template . '_border_size'] === 'fg-border-thin' ) {
+        $layout_ref['padding'] = 4;
+      } elseif ( $settings[$template . '_border_size'] === 'fg-border-medium' ) {
+        $layout_ref['padding'] = 10;
+      } elseif ( $settings[$template . '_border_size'] === 'fg-border-thick' ) {
+        $layout_ref['padding'] = 16;
+      }
     }
     if ( isset($settings[$template . '_rounded_corners']) ) {
-        if ( $settings[$template . '_rounded_corners'] === '' ) {
-            $layout_ref['borderRadius'] = 0;
-        }
-        elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-small' ) {
-            $layout_ref['borderRadius'] = 1;
-        }
-        elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-medium' ) {
-            $layout_ref['borderRadius'] = 2;
-        }
-        elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-large' ) {
-            $layout_ref['borderRadius'] = 5;
-        }
-        elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-full' ) {
-            $layout_ref['borderRadius'] = 50;
-        }
+      if ( $settings[$template . '_rounded_corners'] === '' ) {
+        $layout_ref['borderRadius'] = 0;
+      } elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-small' ) {
+        $layout_ref['borderRadius'] = 1;
+      } elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-medium' ) {
+        $layout_ref['borderRadius'] = 2;
+      } elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-large' ) {
+        $layout_ref['borderRadius'] = 5;
+      } elseif ( $settings[$template . '_rounded_corners'] === 'fg-round-full' ) {
+        $layout_ref['borderRadius'] = 50;
+      }
     }
     if ( isset($settings[$template . '_hover_effect_type']) ) {
-        if ( $settings[$template . '_hover_effect_type'] === 'normal' ) {
-            if ( isset($settings[$template . '_hover_effect_scale']) && ($settings[$template . '_hover_effect_scale'] === 'fg-hover-zoomed'
-                || $settings[$template . '_hover_effect_scale'] === 'fg-hover-semi-zoomed') ) {
-                    $layout_ref['hoverEffect'] = 'zoom-out';
-            }
-            if ( isset($settings[$template . '_hover_effect_icon']) ) {
-                if ( $settings[$template . '_hover_effect_icon'] === '' ) {
-                    $layout_ref['hoverEffect'] = 'overlay';
-                }
-                elseif ( strpos($settings[$template . '_hover_effect_icon'], 'zoom') !== false ) {
-                    $layout_ref['hoverEffect'] = 'overlay-icon-zoom';
-                }
-                elseif ( strpos($settings[$template . '_hover_effect_icon'], 'plus') !== false ) {
-                    $layout_ref['hoverEffect'] = 'overlay-icon-plus';
-                }
-                elseif ( $settings[$template . '_hover_effect_icon'] === 'fg-hover-eye'
-                || $settings[$template . '_hover_effect_icon'] === 'fg-hover-external' ) {
-                    $layout_ref['hoverEffect'] = 'overlay-icon-fullscreen';
-                }
-            }
+      if ( $settings[$template . '_hover_effect_type'] === 'normal' ) {
+        if ( isset($settings[$template . '_hover_effect_scale']) && ($settings[$template . '_hover_effect_scale'] === 'fg-hover-zoomed'
+            || $settings[$template . '_hover_effect_scale'] === 'fg-hover-semi-zoomed') ) {
+          $layout_ref['hoverEffect'] = 'zoom-out';
         }
-        elseif ( $settings[$template . '_hover_effect_type'] === 'none' ) {
-            $layout_ref['showTitle'] = FALSE;
-            $layout_ref['showCaption'] = FALSE;
-            $layout_ref['showDescription'] = FALSE;
-            $layout_ref['hoverEffect'] = 'none';
+        if ( isset($settings[$template . '_hover_effect_icon']) ) {
+          if ( $settings[$template . '_hover_effect_icon'] === '' ) {
+            $layout_ref['hoverEffect'] = 'overlay';
+          } elseif ( strpos($settings[$template . '_hover_effect_icon'], 'zoom') !== false ) {
+            $layout_ref['hoverEffect'] = 'overlay-icon-zoom';
+          } elseif ( strpos($settings[$template . '_hover_effect_icon'], 'plus') !== false ) {
+            $layout_ref['hoverEffect'] = 'overlay-icon-plus';
+          } elseif ( $settings[$template . '_hover_effect_icon'] === 'fg-hover-eye'
+          || $settings[$template . '_hover_effect_icon'] === 'fg-hover-external' ) {
+            $layout_ref['hoverEffect'] = 'overlay-icon-fullscreen';
+          }
         }
-        elseif ( $settings[$template . '_hover_effect_type'] === 'preset' ) {
-            // Specific hover effecr.
-            $overrides['css'] = '.thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-title, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-subtitle, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-titleWrap, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-title, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-subtitle, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-titleWrap  {
+      } elseif ( $settings[$template . '_hover_effect_type'] === 'none' ) {
+        $layout_ref['showTitle'] = FALSE;
+        $layout_ref['showCaption'] = FALSE;
+        $layout_ref['showDescription'] = FALSE;
+        $layout_ref['hoverEffect'] = 'none';
+      } elseif ( $settings[$template . '_hover_effect_type'] === 'preset' ) {
+        // Specific hover effecr.
+        $overrides['css'] = '.thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-title, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-subtitle, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-titleWrap, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-title, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-subtitle, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-titleWrap  {
                 opacity: 1;
                 -webkit-transition: all .35s cubic-bezier(.22, .61, .36, 1);
                 -moz-transition: all .35s cubic-bezier(.22, .61, .36, 1);
@@ -243,278 +228,245 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
                 transform: translateY(-50%);
                 transition: all .35s cubic-bezier(.22, .61, .36, 1);
                 }';
-        }
+      }
     }
     if ( isset($settings[$template . '_hover_effect_caption_visibility']) ) {
-        if ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-caption-hover' ) {
-            $layout_ref['titleVisibility'] = 'onHover';
-            $layout_ref['titlePosition'] = 'center';
-        }
-        elseif ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-caption-always' ) {
-            $layout_ref['titleVisibility'] = 'alwaysShown';
-            $layout_ref['titlePosition'] = 'bottom';
-        }
-        elseif ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-captions-bottom' ) {
-            $layout_ref['titleVisibility'] = 'alwaysShown';
-            $layout_ref['titlePosition'] = 'below';
-            $layout_ref['descriptionPosition'] = 'below';
-        }
-        elseif ( $settings[$template . '_hover_effect_caption_visibility'] === '' ) {
-            $layout_ref['showTitle'] = FALSE;
-            $layout_ref['showCaption'] = FALSE;
-            $layout_ref['showDescription'] = FALSE;
-        }
+      if ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-caption-hover' ) {
+        $layout_ref['titleVisibility'] = 'onHover';
+        $layout_ref['titlePosition'] = 'center';
+      } elseif ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-caption-always' ) {
+        $layout_ref['titleVisibility'] = 'alwaysShown';
+        $layout_ref['titlePosition'] = 'bottom';
+      } elseif ( $settings[$template . '_hover_effect_caption_visibility'] === 'fg-captions-bottom' ) {
+        $layout_ref['titleVisibility'] = 'alwaysShown';
+        $layout_ref['titlePosition'] = 'below';
+        $layout_ref['descriptionPosition'] = 'below';
+      } elseif ( $settings[$template . '_hover_effect_caption_visibility'] === '' ) {
+        $layout_ref['showTitle'] = FALSE;
+        $layout_ref['showCaption'] = FALSE;
+        $layout_ref['showDescription'] = FALSE;
+      }
     }
     if ( isset($settings[$template . '_caption_position']) ) {
-        $layout_ref['showTitle'] = TRUE;
-        $layout_ref['showDescription'] = TRUE;
-        $layout_ref['titleVisibility'] = 'alwaysShown';
-        if ( $settings[$template . '_caption_position'] === 'fg-captions-top' ) {
-            $layout_ref['titlePosition'] = 'above';
-            $layout_ref['descriptionPosition'] = 'above';
-        }
-        elseif ( $settings[$template . '_caption_position'] === '' ) {
-            $layout_ref['titlePosition'] = 'below';
-            $layout_ref['descriptionPosition'] = 'below';
-        }
+      $layout_ref['showTitle'] = TRUE;
+      $layout_ref['showDescription'] = TRUE;
+      $layout_ref['titleVisibility'] = 'alwaysShown';
+      if ( $settings[$template . '_caption_position'] === 'fg-captions-top' ) {
+        $layout_ref['titlePosition'] = 'above';
+        $layout_ref['descriptionPosition'] = 'above';
+      } elseif ( $settings[$template . '_caption_position'] === '' ) {
+        $layout_ref['titlePosition'] = 'below';
+        $layout_ref['descriptionPosition'] = 'below';
+      }
     }
     if ( isset($settings[$template . '_caption_desc_clamp']) ) {
-        $layout_ref['descriptionMaxRowsCount'] = intval($settings[$template . '_caption_desc_clamp']);
+      $layout_ref['descriptionMaxRowsCount'] = intval($settings[$template . '_caption_desc_clamp']);
     }
     if ( isset($settings[$template . '_caption_alignment']) ) {
-        if ( $settings[$template . '_caption_alignment'] === 'fg-c-l' ) {
-            $layout_ref['titleAlignment'] = 'left';
-        }
-        elseif ( $settings[$template . '_caption_alignment'] === 'fg-c-c' ) {
-            $layout_ref['titleAlignment'] = 'center';
-        }
-        elseif ( $settings[$template . '_caption_alignment'] === 'fg-c-r' ) {
-            $layout_ref['titleAlignment'] = 'right';
-        }
+      if ( $settings[$template . '_caption_alignment'] === 'fg-c-l' ) {
+        $layout_ref['titleAlignment'] = 'left';
+      } elseif ( $settings[$template . '_caption_alignment'] === 'fg-c-c' ) {
+        $layout_ref['titleAlignment'] = 'center';
+      } elseif ( $settings[$template . '_caption_alignment'] === 'fg-c-r' ) {
+        $layout_ref['titleAlignment'] = 'right';
+      }
     }
     if ( isset($settings[$template . '_caption_title_source']) ) {
-        $layout_ref['showTitle'] = TRUE;
-        if ( $settings[$template . '_caption_title_source'] === 'none' ) {
-            $layout_ref['showTitle'] = FALSE;
-        }
-        elseif ( $settings[$template . '_caption_title_source'] === 'desc' ) {
-            // Only description value is different.
-            $layout_ref['titleSource'] = 'description';
-        }
-        elseif ( $settings[$template . '_caption_title_source'] === '' ) {
-            // Default.
-            $layout_ref['titleSource'] = 'title';
-        }
-        else {
-            $layout_ref['titleSource'] = $settings[$template . '_caption_title_source'];
-        }
+      $layout_ref['showTitle'] = TRUE;
+      if ( $settings[$template . '_caption_title_source'] === 'none' ) {
+        $layout_ref['showTitle'] = FALSE;
+      } elseif ( $settings[$template . '_caption_title_source'] === 'desc' ) {
+        // Only description value is different.
+        $layout_ref['titleSource'] = 'description';
+      } elseif ( $settings[$template . '_caption_title_source'] === '' ) {
+        // Default.
+        $layout_ref['titleSource'] = 'title';
+      } else {
+        $layout_ref['titleSource'] = $settings[$template . '_caption_title_source'];
+      }
     }
     if ( isset($settings[$template . '_caption_desc_source']) ) {
-        $layout_ref['showDescriptions'] = TRUE;
-        if ( $settings[$template . '_caption_desc_source'] === 'none' ) {
-            $layout_ref['showDescription'] = FALSE;
-        }
-        elseif ( $settings[$template . '_caption_desc_source'] === 'desc' ) {
-            // Only description value is different.
-            $layout_ref['descriptionSource'] = 'description';
-        }
-        elseif ( $settings[$template . '_caption_desc_source'] === '' ) {
-            // Default.
-            $layout_ref['descriptionSource'] = 'title';
-        }
-        else {
-            $layout_ref['descriptionSource'] = $settings[$template . '_caption_desc_source'];
-        }
+      $layout_ref['showDescriptions'] = TRUE;
+      if ( $settings[$template . '_caption_desc_source'] === 'none' ) {
+        $layout_ref['showDescription'] = FALSE;
+      } elseif ( $settings[$template . '_caption_desc_source'] === 'desc' ) {
+        // Only description value is different.
+        $layout_ref['descriptionSource'] = 'description';
+      } elseif ( $settings[$template . '_caption_desc_source'] === '' ) {
+        // Default.
+        $layout_ref['descriptionSource'] = 'title';
+      } else {
+        $layout_ref['descriptionSource'] = $settings[$template . '_caption_desc_source'];
+      }
     }
     if ( isset($settings[$template . '_paging_type']) ) {
-        if ( strpos($settings[$template . '_paging_type'], 'page') !== false
-        || $settings[$template . '_paging_type'] === 'dots' ) {
-            $layout_ref['paginationType'] = 'simple';
-        }
-        elseif ( $settings[$template . '_paging_type'] === '' ) {
-            $layout_ref['paginationType'] = 'none';
-        }
-        elseif ( strpos($settings[$template . '_paging_type'], 'infin') !== false ) {
-            $layout_ref['paginationType'] = 'scroll';
-        }
-        elseif ( strpos($settings[$template . '_paging_type'], 'load') !== false ) {
-            $layout_ref['paginationType'] = 'loadMore';
-        }
+      if ( strpos($settings[$template . '_paging_type'], 'page') !== false
+      || $settings[$template . '_paging_type'] === 'dots' ) {
+        $layout_ref['paginationType'] = 'simple';
+      } elseif ( $settings[$template . '_paging_type'] === '' ) {
+        $layout_ref['paginationType'] = 'none';
+      } elseif ( strpos($settings[$template . '_paging_type'], 'infin') !== false ) {
+        $layout_ref['paginationType'] = 'scroll';
+      } elseif ( strpos($settings[$template . '_paging_type'], 'load') !== false ) {
+        $layout_ref['paginationType'] = 'loadMore';
+      }
     }
     if ( isset($settings[$template . '_paging_size']) ) {
-        $overrides['general']['itemsPerPage'] = intval($settings[$template . '_paging_size']);
+      $overrides['general']['itemsPerPage'] = intval($settings[$template . '_paging_size']);
     }
 
     if ( isset($settings[$template . '_lightbox']) ) {
-        $overrides['general']['clickAction'] = 'none';
+      $overrides['general']['clickAction'] = 'none';
     }
     if ( isset($settings[$template . '_lightbox_theme']) ) {
-        if ( $settings[$template . '_lightbox_theme'] === '' ) {
-            // Inherit.
-            $settings[$template . '_lightbox_theme'] = $settings[$template . '_theme'];
-        }
-        if ( $settings[$template . '_lightbox_theme'] === 'fg-light' ) {
-            $overrides['lightbox']['backgroundColor'] = '#EEEEEE';
-        }
-        elseif ( $settings[$template . '_lightbox_theme'] === 'fg-dark' ) {
-            $overrides['lightbox']['backgroundColor'] = '#151515';
-        }  
+      if ( $settings[$template . '_lightbox_theme'] === '' ) {
+        // Inherit.
+        $settings[$template . '_lightbox_theme'] = $settings[$template . '_theme'];
+      }
+      if ( $settings[$template . '_lightbox_theme'] === 'fg-light' ) {
+        $overrides['lightbox']['backgroundColor'] = '#EEEEEE';
+      } elseif ( $settings[$template . '_lightbox_theme'] === 'fg-dark' ) {
+        $overrides['lightbox']['backgroundColor'] = '#151515';
+      }
     }
     if ( isset($settings[$template . '_lightbox_transition']) ) {
-        if ( $settings[$template . '_lightbox_transition'] === 'fade' ) {
-            $overrides['lightbox']['imageAnimation'] = 'fade';
-        }
-        elseif ( $settings[$template . '_lightbox_transition'] === 'horizontal' ) {
-            $overrides['lightbox']['imageAnimation'] = 'slideH';
-        }
-        elseif ( $settings[$template . '_lightbox_transition'] === 'vertical' ) {
-            $overrides['lightbox']['imageAnimation'] = 'slideV';
-        }
-        elseif ( $settings[$template . '_lightbox_transition'] === 'none' ) {
-            $overrides['lightbox']['imageAnimation'] = 'blur';
-        }
+      if ( $settings[$template . '_lightbox_transition'] === 'fade' ) {
+        $overrides['lightbox']['imageAnimation'] = 'fade';
+      } elseif ( $settings[$template . '_lightbox_transition'] === 'horizontal' ) {
+        $overrides['lightbox']['imageAnimation'] = 'slideH';
+      } elseif ( $settings[$template . '_lightbox_transition'] === 'vertical' ) {
+        $overrides['lightbox']['imageAnimation'] = 'slideV';
+      } elseif ( $settings[$template . '_lightbox_transition'] === 'none' ) {
+        $overrides['lightbox']['imageAnimation'] = 'blur';
+      }
     }
     if ( isset($settings[$template . '_lightbox_auto_progress']) ) {
-        if ( $settings[$template . '_lightbox_auto_progress'] === 'yes' ) {
-            $overrides['lightbox']['autoplay'] = TRUE;
-            if ( isset($settings[$template . '_lightbox_auto_progress_seconds']) ) {
-                $overrides['lightbox']['slideDuration'] = intval($settings[$template . '_lightbox_auto_progress_seconds']) * 1000;
-            }
+      if ( $settings[$template . '_lightbox_auto_progress'] === 'yes' ) {
+        $overrides['lightbox']['autoplay'] = TRUE;
+        if ( isset($settings[$template . '_lightbox_auto_progress_seconds']) ) {
+          $overrides['lightbox']['slideDuration'] = intval($settings[$template . '_lightbox_auto_progress_seconds']) * 1000;
         }
-        elseif ( $settings[$template . '_lightbox_auto_progress'] === 'no' ) {
-            $overrides['lightbox']['autoplay'] = FALSE;
-        }
+      } elseif ( $settings[$template . '_lightbox_auto_progress'] === 'no' ) {
+        $overrides['lightbox']['autoplay'] = FALSE;
+      }
     }
     if ( isset($settings[$template . '_lightbox_show_fullscreen_button']) ) {
-        if ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'yes' ) {
-            $overrides['lightbox']['isFullscreenAllowed'] = TRUE;
-        }
-        elseif ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'no' ) {
-            $overrides['lightbox']['isFullscreenAllowed'] = FALSE;
-        }  
+      if ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'yes' ) {
+        $overrides['lightbox']['isFullscreenAllowed'] = TRUE;
+      } elseif ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'no' ) {
+        $overrides['lightbox']['isFullscreenAllowed'] = FALSE;
+      }
     }
     if ( isset($settings[$template . '_lightbox_thumbs']) ) {
-        if ( $settings[$template . '_lightbox_thumbs'] === 'left' ) {
-            $overrides['lightbox']['thumbnailsPosition'] = 'end';
-        }
-        elseif ( $settings[$template . '_lightbox_thumbs'] === 'right' ) {
-            $overrides['lightbox']['thumbnailsPosition'] = 'start';
-        }
-        else {
-            $overrides['lightbox']['thumbnailsPosition'] = $settings[$template . '_lightbox_thumbs'];
-        }
+      if ( $settings[$template . '_lightbox_thumbs'] === 'left' ) {
+        $overrides['lightbox']['thumbnailsPosition'] = 'end';
+      } elseif ( $settings[$template . '_lightbox_thumbs'] === 'right' ) {
+        $overrides['lightbox']['thumbnailsPosition'] = 'start';
+      } else {
+        $overrides['lightbox']['thumbnailsPosition'] = $settings[$template . '_lightbox_thumbs'];
+      }
     }
     if ( isset($settings[$template . '_lightbox_thumbs_size']) ) {
-        if ( $settings[$template . '_lightbox_thumbs_size'] === 'small' ) {
-            $overrides['lightbox']['thumbnailWidth'] = 70;
-            $overrides['lightbox']['thumbnailHeight'] = 70;
-        }
+      if ( $settings[$template . '_lightbox_thumbs_size'] === 'small' ) {
+        $overrides['lightbox']['thumbnailWidth'] = 70;
+        $overrides['lightbox']['thumbnailHeight'] = 70;
+      }
     }
     if ( isset($settings[$template . '_lightbox_info_enabled']) ) {
-        if ( $settings[$template . '_lightbox_info_enabled'] === 'disabled' ) {
-            $overrides['lightbox']['showTitle'] = FALSE;
-            $overrides['lightbox']['showDescription'] = FALSE;
-            $overrides['lightbox']['showCaption'] = FALSE;
-        }
-        elseif ( $settings[$template . '_lightbox_info_enabled'] === ''
-         || $settings[$template . '_lightbox_info_enabled'] === 'hidden' ) {
-            $overrides['lightbox']['showTitle'] = TRUE;
-            $overrides['lightbox']['showDescription'] = TRUE;
-            $overrides['lightbox']['showCaption'] = FALSE;
-        }
+      if ( $settings[$template . '_lightbox_info_enabled'] === 'disabled' ) {
+        $overrides['lightbox']['showTitle'] = FALSE;
+        $overrides['lightbox']['showDescription'] = FALSE;
+        $overrides['lightbox']['showCaption'] = FALSE;
+      } elseif ( $settings[$template . '_lightbox_info_enabled'] === ''
+       || $settings[$template . '_lightbox_info_enabled'] === 'hidden' ) {
+        $overrides['lightbox']['showTitle'] = TRUE;
+        $overrides['lightbox']['showDescription'] = TRUE;
+        $overrides['lightbox']['showCaption'] = FALSE;
+      }
     }
     if ( isset($settings[$template . '_lightbox_info_alignment']) ) {
-        if ( $settings[$template . '_lightbox_info_alignment'] === 'default'
-         || $settings[$template . '_lightbox_info_alignment'] === 'justify' ) {
-            $overrides['lightbox']['titleAlignment'] = 'left';
-        }
-        else {
-            $overrides['lightbox']['titleAlignment'] = $settings[$template . '_lightbox_info_alignment'];
-        }
+      if ( $settings[$template . '_lightbox_info_alignment'] === 'default'
+       || $settings[$template . '_lightbox_info_alignment'] === 'justify' ) {
+        $overrides['lightbox']['titleAlignment'] = 'left';
+      } else {
+        $overrides['lightbox']['titleAlignment'] = $settings[$template . '_lightbox_info_alignment'];
+      }
     }
     if ( isset($settings[$template . '_lightbox_info_position']) ) {
-        if ( $settings[$template . '_lightbox_info_position'] === 'top' ) {
-            $overrides['lightbox']['textPosition'] = isset($settings[$template . '_lightbox_info_overlay']) && $settings[$template . '_lightbox_info_overlay'] === 'yes' ? 'top' : 'above';
-        }
-        elseif ( $settings[$template . '_lightbox_info_position'] === 'bottom' ) {
-            $overrides['lightbox']['textPosition'] = isset($settings[$template . '_lightbox_info_overlay']) && $settings[$template . '_lightbox_info_overlay'] === 'yes' ? 'bottom' : 'below';
-        }
+      if ( $settings[$template . '_lightbox_info_position'] === 'top' ) {
+        $overrides['lightbox']['textPosition'] = isset($settings[$template . '_lightbox_info_overlay']) && $settings[$template . '_lightbox_info_overlay'] === 'yes' ? 'top' : 'above';
+      } elseif ( $settings[$template . '_lightbox_info_position'] === 'bottom' ) {
+        $overrides['lightbox']['textPosition'] = isset($settings[$template . '_lightbox_info_overlay']) && $settings[$template . '_lightbox_info_overlay'] === 'yes' ? 'bottom' : 'below';
+      }
     }
     if ( isset($settings[$template . '_lightbox_caption_override']) ) {
-        if ( $settings[$template . '_lightbox_caption_override'] === 'override' ) {
-            $overrides['lightbox']['showTitle'] = TRUE;
-            if ( $settings[$template . '_lightbox_caption_override_title'] === 'none' ) {
-                $overrides['lightbox']['showTitle'] = FALSE;
-            }
-            elseif ( $settings[$template . '_lightbox_caption_override_title'] === '' ) {
-                // Same as thumbnail.
-                $overrides['lightbox']['titleSource'] = $settings[$template . '_caption_title_source'];
-            }
-            elseif ( $settings[$template . '_lightbox_caption_override_title'] === 'desc' ) {
-                // Only description value is different.
-                $overrides['lightbox']['titleSource'] = 'description';
-            }
-            else {
-                $overrides['lightbox']['titleSource'] = $settings[$template . '_lightbox_caption_override_title'];
-            }
+      if ( $settings[$template . '_lightbox_caption_override'] === 'override' ) {
+        $overrides['lightbox']['showTitle'] = TRUE;
+        if ( $settings[$template . '_lightbox_caption_override_title'] === 'none' ) {
+          $overrides['lightbox']['showTitle'] = FALSE;
+        } elseif ( $settings[$template . '_lightbox_caption_override_title'] === '' ) {
+          // Same as thumbnail.
+          $overrides['lightbox']['titleSource'] = $settings[$template . '_caption_title_source'];
+        } elseif ( $settings[$template . '_lightbox_caption_override_title'] === 'desc' ) {
+          // Only description value is different.
+          $overrides['lightbox']['titleSource'] = 'description';
+        } else {
+          $overrides['lightbox']['titleSource'] = $settings[$template . '_lightbox_caption_override_title'];
+        }
 
-            $overrides['lightbox']['showDescription'] = TRUE;
-            if ( $settings[$template . '_lightbox_caption_override_desc'] === 'none' ) {
-                $overrides['lightbox']['showDescription'] = FALSE;
-            }
-            elseif ( $settings[$template . '_lightbox_caption_override_desc'] === '' ) {
-                // Same as thumbnail.
-                $overrides['lightbox']['descriptionSource'] = $settings[$template . '_caption_desc_source'];
-            }
-            elseif ( $settings[$template . '_lightbox_caption_override_desc'] === 'desc' ) {
-                // Only description value is different.    
-                $overrides['lightbox']['descriptionSource'] = 'description';
-            }
-            else {
-                $overrides['lightbox']['descriptionSource'] = $settings[$template . '_lightbox_caption_override_desc'];
-            }
+        $overrides['lightbox']['showDescription'] = TRUE;
+        if ( $settings[$template . '_lightbox_caption_override_desc'] === 'none' ) {
+          $overrides['lightbox']['showDescription'] = FALSE;
+        } elseif ( $settings[$template . '_lightbox_caption_override_desc'] === '' ) {
+          // Same as thumbnail.
+          $overrides['lightbox']['descriptionSource'] = $settings[$template . '_caption_desc_source'];
+        } elseif ( $settings[$template . '_lightbox_caption_override_desc'] === 'desc' ) {
+          // Only description value is different.
+          $overrides['lightbox']['descriptionSource'] = 'description';
+        } else {
+          $overrides['lightbox']['descriptionSource'] = $settings[$template . '_lightbox_caption_override_desc'];
         }
-        elseif ( $settings[$template . '_lightbox_caption_override'] === '' ) {
-            // Same as thumbnail.
-            $overrides['lightbox']['titleSource'] = $settings[$template . '_caption_title_source'];
-            $overrides['lightbox']['descriptionSource'] = $settings[$template . '_caption_desc_source'];
-        }
+      } elseif ( $settings[$template . '_lightbox_caption_override'] === '' ) {
+        // Same as thumbnail.
+        $overrides['lightbox']['titleSource'] = $settings[$template . '_caption_title_source'];
+        $overrides['lightbox']['descriptionSource'] = $settings[$template . '_caption_desc_source'];
+      }
     }
 
     if ( $template === 'masonry' ) {
-        if ( isset($settings[$template . '_thumbnail_width'])) {
-            $layout_ref['width'] = 100;
-        }
-        if ( isset($settings[$template . '_gutter_width'])) {
-            $layout_ref['gap'] = intval($settings[$template . '_gutter_width']);
-        }
-        if ( isset($settings[$template . '_layout'])
-            && strpos($settings[$template . '_layout'], 'col') !== false ) {
-            $layout_ref['columns'] = intval(str_replace('col', '', $settings[$template . '_layout']));
-        }
+      if ( isset($settings[$template . '_thumbnail_width'])) {
+        $layout_ref['width'] = 100;
+      }
+      if ( isset($settings[$template . '_gutter_width'])) {
+        $layout_ref['gap'] = intval($settings[$template . '_gutter_width']);
+      }
+      if ( isset($settings[$template . '_layout'])
+          && strpos($settings[$template . '_layout'], 'col') !== false ) {
+        $layout_ref['columns'] = intval(str_replace('col', '', $settings[$template . '_layout']));
+      }
     }
     if ( $template === 'justified' ) {
-        if ( isset($settings[$template . '_thumb_height'])) {
-            $layout_ref['rowHeight'] = intval($settings[$template . '_thumb_height']);
-        }
-        if ( isset($settings[$template . '_margins'])) {
-            $layout_ref['gap'] = intval($settings[$template . '_margins']);
-        }
+      if ( isset($settings[$template . '_thumb_height'])) {
+        $layout_ref['rowHeight'] = intval($settings[$template . '_thumb_height']);
+      }
+      if ( isset($settings[$template . '_margins'])) {
+        $layout_ref['gap'] = intval($settings[$template . '_margins']);
+      }
     }
     if ( $template === 'simple_portfolio' ) {
-        if ( isset($settings[$template . '_gutter'])) {
-            $layout_ref['gap'] = intval($settings[$template . '_gutter']);
-        }
+      if ( isset($settings[$template . '_gutter'])) {
+        $layout_ref['gap'] = intval($settings[$template . '_gutter']);
+      }
     }
     if ( $template === 'thumbnail' ) {
-        $overrides['type'] = 'thumbnails';
-        $layout_ref['columns'] = 1;
-        $layout_ref['paginationType'] = 'none';
-        $layout_ref['showAllItems'] = false;
-        $layout_ref['containerPadding'] = 30;
-        $overrides['general']['itemsPerPage'] = 1;
-        // Specific template.
-        $overrides['css'] = '.MuiImageList-standard>div:nth-child(2) .thumbnail-gallery__image-wrapper  {
+      $overrides['type'] = 'thumbnails';
+      $layout_ref['columns'] = 1;
+      $layout_ref['paginationType'] = 'none';
+      $layout_ref['showAllItems'] = false;
+      $layout_ref['containerPadding'] = 30;
+      $overrides['general']['itemsPerPage'] = 1;
+      // Specific template.
+      $overrides['css'] = '.MuiImageList-standard>div:nth-child(2) .thumbnail-gallery__image-wrapper  {
             transform: rotate(-15deg);
             }
             .MuiImageList-standard>div:nth-child(3) .thumbnail-gallery__image-wrapper  {
@@ -535,56 +487,54 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
     }
 
     if ( $template === 'image-viewer' ) {
-        $overrides['type'] = 'thumbnails';
-        $layout_ref['columns'] = 1;
-        $layout_ref['paginationType'] = 'simple';
-        $overrides['general']['itemsPerPage'] = 1;
-        if ( isset($settings[$template . '_thumbnail_size'])) {
-            if ( isset($settings[$template . '_thumbnail_size']['width']) ) {
-                $layout_ref['width'] = intval($settings[$template . '_thumbnail_size']['width']);
-            }
-            if ( isset($settings[$template . '_thumbnail_size']['height']) ) {
-                $layout_ref['height'] = intval($settings[$template . '_thumbnail_size']['height']);
-            }
+      $overrides['type'] = 'thumbnails';
+      $layout_ref['columns'] = 1;
+      $layout_ref['paginationType'] = 'simple';
+      $overrides['general']['itemsPerPage'] = 1;
+      if ( isset($settings[$template . '_thumbnail_size'])) {
+        if ( isset($settings[$template . '_thumbnail_size']['width']) ) {
+          $layout_ref['width'] = intval($settings[$template . '_thumbnail_size']['width']);
         }
+        if ( isset($settings[$template . '_thumbnail_size']['height']) ) {
+          $layout_ref['height'] = intval($settings[$template . '_thumbnail_size']['height']);
+        }
+      }
     }
     if ( $template === 'carousel' ) {
-        if ( isset($settings[$template . '_maxItems'])) {
-            $layout_ref['imagesCount'] = intval($settings[$template . '_maxItems']);
+      if ( isset($settings[$template . '_maxItems'])) {
+        $layout_ref['imagesCount'] = intval($settings[$template . '_maxItems']);
+      }
+      if ( isset($settings[$template . '_autoplay_interaction'])) {
+        if ( $settings[$template . '_autoplay_interaction'] === 'pause' ) {
+          $layout_ref['autoplay'] = TRUE;
+        } elseif ( $settings[$template . '_autoplay_interaction'] === 'disable' ) {
+          $layout_ref['autoplay'] = FALSE;
         }
-        if ( isset($settings[$template . '_autoplay_interaction'])) {
-            if ( $settings[$template . '_autoplay_interaction'] === 'pause' ) {
-                $layout_ref['autoplay'] = TRUE;
-            }
-            elseif ( $settings[$template . '_autoplay_interaction'] === 'disable' ) {
-                $layout_ref['autoplay'] = FALSE;
-            }
+      }
+      if ( isset($settings[$template . '_autoplay_time'])) {
+        if ( $settings[$template . '_autoplay_time'] == 0 ) {
+          $layout_ref['autoplay'] = FALSE;
+        } else {
+          $layout_ref['slideDuration'] = intval($settings[$template . '_autoplay_time']) * 1000;
         }
-        if ( isset($settings[$template . '_autoplay_time'])) {
-            if ( $settings[$template . '_autoplay_time'] == 0 ) {
-                $layout_ref['autoplay'] = FALSE;
-            }
-            else {
-                $layout_ref['slideDuration'] = intval($settings[$template . '_autoplay_time']) * 1000;
-            }
+      }
+      if ( isset($settings[$template . '_show_nav_arrows'])) {
+        if ( isset($settings[$template . '_show_nav_arrows'])
+             && isset($settings[$template . '_show_pagination']) ) {
+          if ( $settings[$template . '_show_nav_arrows'] === ''
+          && $settings[$template . '_show_pagination'] === '' ) {
+            $layout_ref['navigation'] = 'arrowsAndDots';
+          }
+          if ( $settings[$template . '_show_nav_arrows'] === ''
+          && $settings[$template . '_show_pagination'] !== '' ) {
+            $layout_ref['navigation'] = 'arrows';
+          }
+          if ( $settings[$template . '_show_nav_arrows'] !== ''
+          && $settings[$template . '_show_pagination'] === '' ) {
+            $layout_ref['navigation'] = 'dots';
+          }
         }
-        if ( isset($settings[$template . '_show_nav_arrows'])) {
-            if ( isset($settings[$template . '_show_nav_arrows'])
-                 && isset($settings[$template . '_show_pagination']) ) {
-                    if ( $settings[$template . '_show_nav_arrows'] === ''
-                    && $settings[$template . '_show_pagination'] === '' ) {
-                        $layout_ref['navigation'] = 'arrowsAndDots';
-                    }
-                    if ( $settings[$template . '_show_nav_arrows'] === ''
-                    && $settings[$template . '_show_pagination'] !== '' ) {
-                        $layout_ref['navigation'] = 'arrows';
-                    }
-                    if ( $settings[$template . '_show_nav_arrows'] !== ''
-                    && $settings[$template . '_show_pagination'] === '' ) {
-                        $layout_ref['navigation'] = 'dots';
-                    }
-            }
-        }
+      }
     }
 
     return $this->cleanup_overrides($overrides);

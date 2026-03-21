@@ -39,7 +39,7 @@ class REACG_Admin_Notices {
 
 		$options = [
       /* translators: %s: celebratory emoji */
-			'title' => sprintf( __( "That’s awesome!%s", "regallery" ), "🎉" ),
+			'title' => sprintf( __( "That’s awesome! %s", "regallery" ), "🎉" ),
       /* translators: 1: plugin name in bold HTML tags, 2: line break HTML tag, 3: line break HTML tag */
 			'description' => sprintf( __( "We noticed you’ve been using %1\$s for a while now.%2\$sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%3\$sYour feedback helps us improve and helps others discover out plugin!", "regallery" ), "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />" ),
       'dismiss_url' => add_query_arg( [

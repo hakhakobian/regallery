@@ -73,7 +73,7 @@ class REACG_Migration_Engine {
       }
     }
 
-    usort($all_items, function($a, $b) {
+    usort($all_items, function ($a, $b) {
       return strnatcasecmp(
         !empty($a['title']) ? (string) $a['title'] : '',
         !empty($b['title']) ? (string) $b['title'] : ''
@@ -111,10 +111,10 @@ class REACG_Migration_Engine {
     return [
       'source' => $source,
       'results' => $results,
-      'imported' => count(array_filter($results, function($row) {
+      'imported' => count(array_filter($results, function ($row) {
         return !empty($row['success']);
       })),
-      'failed' => count(array_filter($results, function($row) {
+      'failed' => count(array_filter($results, function ($row) {
         return empty($row['success']);
       })),
     ];
@@ -385,10 +385,173 @@ class REACG_Migration_Engine {
 
       $item['migrated'] = !empty($migrated_gallery_id);
       $item['migrated_gallery_id'] = intval($migrated_gallery_id);
+      $item['replaced'] = !empty($migrated_gallery_id)
+        && !$this->source_exists_in_posts($source, $source_gallery_id);
       $decorated[] = $item;
     }
 
     return $decorated;
+  }
+
+  /**
+   * Returns true if any post still contains a shortcode or block referencing
+   * this source gallery, i.e. the Replace action has not yet been run.
+   *
+   * Uses a two-step check: a broad LIKE query to find candidate posts, then
+   * an exact PHP regex on those posts to avoid false positives from IDs that
+   * are substrings of other IDs (e.g. ID "5" matching "[foogallery id="15"]").
+   */
+  private function source_exists_in_posts($source, $source_gallery_id) {
+    $source = sanitize_key($source);
+    $source_gallery_id = trim((string) $source_gallery_id);
+    $id_numeric = intval($source_gallery_id);
+
+    // Regex patterns that exactly verify the gallery ID in post content.
+    $verify_regexes = [];
+
+    // Broad LIKE patterns used only to narrow down candidate posts efficiently.
+    $like_clauses = [];
+
+    if ($source === 'envira') {
+      // Shortcodes: [envira-gallery id="X"] or [envira id="X"]
+      $like_clauses[] = '%[envira-gallery%';
+      $like_clauses[] = '%[envira %';
+      $like_clauses[] = '%wp:envira%';
+      $verify_regexes[] = '/\[envira(?:-gallery)?\b[^\]]*\bid\s*=\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\s\]]/i';
+      $verify_regexes[] = '/wp:envira[^\}]*\b' . preg_quote((string) $id_numeric, '/') . '\b/i';
+    } elseif ($source === 'foo') {
+      // Shortcodes: [foogallery id="X"]
+      $like_clauses[] = '%[foogallery%';
+      $like_clauses[] = '%wp:fooplugins%';
+      $like_clauses[] = '%wp:foogallery%';
+      $verify_regexes[] = '/\[foogallery\b[^\]]*\bid\s*=\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\s\]]/i';
+      $verify_regexes[] = '/wp:(?:fooplugins|foogallery)[^\}]*\b' . preg_quote((string) $id_numeric, '/') . '\b/i';
+
+      // Also check Elementor _elementor_data meta for a foogallery widget.
+      if ($this->elementor_foo_widget_exists($id_numeric)) {
+        return true;
+      }
+    } elseif ($source === 'nextgen') {
+      $like_clauses[] = '%[ngg%';
+      $like_clauses[] = '%[nggallery%';
+      $like_clauses[] = '%wp:ngg%';
+      $like_clauses[] = '%wp:nextgen-gallery%';
+      $like_clauses[] = '%wp:imagely%';
+      $verify_regexes[] = '/\[ngg(?:allery)?\b[^\]]*\bid\s*=\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\s\]]/i';
+      $verify_regexes[] = '/wp:(?:ngg|nextgen-gallery|imagely)[^\}]*\b' . preg_quote((string) $id_numeric, '/') . '\b/i';
+    } elseif ($source === 'gutenberg') {
+      // Gutenberg source: the source_gallery_id encodes post_id:index.
+      // We can't reliably detect which specific indexed block was replaced,
+      // so always show the Replace link for Gutenberg items.
+      return true;
+    } else {
+      return false;
+    }
+
+    global $wpdb;
+
+    // Collect candidate post IDs via broad LIKE queries.
+    $candidate_ids = [];
+    foreach ($like_clauses as $like) {
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+      $rows = $wpdb->get_col(
+        $wpdb->prepare(
+          "SELECT ID FROM {$wpdb->posts}
+           WHERE post_status NOT IN ('auto-draft','trash','inherit')
+             AND post_content LIKE %s
+           LIMIT 200",
+          $like
+        )
+      );
+      if (!empty($rows)) {
+        $candidate_ids = array_unique(array_merge($candidate_ids, $rows));
+      }
+    }
+
+    if (empty($candidate_ids)) {
+      return false;
+    }
+
+    // Fetch the content of candidate posts and verify with exact regex.
+    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
+    $contents = $wpdb->get_col(
+      "SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})"
+    );
+
+    foreach ($contents as $content) {
+      foreach ($verify_regexes as $regex) {
+        if (preg_match($regex, $content)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns true if any post's _elementor_data meta still contains a
+   * foogallery Elementor widget referencing the given gallery ID.
+   */
+  private function elementor_foo_widget_exists($source_gallery_id) {
+    global $wpdb;
+    $id_numeric = intval($source_gallery_id);
+
+    // Broad LIKE to find candidate posts — the gallery_id value is an integer
+    // stored as a string in JSON, so we can search for its numeric form.
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $candidate_post_ids = $wpdb->get_col(
+      $wpdb->prepare(
+        "SELECT post_id FROM {$wpdb->postmeta}
+         WHERE meta_key = '_elementor_data'
+           AND meta_value LIKE %s
+         LIMIT 200",
+        '%foogallery%'
+      )
+    );
+
+    if (empty($candidate_post_ids)) {
+      return false;
+    }
+
+    foreach ($candidate_post_ids as $post_id) {
+      $raw = get_post_meta(intval($post_id), '_elementor_data', true);
+      if (empty($raw) || !is_string($raw)) {
+        continue;
+      }
+      $data = json_decode($raw, true);
+      if (is_array($data) && $this->elementor_tree_has_foo_widget($data, $id_numeric)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Recursively checks whether the Elementor elements tree contains a
+   * foogallery widget referencing the given gallery ID.
+   */
+  private function elementor_tree_has_foo_widget(array $elements, $source_gallery_id) {
+    foreach ($elements as $element) {
+      if (
+        !empty($element['elType']) &&
+        $element['elType'] === 'widget' &&
+        !empty($element['widgetType']) &&
+        $element['widgetType'] === 'foogallery' &&
+        isset($element['settings']['gallery_id']) &&
+        intval($element['settings']['gallery_id']) === $source_gallery_id
+      ) {
+        return true;
+      }
+      if (!empty($element['elements']) && is_array($element['elements'])) {
+        if ($this->elementor_tree_has_foo_widget($element['elements'], $source_gallery_id)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private function get_provider($source) {
