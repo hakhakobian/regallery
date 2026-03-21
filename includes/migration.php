@@ -4,7 +4,6 @@ defined('ABSPATH') || die('Access Denied');
 
 require_once REACG_PLUGIN_DIR . '/includes/migration/interface-provider.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-envira.php';
-require_once REACG_PLUGIN_DIR . '/includes/migration/provider-nextgen.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-foogallery.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-gutenberg.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/engine.php';

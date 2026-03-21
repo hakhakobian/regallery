@@ -126,8 +126,11 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
 
     update_post_meta($post_id, '_elementor_data', wp_slash($encoded));
 
-    if (class_exists('\\Elementor\\Plugin')) {
-      \Elementor\Plugin::$instance->documents->get($post_id, false)?->delete_meta('_elementor_css');
+    if (class_exists( '\Elementor\Plugin' )) {
+      $document = \Elementor\Plugin::instance()->documents->get($post_id, false);
+      if ($document) {
+        $document->delete_meta('_elementor_css');
+      }
       delete_post_meta($post_id, '_elementor_css');
     }
 
