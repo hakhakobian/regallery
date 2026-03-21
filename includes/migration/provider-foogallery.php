@@ -72,6 +72,247 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
     ];
   }
 
+  public function get_shortcode_patterns($source_gallery_id) {
+    $id = preg_quote((string) $source_gallery_id, '/');
+
+    return [
+      '/\\[foogallery\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
+    ];
+  }
+
+  public function get_block_namespaces() {
+    return ['foogallery', 'foo-gallery', 'fooplugins'];
+  }
+
+  public function get_block_id_attributes() {
+    return ['id'];
+  }
+
+  public function prefer_shortcode_replacement() {
+    return false;
+  }
+
+  public function replace_specific_gallery($source_gallery_id, $migrated_gallery_id, $replacement_shortcode, $replacement_block) {
+    return null;
+  }
+
+  public function replace_post_meta_references($post_id, $source_gallery_id, $migrated_gallery_id) {
+    $raw = get_post_meta($post_id, '_elementor_data', true);
+    if (empty($raw) || !is_string($raw)) {
+      return 0;
+    }
+
+    $data = json_decode($raw, true);
+    if (!is_array($data)) {
+      return 0;
+    }
+
+    $count = 0;
+    $data = $this->walk_elementor_tree(
+      $data,
+      intval($source_gallery_id),
+      intval($migrated_gallery_id),
+      $count
+    );
+
+    if ($count === 0) {
+      return 0;
+    }
+
+    $encoded = wp_json_encode($data);
+    if ($encoded === false) {
+      return 0;
+    }
+
+    update_post_meta($post_id, '_elementor_data', wp_slash($encoded));
+
+    if (class_exists('\\Elementor\\Plugin')) {
+      \Elementor\Plugin::$instance->documents->get($post_id, false)?->delete_meta('_elementor_css');
+      delete_post_meta($post_id, '_elementor_css');
+    }
+
+    return $count;
+  }
+
+  public function source_exists_in_posts($source_gallery_id) {
+    $source_gallery_id = trim((string) $source_gallery_id);
+    $id_numeric = intval($source_gallery_id);
+
+    if ($this->elementor_foo_widget_exists($id_numeric)) {
+      return true;
+    }
+
+    return $this->content_reference_exists(
+      ['%[foogallery%', '%wp:fooplugins%', '%wp:foogallery%'],
+      [
+        '/\\[foogallery\\b[^\\]]*\\bid\\s*=\\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\\s\\]]/i',
+        '/wp:(?:fooplugins|foogallery)[^\\}]*\\b' . preg_quote((string) $id_numeric, '/') . '\\b/i',
+      ]
+    );
+  }
+
+  private function content_reference_exists($like_clauses, $verify_regexes) {
+    global $wpdb;
+
+    $candidate_ids = [];
+    foreach ((array) $like_clauses as $like) {
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+      $rows = $wpdb->get_col(
+        $wpdb->prepare(
+          "SELECT ID FROM {$wpdb->posts}
+           WHERE post_status NOT IN ('auto-draft','trash','inherit')
+             AND post_type != 'foogallery'
+             AND post_content LIKE %s
+           LIMIT 200",
+          $like
+        )
+      );
+      if (!empty($rows)) {
+        $candidate_ids = array_unique(array_merge($candidate_ids, $rows));
+      }
+    }
+
+    if (empty($candidate_ids)) {
+      return false;
+    }
+
+    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
+    $posts = $wpdb->get_results("SELECT ID, post_type, post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})", ARRAY_A);
+
+    foreach ((array) $posts as $post_row) {
+      if (empty($post_row['post_type']) || !$this->is_replaceable_post_type($post_row['post_type'])) {
+        continue;
+      }
+
+      $content = isset($post_row['post_content']) ? (string) $post_row['post_content'] : '';
+      foreach ((array) $verify_regexes as $regex) {
+        if (preg_match($regex, $content)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private function elementor_foo_widget_exists($source_gallery_id) {
+    global $wpdb;
+
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $candidate_post_ids = $wpdb->get_col(
+      $wpdb->prepare(
+        "SELECT post_id FROM {$wpdb->postmeta}
+         WHERE meta_key = '_elementor_data'
+           AND meta_value LIKE %s
+         LIMIT 200",
+        '%foogallery%'
+      )
+    );
+
+    if (empty($candidate_post_ids)) {
+      return false;
+    }
+
+    foreach ($candidate_post_ids as $post_id) {
+      $post_type = get_post_type(intval($post_id));
+      if (!$this->is_replaceable_post_type($post_type)) {
+        continue;
+      }
+
+      $raw = get_post_meta(intval($post_id), '_elementor_data', true);
+      if (empty($raw) || !is_string($raw)) {
+        continue;
+      }
+      $data = json_decode($raw, true);
+      if (is_array($data) && $this->elementor_tree_has_foo_widget($data, $source_gallery_id)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private function elementor_tree_has_foo_widget(array $elements, $source_gallery_id) {
+    foreach ($elements as $element) {
+      if (
+        !empty($element['elType']) &&
+        $element['elType'] === 'widget' &&
+        !empty($element['widgetType']) &&
+        $element['widgetType'] === 'foogallery' &&
+        isset($element['settings']['gallery_id']) &&
+        intval($element['settings']['gallery_id']) === $source_gallery_id
+      ) {
+        return true;
+      }
+
+      if (!empty($element['elements']) && is_array($element['elements'])) {
+        if ($this->elementor_tree_has_foo_widget($element['elements'], $source_gallery_id)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private function is_replaceable_post_type($post_type) {
+    if (!is_string($post_type) || $post_type === '') {
+      return false;
+    }
+
+    $excluded = [
+      'attachment',
+      'revision',
+      'nav_menu_item',
+      'custom_css',
+      'customize_changeset',
+      'oembed_cache',
+      'user_request',
+      REACG_CUSTOM_POST_TYPE,
+      'foogallery',
+    ];
+
+    if (in_array($post_type, $excluded, true)) {
+      return false;
+    }
+
+    return post_type_supports($post_type, 'editor') || in_array($post_type, ['wp_block', 'wp_template', 'wp_template_part', 'elementor_library'], true);
+  }
+
+  private function walk_elementor_tree(array $elements, $source_gallery_id, $migrated_gallery_id, &$count) {
+    foreach ($elements as &$element) {
+      if (
+        !empty($element['elType']) &&
+        $element['elType'] === 'widget' &&
+        !empty($element['widgetType']) &&
+        $element['widgetType'] === 'foogallery' &&
+        isset($element['settings']['gallery_id']) &&
+        intval($element['settings']['gallery_id']) === $source_gallery_id
+      ) {
+        $element['widgetType'] = 'reacg-elementor';
+        $element['settings'] = [
+          'post_id' => (string) $migrated_gallery_id,
+          'enable_options' => 'no',
+        ];
+        $count++;
+        continue;
+      }
+
+      if (!empty($element['elements']) && is_array($element['elements'])) {
+        $element['elements'] = $this->walk_elementor_tree(
+          $element['elements'],
+          $source_gallery_id,
+          $migrated_gallery_id,
+          $count
+        );
+      }
+    }
+    unset($element);
+
+    return $elements;
+  }
+
   private function get_template($post_id) {
     $template = get_post_meta($post_id, 'foogallery_template', true);
     return sanitize_key((string) $template);
@@ -501,8 +742,12 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       }
     }
     if ( $template === 'carousel' ) {
+      $layout_ref['scale'] = 0.1;
       if ( isset($settings[$template . '_maxItems'])) {
         $layout_ref['imagesCount'] = intval($settings[$template . '_maxItems']);
+      }
+      if ( isset($settings[$template . '_gutter']['max'])) {
+        $layout_ref['spaceBetween'] = intval($settings[$template . '_gutter']['max']);
       }
       if ( isset($settings[$template . '_autoplay_interaction'])) {
         if ( $settings[$template . '_autoplay_interaction'] === 'pause' ) {

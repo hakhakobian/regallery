@@ -82,8 +82,9 @@ class REACG_Migration {
         'select_not_migrated' => __('Only already migrated galleries were selected. Select at least one gallery that has not been migrated yet, or confirm importing migrated galleries too.', 'regallery'),
         'import_done' => __('Import finished.', 'regallery'),
         'force_new_alert' => __('One or more selected galleries have already been migrated. Confirm to migrate them again as new imports, or cancel to migrate only galleries that have not been migrated yet.', 'regallery'),
+        'alert_title' => __('Migration notice', 'regallery'),
         'alert_confirm' => __('Migrate all selected', 'regallery'),
-        'alert_cancel' => __('Only migrate not migrated', 'regallery'),
+        'alert_cancel' => __('Only not migrated', 'regallery'),
         'alert_close' => __('Close dialog', 'regallery'),
         'not_installed' => __('Not installed', 'regallery'),
         'all_sources' => __('All sources', 'regallery'),
@@ -99,8 +100,12 @@ class REACG_Migration {
         'replace_already_replaced' => __('Replaced', 'regallery'),
         'replace_not_supported' => __('Not supported', 'regallery'),
         'replacing_shortcode' => __('Replacing shortcodes...', 'regallery'),
-        'replace_done' => __('Shortcodes replaced successfully.', 'regallery'),
-        'replace_none_found' => __('No matching gallery shortcodes or blocks were found.', 'regallery'),
+        'replace_done' => __('Galleries replaced successfully.', 'regallery'),
+        'replace_none_found' => __('No matching galleries were found.', 'regallery'),
+        'replace_confirm_title' => __('Confirm replacement', 'regallery'),
+        'replace_confirm_message' => __('Replace all matching galleries with the migrated gallery?', 'regallery'),
+        'replace_confirm_button' => __('Replace now', 'regallery'),
+        'replace_cancel_button' => __('Cancel', 'regallery'),
         'items' => __('items', 'regallery'),
         'first_page' => __('First page', 'regallery'),
         'prev' => __('Previous page', 'regallery'),
@@ -120,10 +125,6 @@ class REACG_Migration {
     ?>
     <div class="wrap reacg-migration-page">
       <h1><?php esc_html_e('Universal Gallery Migration', 'regallery'); ?></h1>
-      <p class="description">
-        <?php esc_html_e('Import galleries from Envira, NextGEN, FooGallery, and Gutenberg.', 'regallery'); ?>
-      </p>
-
       <div id="reacg-migration-progress" class="reacg-migration-progress" style="display:none;">
         <span class="spinner is-active" aria-hidden="true"></span>
         <span id="reacg-migration-progress-text"></span>
@@ -168,7 +169,7 @@ class REACG_Migration {
             <a href="#"><span><?php esc_html_e('Status', 'regallery'); ?></span><span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a>
           </th>
           <th scope="col" class="manage-column">
-            <?php esc_html_e('Replace shortcode', 'regallery'); ?>
+            <?php esc_html_e('Replace gallery', 'regallery'); ?>
           </th>
         </tr>
         </thead>
@@ -330,20 +331,31 @@ class REACG_Migration {
     $source = sanitize_key($source);
     $source_gallery_id = trim((string) $source_gallery_id);
 
-    if ($source === 'gutenberg') {
-      return $this->replace_gutenberg_gallery($source_gallery_id, $migrated_gallery_id);
-    }
-
-    $shortcode_patterns = $this->get_shortcode_patterns($source, $source_gallery_id);
-    $block_namespaces = $this->get_source_block_namespaces($source);
-    $block_id_attrs = $this->get_source_block_id_attributes($source);
-
-    if (empty($shortcode_patterns) && empty($block_namespaces)) {
-      return new WP_Error('reacg_migration_replace_unsupported', __('Shortcode/block replacement is not supported for this source.', 'regallery'));
+    $provider = $this->engine->get_provider($source);
+    if (is_wp_error($provider)) {
+      return $provider;
     }
 
     $replacement_shortcode = '[REACG id="' . intval($migrated_gallery_id) . '"]';
     $replacement_block = $this->build_reacg_gutenberg_block($migrated_gallery_id);
+
+    $specific_replacement = $provider->replace_specific_gallery(
+      $source_gallery_id,
+      $migrated_gallery_id,
+      $replacement_shortcode,
+      $replacement_block
+    );
+    if ($specific_replacement !== null) {
+      return $specific_replacement;
+    }
+
+    $shortcode_patterns = $provider->get_shortcode_patterns($source_gallery_id);
+    $block_namespaces = $provider->get_block_namespaces();
+    $block_id_attrs = $provider->get_block_id_attributes();
+
+    if (empty($shortcode_patterns) && empty($block_namespaces)) {
+      return new WP_Error('reacg_migration_replace_unsupported', __('Shortcode/block replacement is not supported for this source.', 'regallery'));
+    }
 
     $post_types = $this->get_replaceable_post_types();
     if (empty($post_types)) {
@@ -368,15 +380,15 @@ class REACG_Migration {
 
     foreach ((array) $query->posts as $post_id) {
       $post = get_post($post_id);
-      if (!$post || $post->post_content === '') {
+      if (!$post) {
         continue;
       }
 
-      $updated_content = $post->post_content;
+      $updated_content = (string) $post->post_content;
       $local_replacements = 0;
 
       // Replace Gutenberg blocks from this source with reacg/gallery block
-      if (!empty($block_namespaces)) {
+      if ($updated_content !== '' && !empty($block_namespaces)) {
         $block_replacements = 0;
         $updated_content = $this->replace_source_blocks_in_content(
           $updated_content,
@@ -392,13 +404,14 @@ class REACG_Migration {
       // Replace plain shortcodes (only when no block was found and replaced).
       // Use preg_replace_callback so the replacement string is treated as a
       // literal — avoiding backreference issues with preg_replace.
-      if (!empty($shortcode_patterns) && $local_replacements === 0) {
-        // If the post is predominantly shortcode-based (no real Gutenberg
-        // blocks other than wp:shortcode wrappers), keep the replacement as a
-        // plain REACG shortcode so the page stays consistent.
-        $shortcode_replacement = $this->post_is_block_based($updated_content)
-          ? $replacement_block
-          : $replacement_shortcode;
+      if ($updated_content !== '' && !empty($shortcode_patterns) && $local_replacements === 0) {
+        // Some providers should preserve shortcode-based integrations even in
+        // block-based content, while others can upgrade to the REACG block.
+        $shortcode_replacement = $provider->prefer_shortcode_replacement()
+          ? $replacement_shortcode
+          : ($this->post_is_block_based($updated_content)
+            ? $replacement_block
+            : $replacement_shortcode);
 
         foreach ($shortcode_patterns as $pattern) {
           $count = 0;
@@ -418,7 +431,7 @@ class REACG_Migration {
 
       // If a source shortcode inside a wp:shortcode block was replaced by the
       // REACG block, remove the now-redundant wp:shortcode wrapper.
-      if ($local_replacements > 0) {
+      if ($updated_content !== '' && $local_replacements > 0) {
         $updated_content = preg_replace_callback(
           '/<!--\s+wp:shortcode\s+-->\s*(<!--\s+wp:reacg\/gallery[\s\S]*?<!--\s+\/wp:reacg\/gallery\s+-->)\s*<!--\s+\/wp:shortcode\s+-->/i',
           function ($m) { return $m[1]; },
@@ -426,18 +439,14 @@ class REACG_Migration {
         );
       }
 
-      // Replace FooGallery Elementor widgets in _elementor_data meta.
-      $elementor_replacements = 0;
-      if ($source === 'foo') {
-        $elementor_replacements = $this->replace_elementor_foo_widget(
-          intval($post_id),
-          $source_gallery_id,
-          $migrated_gallery_id
-        );
-        $local_replacements += $elementor_replacements;
-      }
+      $meta_replacements = $provider->replace_post_meta_references(
+        intval($post_id),
+        $source_gallery_id,
+        $migrated_gallery_id
+      );
+      $local_replacements += intval($meta_replacements);
 
-      if ($local_replacements <= 0 || ($updated_content === $post->post_content && $elementor_replacements === 0)) {
+      if ($local_replacements <= 0 || ($updated_content === $post->post_content && intval($meta_replacements) === 0)) {
         continue;
       }
 
@@ -458,58 +467,6 @@ class REACG_Migration {
       'updated_posts' => $updated_posts,
       'replaced_shortcodes' => $replaced_shortcodes,
       'replacement_shortcode' => $replacement_shortcode,
-    ];
-  }
-
-  private function replace_gutenberg_gallery($source_gallery_id, $migrated_gallery_id) {
-    $parsed = $this->parse_gutenberg_source_gallery_id($source_gallery_id);
-    if (is_wp_error($parsed)) {
-      return $parsed;
-    }
-
-    $post = get_post($parsed['post_id']);
-    if (!$post) {
-      return new WP_Error('reacg_migration_replace_post_not_found', __('Source post not found for Gutenberg gallery.', 'regallery'));
-    }
-
-    $content = (string) $post->post_content;
-    if ($content === '') {
-      return [
-        'updated_posts' => 0,
-        'replaced_shortcodes' => 0,
-      ];
-    }
-
-    $replacement_shortcode = '[REACG id="' . intval($migrated_gallery_id) . '"]';
-    $replacement_block = $this->build_reacg_gutenberg_block($migrated_gallery_id);
-    $updated_content = '';
-    $replacements = 0;
-
-    if ($parsed['type'] === 'shortcode') {
-      $updated_content = $this->replace_nth_gallery_shortcode($content, $parsed['index'], $replacement_block, $replacements);
-    } else {
-      $updated_content = $this->replace_nth_gallery_block($content, $parsed['index'], $replacement_block, $replacements);
-    }
-
-    if ($replacements <= 0 || $updated_content === $content) {
-      return [
-        'updated_posts' => 0,
-        'replaced_shortcodes' => 0,
-        'replacement_shortcode' => $replacement_shortcode,
-        'replacement_block' => $replacement_block,
-      ];
-    }
-
-    wp_update_post([
-      'ID' => intval($post->ID),
-      'post_content' => wp_slash($updated_content),
-    ]);
-
-    return [
-      'updated_posts' => 1,
-      'replaced_shortcodes' => $replacements,
-      'replacement_shortcode' => $replacement_shortcode,
-      'replacement_block' => $replacement_block,
     ];
   }
 
@@ -544,97 +501,6 @@ class REACG_Migration {
     return '<!-- wp:reacg/gallery ' . $json_attributes . ' -->' . $shortcode . '<!-- /wp:reacg/gallery -->';
   }
 
-  private function parse_gutenberg_source_gallery_id($source_gallery_id) {
-    $parts = explode(':', (string) $source_gallery_id);
-    $post_id = !empty($parts[0]) ? intval($parts[0]) : 0;
-
-    if ($post_id <= 0) {
-      return new WP_Error('reacg_migration_replace_invalid_source_id', __('Invalid Gutenberg gallery identifier.', 'regallery'));
-    }
-
-    $type = 'block';
-    $index = 0;
-
-    if (isset($parts[1]) && $parts[1] === 's') {
-      $type = 'shortcode';
-      $index = isset($parts[2]) ? max(0, intval($parts[2])) : 0;
-    } else {
-      $index = isset($parts[1]) ? max(0, intval($parts[1])) : 0;
-    }
-
-    return [
-      'post_id' => $post_id,
-      'type' => $type,
-      'index' => $index,
-    ];
-  }
-
-  private function replace_nth_gallery_block($content, $target_index, $replacement_content, &$replacements) {
-    if (function_exists('parse_blocks') && function_exists('serialize_blocks')) {
-      $blocks = parse_blocks((string) $content);
-      if (!empty($blocks)) {
-        $replacement_blocks = parse_blocks((string) $replacement_content);
-        if (!empty($replacement_blocks[0])) {
-          $current_index = -1;
-          if ($this->replace_nth_gallery_block_in_tree($blocks, $target_index, $replacement_blocks[0], $current_index)) {
-            $replacements += 1;
-            return serialize_blocks($blocks);
-          }
-        }
-      }
-    }
-
-    $pattern = '/<!--\s+wp:gallery\b[\s\S]*?(?:<!--\s+\/wp:gallery\s+-->|\/-->)/i';
-    $current_index = -1;
-
-    return preg_replace_callback($pattern, function ($match) use (&$current_index, $target_index, $replacement_content, &$replacements) {
-      $current_index += 1;
-      if ($current_index === $target_index) {
-        $replacements += 1;
-        return $replacement_content;
-      }
-      return $match[0];
-    }, $content);
-  }
-
-  private function replace_nth_gallery_block_in_tree(&$blocks, $target_index, $replacement_block, &$current_index) {
-    foreach ($blocks as $i => &$block) {
-      if (isset($block['blockName']) && $block['blockName'] === 'core/gallery') {
-        $current_index += 1;
-        if ($current_index === $target_index) {
-          $block = $replacement_block;
-          return true;
-        }
-      }
-
-      if (!empty($block['innerBlocks']) && is_array($block['innerBlocks'])) {
-        if ($this->replace_nth_gallery_block_in_tree($block['innerBlocks'], $target_index, $replacement_block, $current_index)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  private function replace_nth_gallery_shortcode($content, $target_index, $replacement_content, &$replacements) {
-    $pattern = '/' . get_shortcode_regex(['gallery']) . '/s';
-    $current_index = -1;
-
-    return preg_replace_callback($pattern, function ($match) use (&$current_index, $target_index, $replacement_content, &$replacements) {
-      if (empty($match[2]) || strtolower((string) $match[2]) !== 'gallery') {
-        return $match[0];
-      }
-
-      $current_index += 1;
-      if ($current_index === $target_index) {
-        $replacements += 1;
-        return $replacement_content;
-      }
-
-      return $match[0];
-    }, $content);
-  }
 
   /**
    * Returns true when the post content is Gutenberg-block-based, meaning it
@@ -642,87 +508,6 @@ class REACG_Migration {
    * Used to decide whether a plain-shortcode replacement should stay as a
    * shortcode or be upgraded to a block.
    */
-  /**
-   * Replaces FooGallery Elementor widgets (widgetType "foogallery") with the
-   * REACG Elementor widget (widgetType "reacg-elementor") in _elementor_data.
-   * Returns the number of widgets replaced.
-   */
-  private function replace_elementor_foo_widget($post_id, $source_gallery_id, $migrated_gallery_id) {
-    $raw = get_post_meta($post_id, '_elementor_data', true);
-    if (empty($raw) || !is_string($raw)) {
-      return 0;
-    }
-
-    $data = json_decode($raw, true);
-    if (!is_array($data)) {
-      return 0;
-    }
-
-    $count = 0;
-    $data = $this->walk_elementor_tree(
-      $data,
-      intval($source_gallery_id),
-      intval($migrated_gallery_id),
-      $count
-    );
-
-    if ($count === 0) {
-      return 0;
-    }
-
-    $encoded = wp_json_encode($data);
-    if ($encoded === false) {
-      return 0;
-    }
-
-    update_post_meta($post_id, '_elementor_data', wp_slash($encoded));
-
-    // Flush Elementor's cached CSS/data for this post so the change takes effect.
-    if (class_exists('\Elementor\Plugin')) {
-      \Elementor\Plugin::$instance->documents->get($post_id, false)?->delete_meta('_elementor_css');
-      delete_post_meta($post_id, '_elementor_css');
-    }
-
-    return $count;
-  }
-
-  /**
-   * Recursively walks the Elementor elements tree, replacing any
-   * foogallery widget that references $source_gallery_id with a
-   * reacg-elementor widget pointing to $migrated_gallery_id.
-   */
-  private function walk_elementor_tree(array $elements, $source_gallery_id, $migrated_gallery_id, &$count) {
-    foreach ($elements as &$element) {
-      if (
-        !empty($element['elType']) &&
-        $element['elType'] === 'widget' &&
-        !empty($element['widgetType']) &&
-        $element['widgetType'] === 'foogallery' &&
-        isset($element['settings']['gallery_id']) &&
-        intval($element['settings']['gallery_id']) === $source_gallery_id
-      ) {
-        $element['widgetType'] = 'reacg-elementor';
-        $element['settings'] = [
-          'post_id' => (string) $migrated_gallery_id,
-          'enable_options' => 'no',
-        ];
-        $count++;
-        continue;
-      }
-
-      if (!empty($element['elements']) && is_array($element['elements'])) {
-        $element['elements'] = $this->walk_elementor_tree(
-          $element['elements'],
-          $source_gallery_id,
-          $migrated_gallery_id,
-          $count
-        );
-      }
-    }
-    unset($element);
-    return $elements;
-  }
-
   private function post_is_block_based($content) {
     // Strip wp:shortcode wrappers — they appear in classic-editor posts too.
     $stripped = preg_replace(
@@ -731,56 +516,6 @@ class REACG_Migration {
       (string) $content
     );
     return (bool) preg_match('/<!--\s+wp:[a-zA-Z]/', $stripped);
-  }
-
-  private function get_shortcode_patterns($source, $source_gallery_id) {
-    $id = preg_quote((string) $source_gallery_id, '/');
-
-    if ($source === 'envira') {
-      return [
-        '/\\[envira-gallery\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
-        '/\\[envira\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
-      ];
-    }
-
-    if ($source === 'foo') {
-      return [
-        '/\\[foogallery\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
-      ];
-    }
-
-    if ($source === 'nextgen') {
-      return [
-        '/\\[(?:ngg|nggallery)\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
-        '/\\[(?:ngg|nggallery)\\b(?=[^\\]]*\\bids\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?)[^\\]]*\\]/i',
-      ];
-    }
-
-    return [];
-  }
-
-  private function get_source_block_namespaces($source) {
-    if ($source === 'envira') {
-      return ['envira-gallery', 'envira'];
-    }
-
-    if ($source === 'foo') {
-      return ['foogallery', 'foo-gallery', 'fooplugins'];
-    }
-
-    if ($source === 'nextgen') {
-      return ['ngg', 'nextgen-gallery', 'imagely'];
-    }
-
-    return [];
-  }
-
-  private function get_source_block_id_attributes($source) {
-    if ($source === 'nextgen') {
-      return ['galleryId', 'id', 'gallery_id'];
-    }
-
-    return ['id'];
   }
 
   private function replace_source_blocks_in_content($content, $namespaces, $id_attrs, $source_gallery_id, $replacement_block, &$replacements) {
@@ -942,7 +677,7 @@ class REACG_Migration {
         return false;
       }
 
-      return post_type_supports($post_type, 'editor') || in_array($post_type, ['wp_block', 'wp_template', 'wp_template_part'], true);
+      return post_type_supports($post_type, 'editor') || in_array($post_type, ['wp_block', 'wp_template', 'wp_template_part', 'elementor_library'], true);
     }));
   }
 

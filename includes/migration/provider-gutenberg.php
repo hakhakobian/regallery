@@ -144,6 +144,80 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
     ];
   }
 
+  public function get_shortcode_patterns($source_gallery_id) {
+    return [];
+  }
+
+  public function get_block_namespaces() {
+    return [];
+  }
+
+  public function get_block_id_attributes() {
+    return ['id'];
+  }
+
+  public function prefer_shortcode_replacement() {
+    return false;
+  }
+
+  public function replace_specific_gallery($source_gallery_id, $migrated_gallery_id, $replacement_shortcode, $replacement_block) {
+    $parsed = $this->parse_external_id($source_gallery_id);
+    if (empty($parsed['post_id'])) {
+      return new WP_Error('reacg_migration_replace_invalid_source_id', __('Invalid Gutenberg gallery identifier.', 'regallery'));
+    }
+
+    $post = get_post($parsed['post_id']);
+    if (!$post) {
+      return new WP_Error('reacg_migration_replace_post_not_found', __('Source post not found for Gutenberg gallery.', 'regallery'));
+    }
+
+    $content = (string) $post->post_content;
+    if ($content === '') {
+      return [
+        'updated_posts' => 0,
+        'replaced_shortcodes' => 0,
+      ];
+    }
+
+    $updated_content = '';
+    $replacements = 0;
+
+    if ($parsed['type'] === 'shortcode') {
+      $updated_content = $this->replace_nth_gallery_shortcode($content, $parsed['index'], $replacement_block, $replacements);
+    } else {
+      $updated_content = $this->replace_nth_gallery_block($content, $parsed['index'], $replacement_block, $replacements);
+    }
+
+    if ($replacements <= 0 || $updated_content === $content) {
+      return [
+        'updated_posts' => 0,
+        'replaced_shortcodes' => 0,
+        'replacement_shortcode' => $replacement_shortcode,
+        'replacement_block' => $replacement_block,
+      ];
+    }
+
+    wp_update_post([
+      'ID' => intval($post->ID),
+      'post_content' => wp_slash($updated_content),
+    ]);
+
+    return [
+      'updated_posts' => 1,
+      'replaced_shortcodes' => $replacements,
+      'replacement_shortcode' => $replacement_shortcode,
+      'replacement_block' => $replacement_block,
+    ];
+  }
+
+  public function replace_post_meta_references($post_id, $source_gallery_id, $migrated_gallery_id) {
+    return 0;
+  }
+
+  public function source_exists_in_posts($source_gallery_id) {
+    return true;
+  }
+
   private function extract_gallery_blocks($blocks, $visited_refs = []) {
     $result = [];
 
@@ -239,6 +313,73 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
       'type' => $type,
       'index' => max(0, $index),
     ];
+  }
+
+  private function replace_nth_gallery_block($content, $target_index, $replacement_content, &$replacements) {
+    if (function_exists('parse_blocks') && function_exists('serialize_blocks')) {
+      $blocks = parse_blocks((string) $content);
+      if (!empty($blocks)) {
+        $replacement_blocks = parse_blocks((string) $replacement_content);
+        if (!empty($replacement_blocks[0])) {
+          $current_index = -1;
+          if ($this->replace_nth_gallery_block_in_tree($blocks, $target_index, $replacement_blocks[0], $current_index)) {
+            $replacements += 1;
+            return serialize_blocks($blocks);
+          }
+        }
+      }
+    }
+
+    $pattern = '/<!--\s+wp:gallery\b[\s\S]*?(?:<!--\s+\/wp:gallery\s+-->|\/-->)/i';
+    $current_index = -1;
+
+    return preg_replace_callback($pattern, function ($match) use (&$current_index, $target_index, $replacement_content, &$replacements) {
+      $current_index += 1;
+      if ($current_index === $target_index) {
+        $replacements += 1;
+        return $replacement_content;
+      }
+      return $match[0];
+    }, $content);
+  }
+
+  private function replace_nth_gallery_block_in_tree(&$blocks, $target_index, $replacement_block, &$current_index) {
+    foreach ($blocks as &$block) {
+      if (isset($block['blockName']) && $block['blockName'] === 'core/gallery') {
+        $current_index += 1;
+        if ($current_index === $target_index) {
+          $block = $replacement_block;
+          return true;
+        }
+      }
+
+      if (!empty($block['innerBlocks']) && is_array($block['innerBlocks'])) {
+        if ($this->replace_nth_gallery_block_in_tree($block['innerBlocks'], $target_index, $replacement_block, $current_index)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private function replace_nth_gallery_shortcode($content, $target_index, $replacement_content, &$replacements) {
+    $pattern = '/' . get_shortcode_regex(['gallery']) . '/s';
+    $current_index = -1;
+
+    return preg_replace_callback($pattern, function ($match) use (&$current_index, $target_index, $replacement_content, &$replacements) {
+      if (empty($match[2]) || strtolower((string) $match[2]) !== 'gallery') {
+        return $match[0];
+      }
+
+      $current_index += 1;
+      if ($current_index === $target_index) {
+        $replacements += 1;
+        return $replacement_content;
+      }
+
+      return $match[0];
+    }, $content);
   }
 
   private function map_shortcode_gallery_settings($shortcode_gallery, $items) {

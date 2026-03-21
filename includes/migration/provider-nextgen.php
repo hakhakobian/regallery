@@ -139,6 +139,87 @@ class REACG_Migration_Provider_NextGEN implements REACG_Migration_Provider_Inter
     ];
   }
 
+  public function get_shortcode_patterns($source_gallery_id) {
+    $id = preg_quote((string) $source_gallery_id, '/');
+
+    return [
+      '/\\[(?:ngg|nggallery)\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
+      '/\\[(?:ngg|nggallery)\\b(?=[^\\]]*\\bids\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?)[^\\]]*\\]/i',
+    ];
+  }
+
+  public function get_block_namespaces() {
+    return ['ngg', 'nextgen-gallery', 'imagely'];
+  }
+
+  public function get_block_id_attributes() {
+    return ['galleryId', 'id', 'gallery_id'];
+  }
+
+  public function prefer_shortcode_replacement() {
+    return false;
+  }
+
+  public function replace_specific_gallery($source_gallery_id, $migrated_gallery_id, $replacement_shortcode, $replacement_block) {
+    return null;
+  }
+
+  public function replace_post_meta_references($post_id, $source_gallery_id, $migrated_gallery_id) {
+    return 0;
+  }
+
+  public function source_exists_in_posts($source_gallery_id) {
+    $source_gallery_id = trim((string) $source_gallery_id);
+    $id_numeric = intval($source_gallery_id);
+
+    return $this->content_reference_exists(
+      ['%[ngg%', '%[nggallery%', '%wp:ngg%', '%wp:nextgen-gallery%', '%wp:imagely%'],
+      [
+        '/\\[ngg(?:allery)?\\b[^\\]]*\\bid\\s*=\\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\\s\\]]/i',
+        '/wp:(?:ngg|nextgen-gallery|imagely)[^\\}]*\\b' . preg_quote((string) $id_numeric, '/') . '\\b/i',
+      ]
+    );
+  }
+
+  private function content_reference_exists($like_clauses, $verify_regexes) {
+    global $wpdb;
+
+    $candidate_ids = [];
+    foreach ((array) $like_clauses as $like) {
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+      $rows = $wpdb->get_col(
+        $wpdb->prepare(
+          "SELECT ID FROM {$wpdb->posts}
+           WHERE post_status NOT IN ('auto-draft','trash','inherit')
+             AND post_content LIKE %s
+           LIMIT 200",
+          $like
+        )
+      );
+      if (!empty($rows)) {
+        $candidate_ids = array_unique(array_merge($candidate_ids, $rows));
+      }
+    }
+
+    if (empty($candidate_ids)) {
+      return false;
+    }
+
+    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
+    $contents = $wpdb->get_col("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})");
+
+    foreach ((array) $contents as $content) {
+      foreach ((array) $verify_regexes as $regex) {
+        if (preg_match($regex, $content)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   private function table_exists($table_name) {
     global $wpdb;
 

@@ -30,6 +30,7 @@
   var $pagesBottom = $("#reacg-migration-pages-bottom");
   var $forceNewInput = $("#reacg-migration-force-new");
   var $alert = $("#reacg-migration-alert");
+  var $alertTitle = $("#reacg-migration-alert-title");
   var $alertMessage = $("#reacg-migration-alert-message");
   var $alertConfirm = $("#reacg-migration-alert-confirm");
   var $alertCancel = $("#reacg-migration-alert-cancel");
@@ -451,8 +452,17 @@
     };
   }
 
-  function showForceNewAlert(onConfirm, onSkipMigrated, onClose) {
-    $alertMessage.text(reacg_migration.i18n.force_new_alert || "");
+  function showAlertDialog(options) {
+    options = options || {};
+
+    $alertTitle.text(options.title || reacg_migration.i18n.alert_title || "");
+    $alertMessage.text(options.message || "");
+    $alertConfirm.text(
+      options.confirmText || reacg_migration.i18n.alert_confirm || "",
+    );
+    $alertCancel.text(
+      options.cancelText || reacg_migration.i18n.alert_cancel || "",
+    );
     $alert.show().attr("aria-hidden", "false");
     $alertConfirm.trigger("focus");
 
@@ -469,8 +479,8 @@
       .off("click.reacgMigrationAlert")
       .on("click.reacgMigrationAlert", function () {
         hideAlert();
-        if (typeof onConfirm === "function") {
-          onConfirm();
+        if (typeof options.onConfirm === "function") {
+          options.onConfirm();
         }
       });
 
@@ -478,8 +488,8 @@
       .off("click.reacgMigrationAlert")
       .on("click.reacgMigrationAlert", function () {
         hideAlert();
-        if (typeof onSkipMigrated === "function") {
-          onSkipMigrated();
+        if (typeof options.onCancel === "function") {
+          options.onCancel();
         }
       });
 
@@ -487,8 +497,8 @@
       .off("click.reacgMigrationAlert")
       .on("click.reacgMigrationAlert", function () {
         hideAlert();
-        if (typeof onClose === "function") {
-          onClose();
+        if (typeof options.onClose === "function") {
+          options.onClose();
         }
       });
 
@@ -500,8 +510,8 @@
         }
 
         hideAlert();
-        if (typeof onClose === "function") {
-          onClose();
+        if (typeof options.onClose === "function") {
+          options.onClose();
         }
       });
 
@@ -513,9 +523,84 @@
         }
 
         hideAlert();
-        if (typeof onClose === "function") {
-          onClose();
+        if (typeof options.onClose === "function") {
+          options.onClose();
         }
+      });
+  }
+
+  function showForceNewAlert(onConfirm, onSkipMigrated, onClose) {
+    showAlertDialog({
+      message: reacg_migration.i18n.force_new_alert || "",
+      confirmText: reacg_migration.i18n.alert_confirm || "",
+      cancelText: reacg_migration.i18n.alert_cancel || "",
+      onConfirm: onConfirm,
+      onCancel: onSkipMigrated,
+      onClose: onClose,
+    });
+  }
+
+  function runReplaceShortcode($link) {
+    var source = String($link.data("source") || "");
+    var sourceGalleryId = String($link.data("source-gallery-id") || "");
+    var migratedGalleryId =
+      parseInt($link.data("migrated-gallery-id"), 10) || 0;
+
+    $link.addClass("is-busy");
+    setBusy(true);
+    showProgress(reacg_migration.i18n.replacing_shortcode);
+
+    $.post(
+      reacg_migration.ajax_url,
+      getPayload({
+        action: "reacg_migration_replace_shortcode",
+        source: source,
+        source_gallery_id: sourceGalleryId,
+        migrated_gallery_id: migratedGalleryId,
+      }),
+    )
+      .done(function (response) {
+        if (!response || !response.success) {
+          showStatus(
+            "error",
+            (response && response.data && response.data.message) ||
+              reacg_migration.i18n.error,
+          );
+          return;
+        }
+
+        var data = response.data || {};
+        var replacedShortcodes = Number(data.replaced_shortcodes || 0);
+
+        if (replacedShortcodes > 0) {
+          showStatus("success", reacg_migration.i18n.replace_done);
+
+          $link.replaceWith(
+            '<span class="reacg-migration-replaced">' +
+              escHtml(
+                reacg_migration.i18n.replace_replaced ||
+                  reacg_migration.i18n.replace_done,
+              ) +
+              "</span>",
+          );
+        } else {
+          showStatus("warning", reacg_migration.i18n.replace_none_found);
+        }
+      })
+      .fail(function (xhr) {
+        showStatus(
+          "error",
+          (xhr &&
+            xhr.responseJSON &&
+            xhr.responseJSON.data &&
+            xhr.responseJSON.data.message) ||
+            reacg_migration.i18n.error,
+        );
+      })
+      .always(function () {
+        $link.removeClass("is-busy");
+        hideProgress();
+        setBusy(false);
       });
   }
 
@@ -809,71 +894,15 @@
         return;
       }
 
-      $link.addClass("is-busy");
-      setBusy(true);
-      showProgress(reacg_migration.i18n.replacing_shortcode);
-
-      $.post(
-        reacg_migration.ajax_url,
-        getPayload({
-          action: "reacg_migration_replace_shortcode",
-          source: source,
-          source_gallery_id: sourceGalleryId,
-          migrated_gallery_id: migratedGalleryId,
-        }),
-      )
-        .done(function (response) {
-          if (!response || !response.success) {
-            showStatus(
-              "error",
-              (response && response.data && response.data.message) ||
-                reacg_migration.i18n.error,
-            );
-            return;
-          }
-
-          var data = response.data || {};
-          var replacedShortcodes = Number(data.replaced_shortcodes || 0);
-          var updatedPosts = Number(data.updated_posts || 0);
-
-          if (replacedShortcodes > 0) {
-            showStatus(
-              "success",
-              reacg_migration.i18n.replace_done +
-                " (" +
-                replacedShortcodes +
-                ", posts: " +
-                updatedPosts +
-                ")",
-            );
-
-            $link.replaceWith(
-              '<span class="reacg-migration-replaced">' +
-                escHtml(
-                  reacg_migration.i18n.replace_replaced ||
-                    reacg_migration.i18n.replace_done,
-                ) +
-                "</span>",
-            );
-          } else {
-            showStatus("warning", reacg_migration.i18n.replace_none_found);
-          }
-        })
-        .fail(function (xhr) {
-          showStatus(
-            "error",
-            (xhr &&
-              xhr.responseJSON &&
-              xhr.responseJSON.data &&
-              xhr.responseJSON.data.message) ||
-              reacg_migration.i18n.error,
-          );
-        })
-        .always(function () {
-          $link.removeClass("is-busy");
-          hideProgress();
-          setBusy(false);
-        });
+      showAlertDialog({
+        title: reacg_migration.i18n.replace_confirm_title || "",
+        message: reacg_migration.i18n.replace_confirm_message || "",
+        confirmText: reacg_migration.i18n.replace_confirm_button || "",
+        cancelText: reacg_migration.i18n.replace_cancel_button || "",
+        onConfirm: function () {
+          runReplaceShortcode($link);
+        },
+      });
     },
   );
 

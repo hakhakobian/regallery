@@ -106,6 +106,87 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
     ];
   }
 
+  public function get_shortcode_patterns($source_gallery_id) {
+    $id = preg_quote((string) $source_gallery_id, '/');
+
+    return [
+      '/\\[envira-gallery\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
+      '/\\[envira\\b[^\\]]*\\bid\\s*=\\s*(?:"|\')?' . $id . '(?:"|\')?[^\\]]*\\]/i',
+    ];
+  }
+
+  public function get_block_namespaces() {
+    return ['envira-gallery', 'envira'];
+  }
+
+  public function get_block_id_attributes() {
+    return ['id'];
+  }
+
+  public function prefer_shortcode_replacement() {
+    return true;
+  }
+
+  public function replace_specific_gallery($source_gallery_id, $migrated_gallery_id, $replacement_shortcode, $replacement_block) {
+    return null;
+  }
+
+  public function replace_post_meta_references($post_id, $source_gallery_id, $migrated_gallery_id) {
+    return 0;
+  }
+
+  public function source_exists_in_posts($source_gallery_id) {
+    $source_gallery_id = trim((string) $source_gallery_id);
+    $id_numeric = intval($source_gallery_id);
+
+    return $this->content_reference_exists(
+      ['%[envira-gallery%', '%[envira %', '%wp:envira%'],
+      [
+        '/\\[envira(?:-gallery)?\\b[^\\]]*\\bid\\s*=\\s*["\']?' . preg_quote($source_gallery_id, '/') . '["\'\\s\\]]/i',
+        '/wp:envira[^\\}]*\\b' . preg_quote((string) $id_numeric, '/') . '\\b/i',
+      ]
+    );
+  }
+
+  private function content_reference_exists($like_clauses, $verify_regexes) {
+    global $wpdb;
+
+    $candidate_ids = [];
+    foreach ((array) $like_clauses as $like) {
+      // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+      $rows = $wpdb->get_col(
+        $wpdb->prepare(
+          "SELECT ID FROM {$wpdb->posts}
+           WHERE post_status NOT IN ('auto-draft','trash','inherit')
+             AND post_content LIKE %s
+           LIMIT 200",
+          $like
+        )
+      );
+      if (!empty($rows)) {
+        $candidate_ids = array_unique(array_merge($candidate_ids, $rows));
+      }
+    }
+
+    if (empty($candidate_ids)) {
+      return false;
+    }
+
+    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
+    $contents = $wpdb->get_col("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})");
+
+    foreach ((array) $contents as $content) {
+      foreach ((array) $verify_regexes as $regex) {
+        if (preg_match($regex, $content)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   private function get_gallery_data($post_id) {
     $data = get_post_meta($post_id, '_eg_gallery_data', true);
     if (is_string($data)) {
