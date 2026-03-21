@@ -17,7 +17,6 @@ class REACG_Migration {
     $this->obj = $that;
     $this->engine = new REACG_Migration_Engine([
       new REACG_Migration_Provider_Envira(),
-      new REACG_Migration_Provider_NextGEN(),
       new REACG_Migration_Provider_FooGallery(),
       new REACG_Migration_Provider_Gutenberg(),
     ]);
