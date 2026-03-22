@@ -353,8 +353,8 @@ class REACG_Gallery {
       return $item['sizes'][0]['url'];
     }
 
-    if ( !empty($item['original_url']) ) {
-      return $item['original_url'];
+    if ( !empty($item['original']) && !empty($item['original']['url']) ) {
+      return $item['original']['url'];
     }
 
     return $this->obj->plugin_url . $this->obj->no_image;
@@ -1410,7 +1410,7 @@ class REACG_Gallery {
         'height' => 700,
       ];
       return [
-        'original_url' => $no_image['url'],
+        'original' => $no_image,
         'sizes' => [$no_image],
       ];
 
@@ -1424,7 +1424,11 @@ class REACG_Gallery {
     }
 
     $basename = basename($url);
-    $original_url = str_replace($basename, urlencode($basename), $url);
+    $original = [
+      'url' => str_replace($basename, urlencode($basename), $url),
+      'width' => !empty($meta['width']) ? $meta['width'] : 0,
+      'height' => !empty($meta['height']) ? $meta['height'] : 0,
+    ];
 
     $sizes = [];
     $seen  = [];
@@ -1459,16 +1463,10 @@ class REACG_Gallery {
         ];
     }
 
-    if ( !empty($meta['width'])
-      && !empty($meta['height'])
-      && $meta['width'] <= $this->default_max_dimension
-      && $meta['height'] <= $this->default_max_dimension
-      && !in_array($original_url, $seen, true) ) {
-      $sizes[] = [
-        'url'    => $original_url,
-        'width'  => $meta['width'],
-        'height' => $meta['height'],
-      ];
+    if ( $original['width'] <= $this->default_max_dimension
+      && $original['height'] <= $this->default_max_dimension
+      && !in_array($original['url'], $seen, true) ) {
+      $sizes[] = $original;
     }
 
     usort($sizes, function($a, $b) {
@@ -1476,8 +1474,8 @@ class REACG_Gallery {
     });
 
     return [
-      'original_url' => $original_url,
-      'sizes'        => $sizes,
+      'original' => $original,
+      'sizes' => $sizes,
     ];
   }
 
@@ -1541,7 +1539,10 @@ class REACG_Gallery {
       }
 
       $basename = basename($url);
-      $data['original_url'] = str_replace($basename, urlencode($basename), $url);
+      $data['original']['url'] = str_replace($basename, urlencode($basename), $url);
+      $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
+      $data['original']['height'] = !empty($meta['height']) ? $meta['height'] : 0;
+
       $data['type'] = "video";
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the video cover image alt as video alt.
