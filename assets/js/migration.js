@@ -5,6 +5,7 @@
     source: "",
     galleries: [],
     filtered: [],
+    recentMigratedGalleryIds: {},
     sort: {
       key: "title",
       dir: "asc",
@@ -35,6 +36,61 @@
   var $alertConfirm = $("#reacg-migration-alert-confirm");
   var $alertCancel = $("#reacg-migration-alert-cancel");
   var $alertClose = $("#reacg-migration-alert-close");
+  var migratedVisitedStorageKey = "reacgMigrationVisitedLinks";
+
+  function getVisitedMigratedGalleryIds() {
+    try {
+      var raw = window.localStorage.getItem(migratedVisitedStorageKey);
+      if (!raw) {
+        return {};
+      }
+
+      raw = JSON.parse(raw);
+      return raw && typeof raw === "object" ? raw : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function setVisitedMigratedGalleryIds(ids) {
+    try {
+      window.localStorage.setItem(
+        migratedVisitedStorageKey,
+        JSON.stringify(ids || {}),
+      );
+    } catch (error) {}
+  }
+
+  function markRecentMigrated(galleryIds) {
+    (galleryIds || []).forEach(function (galleryId) {
+      var normalizedId = String(parseInt(galleryId, 10) || 0);
+      if (normalizedId !== "0") {
+        state.recentMigratedGalleryIds[normalizedId] = true;
+      }
+    });
+  }
+
+  function isRecentMigrated(item) {
+    var galleryId = String(parseInt(item.migrated_gallery_id, 10) || 0);
+    if (galleryId === "0" || !state.recentMigratedGalleryIds[galleryId]) {
+      return false;
+    }
+
+    return !getVisitedMigratedGalleryIds()[galleryId];
+  }
+
+  function markMigratedVisited(galleryId) {
+    var normalizedId = String(parseInt(galleryId, 10) || 0);
+    var visitedIds = getVisitedMigratedGalleryIds();
+
+    if (normalizedId === "0") {
+      return;
+    }
+
+    visitedIds[normalizedId] = true;
+    setVisitedMigratedGalleryIds(visitedIds);
+    delete state.recentMigratedGalleryIds[normalizedId];
+  }
 
   function getPayload(extra) {
     var payload = {};
@@ -143,10 +199,20 @@
     if (item.migrated) {
       if (item.migrated_gallery_id) {
         var href = reacg_migration.edit_url + item.migrated_gallery_id;
+        var linkClass = "reacg-migration-status-link";
+
+        if (isRecentMigrated(item)) {
+          linkClass += " reacg-migration-status-link--fresh";
+        }
+
         return (
           '<a href="' +
           escHtml(href) +
-          '" target="_blank" rel="noopener noreferrer">' +
+          '" target="_blank" rel="noopener noreferrer" class="' +
+          linkClass +
+          '" data-gallery-id="' +
+          escHtml(item.migrated_gallery_id) +
+          '">' +
           escHtml(reacg_migration.i18n.status_migrated) +
           "</a>"
         );
@@ -174,7 +240,7 @@
   }
 
   function getReplaceAction(item) {
-    if (!item || !item.migrated) {
+    if (!item || !item.migrated || !item.replace_available) {
       return "&mdash;";
     }
 
@@ -614,6 +680,7 @@
     var imported = 0;
     var failed = 0;
     var rows = [];
+    var importedGalleryIds = [];
 
     function renderResultLine(item, isSuccess) {
       if (!isSuccess) {
@@ -642,25 +709,26 @@
     }
 
     function finishImport() {
+      var summaryMessage =
+        reacg_migration.i18n.migration_done;
+
       $results.html(
         '<div class="notice notice-success inline"><p>' +
-          escHtml(reacg_migration.i18n.import_done) +
-          " " +
-          "(Imported: " +
-          imported +
-          ", Failed: " +
-          failed +
-          ")" +
+          escHtml(summaryMessage) +
           "</p><ul>" +
           rows.join("") +
           "</ul></div>",
       );
 
-      clearStatus();
       hideProgress();
       setBusy(false);
       setImportLoading(false);
-      fetchSourcesAndGalleries();
+      markRecentMigrated(importedGalleryIds);
+      fetchSourcesAndGalleries(function (isSuccess) {
+        if (isSuccess) {
+          showStatus("success", summaryMessage);
+        }
+      });
     }
 
     function runNext() {
@@ -724,6 +792,7 @@
           }
 
           imported += 1;
+          importedGalleryIds.push(item.gallery_id);
           renderResultLine(item, true);
         })
         .fail(function () {
@@ -766,7 +835,9 @@
     );
   }
 
-  function fetchSourcesAndGalleries() {
+  function fetchSourcesAndGalleries(onComplete) {
+    var isSuccess = false;
+
     setBusy(true);
     setLoading(reacg_migration.i18n.loading_sources);
     showProgress(reacg_migration.i18n.loading_sources);
@@ -818,6 +889,7 @@
             state.page = 1;
             clearStatus();
             applyFilters();
+            isSuccess = true;
           })
           .fail(function () {
             showStatus("error", reacg_migration.i18n.error);
@@ -825,6 +897,9 @@
           .always(function () {
             setBusy(false);
             hideProgress();
+            if (typeof onComplete === "function") {
+              onComplete(isSuccess);
+            }
           });
       });
   }
@@ -872,6 +947,11 @@
   });
 
   $(document).on("click", "#reacg-migration-import", importSelected);
+
+  $(document).on("click", ".reacg-migration-status-link", function () {
+    markMigratedVisited($(this).data("gallery-id"));
+    $(this).removeClass("reacg-migration-status-link--fresh");
+  });
 
   $(document).on(
     "click",

@@ -19,6 +19,15 @@
   cursor: pointer;
 }
 
+.reacg-migration-page .reacg-migration-status-link--fresh {
+  color: #0a7a2f;
+  font-weight: 600;
+}
+
+.reacg-migration-page .reacg-migration-status-link--fresh:visited {
+  color: #0a7a2f;
+}
+
 .reacg-migration-page .tablenav {
   margin: 8px 0;
 }

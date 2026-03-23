@@ -155,10 +155,12 @@ class REACG_Migration_Engine {
     $attachment_ids = array_values(array_unique(array_filter(array_map('intval', $attachment_ids))));
 
     $title = !empty($source_gallery['title']) ? sanitize_text_field($source_gallery['title']) : __('Imported Gallery', 'regallery');
+    $source_has_placements = (bool) $provider->source_exists_in_posts($gallery_id);
 
     $created = $this->create_regallery($title, $attachment_ids, [
       'source' => $source_key,
       'source_gallery_id' => $gallery_id,
+      'source_has_placements' => $source_has_placements,
     ], $settings);
 
     if (is_wp_error($created)) {
@@ -298,6 +300,7 @@ class REACG_Migration_Engine {
     update_post_meta($post_id, 'gallery_timestamp', time());
     update_post_meta($post_id, '_reacg_migration_source', sanitize_key($source_meta['source']));
     update_post_meta($post_id, '_reacg_migration_source_gallery_id', sanitize_text_field($source_meta['source_gallery_id']));
+    update_post_meta($post_id, '_reacg_migration_source_has_placements', !empty($source_meta['source_has_placements']) ? '1' : '0');
 
     if (!class_exists('REACG_Options')) {
       require_once REACG_PLUGIN_DIR . '/includes/options.php';
@@ -382,15 +385,33 @@ class REACG_Migration_Engine {
       $migrated_gallery_id = $source_gallery_id !== ''
         ? $this->find_existing_import($source, $source_gallery_id)
         : 0;
+      $source_still_exists = !empty($migrated_gallery_id)
+        && $this->source_exists_in_posts($source, $source_gallery_id);
+      $source_has_placements = !empty($migrated_gallery_id)
+        ? $this->get_source_has_placements_flag($migrated_gallery_id)
+        : false;
+
+      if (!empty($migrated_gallery_id) && $source_still_exists && !$source_has_placements) {
+        $source_has_placements = true;
+        update_post_meta($migrated_gallery_id, '_reacg_migration_source_has_placements', '1');
+      }
 
       $item['migrated'] = !empty($migrated_gallery_id);
       $item['migrated_gallery_id'] = intval($migrated_gallery_id);
+      $item['replace_available'] = !empty($migrated_gallery_id) && $source_has_placements;
       $item['replaced'] = !empty($migrated_gallery_id)
-        && !$this->source_exists_in_posts($source, $source_gallery_id);
+        && $source_has_placements
+        && !$source_still_exists;
       $decorated[] = $item;
     }
 
     return $decorated;
+  }
+
+  private function get_source_has_placements_flag($migrated_gallery_id) {
+    $value = get_post_meta(intval($migrated_gallery_id), '_reacg_migration_source_has_placements', true);
+
+    return $value === '1' || $value === 1 || $value === true;
   }
 
   /**

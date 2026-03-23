@@ -77,8 +77,8 @@ class REACG_Migration {
         'no_data' => __('No galleries found.', 'regallery'),
         'select_source' => __('Select source', 'regallery'),
         'select_galleries' => __('Select galleries to import.', 'regallery'),
-        'select_not_migrated' => __('Only already migrated galleries were selected. Select at least one gallery that has not been migrated yet, or confirm importing migrated galleries too.', 'regallery'),
-        'import_done' => __('Import finished.', 'regallery'),
+        'select_not_migrated' => __('Only not migrated galleries were selected. Select at least one gallery that has not been migrated yet, or confirm importing migrated galleries too.', 'regallery'),
+        'migration_done' => __('Migration finished.', 'regallery'),
         'force_new_alert' => __('One or more selected galleries have already been migrated. Confirm to migrate them again as new imports, or cancel to migrate only galleries that have not been migrated yet.', 'regallery'),
         'alert_title' => __('Migration notice', 'regallery'),
         'alert_confirm' => __('Migrate all selected', 'regallery'),
@@ -459,6 +459,10 @@ class REACG_Migration {
 
       $updated_posts += 1;
       $replaced_shortcodes += $local_replacements;
+    }
+
+    if ($replaced_shortcodes > 0 && $migrated_gallery_id > 0) {
+      update_post_meta(intval($migrated_gallery_id), '_reacg_migration_source_has_placements', '1');
     }
 
     return [
