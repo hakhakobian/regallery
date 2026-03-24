@@ -1442,6 +1442,10 @@ class REACG_Gallery {
             continue;
         }
 
+        if ($this->is_cropped_generated_size($data, $original)) {
+          continue;
+        }
+
         if ($data['width'] > $this->default_max_dimension
          || $data['height'] > $this->default_max_dimension) {
             continue;
@@ -1477,6 +1481,23 @@ class REACG_Gallery {
       'original' => $original,
       'sizes' => $sizes,
     ];
+  }
+
+  private function is_cropped_generated_size($size, $original) {
+    $size_width = !empty($size['width']) ? (int) $size['width'] : 0;
+    $size_height = !empty($size['height']) ? (int) $size['height'] : 0;
+    $original_width = !empty($original['width']) ? (int) $original['width'] : 0;
+    $original_height = !empty($original['height']) ? (int) $original['height'] : 0;
+
+    if ($size_width <= 0 || $size_height <= 0 || $original_width <= 0 || $original_height <= 0) {
+      return false;
+    }
+
+    $size_ratio = $size_width / $size_height;
+    $original_ratio = $original_width / $original_height;
+
+    // Allow a tiny difference to account for WordPress rounding during resize.
+    return abs($size_ratio - $original_ratio) > 0.01;
   }
 
   /**
