@@ -549,13 +549,18 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
     }
 
     // Gallery Background -> Container background color.
-    $background_color = $this->extract_color(
-      $this->read_nested($style, ['color', 'background'])
-    );
+    $background_color = null;
+    if (!empty($attrs['backgroundColor'])) {
+      $background_color = $this->resolve_preset_color_slug((string) $attrs['backgroundColor']);
+    }
+    if ($background_color === null) {
+      $background_color = $this->extract_color(
+        $this->read_nested($style, ['color', 'background'])
+      );
+    }
     if ($background_color !== null) {
       $layout_ref['backgroundColor'] = $background_color;
     }
-
     // Gallery block spacing -> Items spacing.
     $block_spacing = $this->extract_css_size(
       $this->read_nested($style, ['spacing', 'blockGap'])
@@ -563,12 +568,13 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
     if ($block_spacing !== null) {
       $spacing_value = max(0, intval(round($block_spacing)));
       if ($layout_type === 'thumbnails') {
-        $layout_ref['itemBorder'] = $spacing_value;
+        $layout_ref['gap'] = $spacing_value - 10;
       } else {
         // Non-thumbnails layouts do not use itemBorder in options.
-        $layout_ref['padding'] = $spacing_value;
+        $layout_ref['padding'] = $spacing_value - 10;
       }
     }
+    $layout_ref['hoverEffect'] = 'none';
 
     // Gallery border -> Container padding.
     $container_border = $this->extract_css_size(
@@ -804,8 +810,7 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
       return null;
     }
 
-    // Keep CSS colors or CSS vars as-is.
-    if (preg_match('/^(#|rgb\(|rgba\(|hsl\(|hsla\(|var\(|--)/i', $value)) {
+    if (preg_match('/^(#|rgb\(|rgba\(|hsl\(|hsla\()/i', $value)) {
       return sanitize_text_field($value);
     }
 
@@ -813,11 +818,96 @@ class REACG_Migration_Provider_Gutenberg implements REACG_Migration_Provider_Int
     if (strpos($value, 'var:preset|color|') === 0) {
       $slug = sanitize_key(str_replace('var:preset|color|', '', $value));
       if ($slug !== '') {
+        $resolved_color = $this->resolve_preset_color_slug($slug);
+        if ($resolved_color !== null) {
+          return $resolved_color;
+        }
+
         return 'var(--wp--preset--color--' . $slug . ')';
       }
     }
 
+    if (preg_match('/^var\(--wp--preset--color--([a-z0-9_-]+)\)$/i', $value, $matches)) {
+      $resolved_color = $this->resolve_preset_color_slug($matches[1]);
+      if ($resolved_color !== null) {
+        return $resolved_color;
+      }
+
+      return sanitize_text_field($value);
+    }
+
+    if (strpos($value, '--wp--preset--color--') === 0) {
+      $slug = str_replace('--wp--preset--color--', '', $value);
+      $resolved_color = $this->resolve_preset_color_slug(
+        $slug
+      );
+      if ($resolved_color !== null) {
+        return $resolved_color;
+      }
+
+      return 'var(--wp--preset--color--' . sanitize_key($slug) . ')';
+    }
+
     return null;
+  }
+
+  private function resolve_preset_color_slug($slug) {
+    $slug = sanitize_key((string) $slug);
+    if ($slug === '') {
+      return null;
+    }
+
+    if (!function_exists('wp_get_global_settings')) {
+      return null;
+    }
+
+    $palette = wp_get_global_settings(['color', 'palette']);
+    if (!is_array($palette)) {
+      return null;
+    }
+
+    foreach ($this->flatten_palette_colors($palette) as $palette_item) {
+      if (!is_array($palette_item) || empty($palette_item['slug'])) {
+        continue;
+      }
+
+      if (sanitize_key((string) $palette_item['slug']) !== $slug) {
+        continue;
+      }
+
+      if (empty($palette_item['color']) || !is_string($palette_item['color'])) {
+        return null;
+      }
+
+      return sanitize_text_field(trim($palette_item['color']));
+    }
+
+    return null;
+  }
+
+  private function flatten_palette_colors($palette) {
+    if (!is_array($palette)) {
+      return [];
+    }
+
+    $items = [];
+
+    foreach ($palette as $palette_item) {
+      if (!is_array($palette_item)) {
+        continue;
+      }
+
+      if (array_key_exists('slug', $palette_item) || array_key_exists('color', $palette_item)) {
+        $items[] = $palette_item;
+        continue;
+      }
+
+      foreach ($this->flatten_palette_colors($palette_item) as $nested_item) {
+        $items[] = $nested_item;
+      }
+    }
+
+    return $items;
   }
 
   private function normalize_aspect_ratio($value) {

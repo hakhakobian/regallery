@@ -123,14 +123,6 @@ class REACG_Migration_Engine {
   private function import_single_gallery($provider, $gallery_id, $args) {
     $source_key = $provider->get_key();
     $existing = $this->find_existing_import($source_key, $gallery_id);
-    if ($existing && empty($args['force_new'])) {
-      return [
-        'success' => true,
-        'source_gallery_id' => $gallery_id,
-        'gallery_id' => intval($existing),
-        'message' => __('Gallery already imported. Reusing existing gallery.', 'regallery'),
-      ];
-    }
 
     $source_gallery = $provider->get_gallery($gallery_id);
     if (is_wp_error($source_gallery)) {
@@ -157,26 +149,34 @@ class REACG_Migration_Engine {
     $title = !empty($source_gallery['title']) ? sanitize_text_field($source_gallery['title']) : __('Imported Gallery', 'regallery');
     $source_has_placements = (bool) $provider->source_exists_in_posts($gallery_id);
 
-    $created = $this->create_regallery($title, $attachment_ids, [
+    $saved_gallery_id = $existing
+      ? $this->update_regallery($existing, $title, $attachment_ids, [
+        'source' => $source_key,
+        'source_gallery_id' => $gallery_id,
+        'source_has_placements' => $source_has_placements,
+      ], $settings)
+      : $this->create_regallery($title, $attachment_ids, [
       'source' => $source_key,
       'source_gallery_id' => $gallery_id,
       'source_has_placements' => $source_has_placements,
     ], $settings);
 
-    if (is_wp_error($created)) {
+    if (is_wp_error($saved_gallery_id)) {
       return [
         'success' => false,
         'source_gallery_id' => $gallery_id,
-        'message' => $created->get_error_message(),
+        'message' => $saved_gallery_id->get_error_message(),
       ];
     }
 
     return [
       'success' => true,
       'source_gallery_id' => $gallery_id,
-      'gallery_id' => intval($created),
+      'gallery_id' => intval($saved_gallery_id),
       'images_count' => count($attachment_ids),
-      'message' => __('Gallery imported successfully.', 'regallery'),
+      'message' => $existing
+        ? __('Gallery updated successfully.', 'regallery')
+        : __('Gallery imported successfully.', 'regallery'),
     ];
   }
 
@@ -293,6 +293,30 @@ class REACG_Migration_Engine {
     if (is_wp_error($post_id) || !$post_id) {
       return new WP_Error('reacg_migration_create_failed', __('Failed to create Re Gallery post.', 'regallery'));
     }
+
+    return $this->store_regallery_data($post_id, $title, $attachment_ids, $source_meta, $settings_overrides);
+  }
+
+  private function update_regallery($post_id, $title, $attachment_ids, $source_meta = [], $settings_overrides = []) {
+    $post_id = intval($post_id);
+    if ($post_id <= 0 || get_post_type($post_id) !== REACG_CUSTOM_POST_TYPE) {
+      return new WP_Error('reacg_migration_update_failed', __('Failed to update Re Gallery post.', 'regallery'));
+    }
+
+    $updated = wp_update_post([
+      'ID' => $post_id,
+      'post_title' => $title,
+    ], true);
+
+    if (is_wp_error($updated)) {
+      return new WP_Error('reacg_migration_update_failed', __('Failed to update Re Gallery post.', 'regallery'));
+    }
+
+    return $this->store_regallery_data($post_id, $title, $attachment_ids, $source_meta, $settings_overrides);
+  }
+
+  private function store_regallery_data($post_id, $title, $attachment_ids, $source_meta = [], $settings_overrides = []) {
+    $post_id = intval($post_id);
 
     update_post_meta($post_id, 'images_ids', wp_json_encode($attachment_ids));
     update_post_meta($post_id, 'images_count', count($attachment_ids));

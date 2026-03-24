@@ -62,12 +62,17 @@
   }
 
   function markRecentMigrated(galleryIds) {
+    var visitedIds = getVisitedMigratedGalleryIds();
+
     (galleryIds || []).forEach(function (galleryId) {
       var normalizedId = String(parseInt(galleryId, 10) || 0);
       if (normalizedId !== "0") {
+        delete visitedIds[normalizedId];
         state.recentMigratedGalleryIds[normalizedId] = true;
       }
     });
+
+    setVisitedMigratedGalleryIds(visitedIds);
   }
 
   function isRecentMigrated(item) {
@@ -506,14 +511,14 @@
     if (!hasMigratedSelection) {
       return {
         selected: selected,
-        forceNew: parseInt($forceNewInput.val(), 10) === 1 ? 1 : 0,
+        forceNew: 0,
         showAlert: false,
       };
     }
 
     return {
       selected: selected,
-      forceNew: 1,
+      forceNew: 0,
       showAlert: true,
     };
   }

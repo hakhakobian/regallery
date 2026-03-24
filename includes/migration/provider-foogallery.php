@@ -439,39 +439,17 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
         $layout_ref['showDescription'] = FALSE;
         $layout_ref['hoverEffect'] = 'none';
       } elseif ( $settings[$template . '_hover_effect_type'] === 'preset' ) {
+        $layout_ref['showTitle'] = TRUE;
+        $layout_ref['showCaption'] = TRUE;
+        $layout_ref['titleVisibility'] = 'onHover';
+        $layout_ref['captionVisibility'] = 'onHover';
+        $layout_ref['titlePosition'] = 'center';
+        $layout_ref['captionPosition'] = 'center';
+        $layout_ref['titleAlignment'] = 'center';
+        $layout_ref['titleFontSize'] = '16px';
+        $layout_ref['captionFontSize'] = '11px';
         // Specific hover effecr.
-        $overrides['css'] = '.thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-title, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-subtitle, .thumbnail-gallery__image-wrapper:hover .thumbnail-gallery__title_on-hover .MuiImageListItemBar-titleWrap, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-title, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-subtitle, .photo-album-item__image-wrapper:hover .photo-album-item__title_on-hover .MuiImageListItemBar-titleWrap  {
-                opacity: 1;
-                -webkit-transition: all .35s cubic-bezier(.22, .61, .36, 1);
-                -moz-transition: all .35s cubic-bezier(.22, .61, .36, 1);
-                transition: all .35s cubic-bezier(.22, .61, .36, 1);
-                -webkit-transform: translateY(0);
-                transform: translateY(0);
-                }
-                .thumbnail-gallery__image-wrapper .thumbnail-gallery__title_on-hover .MuiImageListItemBar-title, .photo-album-item__image-wrapper .photo-album-item__title_on-hover .MuiImageListItemBar-title  {
-                opacity: 0;
-                font-weight: 600;
-                letter-spacing: .03em;
-                text-transform: uppercase;
-                line-height: 2em;
-                transform: translateY(-35px);
-                -webkit-transition: opacity .2s, -webkit-transform 0s .2s;
-                transition: opacity .2s, transform 0s .2s;
-                }
-                .thumbnail-gallery__image-wrapper .thumbnail-gallery__title_on-hover .MuiImageListItemBar-subtitle, .photo-album-item__image-wrapper .photo-album-item__title_on-hover .MuiImageListItemBar-subtitle  {
-                opacity: 0;
-                font-weight: 300;
-                text-transform: uppercase;
-                -webkit-transform: translateY(35px);
-                transform: translateY(35px);
-                -webkit-transition: opacity .2s, -webkit-transform 0s .2s;
-                transition: opacity .2s, transform 0s .2s;
-                }
-                .thumbnail-gallery__image-wrapper .thumbnail-gallery__title_on-hover .MuiImageListItemBar-titleWrap, .photo-album-item__image-wrapper .photo-album-item__title_on-hover .MuiImageListItemBar-titleWrap  {
-                -webkit-transform: translateY(-50%);
-                transform: translateY(-50%);
-                transition: all .35s cubic-bezier(.22, .61, .36, 1);
-                }';
+        $overrides['css'] = '.thumbnail-gallery__image-wrapper .thumbnail-gallery__title_on-hover > div, .photo-album-item__image-wrapper .photo-album-item__title_on-hover > div { width: calc(100% - 50px); height: calc(100% - 50px); margin: 25px; background-color: rgba(0, 0, 0, 0.7) !important; } .MuiImageListItemBar-title, .MuiImageListItemBar-subtitle { display: -webkit-box; -webkit-box-orient: vertical; word-break: break-word; margin: 20px; white-space: unset; } .MuiImageListItemBar-title { -webkit-line-clamp: 2; margin-bottom: 0; } .MuiImageListItemBar-subtitle { -webkit-line-clamp: 3; } .MuiImageListItemBar-subtitle:before { content: ""; display: block; width: 30%; border-bottom: 1px solid currentcolor; margin: 0 auto 20px; } .MuiImageListItemBar-titleWrap { gap: 0 !important; }';
       }
     }
     if ( isset($settings[$template . '_hover_effect_caption_visibility']) ) {
@@ -542,6 +520,10 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       } else {
         $layout_ref['descriptionSource'] = $settings[$template . '_caption_desc_source'];
       }
+    }
+    if ( $settings[$template . '_hover_effect_type'] === 'preset' ) {
+        $layout_ref['titleSource'] = 'caption';
+        $layout_ref['captionSource'] = 'description';
     }
     if ( isset($settings[$template . '_paging_type']) ) {
       if ( strpos($settings[$template . '_paging_type'], 'page') !== false

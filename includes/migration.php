@@ -79,7 +79,7 @@ class REACG_Migration {
         'select_galleries' => __('Select galleries to import.', 'regallery'),
         'select_not_migrated' => __('Only not migrated galleries were selected. Select at least one gallery that has not been migrated yet, or confirm importing migrated galleries too.', 'regallery'),
         'migration_done' => __('Migration finished.', 'regallery'),
-        'force_new_alert' => __('One or more selected galleries have already been migrated. Confirm to migrate them again as new imports, or cancel to migrate only galleries that have not been migrated yet.', 'regallery'),
+        'force_new_alert' => __('One or more selected galleries have already been migrated. Confirm to migrate them again, or cancel to migrate only galleries that have not been migrated yet.', 'regallery'),
         'alert_title' => __('Migration notice', 'regallery'),
         'alert_confirm' => __('Migrate all selected', 'regallery'),
         'alert_cancel' => __('Only not migrated', 'regallery'),
