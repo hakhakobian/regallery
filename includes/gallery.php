@@ -4,6 +4,8 @@ defined('ABSPATH') || die('Access Denied');
 class REACG_Gallery {
   private $obj;
 
+  private $default_max_dimension = 2304;
+
   public function __construct($that, $register = TRUE) {
     $this->obj = $that;
     if ( !$register ) {
@@ -346,6 +348,18 @@ class REACG_Gallery {
     }
   }
 
+  private function get_smallest_image_url($item) {
+    if ( !empty($item['sizes']) && !empty($item['sizes'][0]['url']) ) {
+      return $item['sizes'][0]['url'];
+    }
+
+    if ( !empty($item['original']) && !empty($item['original']['url']) ) {
+      return $item['original']['url'];
+    }
+
+    return $this->obj->plugin_url . $this->obj->no_image;
+  }
+
   private function get_preview_url($post_id) {
     $images_ids = get_post_meta( $post_id, 'images_ids', TRUE );
     $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
@@ -363,8 +377,8 @@ class REACG_Gallery {
           }
         }
         elseif ( $url === "" ) {
-          // Get first existing thumbnail.
-          $url = $item['thumbnail']['url'];
+          // Get the smallest available image URL.
+          $url = $this->get_smallest_image_url($item);
         }
       }
 
@@ -1397,10 +1411,9 @@ class REACG_Gallery {
       ];
       return [
         'original' => $no_image,
-        'thumbnail' => $no_image,
-        'medium_large' => $no_image,
-        'large' => $no_image,
+        'sizes' => [$no_image],
       ];
+
     }
 
     $url = wp_get_attachment_url($id);
@@ -1410,44 +1423,59 @@ class REACG_Gallery {
       return FALSE;
     }
 
-    $base_name = isset($meta['file']) ? basename($meta['file']) : "";
-
-    $thumbnail = [];
-    $thumbnail['url'] = !empty($meta['sizes']['medium']['file']) ? str_replace($base_name, urlencode($meta['sizes']['medium']['file']), $url) : '';
-    $thumbnail['width'] = !empty($meta['sizes']['medium']['width']) ? $meta['sizes']['medium']['width'] : 0;
-    $thumbnail['height'] = !empty($meta['sizes']['medium']['height']) ? $meta['sizes']['medium']['height'] : 0;
-
-    $medium_large = [];
-    $medium_large['url'] = !empty($meta['sizes']['medium_large']['file']) ? str_replace($base_name, urlencode($meta['sizes']['medium_large']['file']), $url) : '';
-    $medium_large['width'] = !empty($meta['sizes']['medium_large']['width']) ? $meta['sizes']['medium_large']['width'] : 0;
-    $medium_large['height'] = !empty($meta['sizes']['medium_large']['height']) ? $meta['sizes']['medium_large']['height'] : 0;
-
-    $large = [];
-    $large['url'] = !empty($meta['sizes']['large']['file']) ? str_replace($base_name, urlencode($meta['sizes']['large']['file']), $url) : '';
-    $large['width'] = !empty($meta['sizes']['large']['width']) ? $meta['sizes']['large']['width'] : 0;
-    $large['height'] = !empty($meta['sizes']['large']['height']) ? $meta['sizes']['large']['height'] : 0;
-
-    $original = [];
     $basename = basename($url);
-    $original['url'] = str_replace($basename, urlencode($basename), $url);
-    $original['width'] = !empty($meta['width']) ? $meta['width'] : 0;
-    $original['height'] = !empty($meta['height']) ? $meta['height'] : 0;
+    $original = [
+      'url' => str_replace($basename, urlencode($basename), $url),
+      'width' => !empty($meta['width']) ? $meta['width'] : 0,
+      'height' => !empty($meta['height']) ? $meta['height'] : 0,
+    ];
 
-    if ( !$large['url'] ) {
-      $large = $original;
+    $sizes = [];
+    $seen  = [];
+
+    // Get actual generated sizes for this image
+    $meta_sizes = !empty($meta['sizes']) ? $meta['sizes'] : [];
+
+    // Loop only through sizes that actually exist
+    foreach ($meta_sizes as $size_name => $data) {
+        if (empty($data['file']) || empty($data['width']) || empty($data['height'])) {
+            continue;
+        }
+
+        if ($data['width'] > $this->default_max_dimension
+         || $data['height'] > $this->default_max_dimension) {
+            continue;
+        }
+
+        $data_url = str_replace($basename, urlencode($data['file']), $url);
+
+        // Avoid duplicates
+        if (in_array($data_url, $seen, true)) {
+            continue;
+        }
+
+        $seen[] = $data_url;
+
+        $sizes[] = [
+            'url'    => $data_url,
+            'width'  => $data['width'],
+            'height' => $data['height'],
+        ];
     }
-    if ( !$medium_large['url'] ) {
-      $medium_large = $large;
+
+    if ( $original['width'] <= $this->default_max_dimension
+      && $original['height'] <= $this->default_max_dimension
+      && !in_array($original['url'], $seen, true) ) {
+      $sizes[] = $original;
     }
-    if ( !$thumbnail['url'] ) {
-      $thumbnail = $medium_large;
-    }
+
+    usort($sizes, function($a, $b) {
+      return (int) $a['width'] <=> (int) $b['width'];
+    });
 
     return [
       'original' => $original,
-      'thumbnail' => $thumbnail,
-      'medium_large' => $medium_large,
-      'large' => $large,
+      'sizes' => $sizes,
     ];
   }
 
@@ -1514,6 +1542,7 @@ class REACG_Gallery {
       $data['original']['url'] = str_replace($basename, urlencode($basename), $url);
       $data['original']['width'] = !empty($meta['width']) ? $meta['width'] : 0;
       $data['original']['height'] = !empty($meta['height']) ? $meta['height'] : 0;
+
       $data['type'] = "video";
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the video cover image alt as video alt.
@@ -1624,7 +1653,7 @@ class REACG_Gallery {
             "id" => $image_id,
             "type" => $item['type'],
             "title" => $item['title'],
-            "url" => $item['thumbnail']['url'],
+            "url" => $this->get_smallest_image_url($item),
           ];
           $this->image_item($data);
         }
