@@ -29,7 +29,7 @@ body {
   outline: none;
 }
 .reacg-settings {
-  .MuiSwitch-track,
+  .Mui-checked + .MuiSwitch-track,
   .MuiTabs-indicator {
     background-color: var(--reacg-primary-color, #155C92) !important;
   }
