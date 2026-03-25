@@ -313,7 +313,7 @@ class REACG_Gallery {
     wp_enqueue_style($this->obj->prefix . '_admin');
 
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'regallery')), array_slice($columns, 1));
-    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images count', 'regallery')), array_slice($columns, 3));
+    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images', 'regallery')), array_slice($columns, 3));
 
     return $columns;
   }
