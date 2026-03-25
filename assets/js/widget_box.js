@@ -7,6 +7,7 @@ jQuery(document).ready(function () {
     const button = jQuery(this);
     const parent = button.parent();
     const spinner = parent.find(".spinner");
+    button.hide();
     spinner.addClass("is-active");
     jQuery.ajax({
       type: "POST",
@@ -17,26 +18,25 @@ jQuery(document).ready(function () {
       },
       success: function (response) {
         spinner.hide();
-        button.hide();
 
         if ( response.data.gallery ) {
           if ( response.data.message ) {
-            parent.append(`<div class="reacg-box__note updated" >${response.data.message}</div>`);
+            parent.append(`<div class="reacg-box__note reacg-keep-notice updated" >${response.data.message}</div>`);
           }
           parent.append(
-            `<a class="reacg-box__note" href="${response.data.gallery.url}" target="_blank">
+            `<a class="reacg-box__note reacg-keep-notice" href="${response.data.gallery.url}" target="_blank">
                 ${response.data.gallery.title}
               </a>`
           );
         }
         else {
-          parent.append(`<div class="reacg-box__note error" >${response.data.message ? response.data.message : 'Error occurred.'}</div>`);
+          parent.append(`<div class="reacg-box__note reacg-keep-notice error" >${response.data.message ? response.data.message : 'Error occurred.'}</div>`);
         }
 
       },
       error: function () {
         spinner.removeClass("is-active");
-        parent.append(`<div class="reacg-box__note error" >Error occurred.</div>`);
+        parent.append(`<div class="reacg-box__note reacg-keep-notice error" >Error occurred.</div>`);
       }
     });
   });

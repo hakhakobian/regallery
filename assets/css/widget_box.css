@@ -119,9 +119,6 @@
   .reacg-box__item .dashicons {
     color: #2271b1;
   }
-  .reacg-box__button {
-    width: calc(100% - 40px);
-  }
 }
 
 #reacg-metabox-widget-main-features h2,
