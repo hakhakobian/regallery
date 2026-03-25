@@ -117,7 +117,7 @@
     padding: 12px;
   }
   .reacg-box__item .dashicons {
-    color: #2271b1;
+    color: var(--reacg-primary-color, #155C92);
   }
 }
 

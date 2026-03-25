@@ -1,3 +1,7 @@
+body {
+  --reacg-primary-color: var(--wp-admin-theme-color, #155C92);
+}
+
 .editor-styles-wrapper .reacg-wrapper img,
 .reacg-wrapper img,
 .reacg-wrapper .reacg-gallery-wrapper img,
@@ -24,6 +28,20 @@
   box-shadow: none;
   outline: none;
 }
+.reacg-settings {
+  .MuiSwitch-track,
+  .MuiTabs-indicator {
+    background-color: var(--reacg-primary-color, #155C92) !important;
+  }
+  .Mui-checked,
+  .MuiSlider-marked,
+  .Mui-focused  {
+    color: var(--reacg-primary-color, #155C92);
+  }
+  .MuiInput-underline.Mui-focused:after {
+    border-bottom-color: var(--reacg-primary-color, #155C92);
+  }
+}
 
 .editor-styles-wrapper .MuiSwitch-switchBase input[type=checkbox] {
   position: absolute !important;
@@ -41,8 +59,8 @@
 /* For Elementor and Divi builder. */
 .elementor-widget-container .button-primary,
 .reacg_module .button-primary {
-  background: #2271b1;
-  border-color: #2271b1;
+  background: var(--reacg-primary-color, #155C92);
+  border-color: var(--reacg-primary-color, #155C92);
   color: #fff;
   text-decoration: none;
   text-shadow: none;
@@ -52,8 +70,8 @@
 
 .elementor-widget-container .button-primary:hover,
 .reacg_module .button-primary:hover {
-  background: #135e96;
-  border-color: #135e96;
+  background: var(--reacg-primary-color, #155C92);
+  border-color: var(--reacg-primary-color, #155C92);
   color: #fff;
   border-radius: 3px;
 }
@@ -61,8 +79,8 @@
 .elementor-widget-container .button-secondary,
 .reacg_module .button-secondary {
   background: #f6f7f7;
-  border-color: #2271b1;
-  color: #2271b1;
+  border-color: var(--reacg-primary-color, #155C92);
+  color: var(--reacg-primary-color, #155C92);
   text-decoration: none;
   text-shadow: none;
   border-radius: 3px;
