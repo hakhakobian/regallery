@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.18.7
+Stable tag: 1.18.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.7: Improved smarter image size selection for better performance. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.8: Fixed the error when retrieving image URL if no additional image sizes were available (only original). Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.8 =
+= Updated: 27.03.2026 =
+* **Fixed:** Error when retrieving image URL if no additional image sizes were available (only original).
+
 = 1.18.7 =
 = Updated: 25.03.2026 =
 * **Improved:** Uses all available WordPress image sizes to load the most appropriate image for each screen and layout.
