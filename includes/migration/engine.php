@@ -189,6 +189,14 @@ class REACG_Migration_Engine {
       }
     }
 
+    if (!empty($item['local_file'])) {
+      $attachment_id = $this->local_file_to_attachment((string) $item['local_file'], $item);
+      if ($attachment_id > 0) {
+        $this->apply_attachment_item_meta($attachment_id, $item);
+        return intval($attachment_id);
+      }
+    }
+
     if (!empty($item['url'])) {
       $url = esc_url_raw($item['url']);
       if (!empty($url)) {
@@ -203,6 +211,92 @@ class REACG_Migration_Engine {
     }
 
     return 0;
+  }
+
+  private function local_file_to_attachment($file_path, $item = []) {
+    $file_path = trim((string) $file_path);
+    if ($file_path === '' || !is_file($file_path) || !is_readable($file_path)) {
+      return 0;
+    }
+
+    $uploads = wp_get_upload_dir();
+    if (!empty($uploads['error'])) {
+      return 0;
+    }
+
+    $normalized_file = wp_normalize_path($file_path);
+    $normalized_base = wp_normalize_path(untrailingslashit($uploads['basedir']));
+
+    $relative = '';
+    if ($normalized_base !== '' && strpos($normalized_file, $normalized_base . '/') === 0) {
+      $relative = ltrim(substr($normalized_file, strlen($normalized_base)), '/');
+    } else {
+      $destination_dir = !empty($uploads['path']) ? $uploads['path'] : $uploads['basedir'];
+      if ($destination_dir === '') {
+        return 0;
+      }
+
+      wp_mkdir_p($destination_dir);
+      $filename = wp_basename($file_path);
+      $unique_name = wp_unique_filename($destination_dir, $filename);
+      $destination_path = trailingslashit($destination_dir) . $unique_name;
+
+      if (!@copy($file_path, $destination_path)) {
+        return 0;
+      }
+
+      $file_path = $destination_path;
+      $normalized_file = wp_normalize_path($file_path);
+      if ($normalized_base !== '' && strpos($normalized_file, $normalized_base . '/') === 0) {
+        $relative = ltrim(substr($normalized_file, strlen($normalized_base)), '/');
+      }
+    }
+
+    if ($relative !== '') {
+      $existing = get_posts([
+        'post_type' => 'attachment',
+        'post_status' => 'inherit',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'meta_key' => '_wp_attached_file',
+        'meta_value' => $relative,
+        'suppress_filters' => true,
+      ]);
+      if (!empty($existing[0])) {
+        return intval($existing[0]);
+      }
+    }
+
+    $filetype = wp_check_filetype(wp_basename($file_path), null);
+    $mime_type = !empty($filetype['type']) ? $filetype['type'] : 'image/jpeg';
+    $title = !empty($item['title']) ? sanitize_text_field($item['title']) : sanitize_text_field(pathinfo(wp_basename($file_path), PATHINFO_FILENAME));
+    if ($title === '') {
+      $title = __('Imported image', 'regallery');
+    }
+
+    $attachment_data = [
+      'post_mime_type' => $mime_type,
+      'post_title' => $title,
+      'post_content' => '',
+      'post_status' => 'inherit',
+    ];
+
+    if ($relative !== '' && !empty($uploads['baseurl'])) {
+      $attachment_data['guid'] = trailingslashit($uploads['baseurl']) . ltrim($relative, '/');
+    }
+
+    $attachment_id = wp_insert_attachment($attachment_data, $file_path, 0, true);
+    if (is_wp_error($attachment_id) || intval($attachment_id) <= 0) {
+      return 0;
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    $metadata = wp_generate_attachment_metadata(intval($attachment_id), $file_path);
+    if (!empty($metadata) && !is_wp_error($metadata)) {
+      wp_update_attachment_metadata(intval($attachment_id), $metadata);
+    }
+
+    return intval($attachment_id);
   }
 
   private function apply_attachment_item_meta($attachment_id, $item) {

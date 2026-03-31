@@ -3,6 +3,7 @@
 defined('ABSPATH') || die('Access Denied');
 
 require_once REACG_PLUGIN_DIR . '/includes/migration/interface-provider.php';
+require_once REACG_PLUGIN_DIR . '/includes/migration/provider-10web.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-envira.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-foogallery.php';
 require_once REACG_PLUGIN_DIR . '/includes/migration/provider-gutenberg.php';
@@ -16,6 +17,7 @@ class REACG_Migration {
   public function __construct($that) {
     $this->obj = $that;
     $this->engine = new REACG_Migration_Engine([
+      new REACG_Migration_Provider_10Web(),
       new REACG_Migration_Provider_Envira(),
       new REACG_Migration_Provider_FooGallery(),
       new REACG_Migration_Provider_Gutenberg(),
