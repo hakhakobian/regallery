@@ -88,7 +88,7 @@
     font-size: 35px;
   }
   .reacg_item_new .reacg_item_image {
-    background-size: 60px;
+    mask-size: 60px;
   }
   .reacg-galleries-list {
     width: calc(100% - 32px);

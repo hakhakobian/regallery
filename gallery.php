@@ -377,7 +377,7 @@ final class REACG {
       'rest_nonce' => $this->rest_nonce,
       'nonce' => wp_create_nonce( $this->nonce ),
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
     ));
 
     // Register general styles/scripts.
@@ -449,7 +449,7 @@ final class REACG {
       'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
     ));
     $gallery_ids = REACGLibrary::get_galleries();
     $data = [];
