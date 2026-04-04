@@ -35,11 +35,11 @@ class REACG_Admin_Notices {
 		$dismiss_url = wp_nonce_url(add_query_arg( [
 			'action' => $this->ajax_action_dissmiss,
 			'notice_id' => $notice_id,
-		], admin_url('admin-ajax.php') ), -1, REACG_NONCE);
+		], admin_url('admin-ajax.php') ), REACG_NONCE, REACG_NONCE);
 
 		$options = [
       /* translators: %s: celebratory emoji */
-			'title' => sprintf( __( "That’s awesome!%s", "regallery" ), "🎉" ),
+			'title' => sprintf( __( "That’s awesome! %s", "regallery" ), "🎉" ),
       /* translators: 1: plugin name in bold HTML tags, 2: line break HTML tag, 3: line break HTML tag */
 			'description' => sprintf( __( "We noticed you’ve been using %1\$s for a while now.%2\$sIf you’re enjoying it, we’d really appreciate it if you could share your experience by leaving a quick review on WordPress.org.%3\$sYour feedback helps us improve and helps others discover out plugin!", "regallery" ), "<strong>" . REACG_NICENAME . "</strong>", "<br />", "<br />" ),
       'dismiss_url' => add_query_arg( [
@@ -150,9 +150,15 @@ class REACG_Admin_Notices {
    * @return void
    */
   public function dismiss_notice() {
-    if ( !empty( $_GET['notice_id'] )
-      && !empty( $_GET[ REACG_NONCE ] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[ REACG_NONCE ]))) ) {
+    if ( !current_user_can( 'manage_options' ) ) {
+      return;
+    }
+
+    if ( !REACGLibrary::verify_nonce() ) {
+      return;
+    }
+
+    if ( !empty( $_GET['notice_id'] ) ) {
       $notice_id = sanitize_key( wp_unslash( $_GET['notice_id'] ) );
       if ( ! in_array( $notice_id, $this->notices ) ) {
         return;

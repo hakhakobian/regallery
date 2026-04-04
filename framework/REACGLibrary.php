@@ -280,4 +280,18 @@ class REACGLibrary {
 
     return $installed_time;
   }
+
+  /**
+   * Verify the nonce for a request.
+   *
+   * @return bool
+   */
+  public static function verify_nonce() {
+    if (!isset($_REQUEST[REACG_NONCE])
+      || !wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST[REACG_NONCE])), REACG_NONCE)) {
+      return false;
+    }
+
+    return true;
+  }
 }

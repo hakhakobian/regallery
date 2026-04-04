@@ -11,7 +11,7 @@ jQuery(document).ready(function () {
     spinner.addClass("is-active");
     jQuery.ajax({
       type: "POST",
-      url: ajaxurl,
+      url: reacg_widget_box.ajax_url,
       dataType: "json",
       data: {
         "action": "reacg_import_demo",

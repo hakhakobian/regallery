@@ -427,7 +427,12 @@ class REACG_Demo {
   public function import_data() {
     $galleries = [];
     $attachments = [];
-    if ( is_admin() && is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+    if (
+      is_admin()
+      && is_user_logged_in()
+      && current_user_can( 'manage_options' )
+      && REACGLibrary::verify_nonce()
+    ) {
       $attachments = $this->import_attachments();
       $galleries = $this->import_galleries($attachments);
     }
