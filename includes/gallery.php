@@ -1478,9 +1478,10 @@ class REACG_Gallery {
         ];
     }
 
-    if ( $original['width'] <= $this->default_max_dimension
+    if ( ($original['width'] <= $this->default_max_dimension
       && $original['height'] <= $this->default_max_dimension
-      && !in_array($original['url'], $seen, true) ) {
+      && !in_array($original['url'], $seen, true) ) || empty($sizes) ) {
+        // Include original image if it doesn't exceed the default max dimensions and is not already included as a generated size, or if no other sizes are available.
       $sizes[] = $original;
     }
 
