@@ -532,7 +532,7 @@ final class REACG {
       if ( !isset( $_GET['activate-multi'] ) ) {
         if ( REACG_PLAYGROUND ) {
           $demo = $this->demo(TRUE);
-          $link = $demo->import_data();
+          $link = $demo->import_data(FALSE);
           if ( !empty($link) ) {
             wp_safe_redirect($link);
             exit;
