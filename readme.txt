@@ -3,9 +3,9 @@ Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.18.8
+Stable tag: 1.18.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,19 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.8: Fixed the error when retrieving image URL if no additional image sizes were available (only original). Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.9: Fixed Broken Access Control. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.9 =
+= Updated: 06.04.2026 =
+* **Improved:** Gallery edit page now deeply adapts to the WordPress admin color scheme.
+* **Changed:** Updated help modal.
+* **Fixed:** Broken access control issue.
+* **Fixed:** Error when retrieving video cover image URL when only a large image is available.
+* **Fixed:** Issue with playing .mov video files in Slider layout and Lightbox.
+* **Fixed:** Minor style issues.
+
 = 1.18.8 =
 = Updated: 27.03.2026 =
 * **Fixed:** Error when retrieving image URL if no additional image sizes were available (only original).
