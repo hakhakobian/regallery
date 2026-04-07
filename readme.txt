@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress galle
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.18.9
+Stable tag: 1.18.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.9: Fixed Broken Access Control. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.10: Fixed Broken access control in REST API endpoint allowing unauthorized updates to gallery configuration. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.10 =
+= Updated: 07.04.2026 =
+* **Fixed:** Broken access control in REST API endpoint allowing unauthorized updates to gallery configuration.
+* **Fixed:** Demo gallery not importing correctly in Playground.
+* **Fixed:** Google Fonts not loading properly in some galleries.
+
 = 1.18.9 =
 = Updated: 06.04.2026 =
 * **Improved:** Gallery edit page now deeply adapts to the WordPress admin color scheme.
