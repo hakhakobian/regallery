@@ -68,25 +68,34 @@ class REACG_Gallery {
       register_rest_route( $this->obj->prefix . '/v1', '/templates', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ $this, 'get_custom_templates'],
-        'permission_callback' => [$this, 'privileged_permission'],
+        'permission_callback' => '__return_true',
       ) );
     } );
 
     // Register a route to get/set/delete options for the gallery with the API.
     add_action( 'rest_api_init', function () {
       require_once REACG()->plugin_dir . "/includes/options.php";
+      $options_args = array(
+        'gallery_id' => array(
+          'validate_callback' => function($param, $request, $key) {
+            return is_numeric( $param );
+          }
+        ),
+      );
       $options = new REACG_Options(true);
       register_rest_route( $this->obj->prefix . '/v1', '/options/(?P<gallery_id>-?\d+)', array(
-        'methods' => WP_REST_Server::READABLE . ", " . WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
-        'callback' => [ $options, 'options'],
-        'args' => array(
-          'gallery_id' => array(
-            'validate_callback' => function($param, $request, $key) {
-              return is_numeric( $param );
-            }
-          ),
+        array(
+          'methods' => WP_REST_Server::READABLE,
+          'callback' => [ $options, 'options'],
+          'args' => $options_args,
+          'permission_callback' => '__return_true',
         ),
-        'permission_callback' => [$this, 'privileged_permission'],
+        array(
+          'methods' => WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
+          'callback' => [ $options, 'options'],
+          'args' => $options_args,
+          'permission_callback' => [$this, 'privileged_permission'],
+        ),
       ) );
     } );
 
@@ -279,25 +288,21 @@ class REACG_Gallery {
   }
 
   /**
-   * @param $request
+   * @param WP_REST_Request $request
    *
    * @return bool
    */
-  public function privileged_permission($request) {
-    if ( $request->get_method() === 'GET' ) {
-      return true;
+  public function privileged_permission( WP_REST_Request $request ) {
+    if ( !is_user_logged_in() ) {
+      return FALSE;
     }
 
-    // If request comes from Elementor editor iframe.
-    if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-      $referer = sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER']));
-
-      if ( strpos( $referer, 'elementor' ) !== FALSE ) {
-        return true;
-      }
+    $gallery_id = intval( $request->get_param( 'gallery_id' ) );
+    if ( $gallery_id > 0 ) {
+      return current_user_can( 'edit_post', $gallery_id );
     }
 
-    return current_user_can('edit_posts');
+    return current_user_can( 'edit_posts' );
   }
 
   /**
