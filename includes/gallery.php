@@ -1761,7 +1761,7 @@ class REACG_Gallery {
     global $wp_meta_boxes;
 
     // These are the metabox IDs you want to pass over. They don't have to match exactly. preg_match will be run on them.
-    $pass_over = [ 'submitdiv' ];
+    $pass_over = [ 'submitdiv', 'wpseo_meta' ];
 
     // All the metabox contexts you want to check.
     $contexts = [ 'normal', 'advanced', 'side' ];
