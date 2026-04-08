@@ -205,7 +205,11 @@ class REACG_Options {
       'slideDuration' => 5000, #number
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
-      'isFullscreenAllowed' => TRUE, #boolean
+      'isFullscreenAllowed' => FALSE, #boolean
+      'showCounter' => FALSE, #boolean
+      'canShare' => FALSE, #boolean
+      'canDownload' => FALSE, #boolean
+      'canZoom' => FALSE, #boolean
       'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
       'thumbnailWidth' => 120, #number
       'thumbnailHeight' => 90, #number
