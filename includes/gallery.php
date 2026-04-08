@@ -1180,6 +1180,40 @@ class REACG_Gallery {
 
     add_meta_box( 'reacg-metabox-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'widget_main_features' ], 'reacg', 'side', 'low' );
     add_meta_box( 'reacg-metabox-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_metabox_widget_why_upgrade' ], 'reacg', 'side', 'low' );
+
+    $this->move_yoast_metabox_to_end();
+  }
+
+  /**
+   * Move the Yoast SEO metabox to the bottom of the main column.
+   *
+   * @return void
+   */
+  private function move_yoast_metabox_to_end() {
+    global $wp_meta_boxes;
+
+    if ( empty( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ] ) ) {
+      return;
+    }
+
+    $yoast_metabox = NULL;
+    $contexts = [ 'normal', 'advanced', 'side' ];
+    $priorities = [ 'high', 'core', 'default', 'low', 'sorted' ];
+
+    foreach ( $contexts as $context ) {
+      foreach ( $priorities as $priority ) {
+        if ( empty( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'] ) ) {
+          continue;
+        }
+
+        $yoast_metabox = $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'];
+        unset( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'] );
+      }
+    }
+
+    if ( !empty( $yoast_metabox ) ) {
+      $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ]['normal']['low']['wpseo_meta'] = $yoast_metabox;
+    }
   }
 
   public function register_dashboard_widgets() {
