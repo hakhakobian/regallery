@@ -205,7 +205,7 @@ class REACG_Options {
       'slideDuration' => 5000, #number
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
-      'isFullscreenAllowed' => FALSE, #boolean
+      'canFullscreen' => FALSE, #boolean
       'showCounter' => FALSE, #boolean
       'canShare' => FALSE, #boolean
       'canDownload' => FALSE, #boolean
@@ -488,7 +488,7 @@ class REACG_Options {
       'slideDuration' => 5000, #number
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
       'isSlideshowAllowed' => TRUE, #boolean
-      'isFullscreenAllowed' => TRUE, #boolean
+      'canFullscreen' => TRUE, #boolean
       'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
       'thumbnailWidth' => 120, #number
       'thumbnailHeight' => 90, #number
@@ -590,6 +590,7 @@ class REACG_Options {
     ];
     $boolean = [
       'showLightbox',
+      'canFullscreen',
       'isFullscreen',
       'areControlButtonsShown',
       'isInfinite',
@@ -599,7 +600,6 @@ class REACG_Options {
       'canZoom',
       'autoplay',
       'isSlideshowAllowed',
-      'isFullscreenAllowed',
       'shadow',
       'playAndPauseAllowed',
       'openUrlInNewTab',
@@ -1220,6 +1220,10 @@ class REACG_Options {
           $options['lightbox']['showTitle'] = FALSE;
           $options['lightbox']['showCaption'] = FALSE;
           $options['lightbox']['showDescription'] = FALSE;
+        }
+        if ( isset($options['lightbox']['isFullscreenAllowed']) ) {
+          $options['lightbox']['canFullscreen'] = $options['lightbox']['isFullscreenAllowed'];
+          unset($options['lightbox']['isFullscreenAllowed']);
         }
       }
     }

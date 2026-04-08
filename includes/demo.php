@@ -180,7 +180,7 @@ class REACG_Demo {
           'slideDuration' => 5000, #number
           'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
           'isSlideshowAllowed' => TRUE, #boolean
-          'isFullscreenAllowed' => TRUE, #boolean
+          'canFullscreen' => FALSE, #boolean
           'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
           'thumbnailWidth' => 120, #number
           'thumbnailHeight' => 90, #number
@@ -318,7 +318,7 @@ class REACG_Demo {
           'slideDuration' => 5000, #number
           'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
           'isSlideshowAllowed' => TRUE, #boolean
-          'isFullscreenAllowed' => TRUE, #boolean
+          'canFullscreen' => TRUE, #boolean
           'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
           'thumbnailWidth' => 120, #number
           'thumbnailHeight' => 90, #number
