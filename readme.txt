@@ -251,7 +251,10 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 == Changelog ==
 = 1.18.10 =
-= Updated: 07.04.2026 =
+= Updated: 10.04.2026 =
+* **Added:** Counter, Share, Download, Zoom, and Fullscreen options to Slider layout.
+* **Added:** Yoast SEO section in gallery edit page.
+* **Added:** Ultimate Showcase pre-built template.
 * **Fixed:** Broken access control in REST API endpoint allowing unauthorized updates to gallery configuration.
 * **Fixed:** Demo gallery not importing correctly in Playground.
 * **Fixed:** Google Fonts not loading properly in some galleries.
