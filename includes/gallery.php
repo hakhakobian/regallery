@@ -59,7 +59,7 @@ class REACG_Gallery {
             }
           ),
         ),
-        'permission_callback' => [$this, 'privileged_permission'],
+        'permission_callback' => '__return_true',
       ) );
     } );
 
@@ -68,25 +68,34 @@ class REACG_Gallery {
       register_rest_route( $this->obj->prefix . '/v1', '/templates', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ $this, 'get_custom_templates'],
-        'permission_callback' => [$this, 'privileged_permission'],
+        'permission_callback' => '__return_true',
       ) );
     } );
 
     // Register a route to get/set/delete options for the gallery with the API.
     add_action( 'rest_api_init', function () {
       require_once REACG()->plugin_dir . "/includes/options.php";
+      $options_args = array(
+        'gallery_id' => array(
+          'validate_callback' => function($param, $request, $key) {
+            return is_numeric( $param );
+          }
+        ),
+      );
       $options = new REACG_Options(true);
       register_rest_route( $this->obj->prefix . '/v1', '/options/(?P<gallery_id>-?\d+)', array(
-        'methods' => WP_REST_Server::READABLE . ", " . WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
-        'callback' => [ $options, 'options'],
-        'args' => array(
-          'gallery_id' => array(
-            'validate_callback' => function($param, $request, $key) {
-              return is_numeric( $param );
-            }
-          ),
+        array(
+          'methods' => WP_REST_Server::READABLE,
+          'callback' => [ $options, 'options'],
+          'args' => $options_args,
+          'permission_callback' => '__return_true',
         ),
-        'permission_callback' => [$this, 'privileged_permission'],
+        array(
+          'methods' => WP_REST_Server::DELETABLE . ", " . WP_REST_Server::EDITABLE,
+          'callback' => [ $options, 'options'],
+          'args' => $options_args,
+          'permission_callback' => [$this, 'privileged_permission'],
+        ),
       ) );
     } );
 
@@ -109,9 +118,7 @@ class REACG_Gallery {
    */
   public function handle_upload_prefilter( $file ) {
     // Only for gallery uploads.
-    if (
-      empty( $_POST['reacg_nonce'] )
-      || ! wp_verify_nonce(sanitize_text_field( wp_unslash( $_POST['reacg_nonce'] ) ), REACG_NONCE) ) {
+    if ( !REACGLibrary::verify_nonce() ) {
       return $file;
     }
     if ( empty( $_POST['reacg'] )
@@ -281,22 +288,18 @@ class REACG_Gallery {
   }
 
   /**
-   * @param $request
+   * @param WP_REST_Request $request
    *
    * @return bool
    */
-  public function privileged_permission($request) {
-    if ( $request->get_method() === 'GET' ) {
-      return '__return_true';
+  public function privileged_permission( WP_REST_Request $request ) {
+    if ( !is_user_logged_in() ) {
+      return FALSE;
     }
 
-    // If request comes from Elementor editor iframe.
-    if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-      $referer = sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER']));
-
-      if ( strpos( $referer, 'elementor' ) !== FALSE ) {
-        return '__return_true';
-      }
+    $gallery_id = intval( $request->get_param( 'gallery_id' ) );
+    if ( $gallery_id > 0 ) {
+      return current_user_can( 'edit_post', $gallery_id );
     }
 
     return current_user_can( 'edit_posts' );
@@ -313,7 +316,7 @@ class REACG_Gallery {
     wp_enqueue_style($this->obj->prefix . '_admin');
 
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'regallery')), array_slice($columns, 1));
-    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images count', 'regallery')), array_slice($columns, 3));
+    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images', 'regallery')), array_slice($columns, 3));
 
     return $columns;
   }
@@ -445,7 +448,7 @@ class REACG_Gallery {
     if ( current_user_can( 'edit_posts' ) && $post->post_type === REACG_CUSTOM_POST_TYPE ) {
       $url = wp_nonce_url(
         admin_url( 'admin.php?action=reacg_duplicate_gallery&post=' . $post->ID ),
-        -1,
+        REACG_NONCE,
         REACG_NONCE
       );
 
@@ -464,18 +467,22 @@ class REACG_Gallery {
    * @return void
    */
   public function duplicate_gallery() {
-    if ( !isset($_GET[REACG_NONCE]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[REACG_NONCE]))) ) {
-      return;
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die(esc_html__('Nonce verification failed!', 'regallery'));
     }
 
     if ( !isset($_GET['post']) ) {
-      wp_die('No gallery to duplicate has been provided!');
+      wp_die(esc_html__('No gallery to duplicate has been provided!', 'regallery'));
     }
 
     $post_id = intval($_GET['post']);
 
+    if ( !current_user_can('edit_post', $post_id) ) {
+      wp_die(esc_html__('You are not allowed to duplicate this gallery.', 'regallery'));
+    }
+
     $post = get_post($post_id);
-    if ( !empty($post) ) {
+    if ( !empty($post) && $post->post_type === REACG_CUSTOM_POST_TYPE ) {
       $new_post = array(
         'post_title' => $post->post_title . ' ' . __('(Copy)', 'regallery'),
         'post_content' => $post->post_content,
@@ -904,28 +911,33 @@ class REACG_Gallery {
    * @return void
    */
   public function save_images() {
-    if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
-      if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
-        $post_id = (int) $_POST['post_id'];
-        $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
-        update_post_meta($post_id, 'images_ids', $images_ids);
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die();
+    }
 
-        if ( isset($_POST['additional_data']) ) {
-          $additional_data = sanitize_text_field(wp_unslash($_POST['additional_data']));
-          update_post_meta($post_id, 'additional_data', $additional_data);
-        }
-
-        /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
-        if ( isset($_POST['gallery_timestamp']) ) {
-          $timestamp = sanitize_text_field(wp_unslash($_POST['gallery_timestamp']));
-          update_post_meta($post_id, 'gallery_timestamp', $timestamp);
-        }
-
-        $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
-        $images_count = count($images_ids_arr);
-        update_post_meta($post_id, 'images_count', $images_count);
+    if ( isset($_POST['post_id']) && isset($_POST['images_ids']) ) {
+      $post_id = (int) $_POST['post_id'];
+      if ( !current_user_can('edit_post', $post_id) ) {
+        wp_die();
       }
+
+      $images_ids = sanitize_text_field(wp_unslash($_POST['images_ids']));
+      update_post_meta($post_id, 'images_ids', $images_ids);
+
+      if ( isset($_POST['additional_data']) ) {
+        $additional_data = sanitize_text_field(wp_unslash($_POST['additional_data']));
+        update_post_meta($post_id, 'additional_data', $additional_data);
+      }
+
+      /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
+      if ( isset($_POST['gallery_timestamp']) ) {
+        $timestamp = sanitize_text_field(wp_unslash($_POST['gallery_timestamp']));
+        update_post_meta($post_id, 'gallery_timestamp', $timestamp);
+      }
+
+      $images_ids_arr = !empty($images_ids) ? json_decode($images_ids, TRUE) : [];
+      $images_count = count($images_ids_arr);
+      update_post_meta($post_id, 'images_count', $images_count);
     }
 
     wp_die();
@@ -937,15 +949,17 @@ class REACG_Gallery {
    * @return void
    */
   public function save_thumbnail() {
-    if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
-      if ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
-        $id = (int) $_POST['id'];
-        $thumbnail_id = (int) $_POST['thumbnail_id'];
-        $metadata = wp_get_attachment_metadata($id);
-        $metadata['thumbnail_id'] = $thumbnail_id;
-        wp_update_attachment_metadata( $id, $metadata );
-      }
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die();
+    }
+
+    if ( isset($_POST['id']) && isset($_POST['thumbnail_id']) ) {
+      $id = (int) $_POST['id'];
+      $thumbnail_id = (int) $_POST['thumbnail_id'];
+
+      $metadata = wp_get_attachment_metadata($id);
+      $metadata['thumbnail_id'] = $thumbnail_id;
+      wp_update_attachment_metadata( $id, $metadata );
     }
 
     wp_die();
@@ -957,14 +971,16 @@ class REACG_Gallery {
    * @return void
    */
   public function delete_thumbnail() {
-    if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
-      if ( isset($_POST['id']) ) {
-        $id = (int) $_POST['id'];
-        $metadata = wp_get_attachment_metadata($id);
-        unset($metadata['thumbnail_id']);
-        wp_update_attachment_metadata( $id, $metadata );
-      }
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die();
+    }
+
+    if ( isset($_POST['id']) ) {
+      $id = (int) $_POST['id'];
+
+      $metadata = wp_get_attachment_metadata($id);
+      unset($metadata['thumbnail_id']);
+      wp_update_attachment_metadata( $id, $metadata );
     }
 
     wp_die();
@@ -976,23 +992,23 @@ class REACG_Gallery {
    * @return void
    */
   public function save_gallery() {
-    if ( isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce]))) ) {
-      $new_post = [
-        'post_title' => !empty($_GET['gallery_title']) ? sanitize_text_field(wp_unslash($_GET['gallery_title'])) : '(no title)',
-        'post_status' => 'publish',
-        'post_type' => 'reacg',
-      ];
-      $post_id = wp_insert_post($new_post, TRUE);
-      if ( $post_id ) {
-        wp_update_post([
-                         'ID' => $post_id,
-                         'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
-                       ]);
-      }
-
-      echo json_encode($post_id);
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die();
     }
+    $new_post = [
+      'post_title' => !empty($_GET['gallery_title']) ? sanitize_text_field(wp_unslash($_GET['gallery_title'])) : '(no title)',
+      'post_status' => 'publish',
+      'post_type' => 'reacg',
+    ];
+    $post_id = wp_insert_post($new_post, TRUE);
+    if ( $post_id ) {
+      wp_update_post([
+                       'ID' => $post_id,
+                       'post_content' => REACGLibrary::get_shortcode($this->obj, $post_id),
+                     ]);
+    }
+
+    echo json_encode($post_id);
     wp_die();
   }
 
@@ -1164,6 +1180,40 @@ class REACG_Gallery {
 
     add_meta_box( 'reacg-metabox-widget-main-features', __( 'Main features', 'regallery' ), [ $this, 'widget_main_features' ], 'reacg', 'side', 'low' );
     add_meta_box( 'reacg-metabox-widget-why-upgrade', __( 'Why upgrade', 'regallery' ), [ $this, 'render_metabox_widget_why_upgrade' ], 'reacg', 'side', 'low' );
+
+    $this->move_yoast_metabox_to_end();
+  }
+
+  /**
+   * Move the Yoast SEO metabox to the bottom of the main column.
+   *
+   * @return void
+   */
+  private function move_yoast_metabox_to_end() {
+    global $wp_meta_boxes;
+
+    if ( empty( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ] ) ) {
+      return;
+    }
+
+    $yoast_metabox = NULL;
+    $contexts = [ 'normal', 'advanced', 'side' ];
+    $priorities = [ 'high', 'core', 'default', 'low', 'sorted' ];
+
+    foreach ( $contexts as $context ) {
+      foreach ( $priorities as $priority ) {
+        if ( empty( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'] ) ) {
+          continue;
+        }
+
+        $yoast_metabox = $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'];
+        unset( $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ][ $context ][ $priority ]['wpseo_meta'] );
+      }
+    }
+
+    if ( !empty( $yoast_metabox ) ) {
+      $wp_meta_boxes[ REACG_CUSTOM_POST_TYPE ]['normal']['low']['wpseo_meta'] = $yoast_metabox;
+    }
   }
 
   public function register_dashboard_widgets() {
@@ -1467,9 +1517,10 @@ class REACG_Gallery {
         ];
     }
 
-    if ( $original['width'] <= $this->default_max_dimension
+    if ( ($original['width'] <= $this->default_max_dimension
       && $original['height'] <= $this->default_max_dimension
-      && !in_array($original['url'], $seen, true) ) {
+      && !in_array($original['url'], $seen, true) ) || empty($sizes) ) {
+        // Include original image if it doesn't exceed the default max dimensions and is not already included as a generated size, or if no other sizes are available.
       $sizes[] = $original;
     }
 
@@ -1634,14 +1685,13 @@ class REACG_Gallery {
    */
   public function meta_box_images($post) {
     // Verify if the request is an AJAX call and ensure its validity.
-    $valid_ajax_call = isset( $_GET[$this->obj->nonce] )
-      && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[$this->obj->nonce])))
+    $valid_ajax_call = REACGLibrary::verify_nonce()
       && isset($_GET['id'])
       && isset($_GET['action'])
       && sanitize_text_field(wp_unslash($_GET['action'])) === 'reacg_get_images';
 
-    // Get the ID depending on whether it is called from builders or the custom post.
-    $post_id = isset($_GET['id']) ? (int) $_GET['id'] : $post->ID;
+    // Get the ID depending on whether it is called from builder or the gallery edit page.
+    $post_id = isset($_GET['id']) ? (int) $_GET['id'] : (!empty($post->ID) ? (int) $post->ID : 0);
     $images_ids = get_post_meta( $post_id, 'images_ids', true );
     $additional_data = get_post_meta( $post_id, 'additional_data', true );
 
@@ -1656,7 +1706,7 @@ class REACG_Gallery {
     ?><div class="reacg_items"
          data-post-id="<?php echo esc_attr($post_id); ?>"
          data-edit-count="<?php echo esc_attr($edit_count); ?>"
-         data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->obj->nonce)); ?>">
+         data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), REACG_NONCE, REACG_NONCE)); ?>">
       <div class="reacg_item reacg_item_new">
         <div class="reacg_item_image"></div>
       </div><?php
@@ -1745,7 +1795,7 @@ class REACG_Gallery {
     global $wp_meta_boxes;
 
     // These are the metabox IDs you want to pass over. They don't have to match exactly. preg_match will be run on them.
-    $pass_over = [ 'submitdiv' ];
+    $pass_over = [ 'submitdiv', 'wpseo_meta' ];
 
     // All the metabox contexts you want to check.
     $contexts = [ 'normal', 'advanced', 'side' ];
@@ -1912,6 +1962,9 @@ class REACG_Gallery {
         'title' => esc_html__('Drag-and-Drop Simplicity', 'regallery'),
       ],
     ];
+    wp_localize_script($this->obj->prefix . '_widget_box', 'reacg_widget_box', [
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), REACG_NONCE, REACG_NONCE),
+    ]);
     wp_enqueue_script($this->obj->prefix . '_widget_box');
     wp_enqueue_style($this->obj->prefix . '_widget_box');
     ?>

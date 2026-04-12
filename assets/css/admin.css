@@ -23,9 +23,16 @@
 }
 
 .reacg_item_new .reacg_item_image {
-  background-image: url(../images/add_new_image.svg);
   cursor: pointer;
-  background-size: 90px;
+  background-color: var(--reacg-primary-color, #155C92);
+  -webkit-mask-image: url(../images/add_new_image.svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 90px;
+  mask-image: url(../images/add_new_image.svg);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 90px;
 }
 
 .reacg_item_image {
@@ -186,6 +193,9 @@ to avoid a bug connected with preview.
 
 /* Remove all notices except plugin's.*/
 .notice:not(.reacg-keep-notice):not(#message),
+.updated:not(.reacg-keep-notice):not(#message) {
+  display: none !important;
+}
 .error {
   display: none;
 }
@@ -403,7 +413,7 @@ to avoid a bug connected with preview.
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  background-color: #2271b1;
+  background-color: var(--reacg-primary-color, #155C92);
   cursor: pointer;
   box-shadow: 0 0 10px 3px #aaaaaa;
   transition: transform 0.3s ease;

@@ -75,29 +75,31 @@ class REACGLibrary {
     $used_fonts = array();
     $google_fonts = self::get_fonts(false);
 
-    $options = [];
-    $all_options = wp_load_alloptions();
-    foreach ( $all_options as $name => $value ) {
-      if ( strpos( $name, 'reacg_options' ) === 0 ) {
-        $options[ $name ] = maybe_unserialize( $value );
-      }
-    }
+    global $wpdb;
+    $options = $wpdb->get_col(
+      $wpdb->prepare(
+        "SELECT option_value FROM $wpdb->options WHERE option_name LIKE %s",
+        $wpdb->esc_like( 'reacg_options' ) . '%'
+      )
+    );
     if ( $options ) {
       foreach ( $options as $option_value ) {
         if ( isset($option_value) ) {
           $option = json_decode($option_value, TRUE);
-          foreach ( $option as $value ) {
-            if ( is_array($value) ) {
-              foreach ( $value as $val ) {
-                // Get all font families saved in the DB.
-                if ( is_string($val) && in_array($val, $google_fonts) ) {
-                  $used_fonts[$val] = $val;
+          if ( is_array($option) ) {
+            foreach ( $option as $value ) {
+              if ( is_array($value) ) {
+                foreach ( $value as $val ) {
+                  // Get all font families saved in the DB.
+                  if ( is_string($val) && isset($google_fonts[$val]) ) {
+                    $used_fonts[$val] = $val;
+                  }
                 }
               }
-            }
-            elseif ( is_string($value) && in_array($value, $google_fonts) ) {
-              // Get all font families saved in the DB.
-              $used_fonts[$value] = $value;
+              elseif ( is_string($value) && isset($google_fonts[$value]) ) {
+                // Get all font families saved in the DB.
+                $used_fonts[$value] = $value;
+              }
             }
           }
         }
@@ -279,5 +281,19 @@ class REACGLibrary {
     }
 
     return $installed_time;
+  }
+
+  /**
+   * Verify the nonce for a request.
+   *
+   * @return bool
+   */
+  public static function verify_nonce() {
+    if (!isset($_REQUEST[REACG_NONCE])
+      || !wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST[REACG_NONCE])), REACG_NONCE)) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -180,7 +180,7 @@ class REACG_Demo {
           'slideDuration' => 5000, #number
           'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
           'isSlideshowAllowed' => TRUE, #boolean
-          'isFullscreenAllowed' => TRUE, #boolean
+          'canFullscreen' => FALSE, #boolean
           'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
           'thumbnailWidth' => 120, #number
           'thumbnailHeight' => 90, #number
@@ -318,7 +318,7 @@ class REACG_Demo {
           'slideDuration' => 5000, #number
           'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
           'isSlideshowAllowed' => TRUE, #boolean
-          'isFullscreenAllowed' => TRUE, #boolean
+          'canFullscreen' => TRUE, #boolean
           'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
           'thumbnailWidth' => 120, #number
           'thumbnailHeight' => 90, #number
@@ -424,10 +424,15 @@ class REACG_Demo {
   /**
    * @return mixed|string|void|null
    */
-  public function import_data() {
+  public function import_data($is_ajax = TRUE) {
     $galleries = [];
     $attachments = [];
-    if ( is_admin() && is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+    if (
+      is_admin()
+      && is_user_logged_in()
+      && current_user_can( 'manage_options' )
+      && (!$is_ajax || REACGLibrary::verify_nonce())
+    ) {
       $attachments = $this->import_attachments();
       $galleries = $this->import_galleries($attachments);
     }

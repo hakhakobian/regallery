@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Re Gallery - Responsive Image & Photo Gallery
  * Description: Photo gallery plugin lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.18.7
+ * Version: 1.18.10
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,7 +24,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.18.7';
+  public $version = '1.18.10';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
@@ -311,6 +311,7 @@ final class REACG {
     wp_register_script($this->prefix . '_thumbnails', $this->plugin_url . '/assets/js/wp-gallery.js', $required_scripts, $this->version, TRUE);
     wp_localize_script( $this->prefix . '_thumbnails', 'reacg_global', array(
       'rest_root' => esc_url_raw( $this->rest_root ),
+      'rest_nonce' => $this->rest_nonce,
       'plugin_url' => $this->plugin_url,
       'plugin_assets_url' => REACG_PLUGIN_ASSETS_URL,
       'upgrade' => [
@@ -386,7 +387,7 @@ final class REACG {
       'rest_nonce' => $this->rest_nonce,
       'nonce' => wp_create_nonce( $this->nonce ),
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
     ));
 
     // Register general styles/scripts.
@@ -458,7 +459,7 @@ final class REACG {
       'plugin_version' => $this->version,
       'icon' => $this->plugin_url . '/assets/images/icon.svg',
       'data' => REACGLibrary::get_shortcodes($this, TRUE),
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), -1, $this->nonce),
+      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
     ));
     $gallery_ids = REACGLibrary::get_galleries();
     $data = [];
@@ -541,7 +542,7 @@ final class REACG {
       if ( !isset( $_GET['activate-multi'] ) ) {
         if ( REACG_PLAYGROUND ) {
           $demo = $this->demo(TRUE);
-          $link = $demo->import_data();
+          $link = $demo->import_data(FALSE);
           if ( !empty($link) ) {
             wp_safe_redirect($link);
             exit;

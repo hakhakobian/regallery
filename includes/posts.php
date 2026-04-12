@@ -43,9 +43,14 @@ class REACG_Posts {
   }
 
   public function get_posts() {
-    if ( empty( $_GET[ REACG_NONCE ] ) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET[REACG_NONCE]))) ) {
+    if ( !REACGLibrary::verify_nonce() ) {
       wp_die();
     }
+
+    if ( !current_user_can('edit_posts') ) {
+      wp_die();
+    }
+
     $select_type_defaults = ['manual', 'dynamic'];
     $select_type = '';
     if ( !empty( $_POST['select_type'] ) ) {
@@ -65,7 +70,7 @@ class REACG_Posts {
     $type_title = REACG_ALLOWED_POST_TYPES[$type]['title'];
 
     $gallery_id = !empty($_POST['gallery_id']) ? intval($_POST['gallery_id']) : 0;
-
+    
     $additional_data = get_post_meta( $gallery_id, 'additional_data', TRUE );
 
     if ( empty($select_type) ) {

@@ -3,9 +3,9 @@ Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
 Requires at least: 4.6
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.18.7
+Stable tag: 1.18.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,10 +246,32 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.7: Improved smarter image size selection for better performance. Enjoy free functionality and add your suggestions via WP forum.
+* 1.18.10: Fixed Broken access control in REST API endpoint allowing unauthorized updates to gallery configuration. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.18.10 =
+= Updated: 10.04.2026 =
+* **Added:** Counter, Share, Download, Zoom, and Fullscreen options to Slider layout.
+* **Added:** Yoast SEO section in gallery edit page.
+* **Added:** Ultimate Showcase pre-built template.
+* **Fixed:** Broken access control in REST API endpoint allowing unauthorized updates to gallery configuration.
+* **Fixed:** Demo gallery not importing correctly in Playground.
+* **Fixed:** Google Fonts not loading properly in some galleries.
+
+= 1.18.9 =
+= Updated: 06.04.2026 =
+* **Improved:** Gallery edit page now deeply adapts to the WordPress admin color scheme.
+* **Changed:** Updated help modal.
+* **Fixed:** Broken access control issue.
+* **Fixed:** Error when retrieving video cover image URL when only a large image is available.
+* **Fixed:** Issue with playing .mov video files in Slider layout and Lightbox.
+* **Fixed:** Minor style issues.
+
+= 1.18.8 =
+= Updated: 27.03.2026 =
+* **Fixed:** Error when retrieving image URL if no additional image sizes were available (only original).
+
 = 1.18.7 =
 = Updated: 25.03.2026 =
 * **Improved:** Uses all available WordPress image sizes to load the most appropriate image for each screen and layout.
