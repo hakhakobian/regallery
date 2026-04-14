@@ -28,8 +28,6 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
   }
 
   public function list_galleries($args = []) {
-    global $wpdb;
-
     if (!$this->required_tables_exist()) {
       return new WP_Error('reacg_migration_unavailable', __('10Web Photo Gallery tables were not found.', 'regallery'));
     }
@@ -38,6 +36,28 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $per_page = !empty($args['per_page']) ? max(1, intval($args['per_page'])) : 50;
     $search = !empty($args['search']) ? sanitize_text_field($args['search']) : '';
 
+    $items = array_merge($this->get_gallery_items($search), $this->get_used_shortcode_items($search));
+    usort($items, function ($a, $b) {
+      return strnatcasecmp(
+        !empty($a['title']) ? (string) $a['title'] : '',
+        !empty($b['title']) ? (string) $b['title'] : ''
+      );
+    });
+
+    $total = count($items);
+    $offset = ($page - 1) * $per_page;
+
+    return [
+      'items' => array_values(array_slice($items, $offset, $per_page)),
+      'total' => $total,
+      'page' => $page,
+      'per_page' => $per_page,
+    ];
+  }
+
+  private function get_gallery_items($search = '') {
+    global $wpdb;
+
     $gallery_table = $this->table_name('bwg_gallery');
     $image_table = $this->table_name('bwg_image');
 
@@ -45,19 +65,20 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $params = [];
 
     if ($search !== '') {
-      $where .= ' AND `name` LIKE %s ';
+      $where .= ' AND g.`name` LIKE %s ';
       $params[] = '%' . $wpdb->esc_like($search) . '%';
     }
 
-    $total_sql = 'SELECT COUNT(*) FROM `' . esc_sql($gallery_table) . '`' . $where;
-    $total = !empty($params)
-      ? intval($wpdb->get_var($wpdb->prepare($total_sql, $params)))
-      : intval($wpdb->get_var($total_sql));
+    $sql = 'SELECT g.`id`, g.`name`, COUNT(i.`id`) AS image_count
+      FROM `' . esc_sql($gallery_table) . '` g
+      LEFT JOIN `' . esc_sql($image_table) . '` i ON i.`gallery_id` = g.`id` AND i.`published` = 1'
+      . $where .
+      ' GROUP BY g.`id`, g.`name`
+      ORDER BY g.`name` ASC';
 
-    $offset = ($page - 1) * $per_page;
-    $rows_sql = 'SELECT `id`, `name` FROM `' . esc_sql($gallery_table) . '`' . $where . ' ORDER BY `name` ASC LIMIT %d OFFSET %d';
-    $rows_params = array_merge($params, [$per_page, $offset]);
-    $rows = $wpdb->get_results($wpdb->prepare($rows_sql, $rows_params), ARRAY_A);
+    $rows = !empty($params)
+      ? $wpdb->get_results($wpdb->prepare($sql, $params), ARRAY_A)
+      : $wpdb->get_results($sql, ARRAY_A);
 
     $items = [];
     foreach ((array) $rows as $row) {
@@ -66,24 +87,14 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
         continue;
       }
 
-      $images_count = intval($wpdb->get_var($wpdb->prepare(
-        'SELECT COUNT(*) FROM `' . esc_sql($image_table) . '` WHERE `gallery_id` = %d AND `published` = 1',
-        $gallery_id
-      )));
-
       $items[] = [
         'id' => (string) $gallery_id,
         'title' => !empty($row['name']) ? sanitize_text_field($row['name']) : __('(no title)', 'regallery'),
-        'image_count' => $images_count,
+        'image_count' => isset($row['image_count']) ? intval($row['image_count']) : 0,
       ];
     }
 
-    return [
-      'items' => $items,
-      'total' => $total,
-      'page' => $page,
-      'per_page' => $per_page,
-    ];
+    return $items;
   }
 
   public function get_gallery($external_id) {
@@ -93,9 +104,15 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       return new WP_Error('reacg_migration_unavailable', __('10Web Photo Gallery tables were not found.', 'regallery'));
     }
 
-    $gallery_id = intval($external_id);
+    $source = $this->parse_source_external_id($external_id);
+    $gallery_id = !empty($source['gallery_id']) ? intval($source['gallery_id']) : 0;
     if ($gallery_id <= 0) {
       return new WP_Error('reacg_migration_invalid_gallery', __('Invalid 10Web gallery.', 'regallery'));
+    }
+
+    $shortcode_options = [];
+    if (!empty($source['shortcode_id'])) {
+      $shortcode_options = $this->get_shortcode_options_by_id(intval($source['shortcode_id']));
     }
 
     $gallery_table = $this->table_name('bwg_gallery');
@@ -167,36 +184,34 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
 
       $items[] = $item;
     }
-
+    $theme_id = $this->resolve_theme_id($shortcode_options);
     return [
-      'id' => (string) $gallery_id,
+      'id' => (string) $external_id,
       'title' => !empty($gallery_row['name']) ? sanitize_text_field($gallery_row['name']) : __('Imported 10Web Gallery', 'regallery'),
       'items' => $items,
-      'settings' => $this->map_settings($gallery_id),
+      'settings' => $this->map_settings($gallery_id, $shortcode_options, $theme_id),
     ];
   }
 
-  private function map_settings($gallery_id) {
-    $options = $this->get_bwg_options();
+  private function map_settings($gallery_id, $shortcode_options = [], $theme_id = 0) {
+    $use_option_defaults = isset($shortcode_options) && isset($shortcode_options['use_option_defaults']) && $shortcode_options['use_option_defaults'] == 1 ? true : false;
+    $options = $use_option_defaults ? $this->get_bwg_options() : [];
+    $theme_options = $theme_id > 0 ? $this->get_bwg_theme_options($theme_id) : [];
+    if (!empty($theme_options)) {
+      $options = array_merge($options, $theme_options);
+    }
+    if (!empty($shortcode_options)) {
+      $options = array_merge($options, $shortcode_options);
+    }
     if (empty($options)) {
       return [];
     }
-
-    $gallery_type = $this->get_default_gallery_type();
-
-    // If global default is not available, try shortcode-level gallery type.
-    if ($gallery_type === '') {
-      $gallery_type = $this->get_gallery_type_from_shortcode($gallery_id);
-    }
+    $gallery_type = $this->get_default_gallery_type($shortcode_options);
 
     $mapped_type = $this->map_10web_type_to_regallery($gallery_type);
     if ($mapped_type === '') {
       return [];
     }
-
-    $settings = [
-      'type' => $mapped_type,
-    ];
 
     $view_settings = $this->build_view_settings($gallery_type, $mapped_type, $options);
     if (!empty($view_settings)) {
@@ -208,76 +223,26 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       $settings['general'] = $general_settings;
     }
 
+    $lightbox_settings = $this->build_lightbox_settings($gallery_type, $options);
+    if (!empty($lightbox_settings)) {
+      $settings['lightbox'] = $lightbox_settings;
+    }
+    $settings['type'] = $mapped_type;
+
     return $settings;
   }
 
-  private function get_default_gallery_type() {
-    $options = $this->get_bwg_options();
+  private function get_default_gallery_type($options = null) {
+    if (!is_array($options)) {
+      $options = $this->get_bwg_options();
+    }
+
     if (empty($options)) {
       return '';
     }
 
-    // Different plugin versions can use different keys for the global default view.
-    $candidate_keys = [
-      'gallery_type',
-      'default_gallery_type',
-      'gallery_default_view',
-      'gallery_view_type',
-      'view_type',
-    ];
-
-    foreach ($candidate_keys as $key) {
-      if (!empty($options[$key]) && is_string($options[$key])) {
-        return strtolower(trim($options[$key]));
-      }
-    }
-
-    return '';
-  }
-
-  private function get_gallery_type_from_shortcode($gallery_id) {
-    global $wpdb;
-
-    $gallery_id = intval($gallery_id);
-    if ($gallery_id <= 0) {
-      return '';
-    }
-
-    $table = $this->table_name('bwg_shortcode');
-    $table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
-    if (empty($table_exists)) {
-      return '';
-    }
-
-    $needle = '%gallery_id="' . $wpdb->esc_like((string) $gallery_id) . '"%';
-    $tagtexts = $wpdb->get_col($wpdb->prepare(
-      'SELECT `tagtext` FROM `' . esc_sql($table) . '` WHERE `tagtext` LIKE %s ORDER BY `id` DESC LIMIT 5',
-      $needle
-    ));
-
-    foreach ((array) $tagtexts as $tagtext) {
-      $type = $this->extract_shortcode_attribute((string) $tagtext, 'gallery_type');
-      if ($type !== '') {
-        return strtolower($type);
-      }
-    }
-
-    return '';
-  }
-
-  private function extract_shortcode_attribute($tagtext, $attribute) {
-    $tagtext = (string) $tagtext;
-    $attribute = trim((string) $attribute);
-    if ($tagtext === '' || $attribute === '') {
-      return '';
-    }
-
-    if (preg_match('/\b' . preg_quote($attribute, '/') . '\s*=\s*"([^"]+)"/i', $tagtext, $matches)) {
-      return trim((string) $matches[1]);
-    }
-
-    if (preg_match('/\b' . preg_quote($attribute, '/') . '\s*=\s*\'([^\']+)\'/i', $tagtext, $matches)) {
-      return trim((string) $matches[1]);
+    if (!empty($options['gallery_type'])) {
+      return strtolower(trim($options['gallery_type']));
     }
 
     return '';
@@ -304,95 +269,134 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
         return 'blog';
       case 'image_browser':
         return 'thumbnails';
-      case 'album_compact_preview':
-      case 'album_masonry_preview':
-      case 'album_extended_preview':
-        return 'mosaic';
       default:
-        return '';
+        return 'thumbnails';
     }
   }
 
   private function build_view_settings($gallery_type, $mapped_type, $options) {
-    $gallery_type = strtolower(trim((string) $gallery_type));
-    $settings = [
-      'thumbnails',
-      'masonry',
-      'mosaic',
-      'slideshow',
-      'carousel',
-      'blog',
-    ];
-
-    $this->assign_int($settings['thumbnails'], 'columns', $this->get_10web_int($options, $gallery_type, ['image_column_number']));
-    $this->assign_int($settings['thumbnails'], 'width', $this->get_10web_int($options, $gallery_type, ['thumb_width']));
-    $this->assign_int($settings['thumbnails'], 'height', $this->get_10web_int($options, $gallery_type, ['thumb_height']));
-    $this->assign_bool($settings['thumbnails'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['showthumbs_name', 'show_image_title']));
-    $this->apply_10web_title_visibility_mode($settings['thumbnails'], $this->get_10web_string($options, $gallery_type, ['image_title_show_hover']));
-    $this->assign_bool($settings['thumbnails'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['show_thumb_description', 'show_image_description']));
-    $this->assign_bool($settings['thumbnails'], 'showCaption', $this->get_10web_visibility($options, $gallery_type, ['show_image_title'], ['image_title']));
-
-    $this->assign_int($settings['masonry'], 'columns', $this->get_10web_int($options, $gallery_type, ['masonry_image_column_number']));
-    $this->assign_int($settings['masonry'], 'gap', $this->get_10web_int($options, $gallery_type, ['masonry_thumb_size']));
-    $this->assign_bool($settings['masonry'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['masonry_show_gallery_title', 'masonry_show_image_title']));
-    $this->assign_bool($settings['masonry'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['masonry_show_gallery_description', 'masonry_show_image_description']));
-    $this->assign_bool($settings['masonry'], 'showCaption', $this->get_10web_visibility($options, $gallery_type, ['masonry_show_image_title'], ['masonry_image_title']));
-    
-    $this->assign_int($settings['mosaic'], 'rowHeight', $this->get_10web_int($options, $gallery_type, ['mosaic_thumb_size']));
-    $this->assign_string($settings['mosaic'], 'direction', $this->map_direction($this->get_10web_string($options, $gallery_type, ['mosaic'])));
-    $this->assign_bool($settings['mosaic'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['mosaic_show_gallery_title', 'mosaic_show_image_title']));
-    $this->assign_bool($settings['mosaic'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['mosaic_show_gallery_description', 'mosaic_show_image_description']));
-    $this->assign_bool($settings['mosaic'], 'showCaption', $this->get_10web_visibility($options, $gallery_type, ['mosaic_show_image_title'], ['mosaic_image_title_show_hover', 'mosaic_image_title']));
-        
-    $this->assign_int($settings['slideshow'], 'width', $this->get_10web_int($options, $gallery_type, ['slideshow_width']));
-    $this->assign_int($settings['slideshow'], 'height', $this->get_10web_int($options, $gallery_type, ['slideshow_height']));
-    $this->assign_bool($settings['slideshow'], 'autoplay', $this->get_10web_bool($options, $gallery_type, ['slideshow_enable_autoplay']));
-    $interval_seconds = $this->get_10web_float($options, $gallery_type, ['slideshow_interval']);
-    if ($interval_seconds !== null && $interval_seconds > 0) {
-      $settings['slideshow']['slideDuration'] = max(300, intval(round($interval_seconds * 1000)));
-    }
-    $this->assign_bool($settings['slideshow'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['slideshow_enable_title', 'slideshow_show_image_title']));
-    $this->assign_bool($settings['slideshow'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['slideshow_enable_description', 'slideshow_show_image_description']));
-
-    $this->assign_int($settings['carousel'], 'width', $this->get_10web_int($options, $gallery_type, ['carousel_width']));
-    $this->assign_int($settings['carousel'], 'height', $this->get_10web_int($options, $gallery_type, ['carousel_height']));
-    $this->assign_int($settings['carousel'], 'imagesCount', $this->get_10web_int($options, $gallery_type, ['carousel_image_column_number']));
-    $this->assign_bool($settings['carousel'], 'autoplay', $this->get_10web_bool($options, $gallery_type, ['carousel_enable_autoplay']));
-    $carousel_interval = $this->get_10web_float($options, $gallery_type, ['carousel_interval']);
-    if ($carousel_interval !== null && $carousel_interval > 0) {
-      $settings['carousel']['slideDuration'] = max(300, intval(round($carousel_interval * 1000)));
-    }
-    $this->assign_bool($settings['carousel'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['carousel_show_gallery_title', 'carousel_show_image_title']));
-    $this->assign_bool($settings['carousel'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['carousel_show_gallery_description', 'carousel_show_image_description']));
-    
-    $this->assign_bool($settings['blog'], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['blog_style_title_enable']));
-    $this->assign_bool($settings['blog'], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['blog_style_description_enable']));
-    $this->assign_bool($settings['blog'], 'showCaption', false);
-    
-    switch ($mapped_type) {
+    $settings = [$mapped_type => []];
+    switch ($gallery_type) {
       case 'thumbnails':
-        $this->apply_pagination($settings['thumbnails'], $options, $gallery_type, 'image_enable_page', 'images_per_page');
+        $this->assign_int($settings[$mapped_type], 'columns', $this->get_10web_int($options, $gallery_type, ['image_column_number']));
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['thumb_width']));
+        $this->assign_int($settings[$mapped_type], 'height', $this->get_10web_int($options, $gallery_type, ['thumb_height']));
+        $this->assign_int($settings[$mapped_type], 'gap', $this->get_10web_css_int($options, $gallery_type, ['thumb_margin']));
+        $this->assign_int($settings[$mapped_type], 'padding', $this->get_10web_css_int($options, $gallery_type, ['thumb_padding']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['thumb_title_font_size']));
+        $this->assign_int($settings[$mapped_type], 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, ['thumb_description_font_size']));
+        $this->apply_10web_visibility_mode($settings[$mapped_type], 'showTitle', 'titleVisibility', $this->get_10web_string($options, $gallery_type, ['image_title', 'image_title_show_hover', 'thumb_title_pos']));
+        $this->assign_string($settings[$mapped_type], 'titlePosition', $this->map_title_position($this->get_10web_string($options, $gallery_type, ['thumb_title_pos'])));
+        $this->assign_bool($settings[$mapped_type], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['show_thumb_description', 'show_image_description']));
+        $this->assign_string($settings[$mapped_type], 'descriptionPosition', $this->map_description_position($this->get_10web_string($options, $gallery_type, ['thumb_title_pos'])));
+        $this->apply_pagination($settings[$mapped_type], $options, $gallery_type, 'image_enable_page', 'images_per_page');
         break;
 
-      case 'masonry':
-        $this->apply_pagination($settings['masonry'], $options, $gallery_type, 'masonry_image_enable_page', 'masonry_images_per_page');
+      case 'thumbnails_masonry':
+        $this->assign_int($settings[$mapped_type], 'columns', $this->get_10web_int($options, $gallery_type, ['masonry_image_column_number']));
+        $this->assign_int($settings[$mapped_type], 'gap', $this->get_10web_css_int($options, $gallery_type, ['masonry_container_margin']));
+        $this->assign_int($settings[$mapped_type], 'padding', $this->get_10web_css_int($options, $gallery_type, ['masonry_thumb_padding']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['masonry_thumb_title_font_size']));
+        $this->assign_int($settings[$mapped_type], 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, ['masonry_description_font_size']));
+        $this->apply_10web_visibility_mode($settings[$mapped_type], 'showTitle', 'titleVisibility', $this->get_10web_string($options, $gallery_type, ['image_title']));
+        $this->apply_10web_visibility_mode($settings[$mapped_type], 'showDescription', 'descriptionVisibility', $this->get_10web_string($options, $gallery_type, ['image_description']));
+        $this->apply_pagination($settings[$mapped_type], $options, $gallery_type, 'masonry_image_enable_page', 'masonry_images_per_page');
         break;
 
-      case 'mosaic':
-        $this->apply_pagination($settings['mosaic'], $options, $gallery_type, 'mosaic_image_enable_page', 'mosaic_images_per_page');
+      case 'thumbnails_mosaic':
+        if (isset($options['mosaic_hor_ver']) && strtolower(trim($options['mosaic_hor_ver'])) === 'horizontal') {
+          $mapped_type = 'justified';
+          $settings[$mapped_type] = [];
+        }
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['mosaic_total_width']));
+        $this->assign_int($settings[$mapped_type], 'rowHeight', $this->get_10web_int($options, $gallery_type, ['mosaic_thumb_size']));
+        $this->assign_int($settings[$mapped_type], 'gap', $this->get_10web_css_int($options, $gallery_type, ['mosaic_container_margin']));
+        $this->assign_int($settings[$mapped_type], 'padding', $this->get_10web_css_int($options, $gallery_type, ['mosaic_thumb_padding']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['mosaic_thumb_title_font_size']));
+        $this->apply_10web_visibility_mode($settings[$mapped_type], 'showTitle', 'titleVisibility', $this->get_10web_string($options, $gallery_type, ['image_title', 'mosaic_image_title_show_hover', 'mosaic_image_title']));
+        $this->apply_pagination($settings[$mapped_type], $options, $gallery_type, 'mosaic_image_enable_page', 'mosaic_images_per_page');
         break;
 
       case 'slideshow':
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['slideshow_width']));
+        $this->assign_int($settings[$mapped_type], 'height', $this->get_10web_int($options, $gallery_type, ['slideshow_height']));
+        $this->assign_bool($settings[$mapped_type], 'autoplay', $this->get_10web_bool($options, $gallery_type, ['enable_slideshow_autoplay', 'slideshow_enable_autoplay']));
+        $interval_seconds = $this->get_10web_float($options, $gallery_type, ['slideshow_interval']);
+        if ($interval_seconds !== null && $interval_seconds > 0) {
+          $settings[$mapped_type]['slideDuration'] = max(300, intval(round($interval_seconds * 1000)));
+        }
+        $this->assign_string($settings[$mapped_type], 'imageAnimation', $this->get_10web_string($options, $gallery_type, ['slideshow_effect']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['slideshow_title_font_size']));
+        $this->assign_int($settings[$mapped_type], 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, ['slideshow_description_font_size']));
+
+        if (isset($options['slideshow_filmstrip_type']) && $options['slideshow_filmstrip_type'] == 0) {
+          $settings[$mapped_type]['thumbnailsPosition'] = 'none';
+        } else {
+          $settings[$mapped_type]['thumbnailsPosition'] = $this->map_thumbnails_position($this->get_10web_string($options, $gallery_type, ['slideshow_filmstrip_pos']));
+          if (empty($settings[$mapped_type]['thumbnailsPosition'])) {
+            $settings[$mapped_type]['thumbnailsPosition'] = 'bottom';
+          }
+          $this->assign_int($settings[$mapped_type], 'thumbnailHeight', $this->get_10web_int($options, $gallery_type, ['slideshow_filmstrip_height']));
+        }
+        $this->assign_bool($settings[$mapped_type], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['slideshow_enable_title']));
+        $this->assign_bool($settings[$mapped_type], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['slideshow_enable_description']));
+        if (isset($options['slideshow_title_position']) && strpos($options['slideshow_title_position'], 'top') !== false) {
+          $settings[$mapped_type]['textPosition'] = 'top';
+        } else {
+          $settings[$mapped_type]['textPosition'] = 'bottom';
+        }
+        break;
+      case 'image_browser':
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['image_browser_width']));
+        $this->assign_int($settings[$mapped_type], 'padding', $this->get_10web_css_int($options, $gallery_type, ['image_browser_padding']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['image_browser_img_font_size']));
+        $this->assign_int($settings[$mapped_type], 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, ['image_browser_img_font_size']));
+        $this->assign_bool($settings[$mapped_type], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['image_browser_title_enable']));
+        $this->assign_bool($settings[$mapped_type], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['image_browser_description_enable']));
+        $settings[$mapped_type]['titleVisibility'] = 'alwaysShown';
+        $settings[$mapped_type]['titlePosition'] = $this->map_title_position($this->get_10web_string($options, $gallery_type, ['image_browser_image_title_align']));
+        if (empty($settings[$mapped_type]['titlePosition'])) {
+          $settings[$mapped_type]['titlePosition'] = 'below';
+        }
+        $settings[$mapped_type]['descriptionVisibility'] = 'alwaysShown';
+        $settings[$mapped_type]['descriptionPosition'] = $this->map_description_position($this->get_10web_string($options, $gallery_type, ['image_browser_image_description_align', 'image_browser_image_title_align']));
+        if (empty($settings[$mapped_type]['descriptionPosition'])) {
+          $settings[$mapped_type]['descriptionPosition'] = 'below';
+        }
         break;
 
       case 'carousel':
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['carousel_width']));
+        $this->assign_int($settings[$mapped_type], 'height', $this->get_10web_int($options, $gallery_type, ['carousel_height']));
+        $this->assign_int($settings[$mapped_type], 'imagesCount', $this->get_10web_int($options, $gallery_type, ['carousel_image_column_number']));
+        $this->assign_bool($settings[$mapped_type], 'autoplay', $this->get_10web_bool($options, $gallery_type, ['carousel_enable_autoplay']));
+        $carousel_interval = $this->get_10web_float($options, $gallery_type, ['carousel_interval']);
+        if ($carousel_interval !== null && $carousel_interval > 0) {
+          $settings[$mapped_type]['slideDuration'] = max(300, intval(round($carousel_interval * 1000)));
+        }
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['carousel_caption_p_font_size', 'carousel_gal_title_font_size']));
+        $this->assign_bool($settings[$mapped_type], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['carousel_show_gallery_title', 'carousel_show_image_title']));
+        $this->assign_bool($settings[$mapped_type], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['carousel_show_gallery_description', 'carousel_show_image_description']));
+        $settings[$mapped_type]['titleVisibility'] = 'alwaysShown';
+        $settings[$mapped_type]['titlePosition'] = 'bottom';
         break;
 
-      case 'blog':
-        $this->apply_pagination($settings['blog'], $options, $gallery_type, 'blog_style_enable_page', 'blog_style_images_per_page');
+      case 'blog_style':
+        $this->assign_int($settings[$mapped_type], 'width', $this->get_10web_int($options, $gallery_type, ['blog_style_width']));
+        $this->assign_int($settings[$mapped_type], 'padding', $this->get_10web_css_int($options, $gallery_type, ['blog_style_padding']));
+        $this->assign_int($settings[$mapped_type], 'titleFontSize', $this->get_10web_int($options, $gallery_type, ['blog_style_gal_title_font_size']));
+        $this->assign_int($settings[$mapped_type], 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, ['blog_style_img_font_size']));
+        $this->assign_bool($settings[$mapped_type], 'showTitle', $this->get_10web_bool($options, $gallery_type, ['blog_style_title_enable']));
+        $this->assign_bool($settings[$mapped_type], 'showDescription', $this->get_10web_bool($options, $gallery_type, ['blog_style_description_enable']));
+        $settings[$mapped_type]['titleVisibility'] = 'alwaysShown';
+        $settings[$mapped_type]['titlePosition'] = 'below';
+        $settings[$mapped_type]['descriptionVisibility'] = 'alwaysShown';
+        $settings[$mapped_type]['descriptionPosition'] = 'below';
+          
+        $this->apply_pagination($settings[$mapped_type], $options, $gallery_type, 'blog_style_enable_page', 'blog_style_images_per_page');
         break;
     }
-
+    
     return $settings;
   }
 
@@ -400,8 +404,60 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $settings = [];
 
     $this->assign_int($settings, 'itemsPerPage', $this->get_items_per_page($gallery_type, $options));
+    $this->assign_string($settings, 'orderBy', $this->get_order_by($gallery_type, $options));
+    $this->assign_string($settings, 'orderDirection', $this->get_order_direction($gallery_type, $options));
     $this->assign_bool($settings, 'enableSearch', $this->get_search_enabled($gallery_type, $options));
     $this->assign_string($settings, 'searchPlaceholderText', $this->get_search_placeholder($gallery_type, $options));
+
+    $pagination_button_color = $this->format_10web_color(
+      $this->get_10web_string($options, $gallery_type, [
+        'page_nav_button_bg_color',
+      ]),
+      $this->get_10web_int($options, $gallery_type, [
+        'page_nav_button_bg_transparent',
+      ])
+    );
+    if ($pagination_button_color !== '') {
+      $settings['activeButtonColor'] = $pagination_button_color;
+      $settings['inactiveButtonColor'] = $pagination_button_color;
+      $settings['loadMoreButtonColor'] = $pagination_button_color;
+    }
+
+    $pagination_text_color = $this->format_10web_color($this->get_10web_string($options, $gallery_type, [
+      'page_nav_font_color',
+    ]));
+    if ($pagination_text_color !== '') {
+      $settings['paginationTextColor'] = $pagination_text_color;
+    }
+
+    $pagination_text_size = $this->get_10web_float($options, $gallery_type, [
+      'page_nav_font_size',
+    ]);
+    if ($pagination_text_size !== null && $pagination_text_size > 0) {
+      $settings['paginationButtonTextSize'] = floatval($pagination_text_size);
+    }
+
+    $this->assign_int($settings, 'paginationButtonBorderRadius', $this->get_10web_css_int($options, $gallery_type, [
+      'page_nav_border_radius',
+    ]));
+
+    $pagination_border_style = strtolower($this->get_10web_string($options, $gallery_type, [
+      'page_nav_border_style',
+    ]));
+    if ($pagination_border_style === 'none') {
+      $settings['paginationButtonBorderSize'] = 0;
+    } else {
+      $this->assign_int($settings, 'paginationButtonBorderSize', $this->get_10web_css_int($options, $gallery_type, [
+        'page_nav_border_width',
+      ]));
+    }
+
+    $pagination_border_color = $this->format_10web_color($this->get_10web_string($options, $gallery_type, [
+      'page_nav_border_color',
+    ]));
+    if ($pagination_border_color !== '') {
+      $settings['paginationButtonBorderColor'] = $pagination_border_color;
+    }
 
     $click_action = $this->get_10web_string($options, $gallery_type, ['thumb_click_action']);
     $mapped_click_action = $this->map_click_action($click_action);
@@ -411,25 +467,270 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
 
     $open_in_new_tab = $this->get_10web_bool($options, $gallery_type, ['thumb_link_target']);
     $this->assign_bool($settings, 'openUrlInNewTab', $open_in_new_tab);
+    $this->assign_bool($settings, 'enableRightClickProtection', $this->get_10web_bool($options, $gallery_type, [
+      'image_right_click',
+    ]));
+
+    $watermark_settings = $this->build_watermark_settings($gallery_type, $options);
+    if (!empty($watermark_settings)) {
+      $settings = array_merge($settings, $watermark_settings);
+    }
+
+    return $settings;
+  }
+
+  private function build_watermark_settings($gallery_type, $options) {
+    $settings = [];
+
+    $watermark_type = strtolower($this->get_10web_string($options, $gallery_type, [
+      'watermark_type',
+    ]));
+
+    $watermark_image_url = $this->get_10web_string($options, $gallery_type, [
+      'watermark_url',
+    ]);
+
+    if ($watermark_type === 'image' && $watermark_image_url !== '') {
+      $settings['enableWatermark'] = true;
+    }
+
+    $settings['watermarkImageURL'] = esc_url_raw($watermark_image_url);
+
+    $transparency = $this->get_10web_int($options, $gallery_type, [
+      'watermark_opacity',
+    ]);
+    if ($transparency !== null) {
+      $settings['watermarkTransparency'] = max(0, min(100, intval($transparency)));
+    }
+
+    $watermark_position = $this->map_watermark_position($this->get_10web_string($options, $gallery_type, [
+      'watermark_position',
+    ]));
+    if ($watermark_position !== '') {
+      $settings['watermarkPosition'] = $watermark_position;
+    }
+
+    return $settings;
+  }
+
+  private function build_lightbox_settings($gallery_type, $options) {
+    $settings = [];
+
+    $this->assign_bool($settings, 'isFullscreen', $this->get_10web_bool($options, $gallery_type, [
+      'popup_fullscreen',
+      'lightbox_fullscreen',
+      'slideshow_fullscreen',
+    ]));
+    $this->assign_int($settings, 'width', $this->get_10web_int($options, $gallery_type, [
+      'popup_width',
+      'lightbox_width',
+      'slideshow_lightbox_width',
+    ]));
+    $this->assign_int($settings, 'height', $this->get_10web_int($options, $gallery_type, [
+      'popup_height',
+      'lightbox_height',
+      'slideshow_lightbox_height',
+    ]));
+
+    $this->assign_bool($settings, 'areControlButtonsShown', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_ctrl_btn',
+      'lightbox_ctrl_btn',
+      'lightbox_show_controls',
+    ]));
+    $this->assign_bool($settings, 'isInfinite', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_loop',
+      'lightbox_loop',
+      'slideshow_enable_loop',
+    ]));
+    $this->assign_bool($settings, 'autoplay', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_autoplay',
+      'lightbox_autoplay',
+      'slideshow_autoplay',
+    ]));
+
+    $duration = $this->get_10web_float($options, $gallery_type, [
+      'popup_interval',
+      'lightbox_interval',
+      'slideshow_interval',
+    ]);
+    if ($duration !== null && $duration > 0) {
+      $duration_ms = $duration > 100 ? $duration : $duration * 1000;
+      $settings['slideDuration'] = max(300, intval(round($duration_ms)));
+    }
+
+    $this->assign_int($settings, 'titleFontSize', $this->get_10web_int($options, $gallery_type, [
+      'lightbox_title_font_size',
+      'slideshow_title_font_size',
+    ]));
+    $this->assign_int($settings, 'descriptionFontSize', $this->get_10web_int($options, $gallery_type, [
+      'lightbox_description_font_size',
+      'slideshow_description_font_size',
+    ]));
+
+    $text_font_family = $this->get_10web_string($options, $gallery_type, [
+      'lightbox_title_font_style',
+      'lightbox_description_font_style',
+      'slideshow_title_font',
+      'slideshow_description_font',
+    ]);
+    if ($text_font_family !== '') {
+      $settings['textFontFamily'] = $text_font_family;
+    }
+
+    $background_color = $this->format_10web_color(
+      $this->get_10web_string($options, $gallery_type, [
+        'lightbox_overlay_bg_color',
+        'lightbox_bg_color',
+        'slideshow_cont_bg_color',
+      ]),
+      $this->get_10web_int($options, $gallery_type, [
+        'lightbox_overlay_bg_transparent',
+        'lightbox_bg_transparent',
+      ])
+    );
+    if ($background_color !== '') {
+      $settings['backgroundColor'] = $background_color;
+    }
+
+    $text_background = $this->format_10web_color(
+      $this->get_10web_string($options, $gallery_type, [
+        'lightbox_info_bg_color',
+        'slideshow_title_background_color',
+        'slideshow_description_background_color',
+      ]),
+      $this->get_10web_int($options, $gallery_type, [
+        'lightbox_info_bg_transparent',
+        'slideshow_title_opacity',
+        'slideshow_description_opacity',
+      ])
+    );
+    if ($text_background !== '') {
+      $settings['textBackground'] = $text_background;
+    }
+
+    $text_color = $this->format_10web_color($this->get_10web_string($options, $gallery_type, [
+      'lightbox_title_color',
+      'lightbox_description_color',
+      'slideshow_title_color',
+      'slideshow_description_color',
+    ]));
+    if ($text_color !== '') {
+      $settings['textColor'] = $text_color;
+    }
+
+    $this->assign_bool($settings, 'showTitle', $this->get_10web_bool($options, $gallery_type, [
+      'popup_show_title',
+      'lightbox_show_title',
+      'show_image_title',
+    ]));
+    $this->assign_bool($settings, 'showDescription', $this->get_10web_bool($options, $gallery_type, [
+      'popup_show_description',
+      'lightbox_show_description',
+      'show_image_description',
+    ]));
+
+    $title_alignment = $this->map_alignment($this->get_10web_string($options, $gallery_type, [
+      'popup_title_position',
+      'lightbox_title_position',
+      'popup_title_alignment',
+      'lightbox_title_alignment',
+      'lightbox_info_align',
+    ]));
+    if ($title_alignment !== '') {
+      $settings['titleAlignment'] = $title_alignment;
+    }
+
+    $text_position = $this->map_lightbox_text_position($this->get_10web_string($options, $gallery_type, [
+      'popup_description_position',
+      'lightbox_description_position',
+      'popup_text_position',
+      'lightbox_text_position',
+      'lightbox_info_pos',
+      'slideshow_title_position',
+    ]));
+    if ($text_position !== '') {
+      $settings['textPosition'] = $text_position;
+    }
+
+    $this->assign_bool($settings, 'canDownload', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_download',
+      'lightbox_enable_download',
+    ]));
+    $this->assign_bool($settings, 'canZoom', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_zoom',
+      'lightbox_enable_zoom',
+    ]));
+    $this->assign_bool($settings, 'canFullscreen', $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_fullscreen',
+      'lightbox_enable_fullscreen',
+    ]));
+
+    $thumbnails_enabled = $this->get_10web_bool($options, $gallery_type, [
+      'popup_enable_filmstrip',
+      'lightbox_enable_filmstrip',
+    ]);
+    if ($thumbnails_enabled === false) {
+      $settings['thumbnailsPosition'] = 'none';
+    } else {
+      $thumbnails_position = $this->map_thumbnails_position($this->get_10web_string($options, $gallery_type, [
+        'popup_filmstrip_position',
+        'lightbox_filmstrip_position',
+        'lightbox_filmstrip_pos',
+        'slideshow_filmstrip_pos',
+      ]));
+      if ($thumbnails_position !== '') {
+        $settings['thumbnailsPosition'] = $thumbnails_position;
+      }
+    }
+
+    $this->assign_int($settings, 'thumbnailBorder', $this->get_10web_int($options, $gallery_type, [
+      'lightbox_filmstrip_thumb_border_width',
+      'slideshow_filmstrip_thumb_border_width',
+    ]));
+    $this->assign_int($settings, 'thumbnailBorderRadius', $this->get_10web_css_int($options, $gallery_type, [
+      'lightbox_filmstrip_thumb_border_radius',
+      'slideshow_filmstrip_thumb_border_radius',
+    ]));
+    $this->assign_int($settings, 'thumbnailGap', $this->get_10web_css_int($options, $gallery_type, [
+      'lightbox_filmstrip_thumb_margin',
+      'slideshow_filmstrip_thumb_margin',
+    ]));
+
+    $thumbnail_border_color = $this->format_10web_color($this->get_10web_string($options, $gallery_type, [
+      'lightbox_filmstrip_thumb_border_color',
+      'slideshow_filmstrip_thumb_border_color',
+    ]));
+    if ($thumbnail_border_color !== '') {
+      $settings['thumbnailBorderColor'] = $thumbnail_border_color;
+    }
 
     return $settings;
   }
 
   private function apply_pagination(&$settings, $options, $gallery_type, $enable_key, $per_page_key) {
-    $enabled = $this->get_10web_bool($options, $gallery_type, [$enable_key]);
-    if ($enabled !== null) {
-      if ($enabled) {
-        $settings['paginationType'] = 'simple';
-        $settings['showAllItems'] = false;
-      } else {
-        $settings['paginationType'] = 'none';
-        $settings['showAllItems'] = true;
+    $paginationType = $this->get_10web_string($options, $gallery_type, [$enable_key]);
+    if ($paginationType !== null) {
+      switch ($paginationType) {
+        case "1":
+          $settings['paginationType'] = 'simple';
+          break;
+        case "2":
+          $settings['paginationType'] = 'loadMore';
+          break;
+        case "3":
+          $settings['paginationType'] = 'scroll';
+          break;
+        default:
+          $settings['paginationType'] = 'none';
+          break;
       }
     }
 
     $items_per_page = $this->get_10web_int($options, $gallery_type, [$per_page_key]);
     if ($items_per_page !== null && $items_per_page > 0) {
       $settings['showAllItems'] = false;
+    } else {
+      $settings['showAllItems'] = true;
     }
   }
 
@@ -439,13 +740,62 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       'thumbnails_masonry' => 'masonry_images_per_page',
       'thumbnails_mosaic' => 'mosaic_images_per_page',
       'blog_style' => 'blog_style_images_per_page',
-      'image_browser' => 'images_per_page',
-      'slideshow' => 'images_per_page',
-      'carousel' => 'images_per_page',
+      'carousel' => 'carousel_images_per_page',
     ];
 
     $key = isset($per_type_keys[$gallery_type]) ? $per_type_keys[$gallery_type] : 'images_per_page';
     return $this->get_10web_int($options, $gallery_type, [$key]);
+  }
+
+  private function get_order_by($gallery_type, $options) {
+    $per_type_keys = [
+      'thumbnails' => 'sort_by',
+      'thumbnails_masonry' => 'masonry_sort_by',
+      'thumbnails_mosaic' => 'mosaic_sort_by',
+      'blog_style' => 'blog_style_sort_by',
+      'image_browser' => 'image_browser_sort_by',
+      'slideshow' => 'slideshow_sort_by',
+      'carousel' => 'carousel_sort_by',
+    ];
+
+    $key = isset($per_type_keys[$gallery_type]) ? $per_type_keys[$gallery_type] : 'sort_by';
+    $value = strtolower($this->get_10web_string($options, $gallery_type, [$key, 'sort_by', 'sorting']));
+
+    $map = [
+      'order' => 'default',
+      'alt' => 'title',
+      'filename' => 'title',
+      'date' => 'date',
+      'random' => 'default',
+      'size' => 'default',
+    ];
+
+    if (isset($map[$value])) {
+      return $map[$value];
+    }
+
+    return '';
+  }
+
+  private function get_order_direction($gallery_type, $options) {
+    $per_type_keys = [
+      'thumbnails' => 'order_by',
+      'thumbnails_masonry' => 'masonry_order_by',
+      'thumbnails_mosaic' => 'mosaic_order_by',
+      'blog_style' => 'blog_style_order_by',
+      'image_browser' => 'image_browser_order_by',
+      'slideshow' => 'slideshow_order_by',
+      'carousel' => 'carousel_order_by',
+    ];
+
+    $key = isset($per_type_keys[$gallery_type]) ? $per_type_keys[$gallery_type] : 'order_by';
+    $value = strtolower($this->get_10web_string($options, $gallery_type, [$key, 'sort_direction', 'sorting_direction', 'order']));
+
+    if (in_array($value, ['asc', 'desc'], true)) {
+      return $value;
+    }
+
+    return 'asc';
   }
 
   private function get_search_enabled($gallery_type, $options) {
@@ -485,6 +835,23 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     }
 
     return intval($value);
+  }
+
+  private function get_10web_css_int($options, $gallery_type, $keys) {
+    $value = $this->get_10web_option_value($options, $gallery_type, $keys);
+    if ($value === null || $value === '') {
+      return null;
+    }
+
+    if (is_numeric($value)) {
+      return intval($value);
+    }
+
+    if (preg_match('/-?\d+/', (string) $value, $matches)) {
+      return intval($matches[0]);
+    }
+
+    return null;
   }
 
   private function get_10web_float($options, $gallery_type, $keys) {
@@ -537,6 +904,43 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     }
 
     return '';
+  }
+
+  private function format_10web_color($color, $transparency = null) {
+    $color = trim((string) $color);
+    if ($color === '') {
+      return '';
+    }
+
+    if (stripos($color, 'rgb') === 0) {
+      return $color;
+    }
+
+    $hex = ltrim($color, '#');
+    if (!preg_match('/^[0-9a-f]{3}([0-9a-f]{3})?$/i', $hex)) {
+      return $color;
+    }
+
+    if ($transparency === null) {
+      return '#' . strtoupper($hex);
+    }
+
+    $alpha = max(0, min(100, intval($transparency))) / 100;
+    if ($alpha >= 1) {
+      return '#' . strtoupper($hex);
+    }
+
+    if (strlen($hex) === 3) {
+      $hex = preg_replace('/(.)/', '$1$1', $hex);
+    }
+
+    return sprintf(
+      'rgba(%d, %d, %d, %.2f)',
+      hexdec(substr($hex, 0, 2)),
+      hexdec(substr($hex, 2, 2)),
+      hexdec(substr($hex, 4, 2)),
+      $alpha
+    );
   }
 
   private function get_10web_option_value($options, $gallery_type, $keys) {
@@ -592,26 +996,114 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     return '';
   }
 
-  private function apply_10web_title_visibility_mode(&$settings, $mode) {
-    $mode = strtolower(trim((string) $mode));
-    if ($mode === '') {
-      return;
+  private function map_title_position($position) {
+    $position = strtolower(trim((string) $position));
+    if (in_array($position, ['top', 'bottom', 'center', 'above', 'below'], true)) {
+      return $position;
     }
 
+    return '';
+  }
+
+  private function map_description_position($position) {
+    $position = strtolower(trim((string) $position));
+    if (in_array($position, ['above', 'below'], true)) {
+      return $position;
+    }
+    if ($position === 'top') {
+      return 'above';
+    }
+    if ($position === 'bottom') {
+      return 'below';
+    }
+
+    return '';
+  }
+
+  private function map_alignment($alignment) {
+    $alignment = strtolower(trim((string) $alignment));
+    if (in_array($alignment, ['left', 'center', 'right'], true)) {
+      return $alignment;
+    }
+
+    return '';
+  }
+
+  private function map_lightbox_text_position($position) {
+    $position = strtolower(trim((string) $position));
+    if (in_array($position, ['top', 'bottom', 'above', 'below'], true)) {
+      return $position;
+    }
+
+    return '';
+  }
+
+  private function map_thumbnails_position($position) {
+    $position = strtolower(trim((string) $position));
+    if ($position === 'left') {
+      return 'start';
+    }
+    if ($position === 'right') {
+      return 'end';
+    }
+    if (in_array($position, ['top', 'bottom', 'start', 'end', 'none'], true)) {
+      return $position;
+    }
+
+    return '';
+  }
+
+  private function map_watermark_position($position) {
+    $position = strtolower(trim((string) $position));
+    $map = [
+      'top-left' => 'top-left',
+      'top-center' => 'top-center',
+      'top-right' => 'top-right',
+      'middle-left' => 'middle-left',
+      'middle-center' => 'middle-center',
+      'middle-right' => 'middle-right',
+      'bottom-left' => 'bottom-left',
+      'bottom-center' => 'bottom-center',
+      'bottom-right' => 'bottom-right',
+    ];
+
+    if (isset($map[$position])) {
+      return $map[$position];
+    }
+
+    return '';
+  }
+
+  private function apply_10web_visibility_mode(&$settings, $show_key, $visibility_key, $mode) {
+    $mode = strtolower(trim((string) $mode));
     if (in_array($mode, ['show'], true)) {
-      $settings['showTitle'] = true;
-      $settings['titleVisibility'] = 'alwaysShown';
+      $settings[$show_key] = true;
+      $settings[$visibility_key] = 'alwaysShown';
       return;
     }
 
     if (in_array($mode, ['hover'], true)) {
-      $settings['showTitle'] = true;
-      $settings['titleVisibility'] = 'onHover';
+      $settings[$show_key] = true;
+      $settings[$visibility_key] = 'onHover';
       return;
     }
 
     if (in_array($mode, ['none'], true)) {
-      $settings['showTitle'] = false;
+      $settings[$show_key] = false;
+      return;
+    }
+
+    if ($mode !== '') {
+      if ($this->visibility_mode_is_enabled($mode)) {
+        $settings[$show_key] = true;
+      } else {
+        $settings[$show_key] = false;
+        return;
+      }
+    }
+
+    if (!empty($settings[$show_key])) {
+      $settings[$visibility_key] = 'alwaysShown';
     }
   }
 
@@ -671,31 +1163,161 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
   public function get_shortcode_patterns($source_gallery_id) {
     $patterns = [];
 
-    foreach ($this->get_shortcode_ids_for_gallery($source_gallery_id) as $shortcode_id) {
+    $source = $this->parse_source_external_id($source_gallery_id);
+    $shortcode_id = !empty($source['shortcode_id']) ? intval($source['shortcode_id']) : 0;
+    $gallery_id = !empty($source['gallery_id']) ? intval($source['gallery_id']) : intval($source_gallery_id);
+
+    if ($shortcode_id > 0) {
+      $sid = preg_quote((string) $shortcode_id, '/');
+      $patterns[] = '/\[Best_Wordpress_Gallery\b[^\]]*\bid\s*=\s*(?:"|\')?' . $sid . '(?:"|\')?[^\]]*\]/i';
+      return $patterns;
+    }
+
+    foreach ($this->get_shortcode_ids_for_gallery($gallery_id) as $shortcode_id) {
       $sid = preg_quote((string) $shortcode_id, '/');
       $patterns[] = '/\[Best_Wordpress_Gallery\b[^\]]*\bid\s*=\s*(?:"|\')?' . $sid . '(?:"|\')?[^\]]*\]/i';
     }
 
-    $gid = preg_quote((string) $source_gallery_id, '/');
+    $gid = preg_quote((string) $gallery_id, '/');
     $patterns[] = '/\[Best_Wordpress_Gallery\b[^\]]*\bgallery_id\s*=\s*(?:"|\')?' . $gid . '(?:"|\')?[^\]]*\]/i';
 
     return array_values(array_unique($patterns));
   }
 
   public function get_block_namespaces() {
-    return [];
+    return ['tw'];
   }
 
   public function get_block_id_attributes() {
-    return ['id'];
+    return ['shortcode_id', 'id'];
   }
 
   public function prefer_shortcode_replacement() {
-    return true;
+    return false;
   }
 
   public function replace_specific_gallery($source_gallery_id, $migrated_gallery_id, $replacement_shortcode, $replacement_block) {
-    return null;
+    $source = $this->parse_source_external_id($source_gallery_id);
+    $gallery_id = !empty($source['gallery_id']) ? intval($source['gallery_id']) : 0;
+    if ($gallery_id <= 0) {
+      return new WP_Error('reacg_migration_replace_invalid_source_id', __('Invalid 10Web gallery identifier.', 'regallery'));
+    }
+
+    $shortcode_ids = !empty($source['shortcode_id'])
+      ? [intval($source['shortcode_id'])]
+      : $this->get_shortcode_ids_for_gallery($gallery_id);
+
+    $shortcode_patterns = $this->get_shortcode_patterns($source_gallery_id);
+    $block_patterns = $this->get_10web_block_patterns($shortcode_ids);
+
+    if (empty($shortcode_patterns) && empty($block_patterns)) {
+      return [
+        'updated_posts' => 0,
+        'replaced_shortcodes' => 0,
+        'replacement_shortcode' => $replacement_shortcode,
+        'replacement_block' => $replacement_block,
+      ];
+    }
+
+    $post_types = $this->get_replaceable_post_types();
+    if (empty($post_types)) {
+      return [
+        'updated_posts' => 0,
+        'replaced_shortcodes' => 0,
+        'replacement_shortcode' => $replacement_shortcode,
+        'replacement_block' => $replacement_block,
+      ];
+    }
+
+    $query = new WP_Query([
+      'post_type' => array_values($post_types),
+      'post_status' => ['publish', 'draft', 'private', 'pending', 'future'],
+      'posts_per_page' => -1,
+      'fields' => 'ids',
+      'no_found_rows' => true,
+      'orderby' => 'ID',
+      'order' => 'ASC',
+    ]);
+
+    $updated_posts = 0;
+    $replaced_shortcodes = 0;
+
+    foreach ((array) $query->posts as $post_id) {
+      $post = get_post($post_id);
+      if (!$post) {
+        continue;
+      }
+
+      $updated_content = (string) $post->post_content;
+      $local_replacements = 0;
+
+      if ($updated_content !== '' && !empty($block_patterns)) {
+        foreach ($block_patterns as $pattern) {
+          $count = 0;
+          $updated_content = preg_replace_callback(
+            $pattern,
+            function () use ($replacement_block, &$count) {
+              $count++;
+              return $replacement_block;
+            },
+            $updated_content
+          );
+          if ($count > 0) {
+            $local_replacements += $count;
+          }
+        }
+      }
+
+      if ($updated_content !== '' && !empty($shortcode_patterns) && $local_replacements === 0) {
+        $shortcode_replacement = $this->post_is_block_based($updated_content)
+          ? $replacement_block
+          : $replacement_shortcode;
+
+        foreach ($shortcode_patterns as $pattern) {
+          $count = 0;
+          $updated_content = preg_replace_callback(
+            $pattern,
+            function () use ($shortcode_replacement, &$count) {
+              $count++;
+              return $shortcode_replacement;
+            },
+            $updated_content
+          );
+          if ($count > 0) {
+            $local_replacements += $count;
+          }
+        }
+      }
+
+      if ($updated_content !== '' && $local_replacements > 0) {
+        $updated_content = preg_replace_callback(
+          '/<!--\s+wp:shortcode\s+-->\s*(<!--\s+wp:reacg\/gallery[\s\S]*?<!--\s+\/wp:reacg\/gallery\s+-->)\s*<!--\s+\/wp:shortcode\s+-->/i',
+          function ($matches) {
+            return $matches[1];
+          },
+          $updated_content
+        );
+      }
+
+      if ($local_replacements <= 0 || $updated_content === $post->post_content) {
+        continue;
+      }
+
+      wp_update_post([
+        'ID' => intval($post_id),
+        'post_content' => wp_slash($updated_content),
+      ]);
+
+      $updated_posts += 1;
+      $replaced_shortcodes += $local_replacements;
+    }
+
+    return [
+      'updated_posts' => $updated_posts,
+      'replaced_shortcodes' => $replaced_shortcodes,
+      'replacement_shortcode' => $replacement_shortcode,
+      'replacement_block' => $replacement_block,
+    ];
   }
 
   public function replace_post_meta_references($post_id, $source_gallery_id, $migrated_gallery_id) {
@@ -703,15 +1325,77 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
   }
 
   public function source_exists_in_posts($source_gallery_id) {
+    $source = $this->parse_source_external_id($source_gallery_id);
     $patterns = $this->get_shortcode_patterns($source_gallery_id);
-    if (empty($patterns)) {
+    $shortcode_ids = !empty($source['shortcode_id'])
+      ? [intval($source['shortcode_id'])]
+      : $this->get_shortcode_ids_for_gallery(!empty($source['gallery_id']) ? intval($source['gallery_id']) : 0);
+    $block_patterns = $this->get_10web_block_reference_patterns($shortcode_ids);
+
+    if (empty($patterns) && empty($block_patterns)) {
       return false;
     }
 
     return $this->content_reference_exists(
       ['%[Best_Wordpress_Gallery%', '%wp:tw/bwg%'],
-      $patterns
+      array_merge($patterns, $block_patterns)
     );
+  }
+
+  private function get_10web_block_patterns($shortcode_ids) {
+    $patterns = [];
+
+    foreach (array_values(array_unique(array_filter(array_map('intval', (array) $shortcode_ids)))) as $shortcode_id) {
+      $sid = preg_quote((string) $shortcode_id, '/');
+      $patterns[] = '/<!--\s+wp:tw\/[a-z0-9_-]+\s+\{[^}]*"shortcode_id"\s*:\s*(?:"' . $sid . '"|' . $sid . ')[^}]*\}[\s\S]*?(?:<!--\s+\/wp:tw\/[a-z0-9_-]+\s+-->|\s*\/-->)/i';
+    }
+
+    return $patterns;
+  }
+
+  private function get_10web_block_reference_patterns($shortcode_ids) {
+    $patterns = [];
+
+    foreach (array_values(array_unique(array_filter(array_map('intval', (array) $shortcode_ids)))) as $shortcode_id) {
+      $sid = preg_quote((string) $shortcode_id, '/');
+      $patterns[] = '/wp:tw\/[a-z0-9_-]+[^\}]*"shortcode_id"\s*:\s*(?:"' . $sid . '"|' . $sid . ')/i';
+    }
+
+    return $patterns;
+  }
+
+  private function get_replaceable_post_types() {
+    $post_types = get_post_types([], 'names');
+    if (empty($post_types)) {
+      return [];
+    }
+
+    $excluded = [
+      'attachment',
+      'revision',
+      'nav_menu_item',
+      'custom_css',
+      'customize_changeset',
+      'oembed_cache',
+      'wp_block',
+      'wp_template',
+      'wp_template_part',
+      'wp_global_styles',
+      'wp_navigation',
+      REACG_CUSTOM_POST_TYPE,
+    ];
+
+    return array_values(array_diff($post_types, $excluded));
+  }
+
+  private function post_is_block_based($content) {
+    $stripped = preg_replace(
+      '/<!--\s+wp:shortcode\s+-->[\s\S]*?<!--\s+\/wp:shortcode\s+-->/i',
+      '',
+      (string) $content
+    );
+
+    return (bool) preg_match('/<!--\s+wp:[a-zA-Z]/', $stripped);
   }
 
   private function required_tables_exist() {
@@ -737,6 +1421,185 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     global $wpdb;
 
     return $wpdb->prefix . $name;
+  }
+
+  private function parse_source_external_id($external_id) {
+    $value = trim((string) $external_id);
+    if ($value === '') {
+      return [
+        'gallery_id' => 0,
+        'shortcode_id' => 0,
+      ];
+    }
+
+    if (preg_match('/^shortcode:(\d+):(\d+)$/', $value, $matches)) {
+      return [
+        'gallery_id' => intval($matches[2]),
+        'shortcode_id' => intval($matches[1]),
+      ];
+    }
+
+    return [
+      'gallery_id' => intval($value),
+      'shortcode_id' => 0,
+    ];
+  }
+
+  private function get_used_shortcode_items($search = '') {
+    global $wpdb;
+
+    $table = $this->table_name('bwg_shortcode');
+    $table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+    if (empty($table_exists)) {
+      return [];
+    }
+
+    // Collect unique shortcode IDs from published post content only.
+    $contents = $wpdb->get_col(
+      "SELECT post_content FROM {$wpdb->posts}
+       WHERE post_status NOT IN ('auto-draft','trash','inherit')
+         AND post_content LIKE '%[Best_Wordpress_Gallery%'
+       LIMIT 500"
+    );
+
+    if (empty($contents)) {
+      return [];
+    }
+
+    $shortcode_ids = [];
+    foreach ((array) $contents as $content) {
+      if (!is_string($content) || $content === '') {
+        continue;
+      }
+
+      if (!preg_match_all('/\[Best_Wordpress_Gallery\b([^\]]*)\]/i', $content, $matches)) {
+        continue;
+      }
+
+      foreach ((array) $matches[1] as $attr_string) {
+        $attrs = $this->parse_shortcode_attributes($attr_string);
+        if (empty($attrs['id']) || !is_numeric($attrs['id'])) {
+          continue;
+        }
+
+        $shortcode_id = intval($attrs['id']);
+        if ($shortcode_id > 0) {
+          $shortcode_ids[$shortcode_id] = true;
+        }
+      }
+    }
+
+    if (empty($shortcode_ids)) {
+      return [];
+    }
+
+    $image_table = $this->table_name('bwg_image');
+    $items = [];
+
+    foreach (array_keys($shortcode_ids) as $shortcode_id) {
+      $shortcode_options = $this->get_shortcode_options_by_id($shortcode_id);
+      $gallery_id = !empty($shortcode_options['gallery_id']) ? intval($shortcode_options['gallery_id']) : 0;
+      if ($gallery_id <= 0) {
+        continue;
+      }
+
+      $gallery_title = $wpdb->get_var($wpdb->prepare(
+        'SELECT `name` FROM `' . esc_sql($this->table_name('bwg_gallery')) . '` WHERE `id` = %d',
+        $gallery_id
+      ));
+
+      $images_count = intval($wpdb->get_var($wpdb->prepare(
+        'SELECT COUNT(*) FROM `' . esc_sql($image_table) . '` WHERE `gallery_id` = %d AND `published` = 1',
+        $gallery_id
+      )));
+
+      $title = !empty($gallery_title) ? sanitize_text_field($gallery_title) : __('(no title)', 'regallery');
+      $title .= ' ' . sprintf(__('(Shortcode #%d)', 'regallery'), $shortcode_id);
+
+      $items[] = [
+        'id' => 'shortcode:' . $shortcode_id . ':' . $gallery_id,
+        'title' => $title,
+        'image_count' => $images_count,
+      ];
+    }
+
+    if ($search !== '') {
+      $items = array_values(array_filter($items, function ($item) use ($search) {
+        $title = !empty($item['title']) ? (string) $item['title'] : '';
+        return stripos($title, $search) !== false;
+      }));
+    }
+
+    usort($items, function ($a, $b) {
+      return strnatcasecmp(
+        !empty($a['title']) ? (string) $a['title'] : '',
+        !empty($b['title']) ? (string) $b['title'] : ''
+      );
+    });
+
+    return $items;
+  }
+
+  private function get_shortcode_options_by_id($shortcode_id) {
+    global $wpdb;
+
+    $shortcode_id = intval($shortcode_id);
+    if ($shortcode_id <= 0) {
+      return [];
+    }
+
+    $table = $this->table_name('bwg_shortcode');
+    $table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+    if (empty($table_exists)) {
+      return [];
+    }
+
+    $tagtext = $wpdb->get_var($wpdb->prepare(
+      'SELECT `tagtext` FROM `' . esc_sql($table) . '` WHERE `id` = %d',
+      $shortcode_id
+    ));
+
+    if (!is_string($tagtext) || $tagtext === '') {
+      return [];
+    }
+
+    return $this->parse_shortcode_attributes($tagtext);
+  }
+
+  private function parse_shortcode_attributes($shortcode_text) {
+    $shortcode_text = (string) $shortcode_text;
+    if ($shortcode_text === '') {
+      return [];
+    }
+
+    $attributes = [];
+    if (!preg_match_all('/([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s\]]+))/i', $shortcode_text, $matches, PREG_SET_ORDER)) {
+      return $attributes;
+    }
+
+    foreach ((array) $matches as $match) {
+      if (empty($match[1])) {
+        continue;
+      }
+
+      $key = strtolower(trim((string) $match[1]));
+      if ($key === '') {
+        continue;
+      }
+
+      $value = '';
+      if (isset($match[2]) && $match[2] !== '') {
+        $value = (string) $match[2];
+      } elseif (isset($match[3]) && $match[3] !== '') {
+        $value = (string) $match[3];
+      } elseif (isset($match[4])) {
+        $value = (string) $match[4];
+      }
+
+      $attributes[$key] = trim($value);
+    }
+
+    return $attributes;
   }
 
   private function get_shortcode_ids_for_gallery($source_gallery_id) {
@@ -1283,17 +2146,7 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $bwg_options = null;
 
     if (is_string($bwg_options_raw)) {
-      $decoded_json = json_decode($bwg_options_raw, true);
-      if (is_array($decoded_json)) {
-        $bwg_options = $decoded_json;
-      } else {
-        $unserialized = maybe_unserialize($bwg_options_raw);
-        if (is_array($unserialized)) {
-          $bwg_options = $unserialized;
-        } elseif (is_object($unserialized)) {
-          $bwg_options = (array) $unserialized;
-        }
-      }
+      $bwg_options = $this->decode_json_or_safe_unserialize_array($bwg_options_raw);
     } elseif (is_array($bwg_options_raw)) {
       $bwg_options = $bwg_options_raw;
     } elseif (is_object($bwg_options_raw)) {
@@ -1324,17 +2177,7 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $raw = get_option('wd_bwg_options');
 
     if (is_string($raw)) {
-      $decoded_json = json_decode($raw, true);
-      if (is_array($decoded_json)) {
-        $this->bwg_options = $decoded_json;
-      } else {
-        $unserialized = maybe_unserialize($raw);
-        if (is_array($unserialized)) {
-          $this->bwg_options = $unserialized;
-        } elseif (is_object($unserialized)) {
-          $this->bwg_options = (array) $unserialized;
-        }
-      }
+      $this->bwg_options = $this->decode_json_or_safe_unserialize_array($raw);
     } elseif (is_array($raw)) {
       $this->bwg_options = $raw;
     } elseif (is_object($raw)) {
@@ -1342,6 +2185,87 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     }
 
     return $this->bwg_options;
+  }
+
+  private function resolve_theme_id($shortcode_options = []) {
+    if (is_array($shortcode_options) && !empty($shortcode_options['theme_id'])) {
+      $theme_id = intval($shortcode_options['theme_id']);
+      if ($theme_id > 0) {
+        return $theme_id;
+      }
+    }
+
+    global $wpdb;
+
+    $theme_table = $this->table_name('bwg_theme');
+    $table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $theme_table));
+    if (empty($table_exists)) {
+      return 0;
+    }
+
+    return intval($wpdb->get_var(
+      'SELECT `id` FROM `' . esc_sql($theme_table) . '` WHERE `default_theme` = 1 ORDER BY `id` ASC LIMIT 1'
+    ));
+  }
+
+  private function get_bwg_theme_options($theme_id) {
+    global $wpdb;
+
+    $theme_id = intval($theme_id);
+    if ($theme_id <= 0) {
+      return [];
+    }
+
+    $theme_table = $this->table_name('bwg_theme');
+    $table_exists = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $theme_table));
+    if (empty($table_exists)) {
+      return [];
+    }
+
+    $theme_row = $wpdb->get_row($wpdb->prepare(
+      'SELECT `options` FROM `' . esc_sql($theme_table) . '` WHERE `id` = %d',
+      $theme_id
+    ), ARRAY_A);
+
+    if (empty($theme_row) || empty($theme_row['options'])) {
+      return [];
+    }
+
+    $raw_options = (string) $theme_row['options'];
+    if ($raw_options === '') {
+      return [];
+    }
+
+    $theme_options = [];
+    $theme_options = $this->decode_json_or_safe_unserialize_array($raw_options);
+
+    return $theme_options;
+  }
+
+  private function decode_json_or_safe_unserialize_array($value) {
+    if (!is_string($value) || $value === '') {
+      return [];
+    }
+
+    $decoded_json = json_decode($value, true);
+    if (is_array($decoded_json)) {
+      return $decoded_json;
+    }
+
+    return $this->safe_unserialize_array($value);
+  }
+
+  private function safe_unserialize_array($value) {
+    if (!is_string($value) || $value === '' || !is_serialized($value)) {
+      return [];
+    }
+
+    $unserialized = @unserialize(trim($value), ['allowed_classes' => false]);
+    if (is_array($unserialized)) {
+      return $unserialized;
+    }
+
+    return [];
   }
 
   private function content_reference_exists($like_clauses, $verify_regexes) {

@@ -190,13 +190,26 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
   private function get_gallery_data($post_id) {
     $data = get_post_meta($post_id, '_eg_gallery_data', true);
     if (is_string($data)) {
-      $decoded = maybe_unserialize($data);
+      $decoded = $this->safe_unserialize_array($data);
       if (is_array($decoded)) {
         $data = $decoded;
       }
     }
 
     return is_array($data) ? $data : [];
+  }
+
+  private function safe_unserialize_array($value) {
+    if (!is_string($value) || $value === '' || !is_serialized($value)) {
+      return [];
+    }
+
+    $decoded = @unserialize(trim($value), ['allowed_classes' => false]);
+    if (is_array($decoded)) {
+      return $decoded;
+    }
+
+    return [];
   }
 
   private function extract_attachment_ids($post_id) {
@@ -366,7 +379,6 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
     }
 
     $lightbox_image_size = $this->get_string($config, ['lightbox_image_size']);
-    var_dump($lightbox_image_size);
     if ($lightbox_image_size !== null) {
       $overrides['lightbox']['isFullscreen'] = false;
       switch (strtolower($lightbox_image_size)) {

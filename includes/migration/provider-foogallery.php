@@ -329,7 +329,7 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       if (is_array($decoded_json)) {
         $settings = $decoded_json;
       } else {
-        $parsed = maybe_unserialize($settings);
+        $parsed = $this->safe_unserialize_array($settings);
         if (is_array($parsed)) {
           $settings = $parsed;
         }
@@ -522,8 +522,8 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       }
     }
     if ( $settings[$template . '_hover_effect_type'] === 'preset' ) {
-        $layout_ref['titleSource'] = 'caption';
-        $layout_ref['captionSource'] = 'description';
+      $layout_ref['titleSource'] = 'caption';
+      $layout_ref['captionSource'] = 'description';
     }
     if ( isset($settings[$template . '_paging_type']) ) {
       if ( strpos($settings[$template . '_paging_type'], 'page') !== false
@@ -578,9 +578,9 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
     }
     if ( isset($settings[$template . '_lightbox_show_fullscreen_button']) ) {
       if ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'yes' ) {
-        $overrides['lightbox']['isFullscreenAllowed'] = TRUE;
+        $overrides['lightbox']['canFullscreen'] = TRUE;
       } elseif ( $settings[$template . '_lightbox_show_fullscreen_button'] === 'no' ) {
-        $overrides['lightbox']['isFullscreenAllowed'] = FALSE;
+        $overrides['lightbox']['canFullscreen'] = FALSE;
       }
     }
     if ( isset($settings[$template . '_lightbox_thumbs']) ) {
@@ -913,7 +913,7 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       if (is_array($decoded_json)) {
         $value = $decoded_json;
       } else {
-        $parsed = maybe_unserialize($value);
+        $parsed = $this->safe_unserialize_array($value);
         if (is_array($parsed)) {
           $value = $parsed;
         } else {
@@ -954,5 +954,18 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
     }
 
     return $ids;
+  }
+
+  private function safe_unserialize_array($value) {
+    if (!is_string($value) || $value === '' || !is_serialized($value)) {
+      return [];
+    }
+
+    $decoded = @unserialize(trim($value), ['allowed_classes' => false]);
+    if (is_array($decoded)) {
+      return $decoded;
+    }
+
+    return [];
   }
 }
