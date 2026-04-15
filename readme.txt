@@ -1,7 +1,7 @@
 === Re Gallery - Responsive Image & Photo Gallery ===
 Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
-Tags: gallery, photo gallery, image gallery, responsive gallery, wordpress gallery plugin
+Tags: gallery, photo gallery, image gallery, lightbox, masonry
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
