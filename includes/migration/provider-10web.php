@@ -20,11 +20,25 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
   }
 
   public function is_available() {
-    if (post_type_exists('bwg_gallery') || shortcode_exists('Best_Wordpress_Gallery')) {
+    if (!$this->is_10web_plugin_active()) {
+      return false;
+    }
+
+    return post_type_exists('bwg_gallery')
+      || shortcode_exists('Best_Wordpress_Gallery')
+      || $this->required_tables_exist();
+  }
+
+  private function is_10web_plugin_active() {
+    if (function_exists('is_plugin_active') && is_plugin_active('photo-gallery/photo-gallery.php')) {
       return true;
     }
 
-    return $this->required_tables_exist();
+    if (function_exists('is_plugin_active_for_network') && is_plugin_active_for_network('photo-gallery/photo-gallery.php')) {
+      return true;
+    }
+
+    return false;
   }
 
   public function list_galleries($args = []) {
