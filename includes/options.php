@@ -506,7 +506,7 @@ class REACG_Options {
       'showTitle' => TRUE, #bool
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 1.6, #float
-      'titleAlignment' => 'left', #string
+      'titleAlignment' => 'left', #string left | center | right
       'showDescription' => TRUE, #bool
       'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionFontSize' => 1.3, #float
