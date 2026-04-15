@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Re Gallery - Responsive Image & Photo Gallery
  * Description: Photo gallery plugin lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.18.10
+ * Version: 1.18.11
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,7 +24,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.18.10';
+  public $version = '1.18.11';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
