@@ -26,7 +26,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showAllItems' => TRUE, #boolean
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -75,7 +75,7 @@ class REACG_Options {
       'rowHeight' => 200, #number
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -118,7 +118,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'rowHeight' => 300, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -161,7 +161,7 @@ class REACG_Options {
       'paddingColor' => '', #string
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -258,7 +258,7 @@ class REACG_Options {
       'backgroundColor' => '#FFFFFF', #string;
       'padding' => 0, #number;
       'shadow' => TRUE, #boolean
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -312,7 +312,7 @@ class REACG_Options {
       'imagesCount' => 3, #number
       'enableScrollByImagesCount' => FALSE, #boolean
       'spaceBetween' => 20, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -361,7 +361,7 @@ class REACG_Options {
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -413,7 +413,7 @@ class REACG_Options {
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
       'imageRadius' => 0, #number
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'showTitle' => TRUE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 36, #number
@@ -714,7 +714,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'soft-light', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
