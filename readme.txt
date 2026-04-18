@@ -119,7 +119,7 @@ Display your WooCommerce products in stunning, customizable galleries with Re Ga
 
 == Get more with Re Gallery PRO ==
 
-**50+ Pre-Designed Templates:** Access a rich library of professionally designed gallery templates created specifically for WordPress websites. Each pre-designed template is fully optimized for fast loading, mobile responsiveness, and high-performance image display. Whether you need masonry grids, sliders, product galleries, or clean portfolio layouts, every template helps you show your photos beautifully, without hiring a designer or writing any code.
+**55+ Pre-Designed Templates:** Access a rich library of professionally designed gallery templates created specifically for WordPress websites. Each pre-designed template is fully optimized for fast loading, mobile responsiveness, and high-performance image display. Whether you need masonry grids, sliders, product galleries, or clean portfolio layouts, every template helps you show your photos beautifully, without hiring a designer or writing any code.
 [Gallery Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_demo)
 
 **Template Library:** Save time with a ready-to-use template library that helps you keep a consistent style across your whole WordPress website. It's perfect for bloggers, portfolio creators, and WooCommerce store owners who want clean and organized image galleries.

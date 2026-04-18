@@ -8,7 +8,7 @@ class REACG_Options {
     'templateType' => "", #string
     'css' => '', #string
     'custom_css' => '', #string
-    'type' => 'mosaic', #string thumbnails | mosaic | masonry | slideshow | cube | carousel | cards | blog
+    'type' => 'mosaic', #string thumbnails | mosaic | justified | masonry | slideshow | cube | carousel | coverflow | cards | blog
     'thumbnails' => [
       'fillContainer' => FALSE, #boolean
       'aspectRatio' => '1.77', #string
@@ -403,6 +403,58 @@ class REACG_Options {
       'buttonBorderColor' => '#afafaf80', #string
       'buttonBorderRadius' => 4, #number
     ],
+    'coverflow' => [
+      'width' => 500, #number
+      'height' => 700, #number
+      'backgroundColor' => '', #string;
+      'padding' => 0, #number
+      'autoplay' => TRUE, #boolean
+      'slideDuration' => 3000, #number
+      'playAndPauseAllowed' => FALSE, #boolean
+      'rotate' => 50, #number
+      'imagesCount' => 3, #number
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'showTitle' => FALSE, #boolean
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
+      'titleFontSize' => 20, #number
+      'titleColor' => '#DDDDDD', #string
+      'titleAlignment' => 'left', #string left | center | right
+      'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => '', #string
+      'invertTextColor' => FALSE, #boolean
+      'showCaption' => FALSE, #boolean
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
+      'captionFontSize' => 18, #number
+      'captionFontColor' => '#DDDDDD', #string
+      'navigation' => 'none', #string none | arrows | dots | arrowsAndDots
+      'arrowsSize' => 26, #number
+      'arrowsColor' => 'rgba(255, 255, 255, 0.8)',
+      'dotsPosition' => 'outside', #string inside | outside
+      'dotsSize' => 13, #number
+      'dotsGap' => 4, #number
+      'activeDotColor' => '#aaaaaa', #string
+      'inactiveDotsColor' => 'rgba(170, 170, 170, 0.4)', #string
+      'showVideoControls' => false,
+      'animationSpeed' => 800, #number
+      'showVideoCover' => FALSE, #boolean
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
+    ],
     'blog' => [
       'imageWidth' => 50, #number
       'imageWidthType' => '%', #string % | px | vw | rem | em
@@ -562,6 +614,7 @@ class REACG_Options {
       'dotsSize',
       'dotsGap',
       'animationSpeed',
+      'rotate',
     ];
     $empty_number = [
       'template_id',
@@ -634,7 +687,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'cards', 'blog' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'coverflow', 'cards', 'blog' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
