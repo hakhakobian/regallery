@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, lightbox, masonry
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.18.11
+Stable tag: 1.19.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -161,17 +161,18 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 7. Gallery Carousel view
 8. Gallery Cards view
 9. Gallery Blog view
-10. Image Gallery Lightbox
-11. Gallery Chaos template
-12. Gallery Products template
-13. Gallery Modern template
-14. Gallery Prism Pattern template
-15. Gallery Dynamic template
-16. Gallery Grid template
-17. Gallery Border Hover template
-18. Add Image to the Gallery
-19. Gallery Options with Live Preview
-20. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
+10. Gallery Coverflow view
+11. Image Gallery Lightbox
+12. Gallery Chaos template
+13. Gallery Products template
+14. Gallery Modern template
+15. Gallery Prism Pattern template
+16. Gallery Dynamic template
+17. Gallery Grid template
+18. Gallery Border Hover template
+19. Add Image to the Gallery
+20. Gallery Options with Live Preview
+21. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
 
 
 == Frequently Asked Questions ==
@@ -198,7 +199,7 @@ Yes, you can fully edit the AI-generated image captions in Re Gallery. After gen
 Yes, Re Gallery is highly SEO friendly. Its AI-generated image captions automatically create descriptive titles, alt text, and descriptions for your images, which improves search engine visibility. Combined with responsive photo galleries and optimized mobile galleries, this helps your WordPress site rank better.
 
 = How does Re Gallery photo gallery plugin integrate with WooCommerce for photo galleries? =
-Re Gallery integrates smoothly with WooCommerce, allowing you to create beautiful, responsive photo galleries for your products. It includes features like lightbox viewing, hover effects, AI-generated image captions, and customizable gallery layouts such as masonry, mosaic, justified, grid/thumbnails, carousel, cards, slider, blog and cube. These tools help make your product galleries more engaging, mobile-optimized, and SEO-friendly, delivering a better shopping experience for your customers.
+Re Gallery integrates smoothly with WooCommerce, allowing you to create beautiful, responsive photo galleries for your products. It includes features like lightbox viewing, hover effects, AI-generated image captions, and customizable gallery layouts such as masonry, mosaic, justified, grid/thumbnails, carousel, cards, slider, coverflow, blog and cube. These tools help make your product galleries more engaging, mobile-optimized, and SEO-friendly, delivering a better shopping experience for your customers.
 
 = Which gallery views like masonry, carousel, justified are available in WordPress photo gallery plugin? =
 Re Gallery supports multiple gallery layouts including։
@@ -212,6 +213,7 @@ Re Gallery supports multiple gallery layouts including։
 * **Carousel view:** Show multiple images in a horizontal scroll, perfect for displaying related photos in a compact space.
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 * **Blog view:** Display your images in a vertically stacked layout similar to blog posts, often including captions or descriptions.
+* **Coverflow view:** Showcase your images in an interactive, horizontal flow with a centered focus image and angled side previews, creating a sleek 3D browsing experience.
 
 All views are fully responsive and mobile-optimized. Besides these layouts, Re Gallery offers features like Live Demo, AI-generated image captions, WooCommerce photo gallery integration, pre-designed gallery templates, and customizable gallery styles to help you create professional and engaging photo galleries in WordPress.
 
@@ -246,10 +248,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.18.11: Added migration from FooGallery, Envira Gallery, Gutenberg Gallery, and Photo Gallery by 10Web. Enjoy free functionality and add your suggestions via WP forum.
+* 1.19.0: Added Coverflow layout. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.19.0 =
+= Updated: 20.04.2026 =
+* **Added:** Coverflow layout.
+* **Added:** Soft light hover effect.
+* **Added:** DepthFlow pre-designed template.
+
 = 1.18.11 =
 = Updated: 16.04.2026 =
 * **Added:** Migration from FooGallery, Envira Gallery, Gutenberg Gallery, and Photo Gallery by 10Web.
