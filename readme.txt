@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, lightbox, masonry
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.19.0
+Stable tag: 1.19.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -248,10 +248,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.19.0: Added Coverflow layout. Enjoy free functionality and add your suggestions via WP forum.
+* 1.19.1: Added tab-based settings navigation for faster access to Gallery, Content, Appearance, Lightbox, Navigation, and Protection options. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.19.1 =
+= Updated: 27.04.2026 =
+* **Added:** New tab-based settings navigation for faster access to Gallery, Content, Appearance, Lightbox, Navigation, and Protection options.
+* **Improved:** Completely redesigned gallery settings interface with a cleaner, modernized UI for a more intuitive editing experience.
+
 = 1.19.0 =
 = Updated: 20.04.2026 =
 * **Added:** Coverflow layout.
