@@ -6,15 +6,21 @@
   max-height: 315px;
   overflow: auto;
   line-height: 0;
+  margin: -2px;
+  margin-top: 8px;
 }
 
 .reacg_item {
-  border: 1px solid #B4AFAF;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   display: inline-block;
   height: 100px;
   width: 100px;
   margin: 2px;
   padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  filter: drop-shadow(1px 1px 3px rgba(26, 45, 89, 0.18));
+  background-color: #ffffff;
 }
 
 .reacg_item a, .reacg_item a:hover {
@@ -178,6 +184,10 @@
   position: relative;
   cursor: move;
   background-size: cover;
+  border-radius: 6px;
+  border: 1px solid #eceaf8;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 2px 3px rgba(26, 45, 89, 0.18));
 }
 
 .reacg-invisible {
@@ -202,9 +212,14 @@ to avoid a bug connected with preview.
 
 .reacg_shortcode code {
   text-align: center;
-  padding: 10px 0;
+  padding: 6px 0;
   display: block;
   max-width: 350px;
+  border-radius: 6px;
+  border: 1px solid #eceaf8;
+  background: #f6f6fb !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 2px 3px rgba(26, 45, 89, 0.18));
 }
 #gallery-help ul li {
   list-style-type: disc;
@@ -468,4 +483,8 @@ to avoid a bug connected with preview.
 }
 label[for=gallery-custom-css-hide] svg {
   display: none;
+}
+
+#gallery-preview .reacg-gallery-wrapper {
+  margin-top: 12px;
 }

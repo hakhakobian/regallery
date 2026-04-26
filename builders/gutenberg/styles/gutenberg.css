@@ -91,12 +91,27 @@
     mask-size: 60px;
   }
   .reacg-galleries-list {
-    width: calc(100% - 32px);
-    margin: 16px;
+    width: calc(100% - 20px);
+    margin: 10px;
     padding: 5px;
     box-sizing: border-box;
+    border-radius: 6px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--reacg-primary-color, #155c92);
+    border-color: rgba(0, 0, 0, 0.23);
   }
+  .reacg-galleries-list:focus {
+    border-width: 2px;
+    color: var(--reacg-primary-color, #155c92);
+    border-color: var(--reacg-primary-color, #155c92);
+    box-shadow: none;;
+    outline: none;
+  }
+
   #reacg-gallery-images {
-    margin: 14px;
+    margin: 10px;
   }
 }

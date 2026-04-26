@@ -2021,7 +2021,7 @@ class REACG_Gallery {
     wp_enqueue_style($this->obj->prefix . '_widget_box');
     ?>
     <div class="reacg-widget-why-upgrade reacg-box">
-      <div class="reacg-box__logo">
+      <div class="reacg-box__logo reacg__pro-logo">
         <?php echo wp_kses( REACGLibrary::$pro_icon, REACGLibrary::allowed_svg() ); ?>
       </div>
       <div class="reacg-box__heading">
