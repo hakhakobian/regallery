@@ -35,6 +35,7 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_images', [ $this, 'save_images' ]);
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
+    add_action('wp_ajax_reacg_auto_upload_video_cover', [ $this, 'upload_video_cover' ]);
 
     add_filter('wp_generate_attachment_metadata', [ $this, 'generate_attachment_metadata' ], 10, 2);
     // Add custom field to the media uploader.
@@ -984,6 +985,90 @@ class REACG_Gallery {
     }
 
     wp_die();
+  }
+
+  /**
+   * Upload a browser-generated cover image and assign it to the video attachment.
+   *
+   * @return void
+   */
+  public function upload_video_cover() {
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_die();
+    }
+
+    $video_id = isset($_POST['video_id']) ? (int) $_POST['video_id'] : 0;
+    if ( $video_id <= 0 || !wp_attachment_is('video', $video_id) ) {
+      wp_send_json_error([ 'message' => __('Invalid video attachment.', 'regallery') ], 400);
+    }
+
+    if ( !current_user_can('edit_post', $video_id) || !current_user_can('upload_files') ) {
+      wp_send_json_error([ 'message' => __('You are not allowed to upload video covers.', 'regallery') ], 403);
+    }
+
+    $metadata = wp_get_attachment_metadata($video_id);
+    // If the video already has a thumbnail, return it without uploading a new one.
+    if ( !empty($metadata['thumbnail_id']) && get_post((int) $metadata['thumbnail_id']) ) {
+      $thumbnail_url = wp_get_attachment_image_url((int) $metadata['thumbnail_id'], 'thumbnail');
+      if ( empty($thumbnail_url) ) {
+        $thumbnail_url = wp_get_attachment_url((int) $metadata['thumbnail_id']);
+      }
+
+      wp_send_json_success([
+        'thumbnail_id' => (int) $metadata['thumbnail_id'],
+        'thumbnail_url' => $thumbnail_url,
+      ]);
+    }
+
+    if ( empty($_FILES['cover']) || empty($_FILES['cover']['tmp_name']) ) {
+      wp_send_json_error([ 'message' => __('No cover image was uploaded.', 'regallery') ], 400);
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $filename = !empty($_POST['filename'])
+      ? sanitize_file_name(wp_unslash($_POST['filename']))
+      : 'video-' . $video_id . '-cover.jpg';
+    $_FILES['cover']['name'] = $filename;
+
+    $attachment_id = media_handle_upload(
+      'cover',
+      $video_id,
+      [
+        'post_title' => sanitize_text_field(pathinfo($filename, PATHINFO_FILENAME)),
+        'post_status' => 'inherit',
+      ],
+      [
+        'test_form' => FALSE,
+        'mimes' => [
+          'jpg|jpeg' => 'image/jpeg',
+          'png' => 'image/png',
+          'webp' => 'image/webp',
+        ],
+      ]
+    );
+
+    if ( is_wp_error($attachment_id) ) {
+      wp_send_json_error([ 'message' => $attachment_id->get_error_message() ], 500);
+    }
+
+    if ( !is_array($metadata) ) {
+      $metadata = [];
+    }
+    $metadata['thumbnail_id'] = (int) $attachment_id;
+    wp_update_attachment_metadata($video_id, $metadata);
+
+    $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+    if ( empty($thumbnail_url) ) {
+      $thumbnail_url = wp_get_attachment_url($attachment_id);
+    }
+
+    wp_send_json_success([
+      'thumbnail_id' => (int) $attachment_id,
+      'thumbnail_url' => $thumbnail_url,
+    ]);
   }
 
   /**
