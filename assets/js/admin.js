@@ -96,10 +96,7 @@ jQuery(document).ready(function () {
     /* The image id to be deleted.*/
     let image_id = item.data("id");
     let type = item.data("type");
-    if ( type === "video" ) {
-      reacg_remove_thumbnail(galleryItemsContainer, image_id);
-    }
-    else if ( reacg.allowed_post_types.hasOwnProperty(type)
+    if ( reacg.allowed_post_types.hasOwnProperty(type)
       && String(image_id).includes("dynamic") ) {
       /* Reset additional data on dynamic gallery delete.*/
       galleryItemsContainer.find(".additional_data").val("");
@@ -470,6 +467,7 @@ function reacg_media_uploader( e, that ) {
   media_uploader.on( 'select', function () {
     /* Get images ids already added.*/
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
+    let coverPromises = [];
 
     /* Get selected images.*/
     let selected_images = media_uploader.state().get( 'selection' ).toJSON();
@@ -519,6 +517,9 @@ function reacg_media_uploader( e, that ) {
         clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(galleryItemsContainer.find(".reacg_item_new"));
+        if ( type === "video" && reacg_should_generate_video_cover(selected_images[key], thumbnail_url) ) {
+          coverPromises.push(reacg_generate_video_cover(selected_images[key], clone, galleryItemsContainer));
+        }
         /* Add selected image id to the existing list.*/
         images_ids.unshift(image_id);
       }
@@ -530,8 +531,136 @@ function reacg_media_uploader( e, that ) {
     /* Save the images.*/
     reacg_save_images(galleryItemsContainer);
 
+    if ( coverPromises.length ) {
+      Promise.all(coverPromises).then(function (results) {
+        if ( results.some(function (result) { return !!result; }) ) {
+          reacg_reload_preview();
+        }
+      });
+    }
+
     media_uploader.remove();
   } );
+}
+
+function reacg_should_generate_video_cover(selectedImage, thumbnailUrl) {
+  if ( !selectedImage || selectedImage.type !== "video" || !selectedImage.id || !selectedImage.url ) {
+    return false;
+  }
+
+  if ( selectedImage.thumb && typeof selectedImage.thumb.src !== 'undefined'
+    && selectedImage.thumb.src.search("media/video.") === -1 ) {
+    return false;
+  }
+
+  return thumbnailUrl === reacg.no_image;
+}
+
+function reacg_generate_video_cover(selectedImage, item, galleryItemsContainer) {
+  return reacg_capture_video_frame(selectedImage.url)
+    .then(function (blob) {
+      return reacg_upload_video_cover(selectedImage.id, blob, selectedImage.filename || selectedImage.title || ("video-" + selectedImage.id));
+    })
+    .then(function (response) {
+      if ( !response || !response.success || !response.data ) {
+        return false;
+      }
+
+      if ( response.data.thumbnail_url ) {
+        item.find(".reacg_item_image").css("background-image", "url('" + response.data.thumbnail_url + "')");
+      }
+
+      return true;
+    })
+    .catch(function (error) {
+      console.warn('Video cover generation failed.', error);
+      return false;
+    });
+}
+
+function reacg_capture_video_frame(videoUrl) {
+  return new Promise(function (resolve, reject) {
+    const video = document.createElement('video');
+    let settled = false;
+
+    function cleanup() {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      video.remove();
+    }
+
+    function finish(callback, value) {
+      if ( settled ) {
+        return;
+      }
+      settled = true;
+      cleanup();
+      callback(value);
+    }
+
+    function drawFrame() {
+      if ( !video.videoWidth || !video.videoHeight ) {
+        finish(reject, new Error('Video frame is not available.'));
+        return;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if ( !context ) {
+        finish(reject, new Error('Canvas context is not available.'));
+        return;
+      }
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(function (blob) {
+        if ( !blob ) {
+          finish(reject, new Error('Failed to create image blob.'));
+          return;
+        }
+
+        finish(resolve, blob);
+      }, 'image/jpeg', 0.92);
+    }
+
+    video.preload = 'auto';
+    video.muted = true;
+    video.playsInline = true;
+    video.style.position = 'fixed';
+    video.style.left = '-9999px';
+    video.style.top = '-9999px';
+
+    video.addEventListener('error', function () {
+      finish(reject, new Error('Video element failed to load.'));
+    }, { once: true });
+
+    video.addEventListener('loadeddata', function () {
+      window.requestAnimationFrame(drawFrame);
+    }, { once: true });
+
+    document.body.appendChild(video);
+    video.src = videoUrl;
+    video.load();
+  });
+}
+
+function reacg_upload_video_cover(videoId, blob, filename) {
+  const formData = new FormData();
+  const safeName = String(filename || ("video-" + videoId)).replace(/\.[^.]+$/, '') + '-cover.jpg';
+  formData.append('action', 'reacg_auto_upload_video_cover');
+  formData.append('video_id', videoId);
+  formData.append('filename', safeName);
+  formData.append('cover', blob, safeName);
+
+  return jQuery.ajax({
+    type: 'POST',
+    url: reacg.ajax_url,
+    data: formData,
+    processData: false,
+    contentType: false,
+  });
 }
 
 /**
