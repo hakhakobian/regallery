@@ -8,7 +8,7 @@ class REACG_Options {
     'templateType' => "", #string
     'css' => '', #string
     'custom_css' => '', #string
-    'type' => 'mosaic', #string thumbnails | mosaic | justified | masonry | slideshow | cube | carousel | coverflow | cards | blog
+    'type' => 'mosaic', #string thumbnails | mosaic | justified | masonry | slideshow | cube | carousel | coverflow | cards | blog | scroller
     'thumbnails' => [
       'fillContainer' => FALSE, #boolean
       'aspectRatio' => '1.77', #string
@@ -455,6 +455,51 @@ class REACG_Options {
       'buttonBorderColor' => '#afafaf80', #string
       'buttonBorderRadius' => 4, #number
     ],
+    'scroller' => [
+      'height' => 200, #number
+      'imagesCount' => 3, #number
+      'scrollDirection' => 'left', #string left | right
+      'backgroundColor' => '', #string
+      'containerPadding' => 0, #number
+      'padding' => 0, #number
+      'paddingColor' => '', #string
+      'borderRadius' => 0, #number
+      'gap' => 20, #number
+      'equalHeight' => TRUE, #boolean
+      'pauseOnHover' => TRUE, #boolean
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'animationSpeed' => 40, #number
+      'showVideoCover' => FALSE, #boolean
+      'showTitle' => FALSE, #boolean
+      'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
+      'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'titlePosition' => 'bottom', #string bottom | top | center | above | below
+      'titleFontSize' => 20, #number
+      'titleColor' => '#DDDDDD', #string
+      'titleAlignment' => 'left', #string left | center | right
+      'titleFontFamily' => 'Inherit', #string
+      'overlayTextBackground' => '', #string
+      'invertTextColor' => FALSE, #boolean
+      'showCaption' => FALSE, #boolean
+      'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
+      'captionVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'captionPosition' => 'bottom', #string bottom | top | center | above | below
+      'captionFontSize' => 18, #number
+      'captionFontColor' => '#DDDDDD', #string
+      'showButton' => FALSE, #boolean
+      'buttonText' => 'View more', #string
+      'openInNewTab' => FALSE, #boolean
+      'buttonAlignment' => 'left', #string left | center | right
+      'buttonFontSize' => 20, #number
+      'buttonColor' => '#afafaf80', #string
+      'buttonTextColor' => '#000000de', #string
+      'buttonUrlSource' => 'action_url', #string action_url | item_url | checkout_url
+      'buttonVisibility' => 'alwaysShown', #string alwaysShown | onHover
+      'buttonPosition' => 'bottom', #string bottom | top | center | above | below
+      'buttonBorderSize' => 0, #number
+      'buttonBorderColor' => '#afafaf80', #string
+      'buttonBorderRadius' => 4, #number
+    ],
     'blog' => [
       'imageWidth' => 50, #number
       'imageWidthType' => '%', #string % | px | vw | rem | em
@@ -613,8 +658,8 @@ class REACG_Options {
       'arrowsSize',
       'dotsSize',
       'dotsGap',
-      'animationSpeed',
       'rotate',
+      'scrollSpeed',
     ];
     $empty_number = [
       'template_id',
@@ -637,6 +682,7 @@ class REACG_Options {
       'watermarkSize',
       'buttonBorderSize',
       'buttonBorderRadius',
+      'animationSpeed',
     ];
     $negative_number = [
       'spaceBetween',
@@ -672,6 +718,8 @@ class REACG_Options {
       'showAllItems',
       'enableScrollByImagesCount',
       'showVideoCover',
+      'equalHeight',
+      'pauseOnHover',
     ];
     $float = [
       'scale',
@@ -687,7 +735,7 @@ class REACG_Options {
     ];
     $specific = [
       'type' => [
-        'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'coverflow', 'cards', 'blog' ],
+        'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'coverflow', 'cards', 'blog', 'scroller' ],
         'default' => 'thumbnails',
       ],
       'direction' => [
@@ -813,6 +861,10 @@ class REACG_Options {
       'dotsPosition' => [
         'allowed' => [ 'outside', 'inside' ],
         'default' => 'outside',
+      ],
+      'scrollDirection' => [
+        'allowed' => [ 'left', 'right' ],
+        'default' => 'left',
       ],
     ];
     if ( in_array($key, $float) ) {
