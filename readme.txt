@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, lightbox, masonry
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.19.1
+Stable tag: 1.19.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -248,10 +248,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.19.1: Added tab-based settings navigation for faster access to Gallery, Content, Appearance, Lightbox, Navigation, and Protection options. Enjoy free functionality and add your suggestions via WP forum.
+* 1.19.2: Added automatic cover generation for uploaded videos. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.19.2 =
+= Updated: 29.04.2026 =
+* **Added:** Automatic cover generation for uploaded videos when inserting them into the gallery.
+* **Fixed:** Gallery update issue.
+
 = 1.19.1 =
 = Updated: 27.04.2026 =
 * **Added:** New tab-based settings navigation for faster access to Gallery, Content, Appearance, Lightbox, Navigation, and Protection options.
