@@ -456,8 +456,10 @@ class REACG_Options {
       'buttonBorderRadius' => 4, #number
     ],
     'scroller' => [
-      'height' => 200, #number
-      'imagesCount' => 3, #number
+      'width' => 400, #number
+      'height' => 300, #number
+      'equalWidth' => FALSE, #boolean
+      'equalHeight' => FALSE, #boolean
       'scrollDirection' => 'left', #string left | right
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
@@ -465,11 +467,10 @@ class REACG_Options {
       'paddingColor' => '', #string
       'borderRadius' => 0, #number
       'gap' => 20, #number
-      'equalHeight' => TRUE, #boolean
       'pauseOnHover' => TRUE, #boolean
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-out', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'animationSpeed' => 40, #number
-      'showVideoCover' => FALSE, #boolean
+      'showVideoCover' => TRUE, #boolean
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -719,6 +720,7 @@ class REACG_Options {
       'enableScrollByImagesCount',
       'showVideoCover',
       'equalHeight',
+      'equalWidth',
       'pauseOnHover',
     ];
     $float = [
