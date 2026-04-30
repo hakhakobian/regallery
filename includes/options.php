@@ -460,6 +460,7 @@ class REACG_Options {
       'height' => 300, #number
       'equalWidth' => FALSE, #boolean
       'equalHeight' => FALSE, #boolean
+      'rowCount' => 1, #number
       'scrollDirection' => 'left', #string left | right
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
@@ -661,6 +662,7 @@ class REACG_Options {
       'dotsGap',
       'rotate',
       'scrollSpeed',
+      'rowCount',
     ];
     $empty_number = [
       'template_id',
