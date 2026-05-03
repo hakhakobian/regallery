@@ -320,6 +320,12 @@ final class REACG {
         'discount_url' => add_query_arg( ['utm_campaign' => 'upgrade_with_discount'], REACG_WEBSITE_URL_UTM . '#pricing' ),
       ],
       'demo_url' => add_query_arg( ['utm_campaign' => 'view_demo'], REACG_DEMO_URL_UTM ),
+      'layout_urls' => [
+        'coverflow' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/depthflow/'),
+        'justified' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/smart-rows/'),
+        'cards' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/spotlight-ad/'),
+        'scroller' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/active-drift/'),
+      ],
       'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'text' => [
