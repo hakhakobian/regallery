@@ -1,11 +1,11 @@
 === Re Gallery - Responsive Image & Photo Gallery ===
 Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
-Tags: gallery, photo gallery, image gallery, lightbox, masonry
+Tags: gallery, photo gallery, image gallery, mosaic gallery, ai gallery
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.19.2
+Stable tag: 1.20.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,17 +162,18 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 8. Gallery Cards view
 9. Gallery Blog view
 10. Gallery Coverflow view
-11. Image Gallery Lightbox
-12. Gallery Chaos template
-13. Gallery Products template
-14. Gallery Modern template
-15. Gallery Prism Pattern template
-16. Gallery Dynamic template
-17. Gallery Grid template
-18. Gallery Border Hover template
-19. Add Image to the Gallery
-20. Gallery Options with Live Preview
-21. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
+11. Gallery Scroller view
+12. Image Gallery Lightbox
+13. Gallery Chaos template
+14. Gallery Products template
+15. Gallery Modern template
+16. Gallery Prism Pattern template
+17. Gallery Dynamic template
+18. Gallery Grid template
+19. Gallery Border Hover template
+20. Add Image to the Gallery
+21. Gallery Options with Live Preview
+22. Insert gallery with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery Page Builder
 
 
 == Frequently Asked Questions ==
@@ -214,6 +215,7 @@ Re Gallery supports multiple gallery layouts including։
 * **Cards view:** Each item is placed in a distinct card, making it easy for users to scan through various media at a glance.
 * **Blog view:** Display your images in a vertically stacked layout similar to blog posts, often including captions or descriptions.
 * **Coverflow view:** Showcase your images in an interactive, horizontal flow with a centered focus image and angled side previews, creating a sleek 3D browsing experience.
+* **Scroller view:** Display your content in a smooth, continuous multi-row scrolling showcase that highlights more items at once, creating a dynamic and engaging browsing experience.
 
 All views are fully responsive and mobile-optimized. Besides these layouts, Re Gallery offers features like Live Demo, AI-generated image captions, WooCommerce photo gallery integration, pre-designed gallery templates, and customizable gallery styles to help you create professional and engaging photo galleries in WordPress.
 
@@ -248,10 +250,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.19.2: Added automatic cover generation for uploaded videos. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.0: Added Scroller layout. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.0 =
+= Updated: 04.05.2026 =
+* **Added:** Scroller layout.
+* **Added:** Active Drift pre-built template.
+* **Added:** Twin Flow pre-built template.
+* **Fixed:** Templates issue in Gutenberg.
+
 = 1.19.2 =
 = Updated: 29.04.2026 =
 * **Added:** Automatic cover generation for uploaded videos when inserting them into the gallery.
