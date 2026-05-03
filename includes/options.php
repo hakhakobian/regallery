@@ -469,7 +469,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'gap' => 20, #number
       'pauseOnHover' => TRUE, #boolean
-      'hoverEffect' => 'zoom-out', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
       'animationSpeed' => 40, #number
       'showVideoCover' => TRUE, #boolean
       'showTitle' => FALSE, #boolean
