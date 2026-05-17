@@ -265,6 +265,7 @@ function reacg_isPro(isPro) {
   if (isPro) {
     jQuery("#reacg-metabox-widget-why-upgrade").remove();
     jQuery("#gallery-custom-css").find(".postbox-header h2 svg").remove();
+    window.dispatchEvent(new Event('reacg:pro-activated'));
   }
   jQuery(".reacg-pro-not-active").toggle(!isPro);
   jQuery(".reacg-pro-active").toggle(isPro);

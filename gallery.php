@@ -33,6 +33,7 @@ final class REACG {
   public $demo_url = 'https://regallery.team/core/demo/';
   public $blog_url = 'https://regallery.team/core/blog/';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
+  public $activate_trial_url = "https://regallery.team/core/wp-json/reacgcore/v2/trial/activate";
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
@@ -96,6 +97,8 @@ final class REACG {
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-topic-0' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
     define('REACG_PLAYGROUND', strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE );
+    define('REACG_FREE_TRIAL_DAYS', 7);
+    define('REACG_ACTIVATE_TRIAL_URL', $this->activate_trial_url);
   }
 
   /**
@@ -328,6 +331,8 @@ final class REACG {
       ],
       'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
+      'trial_days' => REACG_FREE_TRIAL_DAYS,
+      'activate_trial_url' => REACG_ACTIVATE_TRIAL_URL,
       'text' => [
         'load_more' => __('Load more', 'regallery'),
         'view_more' => __('View more', 'regallery'),
