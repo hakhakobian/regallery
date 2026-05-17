@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, mosaic gallery, ai gallery
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.0
+Stable tag: 1.20.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.0: Added Scroller layout. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.1: Added Free trial activation support for PRO features. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.1 =
+= Updated: 18.05.2026 =
+* **Added:** Free trial activation support for PRO features.
+* **Fixed:** Content items visibility inconstancy.
+
 = 1.20.0 =
 = Updated: 04.05.2026 =
 * **Added:** Scroller layout.
