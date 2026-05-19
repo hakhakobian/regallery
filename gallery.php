@@ -212,10 +212,26 @@ final class REACG {
   }
 
   public function initialize_divi_extension() {
-    if ( ! class_exists( 'ET_Builder_Element' ) ) {
-      return;
+    // Check for Divi 5 support first
+    if ( class_exists( 'ET_Core_PortablePlugin' ) && defined( 'ET_CORE_VERSION' ) ) {
+      $divi_version = (int) explode('.', ET_CORE_VERSION)[0];
+      
+      // Load appropriate extension based on Divi version
+      if ( $divi_version >= 5 ) {
+        require_once ($this->plugin_dir . '/builders/divi/includes/divi-5.php');
+      } else {
+        // Divi 4 support
+        if ( class_exists( 'ET_Builder_Element' ) ) {
+          require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
+        }
+      }
+    } elseif ( class_exists( 'ET_Builder_Element' ) ) {
+      // Fallback for older Divi versions without ET_CORE_VERSION
+      require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
     }
-    require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
+    
+    // Load the module (handles version detection)
+    require_once ($this->plugin_dir . '/builders/divi/includes/loader.php');
   }
 
   public function register_wpbakery_widget() {
