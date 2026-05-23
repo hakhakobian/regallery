@@ -394,7 +394,7 @@ final class REACG {
       'ai_generate_content' => __('AI Generate Content', 'regallery'),
       'processing' => __('Processing', 'regallery'),
       'content_generated_successfully' => __('Content generated successfully.', 'regallery'),
-      'no_fields_to_generate' => __('No fields to generate.', 'regallery'),
+      'no_fields_to_generate' => __('Nothing to generate for the items. All selected fields already contain content.', 'regallery'),
       'content_generated_based_on_image' => __('The content will be generated based on the image and will be automatically saved.', 'regallery'),
       'save_failed' => __('Unable to save image data.', 'regallery'),
       'ai_popup_additional_notes_label' => __('Additional Notes', 'regallery'),

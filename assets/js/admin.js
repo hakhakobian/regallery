@@ -917,39 +917,61 @@ function reacg_open_ai_generate_content_modal(images, options) {
     const responses = [];
     const errors = [];
     const notifyProgress = typeof onProgress === 'function' ? onProgress : function () {};
-    const hasUpgradeLinkInPayload = function (payload) {
+
+    const readPayloadCode = function (payload) {
       const source = payload || {};
-      let message = '';
 
       if ( source.responseJSON ) {
-        if ( source.responseJSON.data && source.responseJSON.data.message ) {
-          message = source.responseJSON.data.message;
+        if ( source.responseJSON.code ) {
+          return String(source.responseJSON.code);
         }
-        else if ( source.responseJSON.errors && source.responseJSON.errors.message ) {
-          message = source.responseJSON.errors.message;
+        if ( source.responseJSON.data && source.responseJSON.data.code ) {
+          return String(source.responseJSON.data.code);
         }
-        else if ( source.responseJSON.message ) {
-          message = source.responseJSON.message;
+        if ( source.responseJSON.error_data && typeof source.responseJSON.error_data === 'object' ) {
+          const errorDataKeys = Object.keys(source.responseJSON.error_data);
+          if ( errorDataKeys.length ) {
+            return String(errorDataKeys[0]);
+          }
+        }
+        if ( source.responseJSON.errors && typeof source.responseJSON.errors === 'object' ) {
+          const errorKeys = Object.keys(source.responseJSON.errors);
+          if ( errorKeys.length ) {
+            return String(errorKeys[0]);
+          }
         }
       }
 
-      if ( !message && source.responseText && typeof source.responseText === 'string' ) {
+      if ( source.responseText && typeof source.responseText === 'string' ) {
         try {
           const parsed = JSON.parse(source.responseText);
-          if ( parsed && parsed.data && parsed.data.message ) {
-            message = parsed.data.message;
+          if ( parsed && parsed.code ) {
+            return String(parsed.code);
           }
-          else if ( parsed && parsed.errors && parsed.errors.message ) {
-            message = parsed.errors.message;
+          if ( parsed && parsed.data && parsed.data.code ) {
+            return String(parsed.data.code);
           }
-          else if ( parsed && parsed.message ) {
-            message = parsed.message;
+          if ( parsed && parsed.error_data && typeof parsed.error_data === 'object' ) {
+            const errorDataKeys = Object.keys(parsed.error_data);
+            if ( errorDataKeys.length ) {
+              return String(errorDataKeys[0]);
+            }
+          }
+          if ( parsed && parsed.errors && typeof parsed.errors === 'object' ) {
+            const errorKeys = Object.keys(parsed.errors);
+            if ( errorKeys.length ) {
+              return String(errorKeys[0]);
+            }
           }
         }
         catch (ignored) {}
       }
 
-      return String(message || '').indexOf('reacg-upgrade-link') !== -1;
+      return '';
+    };
+
+    const isNothingToGeneratePayload = function (payload) {
+      return readPayloadCode(payload) === 'nothing_to_generate';
     };
 
     if ( !imageEntries.length ) {
@@ -1085,10 +1107,17 @@ function reacg_open_ai_generate_content_modal(images, options) {
           return;
         }
 
-        const closeOnStatus200 = responses.length > 0 && responses.every(function (entry) {
+        const successCount = responses.filter(function (entry) {
           return parseInt(entry.statusCode, 10) === 200;
+        }).length;
+        const closeOnStatus200 = successCount > 0;
+        deferred.resolve({
+          responses: responses,
+          errors: [],
+          images: imagesData,
+          closeOnStatus200: closeOnStatus200,
+          successCount: successCount,
         });
-        deferred.resolve({ responses: responses, errors: [], images: imagesData, closeOnStatus200: closeOnStatus200 });
         return;
       }
 
@@ -1105,7 +1134,7 @@ function reacg_open_ai_generate_content_modal(images, options) {
         contentType: 'application/json',
         data: {
           image_id: imageId,
-          url: singleImageData.url || '',
+          image_url: singleImageData.url || '',
           title: singleImageData.title || '',
           alt: singleImageData.alt || '',
           caption: singleImageData.caption || '',
@@ -1144,6 +1173,19 @@ function reacg_open_ai_generate_content_modal(images, options) {
             runChunk(index + 1);
           });
       }).fail(function (xhr) {
+        if ( isNothingToGeneratePayload(xhr) ) {
+          responses.push({
+            index: index,
+            imageId: imageId,
+            statusCode: xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 400,
+            response: xhr,
+            skipped: true,
+            image: singleImageData,
+          });
+          runChunk(index + 1);
+          return;
+        }
+
         errors.push({ index: index, imageId: imageId, stage: 'generate', xhr: xhr });
         deferred.reject({ responses: responses, errors: errors, images: imagesData });
       });
@@ -1309,7 +1351,7 @@ function reacg_open_ai_generate_content_modal(images, options) {
     };
 
     const readErrorMessageFromResponse = function (payload, fallbackMessage) {
-      const fallback = fallbackMessage || errorText + "zz";
+      const fallback = fallbackMessage || errorText;
       const source = payload || {};
 
       if ( source.responseJSON ) {
@@ -1393,13 +1435,13 @@ function reacg_open_ai_generate_content_modal(images, options) {
         const firstResponse = resultData && resultData.responses && resultData.responses.length
           ? resultData.responses[0].response
           : null;
-        const responseErrorMessage = readErrorMessageFromResponse(firstResponse, errorText + "aa");
+        const responseErrorMessage = readErrorMessageFromResponse(firstResponse, errorText);
         setStatus('error', responseErrorMessage);
       });
       result.fail(function (errorData) {
         const firstError = errorData && errorData.errors && errorData.errors.length ? errorData.errors[0] : null;
         const xhr = firstError && firstError.xhr ? firstError.xhr : null;
-        let message = readErrorMessageFromResponse(xhr || firstError, errorText + "bb");
+        let message = readErrorMessageFromResponse(xhr || firstError, errorText);
 
         const successCount = errorData && errorData.responses && errorData.responses.length
           ? errorData.responses.length
