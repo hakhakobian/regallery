@@ -219,7 +219,7 @@ function reacg_isPro(isPro) {
     let text = jQuery(this).val();
     if ( !isPro && text.length > 100) {
       jQuery(this).val(text.substring(0, 100));
-      reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
+      reacg_open_free_trial_offer_dialog({utm_medium: 'custom_css'});
     }
   });
   localStorage.setItem("reacg-pro", isPro);
@@ -784,7 +784,7 @@ function reacg_attachment_edit_modal(attachment) {
                   (filename ? '<p><strong>' + reacg_escape_html(reacg.attachment_filename) + ':</strong> ' + reacg_escape_html(filename) + '</p>' : '') +
                   (dimensions ? '<p><strong>' + reacg_escape_html(reacg.attachment_dimensions) + ':</strong> ' + reacg_escape_html(dimensions) + 'px</p>' : '') +
                   (fileSize ? '<p><strong>' + reacg_escape_html(reacg.attachment_file_size) + ':</strong> ' + reacg_escape_html(fileSize) + '</p>' : '') +
-                  '<p class="reacg-attachment-modal__edit-link"><a href="' + reacg_escape_html(editLink) + '" target="_blank" rel="noopener noreferrer">' + reacg.edit_image_page + '</a></p>' +
+                  '<p class="reacg-attachment-modal__edit-link"><a href="' + reacg_escape_html(editLink) + '" target="_blank" rel="noopener noreferrer">' + reacg.edit + '</a></p>' +
                 '</div>' +
               '</div>' +
               '<div class="reacg-modal__layout-content">' +
@@ -898,6 +898,531 @@ function reacg_ai_button() {
   return jQuery('<button class="reacg-ai-button" title="' + reacg.generate + '">' + reacg_ai_icon() + '</button>');
 }
 
+function reacg_open_ai_generate_content_modal(images, options) {
+  const imagesData = images && typeof images === 'object' ? images : {};
+  const chunkObject = function (source, size) {
+    const entries = Object.entries(source || {});
+    const chunks = [];
+
+    for ( let i = 0; i < entries.length; i += size ) {
+      chunks.push(Object.fromEntries(entries.slice(i, i + size)));
+    }
+
+    return chunks;
+  };
+
+  const runBulkGenerateInChunks = function (state, chunkSize, onProgress) {
+    const imageEntries = Object.entries(imagesData);
+    const deferred = jQuery.Deferred();
+    const responses = [];
+    const errors = [];
+    const notifyProgress = typeof onProgress === 'function' ? onProgress : function () {};
+    const hasUpgradeLinkInPayload = function (payload) {
+      const source = payload || {};
+      let message = '';
+
+      if ( source.responseJSON ) {
+        if ( source.responseJSON.data && source.responseJSON.data.message ) {
+          message = source.responseJSON.data.message;
+        }
+        else if ( source.responseJSON.errors && source.responseJSON.errors.message ) {
+          message = source.responseJSON.errors.message;
+        }
+        else if ( source.responseJSON.message ) {
+          message = source.responseJSON.message;
+        }
+      }
+
+      if ( !message && source.responseText && typeof source.responseText === 'string' ) {
+        try {
+          const parsed = JSON.parse(source.responseText);
+          if ( parsed && parsed.data && parsed.data.message ) {
+            message = parsed.data.message;
+          }
+          else if ( parsed && parsed.errors && parsed.errors.message ) {
+            message = parsed.errors.message;
+          }
+          else if ( parsed && parsed.message ) {
+            message = parsed.message;
+          }
+        }
+        catch (ignored) {}
+      }
+
+      return String(message || '').indexOf('reacg-upgrade-link') !== -1;
+    };
+
+    if ( !imageEntries.length ) {
+      notifyProgress(0, 0);
+      deferred.resolve({ responses: [], errors: [], images: imagesData, closeOnStatus200: false });
+      return deferred.promise();
+    }
+
+    notifyProgress(0, imageEntries.length);
+
+    const normalizeGeneratedResponse = function (response) {
+      let responseObject = response;
+      if ( typeof responseObject === 'string' ) {
+        try {
+          responseObject = JSON.parse(responseObject);
+        }
+        catch (e) {
+          responseObject = {};
+        }
+      }
+
+      if ( responseObject && responseObject.responseJSON ) {
+        responseObject = responseObject.responseJSON;
+      }
+
+      const source = responseObject && typeof responseObject === 'object'
+        ? (responseObject.data && typeof responseObject.data === 'object' ? responseObject.data : responseObject)
+        : {};
+
+      const normalized = {};
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( Object.prototype.hasOwnProperty.call(source, fieldName) ) {
+          normalized[fieldName] = source[fieldName] == null ? '' : String(source[fieldName]);
+        }
+      });
+
+      return normalized;
+    };
+
+    const applyGeneratedDataToImage = function (imageId, imageData, generatedFields) {
+      const baseImage = imageData && typeof imageData === 'object' ? imageData : {};
+      const nextImage = jQuery.extend({}, baseImage);
+      let changed = false;
+
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+          return;
+        }
+
+        nextImage[fieldName] = generatedFields[fieldName];
+        changed = true;
+      });
+
+      if ( changed ) {
+        imagesData[imageId] = nextImage;
+      }
+
+      return nextImage;
+    };
+
+    const saveGeneratedDataToAttachment = function (imageId, previousImageData, generatedFields) {
+      const deferredSave = jQuery.Deferred();
+      const normalizedImageId = parseInt(imageId, 10);
+      const saveData = {};
+      const normalizeValue = function (value) {
+        return value == null ? '' : String(value);
+      };
+
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+          return;
+        }
+
+        const previousValue = normalizeValue(previousImageData && previousImageData[fieldName]);
+        const nextValue = normalizeValue(generatedFields[fieldName]);
+        if ( previousValue !== nextValue ) {
+          saveData[fieldName] = nextValue;
+        }
+      });
+
+      if ( !Object.keys(saveData).length ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      if ( !normalizedImageId ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      if ( !wp || !wp.media || typeof wp.media.attachment !== 'function' ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      const attachment = wp.media.attachment(normalizedImageId);
+      if ( !attachment || typeof attachment.save !== 'function' ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      const persist = function () {
+        attachment.save(saveData)
+          .done(function (response) {
+            deferredSave.resolve(response);
+          })
+          .fail(function (xhr) {
+            deferredSave.reject(xhr);
+          });
+      };
+
+      if ( typeof attachment.fetch === 'function' ) {
+        attachment.fetch()
+          .done(function () {
+            persist();
+          })
+          .fail(function (xhr) {
+            deferredSave.reject(xhr);
+          });
+      }
+      else {
+        persist();
+      }
+
+      return deferredSave.promise();
+    };
+
+    const runChunk = function (index) {
+      if ( index >= imageEntries.length ) {
+        notifyProgress(imageEntries.length, imageEntries.length);
+        if ( errors.length ) {
+          deferred.reject({ responses: responses, errors: errors, images: imagesData });
+          return;
+        }
+
+        const closeOnStatus200 = responses.length > 0 && responses.every(function (entry) {
+          return parseInt(entry.statusCode, 10) === 200;
+        });
+        deferred.resolve({ responses: responses, errors: [], images: imagesData, closeOnStatus200: closeOnStatus200 });
+        return;
+      }
+
+      const imageEntry = imageEntries[index];
+      const imageId = imageEntry[0];
+      const imageData = imageEntry[1];
+      const singleImageData = imageData && typeof imageData === 'object' ? imageData : {};
+
+      notifyProgress(index + 1, imageEntries.length);
+
+      jQuery.ajax({
+        type: 'GET',
+        url: 'https://regallery.team/core/wp-json/reacgcore/v2/ai',
+        contentType: 'application/json',
+        data: {
+          image_id: imageId,
+          url: singleImageData.url || '',
+          title: singleImageData.title || '',
+          alt: singleImageData.alt || '',
+          caption: singleImageData.caption || '',
+          description: singleImageData.description || '',
+          fields: JSON.stringify(state.fields),
+          overwrite_mode: state.overwriteMode,
+          action: 'get_content',
+        },
+      }).done(function (response, textStatus, xhr) {
+        const statusCode = xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 0;
+        const previousImageData = jQuery.extend({}, singleImageData);
+        const generatedFields = normalizeGeneratedResponse(response);
+        const updatedImageData = applyGeneratedDataToImage(imageId, singleImageData, generatedFields);
+
+        saveGeneratedDataToAttachment(imageId, previousImageData, generatedFields)
+          .done(function (saveResponse) {
+            responses.push({
+              index: index,
+              imageId: imageId,
+              statusCode: statusCode,
+              response: response,
+              saveResponse: saveResponse,
+              generated: generatedFields,
+              image: updatedImageData,
+            });
+          })
+          .fail(function (xhr) {
+            errors.push({ index: index, imageId: imageId, stage: 'save', xhr: xhr });
+          })
+          .always(function () {
+            if ( errors.length ) {
+              deferred.reject({ responses: responses, errors: errors, images: imagesData });
+              return;
+            }
+
+            runChunk(index + 1);
+          });
+      }).fail(function (xhr) {
+        errors.push({ index: index, imageId: imageId, stage: 'generate', xhr: xhr });
+        deferred.reject({ responses: responses, errors: errors, images: imagesData });
+      });
+    };
+
+    runChunk(0);
+
+    return deferred.promise();
+  };
+
+  const settings = jQuery.extend(true, {
+    chunkSize: 5,
+    fields: {
+      title: true,
+      alt: false,
+      caption: false,
+      description: false,
+    },
+    overwriteMode: 'empty',
+    onGenerate: null,
+  }, options || {});
+
+  const checkedAttr = function (value) {
+    return value ? ' checked="checked"' : '';
+  };
+  const selectedOverwrite = settings.overwriteMode === 'replace' ? 'replace' : 'empty';
+
+  const modal = jQuery('' +
+    '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
+      '<div class="reacg-modal-wrapper">' +
+        '<div class="reacg-modal-content">' +
+          '<div class="reacg-modal__header">' +
+            '<h1>' + reacg_escape_html(reacg.ai_generate_content) + '</h1>' +
+            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+          '</div>' +
+          '<div class="reacg-modal__body">' +
+            '<div class="reacg-modal__layout-content">' +
+              '<div><p class="reacg-modal-note">' + reacg_info_icon() + reacg_escape_html(reacg.content_generated_based_on_image) + '</p></div>' +
+              '<h3>' + reacg_escape_html(reacg.choose_what_to_generate) + '</h3>' +
+              '<div class="reacg-ai-generate-modal__fields">' +
+                '<label><input type="checkbox" name="title" value="1"' + checkedAttr(settings.fields.title) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_title) + '</span></label>' +
+                '<label><input type="checkbox" name="caption" value="1"' + checkedAttr(settings.fields.caption) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_caption) + '</span></label>' +
+                '<label><input type="checkbox" name="alt" value="1"' + checkedAttr(settings.fields.alt) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_alt_text) + '</span></label>' +
+                '<label><input type="checkbox" name="description" value="1"' + checkedAttr(settings.fields.description) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_description) + '</span></label>' +
+              '</div>' +
+              '<h3>' + reacg_escape_html(reacg.overwrite_existing) + '</h3>' +
+              '<div class="reacg-ai-generate-modal__overwrite">' +
+                '<label><input type="radio" name="reacg-overwrite" value="empty"' + checkedAttr(selectedOverwrite === 'empty') + ' /><span>' + reacg_escape_html(reacg.only_empty_fields) + '</span></label>' +
+                '<label><input type="radio" name="reacg-overwrite" value="replace"' + checkedAttr(selectedOverwrite === 'replace') + ' /><span>' + reacg_escape_html(reacg.replace_existing) + '</span></label>' +
+              '</div>' +
+              '<p class="reacg-ai-generate-modal__notice hidden"></p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="reacg-modal__footer">' +
+            '<div class="reacg-modal-buttons-wrapper">' +
+              '<span class="reacg-ai-generate-modal__progress hidden"></span>' +
+              '<span class="spinner"></span>' +
+              '<button class="button button-primary button-large reacg-modal-button-generate">' + reacg_ai_icon() + reacg_escape_html(reacg.generate) + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>');
+
+  const getState = function () {
+    return {
+      fields: {
+        title: modal.find('input[name="title"]').is(':checked'),
+        alt: modal.find('input[name="alt"]').is(':checked'),
+        caption: modal.find('input[name="caption"]').is(':checked'),
+        description: modal.find('input[name="description"]').is(':checked'),
+      },
+      overwriteMode: modal.find('input[name="reacg-overwrite"]:checked').val() || 'empty',
+    };
+  };
+
+  const closeModal = function () {
+    modal.remove();
+  };
+
+  jQuery('body').append(modal);
+  modal.css('display', 'flex').show();
+
+  modal.find('.reacg-modal-close').on('click', closeModal);
+  modal.on('click', function (e) {
+    if ( e.target === this ) {
+      closeModal();
+    }
+  });
+  modal.find('.reacg-modal-wrapper').on('click', function (e) {
+    e.stopPropagation();
+  });
+
+  modal.find('.reacg-modal-button-generate').on('click', function (e) {
+    e.preventDefault();
+    const button = jQuery(this);
+    const spinner = modal.find('.reacg-modal__footer .spinner');
+    const progressNote = modal.find('.reacg-ai-generate-modal__progress');
+    const statusNote = modal.find('.reacg-ai-generate-modal__notice');
+    const state = getState();
+    const errorText = reacg_escape_html(reacg.no_fields_to_generate);
+    let shouldCloseAfterSuccess = false;
+
+    const updateProgress = function (current, total) {
+      if ( !total ) {
+        progressNote.addClass('hidden').text('');
+        return;
+      }
+
+      progressNote.text(reacg.processing + ' ' + current + '/' + total).removeClass('hidden');
+    };
+
+    const setStatus = function (type, message) {
+      const statusMessage = message == null ? '' : String(message);
+      const upgradeLinkMarkup = 'reacg-upgrade-link';
+      const hasUpgradeLink = statusMessage.indexOf(upgradeLinkMarkup) !== -1;
+
+      statusNote
+        .removeClass('hidden reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error reacg-ai-generate-modal__notice--animate')
+        .addClass(type === 'success' ? 'reacg-ai-generate-modal__notice--success' : 'reacg-ai-generate-modal__notice--error');
+
+      if ( hasUpgradeLink ) {
+        statusNote.html(statusMessage);
+        statusNote.find('.reacg-upgrade-link').off('click').on('click', function (event) {
+          event.preventDefault();
+          reacg_open_free_trial_offer_dialog({utm_medium: 'ai'});
+        });
+      }
+      else {
+        statusNote.text(statusMessage);
+      }
+
+      if ( statusNote.length ) {
+        const statusNode = statusNote.get(0);
+        /* Force reflow, then add class on next frame to ensure animation visibly plays. */
+        void statusNode.offsetWidth;
+        window.requestAnimationFrame(function () {
+          statusNote.addClass('reacg-ai-generate-modal__notice--animate');
+        });
+      }
+
+      const wrapper = modal.find('.reacg-modal-wrapper').first();
+      if ( wrapper.length && statusNote.length ) {
+        const wrapperNode = wrapper.get(0);
+        const statusNode = statusNote.get(0);
+        const wrapperTop = wrapper.offset().top;
+        const statusTop = statusNote.offset().top;
+        const targetScrollTop = wrapper.scrollTop() + (statusTop - wrapperTop) - 24;
+
+        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+          wrapperNode.scrollTo({
+            top: Math.max(0, targetScrollTop),
+            behavior: 'smooth',
+          });
+        }
+        else {
+          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
+        }
+      }
+      else if ( statusNote.length && statusNote.get(0) && typeof statusNote.get(0).scrollIntoView === 'function' ) {
+        statusNote.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    const readErrorMessageFromResponse = function (payload, fallbackMessage) {
+      const fallback = fallbackMessage || errorText + "zz";
+      const source = payload || {};
+
+      if ( source.responseJSON ) {
+        if ( source.responseJSON.data && source.responseJSON.data.message ) {
+          return source.responseJSON.data.message;
+        }
+        if ( source.responseJSON.errors && source.responseJSON.errors.message ) {
+          return source.responseJSON.errors.message;
+        }
+        if ( source.responseJSON.message ) {
+          return source.responseJSON.message;
+        }
+      }
+
+      if ( source.data && source.data.message ) {
+        return source.data.message;
+      }
+      if ( source.errors && source.errors.message ) {
+        return source.errors.message;
+      }
+      if ( source.message ) {
+        return source.message;
+      }
+
+      if ( source.responseText && typeof source.responseText === 'string' ) {
+        try {
+          const parsed = JSON.parse(source.responseText);
+          if ( parsed && parsed.data && parsed.data.message ) {
+            return parsed.data.message;
+          }
+          if ( parsed && parsed.errors && parsed.errors.message ) {
+            return parsed.errors.message;
+          }
+          if ( parsed && parsed.message ) {
+            return parsed.message;
+          }
+        }
+        catch (ignored) {}
+      }
+
+      return fallback;
+    };
+
+    statusNote
+      .addClass('hidden')
+      .removeClass('reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error')
+      .text('');
+
+    const defaultGenerateHandler = function (currentState) {
+      const parsedChunkSize = parseInt(settings.chunkSize, 10);
+      const chunkSize = parsedChunkSize > 0 ? parsedChunkSize : 5;
+      return runBulkGenerateInChunks(currentState, chunkSize, updateProgress);
+    };
+
+    let result = typeof settings.onGenerate === 'function'
+      ? settings.onGenerate(state, modal)
+      : defaultGenerateHandler(state);
+
+    if ( result === false ) {
+      return;
+    }
+
+    if ( !result || typeof result.then !== 'function' ) {
+      result = defaultGenerateHandler(state);
+    }
+
+    if ( result && typeof result.then === 'function' ) {
+      button.attr('disabled', true);
+      spinner.addClass('is-active');
+      result.done(function (resultData) {
+        const canClose = !!(resultData && resultData.closeOnStatus200);
+        if ( canClose ) {
+          shouldCloseAfterSuccess = true;
+          setStatus('success', reacg_escape_html(reacg.content_generated_successfully));
+          reacg_reload_preview();
+          window.setTimeout(function () {
+            closeModal();
+          }, 3000);
+          return;
+        }
+        const firstResponse = resultData && resultData.responses && resultData.responses.length
+          ? resultData.responses[0].response
+          : null;
+        const responseErrorMessage = readErrorMessageFromResponse(firstResponse, errorText + "aa");
+        setStatus('error', responseErrorMessage);
+      });
+      result.fail(function (errorData) {
+        const firstError = errorData && errorData.errors && errorData.errors.length ? errorData.errors[0] : null;
+        const xhr = firstError && firstError.xhr ? firstError.xhr : null;
+        let message = readErrorMessageFromResponse(xhr || firstError, errorText + "bb");
+
+        const successCount = errorData && errorData.responses && errorData.responses.length
+          ? errorData.responses.length
+          : 0;
+        const hasUpgradeLink = String(message || '').indexOf('reacg-upgrade-link') !== -1;
+        if ( hasUpgradeLink && successCount > 0 ) {
+          message = 'Generated content for ' + successCount + ' image' + (successCount === 1 ? '' : 's') + '. ' + message;
+        }
+
+        setStatus('error', message);
+      });
+      result.always(function () {
+        progressNote.addClass('hidden').text('');
+        spinner.removeClass('is-active');
+        button.removeAttr('disabled');
+      });
+      return;
+    }
+  });
+
+  return modal;
+}
+
 function reacg_modal(field) {
   return jQuery('' +
     '<div class="reacg-modal" style="display:none;">' +
@@ -980,10 +1505,7 @@ function reacg_add_ai_button(that, field) {
           "action": "check",
         },
         complete: function (response) {
-          if (response.status === 204) {
-            reacg_open_premium_offer_dialog({utm_medium: 'ai'});
-          }
-          else if (response.status === 200) {
+          if (response.status === 200) {
             /* Create modal if not exist and open.*/
             if (!jQuery("body").find(".reacg-modal:not(.reacg-attachment-modal)").length) {
               const modal = reacg_modal(field);
@@ -1024,16 +1546,24 @@ function reacg_add_ai_button(that, field) {
                     modalSpinnerCont.removeClass("is-active");
                     generatedText.removeAttr("disabled");
                     generateButton.removeAttr("disabled");
-                    if (response.status === 204) {
-                      reacg_open_premium_offer_dialog({utm_medium: 'ai_generate'});
-                    }
-                    else if (response.status === 200 && response.success && response.responseJSON) {
+                    if (response.status === 200 && response.success && response.responseJSON) {
                       generatedText.removeAttr("disabled").val(response.responseJSON);
                       proceedButton.removeAttr("disabled");
                       generateButton.html(reacg_ai_icon() + reacg.regenerate);
                     }
                     else {
-                      errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+                      const errorMessage = response && response.responseJSON && response.responseJSON.errors
+                        ? response.responseJSON.errors.message
+                        : '';
+                      const hasUpgradeLink = String(errorMessage || '').indexOf('reacg-upgrade-link') !== -1;
+
+                      errorNoteCont.removeClass("hidden").html(errorMessage || '');
+                      if ( hasUpgradeLink ) {
+                        errorNoteCont.find('.reacg-upgrade-link').off('click').on('click', function (event) {
+                          event.preventDefault();
+                          reacg_open_free_trial_offer_dialog({utm_medium: 'ai_generate'});
+                        });
+                      }
                     }
                   }
                 });

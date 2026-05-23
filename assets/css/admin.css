@@ -252,7 +252,7 @@ to avoid a bug connected with preview.
 .reacg-ai-button {
   background: #FFC54D;
   border: #FFC54D;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 4px 6px 1px;
   margin: 2px;
   cursor: pointer;
@@ -309,7 +309,8 @@ to avoid a bug connected with preview.
     justify-content: center;
     align-items: start;
 
-    h1 {
+    h1,
+    h3 {
       margin: 0;
     }
 
@@ -319,6 +320,12 @@ to avoid a bug connected with preview.
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 7px;
+    }
+    label span {
+      font-weight: normal;
+    }
+    input[type=radio] {
+      margin-top: 0;
     }
 
     p {
@@ -570,4 +577,67 @@ label[for=gallery-custom-css-hide] svg {
 
 #gallery-preview .reacg-gallery-wrapper {
   margin-top: 12px;
+}
+
+.reacg-modal.reacg-ai-generate-modal {
+  .reacg-ai-generate-modal__fields {
+    border-top: 1px solid #E2E4E7;
+    border-bottom: 1px solid #E2E4E7;
+    padding: 14px 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .reacg-ai-generate-modal__fields label {
+    display: grid;
+    grid-template-columns: 24px minmax(120px, 140px) 1fr;
+    gap: 10px;
+    align-items: center;
+    margin: 0;
+  }
+
+  .reacg-ai-generate-modal__fields input[type="checkbox"] {
+    margin: 0;
+  }
+
+  .reacg-ai-generate-modal__field-name {
+    font-weight: 600;
+  }
+
+  .reacg-ai-generate-modal__overwrite {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .reacg-ai-generate-modal__overwrite label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+
+  .reacg-ai-generate-modal__progress {
+    margin: 0 12px 0 auto;
+    font-size: 13px;
+    color: #50575E;
+    white-space: nowrap;
+    align-content: center;
+  }
+
+  .reacg-ai-generate-modal__notice--success {
+    color: #1d6f42;
+    background-color: #ebf9f0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .reacg-ai-generate-modal__notice--error {
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
 }
