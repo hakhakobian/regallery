@@ -278,7 +278,7 @@ to avoid a bug connected with preview.
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: none;
-  z-index: 1000;
+  z-index: 10000000;
   -webkit-box-pack: center;
   justify-content: center;
   -webkit-box-align: center;
@@ -286,13 +286,13 @@ to avoid a bug connected with preview.
 
   .reacg-modal-wrapper {
     background-color: #FFF;
-    border-radius: 24px;
+    border-radius: 6px;
     position: relative;
     max-height: calc(100% - 64px);
     width: 600px;
     overflow-y: auto;
   }
-
+  
   .reacg-modal-close {
     position: absolute;
     right: 0;
@@ -308,10 +308,9 @@ to avoid a bug connected with preview.
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    padding: 30px;
 
     h1 {
-      margin-top: 0;
+      margin: 0;
     }
 
     label {
@@ -334,7 +333,10 @@ to avoid a bug connected with preview.
 
     div {
       width: 100%;
-      margin-top: 20px;
+    }
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
     }
 
     .reacg-modal-buttons-wrapper {
@@ -363,6 +365,87 @@ to avoid a bug connected with preview.
 
     .reacg-modal-error-note {
       color: #B32D2E;
+    }
+  }
+  
+  .reacg-modal__header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #FFF;
+    padding: 24px 30px 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #E2E4E7;
+    box-sizing: border-box;
+  }
+
+  .reacg-modal__body {
+    padding: 24px 30px;
+    box-sizing: border-box;
+  }
+
+  .reacg-modal__layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 38%) minmax(420px, 62%);
+    gap: 24px;
+  }
+  
+  .reacg-modal__layout-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    label {
+      display: inline-flex;
+    }
+    .reacg-ai-button {
+      margin: 0 0 8px 8px;
+      vertical-align: middle;
+    }
+    .spinner.reacg-float-none {
+      margin-left: 6px;
+      margin-bottom: 8px;
+      vertical-align: middle;
+    }
+  }
+
+  .reacg-modal__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: #FFF;
+    padding: 20px 30px 24px 30px;
+    border-top: 1px solid #E2E4E7;
+    box-sizing: border-box;
+  }
+}
+
+.reacg-modal.reacg-attachment-modal {
+  .reacg-modal-wrapper {
+    width: min(1100px, calc(100% - 64px));
+  }
+  .reacg-attachment-modal__preview img,
+  .reacg-attachment-modal__preview video {
+    display: block;
+    max-width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    background: #F6F7F7;
+  }
+  .reacg-attachment-modal__details p {
+    margin: 0 0 8px 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .reacg-modal {
+    .reacg-modal-wrapper {
+      width: calc(100% - 24px);
+      max-height: calc(100% - 24px);
+    }
+    .reacg-modal__layout {
+      grid-template-columns: 1fr;
     }
   }
 }
