@@ -407,7 +407,7 @@ to avoid a bug connected with preview.
       display: inline-flex;
     }
     .reacg-ai-button {
-      margin: 0 0 8px 8px;
+      margin: 0 0 6px 8px;
       vertical-align: middle;
     }
     .spinner.reacg-float-none {

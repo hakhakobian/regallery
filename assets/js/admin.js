@@ -1470,7 +1470,6 @@ function reacg_add_ai_button(that, field) {
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
     const url_cont = that.find('[data-setting="url"]');
-    const title_cont = that.find('[data-setting="title"]');
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
@@ -1484,18 +1483,6 @@ function reacg_add_ai_button(that, field) {
 
     button.on('click', function() {
       spinnerCont.addClass("is-active");
-      /* Add notification if title is empty.*/
-      const title = title_cont.find("input").val();
-      if ( !title && field.name !== "title" ) {
-        spinnerCont.removeClass("is-active");
-        title_cont.next(".description.required").remove();
-        title_cont.find("input").addClass("reacg-required-input");
-        title_cont.after("<span class='description required'>" + reacg.ai_title_is_required + "</span>");
-        title_cont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
-        title_cont.find("input").focus();
-
-        return;
-      }
 
       jQuery.ajax({
         type: "GET",
@@ -1538,7 +1525,6 @@ function reacg_add_ai_button(that, field) {
                   contentType: "application/json",
                   data: {
                     "image_url": url_cont.find("input").val(),
-                    "title": title,
                     "notes": modal.find(".reacg-modal-notes").val(),
                     "action": field.action,
                   },
@@ -1563,6 +1549,27 @@ function reacg_add_ai_button(that, field) {
                           event.preventDefault();
                           reacg_open_free_trial_offer_dialog({utm_medium: 'ai_generate'});
                         });
+                      }
+
+                      const wrapper = modal.find('.reacg-modal-wrapper').first();
+                      if ( wrapper.length && errorNoteCont.length ) {
+                        const wrapperNode = wrapper.get(0);
+                        const wrapperTop = wrapper.offset().top;
+                        const errorTop = errorNoteCont.offset().top;
+                        const targetScrollTop = wrapper.scrollTop() + (errorTop - wrapperTop) - 24;
+
+                        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+                          wrapperNode.scrollTo({
+                            top: Math.max(0, targetScrollTop),
+                            behavior: 'smooth',
+                          });
+                        }
+                        else {
+                          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
+                        }
+                      }
+                      else if ( errorNoteCont.length && errorNoteCont.get(0) && typeof errorNoteCont.get(0).scrollIntoView === 'function' ) {
+                        errorNoteCont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
                       }
                     }
                   }
@@ -1596,28 +1603,19 @@ function reacg_add_ai_button_to_uploader() {
 }
 
 function reacg_add_ai_button_to(el) {
-  const title_cont = el.find('[data-setting="title"]');
-  /* Remove required notice on filling.*/
-  title_cont.find("input").on("keyup", function() {
-    if ( jQuery(this).val() !== "" ) {
-      title_cont.next(".description.required").remove();
-      title_cont.find("input").removeClass("reacg-required-input");
-    }
-  });
-
   const add_button_to = {
     alt: {
       name: "alt",
       action: "get_alt",
       title: reacg.ai_popup_alt_heading,
-      notice: reacg.ai_popup_alt_desc_notice,
+      notice: reacg.ai_popup_alt_notice,
       label: reacg.ai_popup_alt_field_label,
     },
     description: {
       name: "description",
       action: "get_description",
       title: reacg.ai_popup_description_heading,
-      notice: reacg.ai_popup_alt_desc_notice,
+      notice: reacg.ai_popup_description_notice,
       label: reacg.ai_popup_description_field_label,
     },
     title: {
