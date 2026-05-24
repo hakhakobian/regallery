@@ -1,11 +1,11 @@
 === Re Gallery - Responsive Image & Photo Gallery ===
 Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
-Tags: gallery, photo gallery, image gallery, mosaic gallery, ai gallery
+Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.1
+Stable tag: 1.20.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.1: Added Free trial activation support for PRO features. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.2: Added bulk AI generation section for images and videos content. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.2 =
+= Updated: 24.05.2026 =
+* **Added:** Bulk AI generation section for images and videos content.
+* **Improved:** Edit images and videos in a custom popup instead of the Media Library.
+* **Improved:** Display limit reached message for AI generations.
+* **Improved:** All separate AI content generations are now based on image analysis instead of title.
+* **Fixed:** Contact Us popup.
+
 = 1.20.1 =
 = Updated: 18.05.2026 =
 * **Added:** Free trial activation support for PRO features.
