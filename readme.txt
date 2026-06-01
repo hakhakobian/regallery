@@ -255,7 +255,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 == Changelog ==
 = 1.20.2 =
-= Updated: 24.05.2026 =
+= Updated: 25.05.2026 =
 * **Added:** Bulk AI generation section for images and videos content.
 * **Improved:** Edit images and videos in a custom popup instead of the Media Library.
 * **Improved:** Display limit reached message for AI generations.
