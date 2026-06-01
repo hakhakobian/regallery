@@ -567,6 +567,13 @@ to avoid a bug connected with preview.
   outline: none !important;
   box-shadow: none !important;
 }
+.wp-core-ui {
+  .button,
+  .button.button-primary,
+  .button.button-secondary {
+    border-radius: 6px;
+  }
+}
 
 #gallery-custom-css h2.hndle {
   justify-content: normal;
