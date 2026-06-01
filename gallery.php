@@ -229,9 +229,6 @@ final class REACG {
       // Fallback for older Divi versions without ET_CORE_VERSION
       require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
     }
-    
-    // Load the module (handles version detection)
-    require_once ($this->plugin_dir . '/builders/divi/includes/loader.php');
   }
 
   public function register_wpbakery_widget() {
