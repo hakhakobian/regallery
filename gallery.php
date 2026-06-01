@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Re Gallery - Responsive Image & Photo Gallery
  * Description: Photo gallery plugin lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
- * Version: 1.20.1
+ * Version: 1.20.2
  * Requires at least: 4.6
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,7 +24,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.20.1';
+  public $version = '1.20.2';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
@@ -390,11 +390,29 @@ final class REACG {
       'update_thumbnail' => __('Update video cover', 'regallery'),
       'edit' => __('Edit', 'regallery'),
       'edit_thumbnail' => __('Edit video cover', 'regallery'),
+      'attachment_filename' => __('Filename', 'regallery'),
+      'attachment_dimensions' => __('Dimensions', 'regallery'),
+      'attachment_file_size' => __('File size', 'regallery'),
+      'attachment_title' => __('Title', 'regallery'),
+      'attachment_caption' => __('Caption', 'regallery'),
+      'attachment_alt_text' => __('Alt text', 'regallery'),
+      'attachment_description' => __('Description', 'regallery'),
+      'attachment_action_url' => __('Action URL', 'regallery'),
+      'attachment_metadata_exif' => __('Metadata (EXIF)', 'regallery'),
       'choose_images' => __('Choose images', 'regallery'),
       'generate' => __('Generate', 'regallery'),
       'regenerate' => __('Regenerate', 'regallery'),
       'proceed' => __('Proceed', 'regallery'),
-      'ai_title_is_required' => __('Title is required. Make sure it accurately describes the image.', 'regallery'),
+      'only_empty_fields' => __('Only empty fields', 'regallery'),
+      'replace_existing' => __('Replace existing content', 'regallery'),
+      'overwrite_existing' => __('Overwrite existing content?', 'regallery'),
+      'choose_what_to_generate' => __('Choose what to generate for the gallery items', 'regallery'),
+      'ai_generate_content' => __('AI Generate Content', 'regallery'),
+      'processing' => __('Processing', 'regallery'),
+      'content_generated_successfully' => __('Content generated successfully.', 'regallery'),
+      'no_fields_to_generate' => __('Nothing to generate for the items. All selected fields already contain content.', 'regallery'),
+      'content_generated_based_on_image' => __('The content will be generated based on the image and will be automatically saved.', 'regallery'),
+      'save_failed' => __('Unable to save image data.', 'regallery'),
       'ai_popup_additional_notes_label' => __('Additional Notes', 'regallery'),
       'ai_popup_additional_notes_placeholder' => __('You can add additional notes here to help generate a more accurate text.', 'regallery'),
       'ai_popup_title_heading' => __('Generative AI Title', 'regallery'),
@@ -403,11 +421,12 @@ final class REACG {
       'ai_popup_caption_heading' => __('Generative AI Caption', 'regallery'),
       'ai_popup_caption_field_label' => __('Generated Caption', 'regallery'),
       'ai_popup_caption_notice' => __('The caption will be generated based on the image.', 'regallery'),
-      'ai_popup_alt_desc_notice' => __('The text will be generated based on the image title. Please ensure that the title is not empty and accurately describes the image.', 'regallery'),
       'ai_popup_description_heading' => __('Generative AI Description', 'regallery'),
       'ai_popup_description_field_label' => __('Generated Description', 'regallery'),
-      'ai_popup_alt_heading' => __('Generative AI Alt', 'regallery'),
-      'ai_popup_alt_field_label' => __('Generated Alt', 'regallery'),
+      'ai_popup_description_notice' => __('The description will be generated based on the image.', 'regallery'),
+      'ai_popup_alt_heading' => __('Generative AI Alt text', 'regallery'),
+      'ai_popup_alt_field_label' => __('Generated Alt text', 'regallery'),
+      'ai_popup_alt_notice' => __('The alt text will be generated based on the image.', 'regallery'),
       'ai_highlight' => __('Use our built-in AI tools to instantly generate a Title, Caption, Description, and Alt text. Ideal for better SEO and accessibility.', 'regallery'),
       'enter_license_key' => __('Please enter license key.', 'regallery'),
       'no_image' => $this->plugin_url . $this->no_image,

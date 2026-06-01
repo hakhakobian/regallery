@@ -42,6 +42,7 @@ class REACG_Gallery {
     add_filter('attachment_fields_to_edit', [ $this, 'attachment_field' ], 10, 2);
     // Save custom field when an image is updated.
     add_filter('attachment_fields_to_save', [ $this, 'save_attachment_field' ], 10, 2);
+    add_filter('wp_prepare_attachment_for_js', [ $this, 'prepare_attachment_for_js' ], 10, 3);
 
     // Register an ajax action to save a gallery (need for builders).
     add_action('wp_ajax_reacg_save_gallery', [ $this, 'save_gallery' ]);
@@ -243,6 +244,32 @@ class REACG_Gallery {
     }
 
     return $post;
+  }
+
+  /**
+   * Add plugin-specific attachment fields to the JS response.
+   *
+   * @param array $response
+   * @param WP_Post $attachment
+   * @param array|false $meta
+   *
+   * @return array
+   */
+  public function prepare_attachment_for_js($response, $attachment, $meta) {
+    if ( empty($response) || !is_array($response) ) {
+      return $response;
+    }
+
+    $response['action_url'] = esc_url_raw(get_post_meta($attachment->ID, 'action_url', TRUE));
+
+    $exif = get_post_meta($attachment->ID, 'exif', TRUE);
+    if ( empty($exif) && !empty($meta['image_meta']) ) {
+      $exif = $this->get_exif($meta['image_meta']);
+    }
+
+    $response['exif'] = html_entity_decode($exif);
+
+    return $response;
   }
 
   /**

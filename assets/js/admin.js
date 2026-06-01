@@ -112,9 +112,6 @@ jQuery(document).ready(function () {
 
   /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
-    wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
-    wp.Uploader.defaults.multipart_params.reacg = 'gallery';
-    wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
     let item = jQuery(this).closest(".reacg_item");
     const galleryItemsContainer = item.closest(".reacg_items");
     /* The image id to be edited.*/
@@ -146,7 +143,6 @@ jQuery(document).ready(function () {
       media_uploader.open();
     }
     else {
-      /* If image or video edited.*/
       if ( jQuery(this).attr('disabled') ) {
         /* To prevent multiple clicks.*/
         e.preventDefault();
@@ -155,64 +151,14 @@ jQuery(document).ready(function () {
       }
 
       jQuery(this).attr("disabled", true);
-      const that = this;
-      /* Fetch the attachment.*/
+      const editButton = jQuery(this);
       const attachment = wp.media.attachment(image_id);
       attachment.fetch().then(function () {
-        jQuery(that).removeAttr("disabled");
-        /* Create a custom Attachments collection containing only the given image.*/
-        const attachments = new wp.media.model.Attachments([attachment], {
-          query: false
-        });
-        /* Create a custom state with that one image.*/
-        const LibraryState = wp.media.controller.Library.extend({
-          defaults: _.defaults({
-            id: 'custom-library',
-            title: reacg.edit,
-            toolbar: 'select',
-            filterable: false,
-            multiple: false,
-            library: attachments
-          }, wp.media.controller.Library.prototype.defaults)
-        });
-        /* Create the media frame with custom state.*/
-        const media_uploader = wp.media({
-          frame: 'select',
-          button: {text: reacg.update},
-          state: 'custom-library',
-          states: [
-            new LibraryState()
-          ]
-        });
-        media_uploader.on('open', function () {
-          /* Change the active tab to the Media Library.*/
-          jQuery('#menu-item-browse').trigger('click');
-
-          let selection = media_uploader.state().get('selection');
-          selection.add(wp.media.attachment(image_id));
-        });
-        media_uploader.on('select', function () {
-          const image = media_uploader.state().get('selection').first();
-          if ( image && image.save ) {
-            /* If the user edited metadata, image.save() will trigger an AJAX request to save those changes.*/
-            image.save().done(function () {
-              /* Waits until the save completes then reload the preview.*/
-              reacg_reload_preview();
-              media_uploader.remove();
-            });
-          }
-          else {
-            reacg_reload_preview();
-            media_uploader.remove();
-          }
-        });
-        media_uploader.on('close', function () {
-          delete wp.Uploader.defaults.multipart_params.reacg;
-          delete wp.Uploader.defaults.multipart_params.reacg_nonce;
-          media_uploader.remove();
-        });
-        media_uploader.open();
+        reacg_open_attachment_edit_modal(editButton, attachment);
+      }).always(function () {
+        editButton.removeAttr("disabled");
       });
+      return false;
     }
   });
 
@@ -273,7 +219,7 @@ function reacg_isPro(isPro) {
     let text = jQuery(this).val();
     if ( !isPro && text.length > 100) {
       jQuery(this).val(text.substring(0, 100));
-      reacg_open_premium_offer_dialog({utm_medium: 'custom_css'});
+      reacg_open_free_trial_offer_dialog({utm_medium: 'custom_css'});
     }
   });
   localStorage.setItem("reacg-pro", isPro);
@@ -778,38 +724,779 @@ function reacg_info_icon() {
   return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,21a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Z"/><path d="M11.545,9.545h-.3A1.577,1.577,0,0,0,9.64,10.938,1.5,1.5,0,0,0,11,12.532v4.65a1.5,1.5,0,0,0,3,0V12A2.455,2.455,0,0,0,11.545,9.545Z"/><path d="M11.83,8.466A1.716,1.716,0,1,0,10.114,6.75,1.715,1.715,0,0,0,11.83,8.466Z"/></svg>';
 }
 
+function reacg_escape_html(value) {
+  return jQuery('<div />').text(value == null ? '' : String(value)).html();
+}
+
+function reacg_get_attachment_field_value(attachment, fieldName) {
+  const value = attachment.get(fieldName);
+  if ( value && typeof value === 'object' ) {
+    return value.raw || value.rendered || '';
+  }
+
+  return value || '';
+}
+
+function reacg_get_attachment_edit_link(attachmentId) {
+  const id = parseInt(attachmentId, 10) || 0;
+  if ( !id ) {
+    return '#';
+  }
+
+  if ( typeof ajaxurl === 'string' && ajaxurl.length ) {
+    return ajaxurl.replace('admin-ajax.php', 'post.php') + '?post=' + id + '&action=edit&image-editor';
+  }
+
+  return '/wp-admin/post.php?post=' + id + '&action=edit&image-editor';
+}
+
+function reacg_attachment_edit_modal(attachment) {
+  const sizes = attachment.get('sizes');
+  const attachmentType = reacg_get_attachment_field_value(attachment, 'type');
+  const mimeType = reacg_get_attachment_field_value(attachment, 'mime');
+  const isVideo = attachmentType === 'video' || (typeof mimeType === 'string' && mimeType.indexOf('video/') === 0);
+  const attachmentUrl = reacg_get_attachment_field_value(attachment, 'url');
+  const previewSize = sizes && sizes.thumbnail ? sizes.thumbnail : sizes && sizes.full ? sizes.full : null;
+  const previewUrl = previewSize && previewSize.url ? previewSize.url : attachmentUrl || reacg.no_image;
+  const previewMedia = isVideo && attachmentUrl
+    ? '<video controls preload="metadata" src="' + reacg_escape_html(attachmentUrl) + '"></video>'
+    : '<img src="' + reacg_escape_html(previewUrl) + '" alt="" />';
+  const filename = reacg_get_attachment_field_value(attachment, 'filename');
+  const dimensions = reacg_get_attachment_field_value(attachment, 'width') && reacg_get_attachment_field_value(attachment, 'height')
+    ? reacg_get_attachment_field_value(attachment, 'width') + ' x ' + reacg_get_attachment_field_value(attachment, 'height')
+    : '';
+  const fileSize = reacg_get_attachment_field_value(attachment, 'filesizeHumanReadable') || '';
+  const editLink = reacg_get_attachment_edit_link(attachment.get('id'));
+
+  return jQuery('' +
+    '<div class="reacg-modal reacg-attachment-modal" style="display:none;">' +
+      '<div class="reacg-modal-wrapper">' +
+        '<div class="reacg-modal-content">' +
+          '<div class="reacg-modal__header">' +
+            '<h1>' + reacg.edit + '</h1>' +
+            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+          '</div>' +
+          '<div class="reacg-modal__body">' +
+            '<div class="reacg-modal__layout">' +
+              '<div class="reacg-modal__layout-content">' +
+                '<div class="reacg-attachment-modal__preview">' + previewMedia + '</div>' +
+                '<div class="reacg-attachment-modal__details">' +
+                  (filename ? '<p><strong>' + reacg_escape_html(reacg.attachment_filename) + ':</strong> ' + reacg_escape_html(filename) + '</p>' : '') +
+                  (dimensions ? '<p><strong>' + reacg_escape_html(reacg.attachment_dimensions) + ':</strong> ' + reacg_escape_html(dimensions) + 'px</p>' : '') +
+                  (fileSize ? '<p><strong>' + reacg_escape_html(reacg.attachment_file_size) + ':</strong> ' + reacg_escape_html(fileSize) + '</p>' : '') +
+                  '<p class="reacg-attachment-modal__edit-link"><a href="' + reacg_escape_html(editLink) + '" target="_blank" rel="noopener noreferrer">' + reacg.edit + '</a></p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="reacg-modal__layout-content">' +
+                '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' + reacg_escape_html(reacg.attachment_title) + '</label><input type="text" id="reacg-attachment-title" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'title')) + '" /></div>' +
+                '<div class="reacg-attachment-modal__field" data-setting="caption"><label for="reacg-attachment-caption">' + reacg_escape_html(reacg.attachment_caption) + '</label><textarea id="reacg-attachment-caption" rows="3">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'caption')) + '</textarea></div>' +
+                '<div class="reacg-attachment-modal__field" data-setting="alt"><label for="reacg-attachment-alt">' + reacg_escape_html(reacg.attachment_alt_text) + '</label><input type="text" id="reacg-attachment-alt" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'alt')) + '" /></div>' +
+                '<div class="reacg-attachment-modal__field" data-setting="description"><label for="reacg-attachment-description">' + reacg_escape_html(reacg.attachment_description) + '</label><textarea id="reacg-attachment-description" rows="4">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'description')) + '</textarea></div>' +
+                '<div class="reacg-attachment-modal__field" data-setting="action_url"><label for="reacg-attachment-action-url">' + reacg_escape_html(reacg.attachment_action_url) + '</label><input type="url" id="reacg-attachment-action-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'action_url')) + '" placeholder="https://example.com" /></div>' +
+                '<div class="reacg-attachment-modal__field" data-setting="exif"><label for="reacg-attachment-exif">' + reacg_escape_html(reacg.attachment_metadata_exif) + '</label><textarea id="reacg-attachment-exif" rows="5">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'exif')) + '</textarea></div>' +
+                '<div class="reacg-attachment-modal__field reacg-hidden" data-setting="url"><label for="reacg-attachment-url">' + reacg_escape_html(reacg.attachment_url) + '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'url')) + '" /></div>' +
+              '</div>' +
+            '</div>' +
+            '<div><p class="reacg-modal-error-note hidden"></p></div>' +
+          '</div>' +
+          '<div class="reacg-modal__footer"><div class="reacg-modal-buttons-wrapper"><span class="spinner"></span><button class="reacg-modal-button-save button button-primary button-large">' + reacg.update + '</button></div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>');
+}
+
+function reacg_open_attachment_edit_modal(button, attachment) {
+  const modal = reacg_attachment_edit_modal(attachment);
+  jQuery('body').append(modal);
+  modal.css('display', 'flex').show();
+  reacg_add_ai_button_to(jQuery('.reacg-modal__layout-content'));
+
+  const closeModal = function () {
+    modal.remove();
+  };
+
+  modal.find('.reacg-modal-close').on('click', closeModal);
+  modal.on('click', function (e) {
+    if ( e.target === this ) {
+      closeModal();
+    }
+  });
+  modal.find('.reacg-modal-wrapper').on('click', function (e) {
+    e.stopPropagation();
+  });
+
+  modal.find('.reacg-modal-button-save').on('click', function () {
+    const saveButton = jQuery(this);
+    const spinner = saveButton.closest('.reacg-modal-buttons-wrapper').find('> .spinner').first();
+    const errorNoteCont = modal.find('.reacg-modal-error-note');
+    const attachmentId = attachment.get('id');
+    const coreChanges = {
+      title: modal.find('#reacg-attachment-title').val(),
+      caption: modal.find('#reacg-attachment-caption').val(),
+      alt: modal.find('#reacg-attachment-alt').val(),
+      description: modal.find('#reacg-attachment-description').val(),
+    };
+    const compatChanges = {
+      attachments: {}
+    };
+    compatChanges.attachments[attachmentId] = {
+      action_url: modal.find('#reacg-attachment-action-url').val(),
+      exif: modal.find('#reacg-attachment-exif').val(),
+    };
+
+    const normalizeValue = function (value) {
+      return value == null ? '' : String(value);
+    };
+    const hasCoreChanges = normalizeValue(coreChanges.title) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'title'))
+      || normalizeValue(coreChanges.caption) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'caption'))
+      || normalizeValue(coreChanges.alt) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'alt'))
+      || normalizeValue(coreChanges.description) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'description'));
+    const hasCompatChanges = normalizeValue(compatChanges.attachments[attachmentId].action_url) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'action_url'))
+      || normalizeValue(compatChanges.attachments[attachmentId].exif) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'exif'));
+
+    if ( !hasCoreChanges && !hasCompatChanges ) {
+      closeModal();
+      button.removeAttr('disabled');
+      return;
+    }
+
+    errorNoteCont.addClass('hidden').empty();
+    saveButton.attr('disabled', true);
+    spinner.addClass('is-active');
+
+    const saveRequests = [];
+    if ( hasCoreChanges ) {
+      saveRequests.push(attachment.save(coreChanges));
+    }
+    if ( hasCompatChanges ) {
+      saveRequests.push(attachment.saveCompat(compatChanges));
+    }
+
+    const saveRequest = saveRequests.length === 1
+      ? saveRequests[0]
+      : jQuery.when.apply(jQuery, saveRequests);
+
+    saveRequest.done(function () {
+      reacg_reload_preview();
+      closeModal();
+    }).fail(function (response) {
+      const message = response && response.responseJSON && response.responseJSON.data && response.responseJSON.data.message
+        ? response.responseJSON.data.message
+        : reacg.save_failed;
+      errorNoteCont.removeClass('hidden').html(message);
+    }).always(function () {
+      spinner.removeClass('is-active');
+      saveButton.removeAttr('disabled');
+      button.removeAttr('disabled');
+    });
+  });
+
+  return modal;
+}
+
 function reacg_ai_button() {
   return jQuery('<button class="reacg-ai-button" title="' + reacg.generate + '">' + reacg_ai_icon() + '</button>');
+}
+
+function reacg_open_ai_generate_content_modal(images, options) {
+  const imagesData = images && typeof images === 'object' ? images : {};
+  const chunkObject = function (source, size) {
+    const entries = Object.entries(source || {});
+    const chunks = [];
+
+    for ( let i = 0; i < entries.length; i += size ) {
+      chunks.push(Object.fromEntries(entries.slice(i, i + size)));
+    }
+
+    return chunks;
+  };
+
+  const runBulkGenerateInChunks = function (state, chunkSize, onProgress) {
+    const imageEntries = Object.entries(imagesData);
+    const deferred = jQuery.Deferred();
+    const responses = [];
+    const errors = [];
+    const notifyProgress = typeof onProgress === 'function' ? onProgress : function () {};
+
+    const readPayloadCode = function (payload) {
+      const source = payload || {};
+
+      if ( source.responseJSON ) {
+        if ( source.responseJSON.code ) {
+          return String(source.responseJSON.code);
+        }
+        if ( source.responseJSON.data && source.responseJSON.data.code ) {
+          return String(source.responseJSON.data.code);
+        }
+        if ( source.responseJSON.error_data && typeof source.responseJSON.error_data === 'object' ) {
+          const errorDataKeys = Object.keys(source.responseJSON.error_data);
+          if ( errorDataKeys.length ) {
+            return String(errorDataKeys[0]);
+          }
+        }
+        if ( source.responseJSON.errors && typeof source.responseJSON.errors === 'object' ) {
+          const errorKeys = Object.keys(source.responseJSON.errors);
+          if ( errorKeys.length ) {
+            return String(errorKeys[0]);
+          }
+        }
+      }
+
+      if ( source.responseText && typeof source.responseText === 'string' ) {
+        try {
+          const parsed = JSON.parse(source.responseText);
+          if ( parsed && parsed.code ) {
+            return String(parsed.code);
+          }
+          if ( parsed && parsed.data && parsed.data.code ) {
+            return String(parsed.data.code);
+          }
+          if ( parsed && parsed.error_data && typeof parsed.error_data === 'object' ) {
+            const errorDataKeys = Object.keys(parsed.error_data);
+            if ( errorDataKeys.length ) {
+              return String(errorDataKeys[0]);
+            }
+          }
+          if ( parsed && parsed.errors && typeof parsed.errors === 'object' ) {
+            const errorKeys = Object.keys(parsed.errors);
+            if ( errorKeys.length ) {
+              return String(errorKeys[0]);
+            }
+          }
+        }
+        catch (ignored) {}
+      }
+
+      return '';
+    };
+
+    const isNothingToGeneratePayload = function (payload) {
+      return readPayloadCode(payload) === 'nothing_to_generate';
+    };
+
+    if ( !imageEntries.length ) {
+      notifyProgress(0, 0);
+      deferred.resolve({ responses: [], errors: [], images: imagesData, closeOnStatus200: false });
+      return deferred.promise();
+    }
+
+    notifyProgress(0, imageEntries.length);
+
+    const normalizeGeneratedResponse = function (response) {
+      let responseObject = response;
+      if ( typeof responseObject === 'string' ) {
+        try {
+          responseObject = JSON.parse(responseObject);
+        }
+        catch (e) {
+          responseObject = {};
+        }
+      }
+
+      if ( responseObject && responseObject.responseJSON ) {
+        responseObject = responseObject.responseJSON;
+      }
+
+      const source = responseObject && typeof responseObject === 'object'
+        ? (responseObject.data && typeof responseObject.data === 'object' ? responseObject.data : responseObject)
+        : {};
+
+      const normalized = {};
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( Object.prototype.hasOwnProperty.call(source, fieldName) ) {
+          normalized[fieldName] = source[fieldName] == null ? '' : String(source[fieldName]);
+        }
+      });
+
+      return normalized;
+    };
+
+    const applyGeneratedDataToImage = function (imageId, imageData, generatedFields) {
+      const baseImage = imageData && typeof imageData === 'object' ? imageData : {};
+      const nextImage = jQuery.extend({}, baseImage);
+      let changed = false;
+
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+          return;
+        }
+
+        nextImage[fieldName] = generatedFields[fieldName];
+        changed = true;
+      });
+
+      if ( changed ) {
+        imagesData[imageId] = nextImage;
+      }
+
+      return nextImage;
+    };
+
+    const saveGeneratedDataToAttachment = function (imageId, previousImageData, generatedFields) {
+      const deferredSave = jQuery.Deferred();
+      const normalizedImageId = parseInt(imageId, 10);
+      const saveData = {};
+      const normalizeValue = function (value) {
+        return value == null ? '' : String(value);
+      };
+
+      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
+        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+          return;
+        }
+
+        const previousValue = normalizeValue(previousImageData && previousImageData[fieldName]);
+        const nextValue = normalizeValue(generatedFields[fieldName]);
+        if ( previousValue !== nextValue ) {
+          saveData[fieldName] = nextValue;
+        }
+      });
+
+      if ( !Object.keys(saveData).length ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      if ( !normalizedImageId ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      if ( !wp || !wp.media || typeof wp.media.attachment !== 'function' ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      const attachment = wp.media.attachment(normalizedImageId);
+      if ( !attachment || typeof attachment.save !== 'function' ) {
+        deferredSave.resolve();
+        return deferredSave.promise();
+      }
+
+      const persist = function () {
+        attachment.save(saveData)
+          .done(function (response) {
+            deferredSave.resolve(response);
+          })
+          .fail(function (xhr) {
+            deferredSave.reject(xhr);
+          });
+      };
+
+      if ( typeof attachment.fetch === 'function' ) {
+        attachment.fetch()
+          .done(function () {
+            persist();
+          })
+          .fail(function (xhr) {
+            deferredSave.reject(xhr);
+          });
+      }
+      else {
+        persist();
+      }
+
+      return deferredSave.promise();
+    };
+
+    const runChunk = function (index) {
+      if ( index >= imageEntries.length ) {
+        notifyProgress(imageEntries.length, imageEntries.length);
+        if ( errors.length ) {
+          deferred.reject({ responses: responses, errors: errors, images: imagesData });
+          return;
+        }
+
+        const successCount = responses.filter(function (entry) {
+          return parseInt(entry.statusCode, 10) === 200;
+        }).length;
+        const closeOnStatus200 = successCount > 0;
+        deferred.resolve({
+          responses: responses,
+          errors: [],
+          images: imagesData,
+          closeOnStatus200: closeOnStatus200,
+          successCount: successCount,
+        });
+        return;
+      }
+
+      const imageEntry = imageEntries[index];
+      const imageId = imageEntry[0];
+      const imageData = imageEntry[1];
+      const singleImageData = imageData && typeof imageData === 'object' ? imageData : {};
+
+      notifyProgress(index + 1, imageEntries.length);
+
+      jQuery.ajax({
+        type: 'GET',
+        url: 'https://regallery.team/core/wp-json/reacgcore/v2/ai',
+        contentType: 'application/json',
+        data: {
+          image_id: imageId,
+          image_url: singleImageData.url || '',
+          title: singleImageData.title || '',
+          alt: singleImageData.alt || '',
+          caption: singleImageData.caption || '',
+          description: singleImageData.description || '',
+          fields: JSON.stringify(state.fields),
+          overwrite_mode: state.overwriteMode,
+          action: 'get_content',
+        },
+      }).done(function (response, textStatus, xhr) {
+        const statusCode = xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 0;
+        const previousImageData = jQuery.extend({}, singleImageData);
+        const generatedFields = normalizeGeneratedResponse(response);
+        const updatedImageData = applyGeneratedDataToImage(imageId, singleImageData, generatedFields);
+
+        saveGeneratedDataToAttachment(imageId, previousImageData, generatedFields)
+          .done(function (saveResponse) {
+            responses.push({
+              index: index,
+              imageId: imageId,
+              statusCode: statusCode,
+              response: response,
+              saveResponse: saveResponse,
+              generated: generatedFields,
+              image: updatedImageData,
+            });
+          })
+          .fail(function (xhr) {
+            errors.push({ index: index, imageId: imageId, stage: 'save', xhr: xhr });
+          })
+          .always(function () {
+            if ( errors.length ) {
+              deferred.reject({ responses: responses, errors: errors, images: imagesData });
+              return;
+            }
+
+            runChunk(index + 1);
+          });
+      }).fail(function (xhr) {
+        if ( isNothingToGeneratePayload(xhr) ) {
+          responses.push({
+            index: index,
+            imageId: imageId,
+            statusCode: xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 400,
+            response: xhr,
+            skipped: true,
+            image: singleImageData,
+          });
+          runChunk(index + 1);
+          return;
+        }
+
+        errors.push({ index: index, imageId: imageId, stage: 'generate', xhr: xhr });
+        deferred.reject({ responses: responses, errors: errors, images: imagesData });
+      });
+    };
+
+    runChunk(0);
+
+    return deferred.promise();
+  };
+
+  const settings = jQuery.extend(true, {
+    chunkSize: 5,
+    fields: {
+      title: true,
+      alt: false,
+      caption: false,
+      description: false,
+    },
+    overwriteMode: 'empty',
+    onGenerate: null,
+  }, options || {});
+
+  const checkedAttr = function (value) {
+    return value ? ' checked="checked"' : '';
+  };
+  const selectedOverwrite = settings.overwriteMode === 'replace' ? 'replace' : 'empty';
+
+  const modal = jQuery('' +
+    '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
+      '<div class="reacg-modal-wrapper">' +
+        '<div class="reacg-modal-content">' +
+          '<div class="reacg-modal__header">' +
+            '<h1>' + reacg_escape_html(reacg.ai_generate_content) + '</h1>' +
+            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+          '</div>' +
+          '<div class="reacg-modal__body">' +
+            '<div class="reacg-modal__layout-content">' +
+              '<div><p class="reacg-modal-note">' + reacg_info_icon() + reacg_escape_html(reacg.content_generated_based_on_image) + '</p></div>' +
+              '<h3>' + reacg_escape_html(reacg.choose_what_to_generate) + '</h3>' +
+              '<div class="reacg-ai-generate-modal__fields">' +
+                '<label><input type="checkbox" name="title" value="1"' + checkedAttr(settings.fields.title) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_title) + '</span></label>' +
+                '<label><input type="checkbox" name="caption" value="1"' + checkedAttr(settings.fields.caption) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_caption) + '</span></label>' +
+                '<label><input type="checkbox" name="alt" value="1"' + checkedAttr(settings.fields.alt) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_alt_text) + '</span></label>' +
+                '<label><input type="checkbox" name="description" value="1"' + checkedAttr(settings.fields.description) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_description) + '</span></label>' +
+              '</div>' +
+              '<h3>' + reacg_escape_html(reacg.overwrite_existing) + '</h3>' +
+              '<div class="reacg-ai-generate-modal__overwrite">' +
+                '<label><input type="radio" name="reacg-overwrite" value="empty"' + checkedAttr(selectedOverwrite === 'empty') + ' /><span>' + reacg_escape_html(reacg.only_empty_fields) + '</span></label>' +
+                '<label><input type="radio" name="reacg-overwrite" value="replace"' + checkedAttr(selectedOverwrite === 'replace') + ' /><span>' + reacg_escape_html(reacg.replace_existing) + '</span></label>' +
+              '</div>' +
+              '<p class="reacg-ai-generate-modal__notice hidden"></p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="reacg-modal__footer">' +
+            '<div class="reacg-modal-buttons-wrapper">' +
+              '<span class="reacg-ai-generate-modal__progress hidden"></span>' +
+              '<span class="spinner"></span>' +
+              '<button class="button button-primary button-large reacg-modal-button-generate">' + reacg_ai_icon() + reacg_escape_html(reacg.generate) + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>');
+
+  const getState = function () {
+    return {
+      fields: {
+        title: modal.find('input[name="title"]').is(':checked'),
+        alt: modal.find('input[name="alt"]').is(':checked'),
+        caption: modal.find('input[name="caption"]').is(':checked'),
+        description: modal.find('input[name="description"]').is(':checked'),
+      },
+      overwriteMode: modal.find('input[name="reacg-overwrite"]:checked').val() || 'empty',
+    };
+  };
+
+  const closeModal = function () {
+    modal.remove();
+  };
+
+  jQuery('body').append(modal);
+  modal.css('display', 'flex').show();
+
+  modal.find('.reacg-modal-close').on('click', closeModal);
+  modal.on('click', function (e) {
+    if ( e.target === this ) {
+      closeModal();
+    }
+  });
+  modal.find('.reacg-modal-wrapper').on('click', function (e) {
+    e.stopPropagation();
+  });
+
+  modal.find('.reacg-modal-button-generate').on('click', function (e) {
+    e.preventDefault();
+    const button = jQuery(this);
+    const spinner = modal.find('.reacg-modal__footer .spinner');
+    const progressNote = modal.find('.reacg-ai-generate-modal__progress');
+    const statusNote = modal.find('.reacg-ai-generate-modal__notice');
+    const state = getState();
+    const errorText = reacg_escape_html(reacg.no_fields_to_generate);
+    let shouldCloseAfterSuccess = false;
+
+    const updateProgress = function (current, total) {
+      if ( !total ) {
+        progressNote.addClass('hidden').text('');
+        return;
+      }
+
+      progressNote.text(reacg.processing + ' ' + current + '/' + total).removeClass('hidden');
+    };
+
+    const setStatus = function (type, message) {
+      const statusMessage = message == null ? '' : String(message);
+      const upgradeLinkMarkup = 'reacg-upgrade-link';
+      const hasUpgradeLink = statusMessage.indexOf(upgradeLinkMarkup) !== -1;
+
+      statusNote
+        .removeClass('hidden reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error reacg-ai-generate-modal__notice--animate')
+        .addClass(type === 'success' ? 'reacg-ai-generate-modal__notice--success' : 'reacg-ai-generate-modal__notice--error');
+
+      if ( hasUpgradeLink ) {
+        statusNote.html(statusMessage);
+        statusNote.find('.reacg-upgrade-link').off('click').on('click', function (event) {
+          event.preventDefault();
+          reacg_open_free_trial_offer_dialog({utm_medium: 'ai'});
+        });
+      }
+      else {
+        statusNote.text(statusMessage);
+      }
+
+      if ( statusNote.length ) {
+        const statusNode = statusNote.get(0);
+        /* Force reflow, then add class on next frame to ensure animation visibly plays. */
+        void statusNode.offsetWidth;
+        window.requestAnimationFrame(function () {
+          statusNote.addClass('reacg-ai-generate-modal__notice--animate');
+        });
+      }
+
+      const wrapper = modal.find('.reacg-modal-wrapper').first();
+      if ( wrapper.length && statusNote.length ) {
+        const wrapperNode = wrapper.get(0);
+        const statusNode = statusNote.get(0);
+        const wrapperTop = wrapper.offset().top;
+        const statusTop = statusNote.offset().top;
+        const targetScrollTop = wrapper.scrollTop() + (statusTop - wrapperTop) - 24;
+
+        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+          wrapperNode.scrollTo({
+            top: Math.max(0, targetScrollTop),
+            behavior: 'smooth',
+          });
+        }
+        else {
+          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
+        }
+      }
+      else if ( statusNote.length && statusNote.get(0) && typeof statusNote.get(0).scrollIntoView === 'function' ) {
+        statusNote.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    const readErrorMessageFromResponse = function (payload, fallbackMessage) {
+      const fallback = fallbackMessage || errorText;
+      const source = payload || {};
+
+      if ( source.responseJSON ) {
+        if ( source.responseJSON.data && source.responseJSON.data.message ) {
+          return source.responseJSON.data.message;
+        }
+        if ( source.responseJSON.errors && source.responseJSON.errors.message ) {
+          return source.responseJSON.errors.message;
+        }
+        if ( source.responseJSON.message ) {
+          return source.responseJSON.message;
+        }
+      }
+
+      if ( source.data && source.data.message ) {
+        return source.data.message;
+      }
+      if ( source.errors && source.errors.message ) {
+        return source.errors.message;
+      }
+      if ( source.message ) {
+        return source.message;
+      }
+
+      if ( source.responseText && typeof source.responseText === 'string' ) {
+        try {
+          const parsed = JSON.parse(source.responseText);
+          if ( parsed && parsed.data && parsed.data.message ) {
+            return parsed.data.message;
+          }
+          if ( parsed && parsed.errors && parsed.errors.message ) {
+            return parsed.errors.message;
+          }
+          if ( parsed && parsed.message ) {
+            return parsed.message;
+          }
+        }
+        catch (ignored) {}
+      }
+
+      return fallback;
+    };
+
+    statusNote
+      .addClass('hidden')
+      .removeClass('reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error')
+      .text('');
+
+    const defaultGenerateHandler = function (currentState) {
+      const parsedChunkSize = parseInt(settings.chunkSize, 10);
+      const chunkSize = parsedChunkSize > 0 ? parsedChunkSize : 5;
+      return runBulkGenerateInChunks(currentState, chunkSize, updateProgress);
+    };
+
+    let result = typeof settings.onGenerate === 'function'
+      ? settings.onGenerate(state, modal)
+      : defaultGenerateHandler(state);
+
+    if ( result === false ) {
+      return;
+    }
+
+    if ( !result || typeof result.then !== 'function' ) {
+      result = defaultGenerateHandler(state);
+    }
+
+    if ( result && typeof result.then === 'function' ) {
+      button.attr('disabled', true);
+      spinner.addClass('is-active');
+      result.done(function (resultData) {
+        const canClose = !!(resultData && resultData.closeOnStatus200);
+        if ( canClose ) {
+          shouldCloseAfterSuccess = true;
+          setStatus('success', reacg_escape_html(reacg.content_generated_successfully));
+          reacg_reload_preview();
+          window.setTimeout(function () {
+            closeModal();
+          }, 3000);
+          return;
+        }
+        const firstResponse = resultData && resultData.responses && resultData.responses.length
+          ? resultData.responses[0].response
+          : null;
+        const responseErrorMessage = readErrorMessageFromResponse(firstResponse, errorText);
+        setStatus('error', responseErrorMessage);
+      });
+      result.fail(function (errorData) {
+        const firstError = errorData && errorData.errors && errorData.errors.length ? errorData.errors[0] : null;
+        const xhr = firstError && firstError.xhr ? firstError.xhr : null;
+        let message = readErrorMessageFromResponse(xhr || firstError, errorText);
+
+        const successCount = errorData && errorData.responses && errorData.responses.length
+          ? errorData.responses.length
+          : 0;
+        const hasUpgradeLink = String(message || '').indexOf('reacg-upgrade-link') !== -1;
+        if ( hasUpgradeLink && successCount > 0 ) {
+          message = 'Generated content for ' + successCount + ' image' + (successCount === 1 ? '' : 's') + '. ' + message;
+        }
+
+        setStatus('error', message);
+      });
+      result.always(function () {
+        progressNote.addClass('hidden').text('');
+        spinner.removeClass('is-active');
+        button.removeAttr('disabled');
+      });
+      return;
+    }
+  });
+
+  return modal;
 }
 
 function reacg_modal(field) {
   return jQuery('' +
     '<div class="reacg-modal" style="display:none;">' +
-    '<div class="reacg-modal-wrapper">' +
-    '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
-    '<div class="reacg-modal-content">' +
-    '<h1>' + field.title + '</h1>' +
-    '<div>' +
-    '<p class="reacg-modal-note">' + reacg_info_icon() + field.notice + '</p>' +
-    '</div>' +
-    '<div>' +
-    '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
-    '<textarea class="reacg-modal-notes" id="reacg-modal-notes" rows="2" placeholder="' + reacg.ai_popup_additional_notes_placeholder + '"></textarea>' +
-    '</div>' +
-    '<div>' +
-    '<label for="reacg-modal-generated-text">' + field.label + ':</label>' +
-    '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
-    '</div>' +
-    '<div>' +
-    '<p class="reacg-modal-error-note hidden"></p>' +
-    '</div>' +
-    '<div class="reacg-modal-buttons-wrapper">' +
-    '<span class="spinner"></span>' +
-    '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + reacg.generate + '</button>' +
-    '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">' + reacg.proceed + '</button>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
+      '<div class="reacg-modal-wrapper">' +
+        '<div class="reacg-modal-content">' +
+          '<div class="reacg-modal__header">' +
+            '<h1>' + field.title + '</h1>' +
+            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+          '</div>' +
+          '<div class="reacg-modal__body">' +
+            '<div class="reacg-modal__layout-content">' +
+              '<div><p class="reacg-modal-note">' + reacg_info_icon() + field.notice + '</p></div>' +
+              '<div>' +
+                '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
+                '<textarea class="reacg-modal-notes" id="reacg-modal-notes" rows="2" placeholder="' + reacg.ai_popup_additional_notes_placeholder + '"></textarea>' +
+              '</div>' +
+              '<div>' +
+                '<label for="reacg-modal-generated-text">' + field.label + ':</label>' +
+                '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
+              '</div>' +
+              '<p class="reacg-modal-error-note hidden"></p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="reacg-modal__footer">' +
+            '<div class="reacg-modal-buttons-wrapper">' +
+              '<span class="spinner"></span>' +
+              '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + reacg.generate + '</button>' +
+              '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">' + reacg.proceed + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
     '</div>');
 }
 
@@ -825,7 +1512,6 @@ function reacg_add_ai_button(that, field) {
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
     const url_cont = that.find('[data-setting="url"]');
-    const title_cont = that.find('[data-setting="title"]');
     that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
     const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
 
@@ -839,18 +1525,6 @@ function reacg_add_ai_button(that, field) {
 
     button.on('click', function() {
       spinnerCont.addClass("is-active");
-      /* Add notification if title is empty.*/
-      const title = title_cont.find("input").val();
-      if ( !title && field.name !== "title" ) {
-        spinnerCont.removeClass("is-active");
-        title_cont.next(".description.required").remove();
-        title_cont.find("input").addClass("reacg-required-input");
-        title_cont.after("<span class='description required'>" + reacg.ai_title_is_required + "</span>");
-        title_cont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
-        title_cont.find("input").focus();
-
-        return;
-      }
 
       jQuery.ajax({
         type: "GET",
@@ -860,14 +1534,11 @@ function reacg_add_ai_button(that, field) {
           "action": "check",
         },
         complete: function (response) {
-          if (response.status === 204) {
-            reacg_open_premium_offer_dialog({utm_medium: 'ai'});
-          }
-          else if (response.status === 200) {
+          if (response.status === 200) {
             /* Create modal if not exist and open.*/
-            if (!button.closest(".media-modal").find(".reacg-modal").length) {
+            if (!jQuery("body").find(".reacg-modal:not(.reacg-attachment-modal)").length) {
               const modal = reacg_modal(field);
-              button.closest(".media-modal-content").after(modal);
+              jQuery("body").append(modal);
               const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
               const generatedText = modal.find(".reacg-modal-generated-text");
               const generateButton = modal.find(".reacg-modal-button-generate");
@@ -896,7 +1567,6 @@ function reacg_add_ai_button(that, field) {
                   contentType: "application/json",
                   data: {
                     "image_url": url_cont.find("input").val(),
-                    "title": title,
                     "notes": modal.find(".reacg-modal-notes").val(),
                     "action": field.action,
                   },
@@ -904,16 +1574,45 @@ function reacg_add_ai_button(that, field) {
                     modalSpinnerCont.removeClass("is-active");
                     generatedText.removeAttr("disabled");
                     generateButton.removeAttr("disabled");
-                    if (response.status === 204) {
-                      reacg_open_premium_offer_dialog({utm_medium: 'ai_generate'});
-                    }
-                    else if (response.status === 200 && response.success && response.responseJSON) {
+                    if (response.status === 200 && response.success && response.responseJSON) {
                       generatedText.removeAttr("disabled").val(response.responseJSON);
                       proceedButton.removeAttr("disabled");
                       generateButton.html(reacg_ai_icon() + reacg.regenerate);
                     }
                     else {
-                      errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
+                      const errorMessage = response && response.responseJSON && response.responseJSON.errors
+                        ? response.responseJSON.errors.message
+                        : '';
+                      const hasUpgradeLink = String(errorMessage || '').indexOf('reacg-upgrade-link') !== -1;
+
+                      errorNoteCont.removeClass("hidden").html(errorMessage || '');
+                      if ( hasUpgradeLink ) {
+                        errorNoteCont.find('.reacg-upgrade-link').off('click').on('click', function (event) {
+                          event.preventDefault();
+                          reacg_open_free_trial_offer_dialog({utm_medium: 'ai_generate'});
+                        });
+                      }
+
+                      const wrapper = modal.find('.reacg-modal-wrapper').first();
+                      if ( wrapper.length && errorNoteCont.length ) {
+                        const wrapperNode = wrapper.get(0);
+                        const wrapperTop = wrapper.offset().top;
+                        const errorTop = errorNoteCont.offset().top;
+                        const targetScrollTop = wrapper.scrollTop() + (errorTop - wrapperTop) - 24;
+
+                        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+                          wrapperNode.scrollTo({
+                            top: Math.max(0, targetScrollTop),
+                            behavior: 'smooth',
+                          });
+                        }
+                        else {
+                          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
+                        }
+                      }
+                      else if ( errorNoteCont.length && errorNoteCont.get(0) && typeof errorNoteCont.get(0).scrollIntoView === 'function' ) {
+                        errorNoteCont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
                     }
                   }
                 });
@@ -923,7 +1622,7 @@ function reacg_add_ai_button(that, field) {
                 modal.remove();
               });
             }
-            jQuery(".reacg-modal").css("display", "flex").show();
+            jQuery(".reacg-modal:not(.reacg-attachment-modal)").css("display", "flex").show();
           }
           spinnerCont.removeClass("is-active");
         }
@@ -939,52 +1638,47 @@ function reacg_add_ai_button_to_uploader() {
   wp.media.view.Attachment.Details.prototype.render = _.wrap(wp.media.view.Attachment.Details.prototype.render, function(render) {
     render.apply(this, _.rest(arguments));
 
-    const title_cont = this.$el.find('[data-setting="title"]');
-    /* Remove required notice on filling.*/
-    title_cont.find("input").on("keyup", function() {
-      if ( jQuery(this).val() !== "" ) {
-        title_cont.next(".description.required").remove();
-        title_cont.find("input").removeClass("reacg-required-input");
-      }
-    });
-
-    const add_button_to = {
-      alt: {
-        name: "alt",
-        action: "get_alt",
-        title: reacg.ai_popup_alt_heading,
-        notice: reacg.ai_popup_alt_desc_notice,
-        label: reacg.ai_popup_alt_field_label,
-      },
-      description: {
-        name: "description",
-        action: "get_description",
-        title: reacg.ai_popup_description_heading,
-        notice: reacg.ai_popup_alt_desc_notice,
-        label: reacg.ai_popup_description_field_label,
-      },
-      title: {
-        name: "title",
-        action: "get_title",
-        title: reacg.ai_popup_title_heading,
-        notice: reacg.ai_popup_title_notice,
-        label: reacg.ai_popup_title_field_label,
-      },
-      caption: {
-        name: "caption",
-        action: "get_caption",
-        title: reacg.ai_popup_caption_heading,
-        notice: reacg.ai_popup_caption_notice,
-        label: reacg.ai_popup_caption_field_label,
-      }
-    }
-
-    for ( let i in add_button_to ) {
-      reacg_add_ai_button(this.$el, add_button_to[i]);
-    }
+    reacg_add_ai_button_to(this.$el);
 
     return this;
   });
+}
+
+function reacg_add_ai_button_to(el) {
+  const add_button_to = {
+    alt: {
+      name: "alt",
+      action: "get_alt",
+      title: reacg.ai_popup_alt_heading,
+      notice: reacg.ai_popup_alt_notice,
+      label: reacg.ai_popup_alt_field_label,
+    },
+    description: {
+      name: "description",
+      action: "get_description",
+      title: reacg.ai_popup_description_heading,
+      notice: reacg.ai_popup_description_notice,
+      label: reacg.ai_popup_description_field_label,
+    },
+    title: {
+      name: "title",
+      action: "get_title",
+      title: reacg.ai_popup_title_heading,
+      notice: reacg.ai_popup_title_notice,
+      label: reacg.ai_popup_title_field_label,
+    },
+    caption: {
+      name: "caption",
+      action: "get_caption",
+      title: reacg.ai_popup_caption_heading,
+      notice: reacg.ai_popup_caption_notice,
+      label: reacg.ai_popup_caption_field_label,
+    }
+  }
+
+  for ( let i in add_button_to ) {
+    reacg_add_ai_button(el, add_button_to[i]);
+  }
 }
 
 function reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text) {
