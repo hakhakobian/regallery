@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
 Requires at least: 4.6
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.3
+Stable tag: 1.20.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.3: Fixed compatibility issue with Divi 5. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.4: Fixed compatibility issue with the WordPress Widgets screen that could trigger a JavaScript error and prevent widgets from loading. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.4 =
+= Updated: 03.06.2026 =
+* **Fixed:** Compatibility issue with the WordPress Widgets screen that could trigger a JavaScript error and prevent widgets from loading.
+
 = 1.20.3 =
 = Updated: 02.06.2026 =
 * **Fixed:** Compatibility issue with Divi 5.
