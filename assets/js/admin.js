@@ -725,7 +725,18 @@ function reacg_info_icon() {
 }
 
 function reacg_escape_html(value) {
-  return jQuery('<div />').text(value == null ? '' : String(value)).html();
+  const stringValue = value == null ? '' : String(value);
+  const htmlEntityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+
+  return stringValue.replace(/[&<>"']/g, function (character) {
+    return htmlEntityMap[character];
+  });
 }
 
 function reacg_get_attachment_field_value(attachment, fieldName) {
