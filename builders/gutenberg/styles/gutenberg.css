@@ -110,8 +110,11 @@
     box-shadow: none;;
     outline: none;
   }
-
   #reacg-gallery-images {
     margin: 10px;
+  }
+  .reacg-hover-buttons span {
+    font-size: 22px;
+    margin-right: 2px;
   }
 }

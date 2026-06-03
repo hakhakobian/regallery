@@ -339,7 +339,10 @@
     let wasSaving = false;
 
     subscribe(function () {
-      const editor = select('core/editor');
+      const editor = select('core/editor') || select('core/block-editor');
+      if (!editor || typeof editor.getBlocks !== 'function') {
+        return;
+      }
 
       const blocks = editor.getBlocks();
       const hasGalleryBlock = blocks.some(
