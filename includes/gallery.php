@@ -344,7 +344,7 @@ class REACG_Gallery {
     wp_enqueue_style($this->obj->prefix . '_admin');
 
     $columns = array_merge(array_slice($columns, 0, 1), array('reacg_thumbnail' => __('Thumbnail', 'regallery')), array_slice($columns, 1));
-    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Images', 'regallery')), array_slice($columns, 3));
+    $columns = array_merge(array_slice($columns, 0, 3), array('reacg_shortcode' => __('Shortcode', 'regallery'), 'reacg_images_count' => __('Items', 'regallery')), array_slice($columns, 3));
 
     return $columns;
   }
@@ -1273,7 +1273,7 @@ class REACG_Gallery {
     $this->remove_all_the_metaboxes();
 
     // Metabox for adding images.
-    add_meta_box( 'gallery-images', __( 'Images', 'regallery' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-images', __( 'Images and Videos', 'regallery' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-settings', __( 'Settings', 'regallery' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-preview', __( 'Preview', 'regallery' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
