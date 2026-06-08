@@ -70,8 +70,8 @@ body {
 
 .elementor-widget-container .button-primary:hover,
 .reacg_module .button-primary:hover {
-  background: var(--reacg-primary-color, #155C92);
-  border-color: var(--reacg-primary-color, #155C92);
+  background: var(--reacg-primary-color-darker, #135e96);
+  border-color: var(--reacg-primary-color-darker, #135e96);
   color: #fff;
   border-radius: 3px;
 }

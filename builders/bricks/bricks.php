@@ -63,10 +63,25 @@ class REACGBricksElement extends \Bricks\Element {
     if (function_exists('bricks_is_builder') && bricks_is_builder()) {
       return true;
     }
+
+    // Bricks front-end preview should not be treated as edit mode.
+    if ( isset($_GET['bricks_preview']) && '' !== (string) $_GET['bricks_preview'] ) {
+      return false;
+    }
+
     // Bricks-related REST/AJAX calls.
     if ( !empty($_SERVER['HTTP_REFERER']) ) {
       $referer = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
-      if ( FALSE !== strpos( $referer, 'bricks=run' ) ) {
+      $query = wp_parse_url( $referer, PHP_URL_QUERY );
+      $params = [];
+
+      if ( !empty( $query ) ) {
+        parse_str( $query, $params );
+      }
+
+      $is_bricks_run = isset( $params['bricks'] ) && 'run' === $params['bricks'];
+
+      if ( $is_bricks_run ) {
         return true;
       }
     }
