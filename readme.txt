@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.4
+Stable tag: 1.20.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.4: Fixed compatibility issue with the WordPress Widgets screen that could trigger a JavaScript error and prevent widgets from loading. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.5: Fixed XSS vulnerability. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.5 =
+= Updated: 09.06.2026 =
+* **Fixed:** XSS vulnerability.
+* **Fixed:** Styling issues in Gutenberg and Bricks Builder options panel.
+
 = 1.20.4 =
 = Updated: 03.06.2026 =
 * **Fixed:** Compatibility issue with the WordPress Widgets screen that could trigger a JavaScript error and prevent widgets from loading.
