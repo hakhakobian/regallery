@@ -496,6 +496,7 @@ final class REACG {
       'title' => $this->nicename,
       'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
       'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
+      'gallery_images_section_title' => __("Images and Videos", "regallery"),
       'create_button' => __("Create", "regallery"),
       'gallery_title_placeholder' => __("Enter gallery title", "regallery"),
       'plugin_url' => $this->plugin_url,

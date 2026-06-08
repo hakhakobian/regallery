@@ -199,9 +199,15 @@
   }
   function gallery_images_container(shortcode_id) {
     return el("div", {
-      id: "reacg-gallery-images",
-      class: (shortcode_id != all_images_id ? "" : "reacg-hidden"),
-    });
+        class: (shortcode_id != all_images_id ? "" : "reacg-hidden"),
+      },
+      el('h2', {
+        class: 'reacg-gallery-images-section-title'
+      }, reacg_gutenberg.gallery_images_section_title),
+      el("div", {
+        id: "reacg-gallery-images",
+      })
+    );
   }
 
   function set_data(baseCont, shortcode_id, props) {

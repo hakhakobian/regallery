@@ -75,20 +75,23 @@
 }
 
 .reacg-gutenberg-settings {
+  .reacg_items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 4px;
+  }
   .reacg_item {
-    width: 69px;
-    height: 69px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin: 0;
   }
   .reacg-cover {
-    width: 60px;
-    height: 60px;
-  }
-  .reacg-cover.dashicons:before,
-  .reacg-cover.reacg-dynamic.dashicons:after {
-    font-size: 35px;
+    width: 65px;
+    height: 65px;
   }
   .reacg_item_new .reacg_item_image {
-    mask-size: 60px;
+    mask-size: 75px;
   }
   .reacg-galleries-list {
     width: calc(100% - 20px);
@@ -113,8 +116,11 @@
   #reacg-gallery-images {
     margin: 10px;
   }
-  .reacg-hover-buttons span {
-    font-size: 22px;
-    margin-right: 2px;
+  .reacg-gallery-images-section-title {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 10px 5px;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
   }
 }
