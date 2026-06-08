@@ -1,4 +1,6 @@
 <?php
+defined('ABSPATH') || die('Access Denied');
+
 /**
  * Divi 5 Compatibility Module
  * 

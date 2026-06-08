@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || die('Access Denied');
 
 class REACG_Divi extends DiviExtension {
 

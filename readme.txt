@@ -2,7 +2,7 @@
 Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
-Requires at least: 4.6
+Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
 Stable tag: 1.20.4

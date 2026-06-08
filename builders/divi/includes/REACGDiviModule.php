@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || die('Access Denied');
 
 class REACG_DiviModule extends ET_Builder_Module {
   public $icon_path = REACG_PLUGIN_DIR . '/assets/images/icon.svg';
