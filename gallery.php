@@ -427,6 +427,8 @@ final class REACG {
       'ai_highlight' => __('Use our built-in AI tools to instantly generate a Title, Caption, Description, and Alt text. Ideal for better SEO and accessibility.', 'regallery'),
       'enter_license_key' => __('Please enter license key.', 'regallery'),
       'no_image' => $this->plugin_url . $this->no_image,
+      'website_language' => get_locale(),
+      'user_language' => get_user_locale(),
       'rest_nonce' => $this->rest_nonce,
       'nonce' => wp_create_nonce( $this->nonce ),
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,

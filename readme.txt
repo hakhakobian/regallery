@@ -152,17 +152,17 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 
 == Screenshots ==
 
-1. Gallery Grid view
-2. Gallery Mosaic view
-3. Gallery Masonry view
-4. Gallery Justified view
-5. Gallery Slider view
-6. Gallery Cube view
-7. Gallery Carousel view
-8. Gallery Cards view
-9. Gallery Blog view
-10. Gallery Coverflow view
-11. Gallery Scroller view
+1. Gallery Grid layout
+2. Gallery Mosaic layout
+3. Gallery Masonry layout
+4. Gallery Justified layout
+5. Gallery Slider layout
+6. Gallery Cube layout
+7. Gallery Carousel layout
+8. Gallery Cards layout
+9. Gallery Blog layout
+10. Gallery Coverflow layout
+11. Gallery Scroller layout
 12. Image Gallery Lightbox
 13. Gallery Chaos template
 14. Gallery Products template

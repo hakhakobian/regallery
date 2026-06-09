@@ -1150,6 +1150,8 @@ function reacg_open_ai_generate_content_modal(images, options) {
           alt: singleImageData.alt || '',
           caption: singleImageData.caption || '',
           description: singleImageData.description || '',
+          website_language: reacg.website_language || '',
+          user_language: reacg.user_language || document.documentElement.lang || '',
           fields: JSON.stringify(state.fields),
           overwrite_mode: state.overwriteMode,
           action: 'get_content',
@@ -1579,6 +1581,8 @@ function reacg_add_ai_button(that, field) {
                   data: {
                     "image_url": url_cont.find("input").val(),
                     "notes": modal.find(".reacg-modal-notes").val(),
+                    "website_language": reacg.website_language || '',
+                    "user_language": reacg.user_language || document.documentElement.lang || '',
                     "action": field.action,
                   },
                   complete: function (response) {
