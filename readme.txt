@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.5
+Stable tag: 1.20.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.5: Fixed XSS vulnerability. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.6: Improved automatically detect and use the website language when generating text with AI. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.6 =
+= Updated: 10.06.2026 =
+* **Improved:** Automatically detect and use the website language when generating text with AI.
+
 = 1.20.5 =
 = Updated: 09.06.2026 =
 * **Fixed:** XSS vulnerability.
