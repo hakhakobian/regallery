@@ -1,14 +1,10 @@
 <?php
 defined('ABSPATH') || die('Access Denied');
 
-use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\Module\Style;
-use ET\Builder\Packages\Module\Module;
 use ET\Builder\Packages\Module\Options\Css\CssStyle;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 use ET\Builder\VisualBuilder\Assets\PackageBuildManager;
-use ET\Builder\Packages\ModuleUtils\ModuleUtils;
-use ET\Builder\Packages\Module\Layout\Components\ModuleElements\ModuleElements;
 
 class REACG_Divi5Module {
   private static $module_registered = FALSE;
@@ -92,7 +88,7 @@ class REACG_Divi5Module {
         'ajax_url'         => admin_url( 'admin-ajax.php' ),
         'nonce'            => wp_create_nonce( 'reacg_divi_builder' ),
         'loading_text'     => esc_html__( 'Loading gallery preview...', 'regallery' ),
-        'empty_text'       => esc_html__( 'Select a gallery to preview it in Divi 5.', 'regallery' ),
+        'empty_text'       => esc_html__( 'Select a gallery to preview it.', 'regallery' ),
         'error_text'       => esc_html__( 'Unable to load gallery preview. Please try again.', 'regallery' ),
       ),
       $this->localized_data
@@ -119,21 +115,24 @@ class REACG_Divi5Module {
     }
 
     $gallery_id     = isset( $_POST['gallery_id'] ) ? self::parse_gallery_id( wp_unslash( $_POST['gallery_id'] ) ) : 0;
+    $module_id      = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
     $enable_options = ! empty( $_POST['enable_options'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['enable_options'] ) );
 
     wp_send_json_success(
       array(
-        'html'        => self::get_preview_markup( $gallery_id, $enable_options ),
+        'html'        => self::get_preview_markup( $gallery_id, $enable_options, $module_id ),
         'galleryData' => REACGLibrary::get_data( $gallery_id ),
         'galleryId'   => $gallery_id,
+        'rootId'      => REACGLibrary::get_root_element_id( $gallery_id, $module_id ),
       )
     );
   }
 
-  private static function get_preview_markup( int $gallery_id, bool $enable_options ): string {
+  private static function get_preview_markup( int $gallery_id, bool $enable_options, string $module_id = '' ): string {
+    $root_id = REACGLibrary::get_root_element_id( $gallery_id, $module_id );
     ob_start();
     ?>
-    <div id="reacg-root<?php echo esc_attr( $gallery_id ); ?>"
+    <div id="<?php echo esc_attr( $root_id ); ?>"
          class="reacg-wrapper reacg-gallery reacg-preview"
           data-options-section="<?php echo esc_attr( (int) $enable_options ); ?>"
          data-options-container="#reacg_settings"
@@ -148,6 +147,7 @@ class REACG_Divi5Module {
 
   public static function render_callback( array $attrs, string $content, object $block, object $elements ): string {
     $new_attrs = $block->parsed_block['attrs'];
+    $module_id = $block->parsed_block['id'] ?? '';
 
     $gallery_id = self::parse_gallery_id(
       self::get_attribute_value( $new_attrs, 'galleryId', self::get_attribute_value( $new_attrs, 'post_id', 0 ) )
@@ -157,7 +157,8 @@ class REACG_Divi5Module {
       return self::get_empty_markup();
     }
 
-    return do_shortcode( REACGLibrary::get_shortcode( REACG(), $gallery_id ) );
+
+    return REACGLibrary::get_rest_routs( $gallery_id, FALSE, $module_id );
   }
 
   public static function module_classnames( array $args ): array {
