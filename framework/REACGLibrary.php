@@ -117,22 +117,43 @@ class REACGLibrary {
    *
    * @return void
    */
-  public static function get_rest_routs($gallery_id, $enable_options = FALSE) {
+  public static function get_rest_routs( $gallery_id, $enable_options = FALSE, $instance_id = '' ) {
     REACGLibrary::enqueue_scripts();
 
-    $data = REACGLibrary::get_data($gallery_id);
+    $data    = REACGLibrary::get_data( $gallery_id );
+    $root_id = self::get_root_element_id( $gallery_id, $instance_id );
     ob_start();
     ?>
-    <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode($data);  ?>;</script>
-    <div id="reacg-root<?php echo esc_attr((int) $gallery_id); ?>"
+    <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode( $data );  ?>;</script>
+    <div id="<?php echo esc_attr( $root_id ); ?>"
          class="reacg-wrapper reacg-gallery reacg-preview"
-         data-options-section="<?php echo esc_attr( (int) ($enable_options || is_admin())); ?>"
-         data-options-container="<?php echo esc_attr('#reacg_settings'); ?>"
-         data-plugin-version="<?php echo esc_attr(REACG_VERSION); ?>"
-         data-gallery-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'gallery_timestamp', TRUE )); ?>"
-         data-options-timestamp="<?php echo esc_attr(get_post_meta( $gallery_id, 'options_timestamp', TRUE )); ?>"
-         data-gallery-id="<?php echo esc_attr((int) $gallery_id); ?>"></div><?php
+         data-options-section="<?php echo esc_attr( (int) ( $enable_options || is_admin() ) ); ?>"
+         data-options-container="<?php echo esc_attr( '#reacg_settings' ); ?>"
+         data-plugin-version="<?php echo esc_attr( REACG_VERSION ); ?>"
+         data-gallery-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'gallery_timestamp', TRUE ) ); ?>"
+         data-options-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'options_timestamp', TRUE ) ); ?>"
+         data-gallery-id="<?php echo esc_attr( (int) $gallery_id ); ?>"></div><?php
     return ob_get_clean();
+  }
+
+  /**
+   * Build a unique DOM id for a gallery instance.
+   *
+   * @param int|string $gallery_id  Gallery post ID.
+   * @param string     $instance_id Optional module/block instance ID.
+   *
+   * @return string
+   */
+  public static function get_root_element_id( $gallery_id, $instance_id = '' ) {
+    if ( '' !== $instance_id && null !== $instance_id ) {
+      $safe_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', (string) $instance_id );
+
+      if ( '' !== $safe_id ) {
+        return 'reacg-root' . $safe_id;
+      }
+    }
+
+    return 'reacg-root' . (int) $gallery_id;
   }
 
   /**

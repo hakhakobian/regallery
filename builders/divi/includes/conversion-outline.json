@@ -1,0 +1,21 @@
+{
+  "advanced": {
+    "animation": "animation",
+    "disabled_on": "disabledOn",
+    "module": "module",
+    "overflow": "overflow",
+    "position_fields": "position",
+    "scroll": "scroll",
+    "sticky": "sticky",
+    "transform": "transform",
+    "transition": "transition",
+    "z_index": "zIndex",
+    "max_width": "sizing",
+    "height": "sizing",
+    "margin_padding": "spacing"
+  },
+  "module": {
+    "post_id": "galleryId.*",
+    "enable_options": "enableOptions.*"
+  }
+}
