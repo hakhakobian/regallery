@@ -127,6 +127,7 @@ final class REACG {
 
     // Register Divi module.
     add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
+    add_action( 'wp_ajax_reacg_divi_preview', array( $this, 'reacg_divi_preview' ) );
 
     // Register WP Bakery widget.
     add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
@@ -212,12 +213,15 @@ final class REACG {
   }
 
   public function initialize_divi_extension() {
-    // Check for Divi 5 support first
-    if ( class_exists( 'ET_Core_PortablePlugin' ) && defined( 'ET_CORE_VERSION' ) ) {
+    // Check for Divi 5 support first.
+    // ET_Core_PortablePlugin is not always loaded this early on frontend requests,
+    // so rely on the version constant here and let the module self-guard later.
+    if ( defined( 'ET_CORE_VERSION' ) ) {
       $divi_version = (int) explode('.', ET_CORE_VERSION)[0];
       
       // Load appropriate extension based on Divi version
       if ( $divi_version >= 5 ) {
+        // $this->divi5_loaded = TRUE;
         require_once ($this->plugin_dir . '/builders/divi/includes/divi-5.php');
       } else {
         // Divi 4 support
@@ -229,6 +233,28 @@ final class REACG {
       // Fallback for older Divi versions without ET_CORE_VERSION
       require_once ($this->plugin_dir . '/builders/divi/includes/divi.php');
     }
+  }
+
+  /**
+   * AJAX preview endpoint for the Divi 5 module.
+   *
+   * Divi's extension bootstrap is not guaranteed to run on admin-ajax requests,
+   * so we register the endpoint from the plugin bootstrap and load the module on demand.
+   */
+  public function reacg_divi_preview() {
+    require_once $this->plugin_dir . '/builders/divi/includes/REACGDivi5Module.php';
+
+    if ( class_exists( 'REACG_Divi5Module' ) ) {
+      $module = new REACG_Divi5Module();
+      $module->preview();
+    }
+
+    wp_send_json_error(
+      array(
+        'message' => esc_html__( 'Unable to load the Divi preview handler.', 'regallery' ),
+      ),
+      500
+    );
   }
 
   public function register_wpbakery_widget() {
