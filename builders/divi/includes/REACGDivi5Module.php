@@ -118,7 +118,7 @@ class REACG_Divi5Module {
       wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to preview this gallery.', 'regallery' ) ), 403 );
     }
 
-    $gallery_id     = isset( $_POST['gallery_id'] ) ? absint( $_POST['gallery_id'] ) : 0;
+    $gallery_id     = isset( $_POST['gallery_id'] ) ? self::parse_gallery_id( wp_unslash( $_POST['gallery_id'] ) ) : 0;
     $enable_options = ! empty( $_POST['enable_options'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['enable_options'] ) );
 
     wp_send_json_success(
@@ -149,9 +149,11 @@ class REACG_Divi5Module {
   public static function render_callback( array $attrs, string $content, object $block, object $elements ): string {
     $new_attrs = $block->parsed_block['attrs'];
 
-    $gallery_id = absint( self::get_attribute_value( $new_attrs, 'galleryId', self::get_attribute_value( $new_attrs, 'post_id', 0 ) ) );
-    
-    if ( empty( $gallery_id ) ) {
+    $gallery_id = self::parse_gallery_id(
+      self::get_attribute_value( $new_attrs, 'galleryId', self::get_attribute_value( $new_attrs, 'post_id', 0 ) )
+    );
+
+    if ( 0 === $gallery_id ) {
       return self::get_empty_markup();
     }
 
@@ -206,6 +208,10 @@ class REACG_Divi5Module {
     <?php
 
     return (string) ob_get_clean();
+  }
+
+  private static function parse_gallery_id( $value ): int {
+    return (int) $value;
   }
 
   private static function get_attribute_value( array $attrs, string $attribute_name, $default_value = null ) {
