@@ -241,10 +241,6 @@ to avoid a bug connected with preview.
   outline: none;
 }
 
-#gallery-custom-css {
-  display: none;
-}
-
 #gallery-custom-css textarea {
   width: 100%;
 }
