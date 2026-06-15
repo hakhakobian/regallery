@@ -18,6 +18,7 @@
     transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
+    border-radius: 6px;
   }
 
   @media screen and (max-width: 600px) {
@@ -41,6 +42,7 @@
     height: 55px;
     box-sizing: border-box;
     border-bottom: 1px solid #FBFBFB;
+    border-radius: 6px 6px 0 0;
   }
 
   .reacg-popup-body {
@@ -79,13 +81,19 @@
     border-top: 1px solid #CCCCCC;
   }
 
-  .reacg-agreement-wrapper,
-  .reacg-buttons-wrapper {
+  .reacg-agreement-wrapper:not(:only-child),
+  .reacg-buttons-wrapper:not(:only-child) {
     padding-top: 10px;
   }
 
   .reacg-buttons-wrapper {
     text-align: right;
+  }
+  .button,
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    border-radius: 6px !important;
   }
 
   .reacg-note-wrapper {
