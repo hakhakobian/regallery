@@ -54,13 +54,14 @@ class REACG_Divi5Module {
         'name'    => 'regallery-divi',
         'version' => REACG_VERSION,
         'script'  => array(
-          'src'                => REACG_PLUGIN_URL . '/builders/divi/scripts/reacg-divi-modern' . $min . '.js',
+          'src'                => REACG_PLUGIN_URL . '/builders/divi/scripts/reacg-divi-modern.js',
           'deps'               => array(
             'react',
             'jquery',
             'divi-module-library',
             'wp-hooks',
             'divi-rest',
+            REACG_PREFIX . '_thumbnails',
           ),
           'enqueue_top_window' => false,
           'enqueue_app_window' => true,
