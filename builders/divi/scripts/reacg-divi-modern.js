@@ -101,6 +101,7 @@
     return {
       active: true,
       timeouts: [],
+      lastTriggerByRootId: {},
     };
   }
 
@@ -244,24 +245,23 @@
     return triggerLoadAppButton(loadApp, root.id);
   }
 
-  function scanEmptyDiviGalleryPreviews() {
-    const documents = getDocumentContexts();
+  function hasMountedGalleryContent(root) {
+    return !!(
+      root &&
+      (root.childElementCount > 0 || String(root.textContent || '').trim() !== '')
+    );
+  }
 
-    documents.forEach(function (doc) {
-      doc.querySelectorAll('.reacg_divi_gallery .reacg-gallery.reacg-preview').forEach(function (root) {
-        if (!root.id || root.hasChildNodes()) {
-          return;
-        }
+  function shouldTriggerMount(controller, rootId) {
+    const now = Date.now();
+    const lastTrigger = controller.lastTriggerByRootId[rootId] || 0;
 
-        const galleryId = root.getAttribute('data-gallery-id');
+    if (now - lastTrigger < 400) {
+      return false;
+    }
 
-        if (!galleryId || galleryId === '0') {
-          return;
-        }
-
-        mountGalleryElement(root);
-      });
-    });
+    controller.lastTriggerByRootId[rootId] = now;
+    return true;
   }
 
   function mountGalleryPreview(rootId, expectedGalleryId, controller, attempt, onSuccess) {
@@ -270,7 +270,7 @@
     }
 
     const currentAttempt = attempt || 0;
-    const maxAttempts = 50;
+    const maxAttempts = 80;
     const root = findElementById(rootId);
 
     if (root) {
@@ -284,16 +284,16 @@
         return;
       }
 
-      if (mountGalleryElement(root)) {
-        scheduleMountRetry(controller, function () {
-          scanEmptyDiviGalleryPreviews();
-        }, 250);
-
+      if (hasMountedGalleryContent(root)) {
         if (typeof onSuccess === 'function') {
           onSuccess();
         }
 
         return;
+      }
+
+      if (shouldTriggerMount(controller, rootId)) {
+        mountGalleryElement(root);
       }
     }
 
@@ -303,7 +303,7 @@
 
     scheduleMountRetry(controller, function () {
       mountGalleryPreview(rootId, expectedGalleryId, controller, currentAttempt + 1, onSuccess);
-    }, currentAttempt < 15 ? 100 : 150);
+    }, currentAttempt < 20 ? 100 : 250);
   }
 
   function scheduleGalleryPreviewMount(rootId, expectedGalleryId, controller, onSuccess) {
@@ -527,6 +527,12 @@
                 ? React.createElement('div', { className: 'reacg-divi-error' }, settings.error_text)
                 : null,
               React.createElement('div', {
+                key:
+                  (preview.rootId || stableRootId) +
+                  ':' +
+                  (preview.galleryId || '') +
+                  ':' +
+                  String(enableOptions),
                 id: preview.rootId || stableRootId,
                 className: 'reacg-wrapper reacg-gallery reacg-preview',
                 'data-options-section': enableOptions === 'on' ? 1 : 0,
