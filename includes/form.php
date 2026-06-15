@@ -4,16 +4,48 @@ defined('ABSPATH') || die('Access Denied');
 class REACG_Form {
   private $obj;
 
-  public function __construct($that) {
+  public function __construct($that, $type = 'support') {
     $this->obj = $that;
 
     if ( is_admin() ) {
       $this->enqueue_scripts();
-      add_action('admin_footer', array( $this, 'content' ));
+      if ( $type === 'support' ) {
+        add_action('admin_footer', array( $this, 'support_content' ));
+      }
+      else if ( $type === 'book-a-call' ) {
+        add_action('admin_footer', array( $this, 'book_a_call_content' ));
+      }
     }
   }
 
-  public function content() {
+  public function support_content() {
+    ?>
+    <div id="reacg-support-popup-overlay" class="reacg-form-popup-overlay" style="display: none;">
+      <div class="reacg-popup">
+        <div class="reacg-popup-header">
+          <?php esc_html_e("Support", 'regallery'); ?>
+          <span class="reacg-popup-close dashicons dashicons-no"></span>
+        </div>
+        <div class="reacg-popup-body">
+          <div class="reacg-note-wrapper">
+              <?php esc_html_e("Have a question or issue?", 'regallery'); ?>
+          </div>
+          <p>
+            <?php esc_html_e("Please post it on our support forum so we can help you faster.", 'regallery'); ?>
+            <?php esc_html_e("We actively monitor and prioritize new questions to ensure quick responses.", 'regallery'); ?>
+          </p>
+          <div class="reacg-buttons-wrapper">
+            <a class="button button-primary" href="https://wordpress.org/support/plugin/regallery/#new-topic-0" target="_blank">
+              <?php esc_html_e("Support Forum", 'regallery'); ?>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php
+  }
+
+  public function book_a_call_content() {
     $reasons = [
       1 => __("Explore Re Gallery Pro with an Expert", "regallery"),
       2 => __("Technical Question", "regallery"),

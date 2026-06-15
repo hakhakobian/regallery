@@ -312,7 +312,7 @@ final class REACG {
 
   public function form() {
     require_once($this->plugin_dir . '/includes/form.php');
-    new REACG_Form( $this );
+    new REACG_Form( $this, 'support' );
   }
 
   /**

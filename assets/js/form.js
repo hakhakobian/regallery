@@ -1,5 +1,6 @@
 jQuery(document).ready(function () {
   reacg_bind_book_a_call_modal_events();
+  reacg_bind_support_modal_events();
 
   reacg_bind_optin_modal_events();
 });
@@ -70,6 +71,21 @@ function reacg_bind_form_events(modal, submitAction, reasonExist = true, agreeme
     }
   });
 }
+
+function reacg_bind_support_modal_events() {
+  const modal = jQuery("#reacg-support-popup-overlay");
+  if (!modal.length) {
+    return;
+  }
+
+  jQuery(document).on("click", "a[href='reacg-support']", function (e){
+    modal.show();
+
+    return false;
+  });
+  reacg_bind_form_events(modal, "");
+}
+
 function reacg_bind_book_a_call_modal_events() {
   const modal = jQuery("#reacg-form-popup-overlay");
   if (!modal.length) {
