@@ -38,7 +38,7 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 *   **Responsive Support & Continuous Improvements:** Our dedicated support team is here to ensure you get the most out of the Re Gallery plugin. We actively listen to user feedback and continuously roll out updates, including upcoming features like lightbox enhancements, gallery animations, and more. Re Gallery is built for long-term use: SEO-optimized, mobile-responsive, and designed to keep your site visually compelling, fast, and easy to navigate.
 
 
-https://www.youtube.com/watch?v=RldoAkceHTQ
+https://www.youtube.com/watch?v=hPJzRNCz8VQ
 
 
 == 🎨 Real-Time Preview - See Photo Gallery in Action ==
@@ -114,7 +114,7 @@ Just upload your images and let Re Gallery PRO do the work.
 
 Display your WooCommerce products in stunning, customizable galleries with Re Gallery. Automatically pull product images, titles, and prices into beautiful layouts that boost engagement and drive sales, no manual setup needed!
 
-👉 [Upgrade to Re Gallery PRO](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=upgrade#pricing) and create a smarter, faster photo gallery today.
+👉 [Upgrade to Re Gallery PRO](https://regallery.team/pricing?utm_source=wordpress&utm_medium=details&utm_campaign=upgrade) and create a smarter, faster photo gallery today.
 
 
 == Get more with Re Gallery PRO ==

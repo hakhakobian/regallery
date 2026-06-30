@@ -304,7 +304,7 @@ class REACG_Gallery {
         }
         elseif ( $menu_item[2] === 'reacg-upgrade' ) {
           // Replace with the external URL.
-          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'));
+          $submenu[$parent_slug][$index][2] = esc_url(add_query_arg(['utm_medium' => 'submenu', 'utm_campaign' => 'upgrade'], REACG_PRICING_URL_UTM));
           if ( isset( $submenu[ $parent_slug ][ $index ][4] ) ) {
             $submenu[ $parent_slug ][ $index ][4] .= ' reacg-sidebar-upgrade-pro reacg-hidden';
           } else {
@@ -1351,7 +1351,7 @@ class REACG_Gallery {
       [
         'id' => 'reacg-dashboard-upgrade-link',
         'title' => __('Upgrade', 'regallery'),
-        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing'),
+        'url' => add_query_arg(['utm_medium' => 'dashboard', 'utm_campaign' => 'upgrade'], REACG_PRICING_URL_UTM),
       ],
     ];
     ?>
@@ -1497,7 +1497,7 @@ class REACG_Gallery {
       <p>
         <?php
         /* translators: %s: HTML link to upgrade to PRO wrapped in strong tags */
-        echo sprintf(esc_html__( "To unlock more features consider %s.", 'regallery' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('upgrading to PRO', 'regallery') . '</a></strong>');
+        echo sprintf(esc_html__( "To unlock more features consider %s.", 'regallery' ), '<strong><a href="' . esc_url(add_query_arg(['utm_medium' => 'license', 'utm_campaign' => 'upgrade'], REACG_PRICING_URL_UTM)) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('upgrading to PRO', 'regallery') . '</a></strong>');
         ?>
       </p>
       <label for="reacg-license-key">
@@ -2156,7 +2156,7 @@ class REACG_Gallery {
         ?>
       </div>
       <div class="reacg-box__button-wrapper">
-        <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing')); ?>" target="_blank" class="button button-primary button-large reacg-box__button reacg-box__upgrade-button">
+        <a href="<?php echo esc_url(add_query_arg(['utm_medium' => $utm_medium, 'utm_campaign' => 'upgrade'], REACG_PRICING_URL_UTM)); ?>" target="_blank" class="button button-primary button-large reacg-box__button reacg-box__upgrade-button">
           <?php esc_html_e('Upgrade', 'regallery'); ?>
         </a>
       </div>

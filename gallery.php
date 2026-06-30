@@ -30,6 +30,7 @@ final class REACG {
   public $nicename = 'Re Gallery';
   public $author = 'Re Gallery Team';
   public $website_url = 'https://regallery.team';
+  public $pricing_url = 'https://regallery.team/pricing';
   public $demo_url = 'https://regallery.team/core/demo/';
   public $blog_url = 'https://regallery.team/core/blog/';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
@@ -87,6 +88,8 @@ final class REACG {
     define('REACG_AUTHOR', $this->author );
     define('REACG_WEBSITE_URL', $this->website_url );
     define('REACG_WEBSITE_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url) );
+    define('REACG_PRICING_URL', $this->pricing_url );
+    define('REACG_PRICING_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->pricing_url) );
     define('REACG_BLOG_URL', $this->blog_url );
     define('REACG_BLOG_URL_UTM', add_query_arg(['utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->blog_url) );
     define('REACG_DEMO_URL', $this->demo_url );
@@ -358,8 +361,8 @@ final class REACG {
       'plugin_assets_url' => REACG_PLUGIN_ASSETS_URL,
       'upgrade' => [
         'text' => REACG_BUY_NOW_TEXT,
-        'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_WEBSITE_URL_UTM . '#pricing' ),
-        'discount_url' => add_query_arg( ['utm_campaign' => 'upgrade_with_discount'], REACG_WEBSITE_URL_UTM . '#pricing' ),
+        'url' => add_query_arg( ['utm_campaign' => 'upgrade'], REACG_PRICING_URL_UTM ),
+        'discount_url' => add_query_arg( ['utm_campaign' => 'upgrade_with_discount'], REACG_PRICING_URL_UTM ),
       ],
       'demo_url' => add_query_arg( ['utm_campaign' => 'view_demo'], REACG_DEMO_URL_UTM ),
       'layout_urls' => [
@@ -368,7 +371,7 @@ final class REACG {
         'cards' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/spotlight-ad/'),
         'scroller' => add_query_arg(['utm_campaign' => 'view_layout_demo', 'utm_source' => 'wordpress_plugin', 'utm_content' => $this->version], $this->website_url . '/core/reacg/active-drift/'),
       ],
-      'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_WEBSITE_URL_UTM . '#see-all-features' ),
+      'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_PRICING_URL_UTM . '#see-all-features' ),
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'trial_days' => REACG_FREE_TRIAL_DAYS,
       'activate_trial_url' => REACG_ACTIVATE_TRIAL_URL,
