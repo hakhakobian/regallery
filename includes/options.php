@@ -17,7 +17,7 @@ class REACG_Options {
       'columns' => 3, #number
       'gap' => 10, #number
       'itemBorder' => 0, #number
-      'itemBackgroundColor' => '', #string
+      'itemBackgroundColor' => '#000000', #string
       'itemBorderRadius' => 0, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
@@ -26,7 +26,7 @@ class REACG_Options {
       'borderRadius' => 0, #number
       'paginationType' => 'simple', #string simple | scroll | loadMore | none
       'showAllItems' => TRUE, #boolean
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -71,11 +71,11 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '', #string
+      'paddingColor' => '#000000', #string
       'rowHeight' => 200, #number
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'overlay', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -115,10 +115,10 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '', #string
+      'paddingColor' => '#000000', #string
       'rowHeight' => 300, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -158,10 +158,10 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '', #string
+      'paddingColor' => '#000000', #string
       'columns' => 3, #number
       'borderRadius' => 0, #number
-      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
@@ -258,7 +258,7 @@ class REACG_Options {
       'backgroundColor' => '#FFFFFF', #string;
       'padding' => 0, #number;
       'shadow' => TRUE, #boolean
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle |push | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -312,7 +312,7 @@ class REACG_Options {
       'imagesCount' => 3, #number
       'enableScrollByImagesCount' => FALSE, #boolean
       'spaceBetween' => 20, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -361,7 +361,7 @@ class REACG_Options {
       'playAndPauseAllowed' => FALSE, #boolean
       'autoplay' => FALSE, #boolean
       'slideDuration' => 3000, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -413,7 +413,7 @@ class REACG_Options {
       'playAndPauseAllowed' => FALSE, #boolean
       'rotate' => 50, #number
       'imagesCount' => 3, #number
-      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'none', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => FALSE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleVisibility' => 'alwaysShown', #string alwaysShown | onHover
@@ -465,11 +465,11 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '', #string
+      'paddingColor' => '#000000', #string
       'borderRadius' => 0, #number
       'gap' => 20, #number
       'pauseOnHover' => TRUE, #boolean
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'animationSpeed' => 40, #number
       'showVideoCover' => TRUE, #boolean
       'showTitle' => FALSE, #boolean
@@ -512,7 +512,7 @@ class REACG_Options {
       'backgroundColor' => '', #string;
       'containerPadding' => 0, #number
       'imageRadius' => 0, #number
-      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
+      'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
       'showTitle' => TRUE, #boolean
       'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
       'titleFontSize' => 36, #number
@@ -819,7 +819,7 @@ class REACG_Options {
         'default' => 'slideH',
       ],
       'hoverEffect' => [
-        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'soft-light', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'none'],
+        'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'soft-light', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'push', 'none'],
         'default' => 'none',
       ],
       'orderBy' => [
