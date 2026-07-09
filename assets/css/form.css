@@ -11,7 +11,8 @@
 
   .reacg-popup {
     background: #FFF;
-    max-width: 600px;
+    width: 600px;
+    max-width: 100%;
     margin: auto;
     box-sizing: border-box;
     position: absolute;
@@ -19,14 +20,6 @@
     left: 50%;
     top: 50%;
     border-radius: 6px;
-  }
-
-  @media screen and (max-width: 600px) {
-    .reacg-popup {
-      width: 100%;
-      top: 0;
-      left: 0;
-    }
   }
 
   .reacg-popup > div {
@@ -68,7 +61,8 @@
   }
 
   .reacg-reasonType-wrapper div,
-  .reacg-reason-wrapper {
+  .reacg-reason-wrapper,
+  .reacg-reason-wrapper textarea {
     margin-top: 7px;
   }
 

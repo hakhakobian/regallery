@@ -61,15 +61,6 @@ function reacg_bind_form_events(modal, submitAction, reasonExist = true, agreeme
       e.stopPropagation();
     });
   }
-
-  modal.find(".reacg-reasonType").on("click", function () {
-    if ( jQuery(this).val() == 4 ) {
-      modal.find(".reacg-reason-wrapper").show();
-    }
-    else {
-      modal.find(".reacg-reason-wrapper").hide();
-    }
-  });
 }
 
 function reacg_bind_support_modal_events() {

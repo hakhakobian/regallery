@@ -23,7 +23,7 @@ class REACG_Deactivate {
       1 => __("It is hard to use", "regallery"),
       2 => __("I didn't find the features I needed", "regallery"),
       3 => __("It's a temporary deactivation", "regallery"),
-      4 => __("I'm open to a quick call to fix this together", "regallery"),
+      4 => __("I'd like someone from the Re Gallery team to contact me", "regallery"),
     ];
     $current_user = wp_get_current_user();
     $email = $current_user->exists() ? $current_user->user_email : "";
@@ -45,7 +45,7 @@ class REACG_Deactivate {
               ?>
               <div>
                 <label>
-                  <input type="radio" class="reacg-reasonType" name="reacg-reasonType" value="<?php echo esc_attr($key); ?>" alt="<?php echo esc_attr($reason); ?>" />
+                  <input $key === 4 ? checked="checked" : '' type="radio" class="reacg-reasonType" name="reacg-reasonType" value="<?php echo esc_attr($key); ?>" alt="<?php echo esc_attr($reason); ?>" />
                   <?php echo esc_attr($reason); ?>
                 </label>
               </div>
@@ -53,10 +53,10 @@ class REACG_Deactivate {
             }
             ?>
           </div>
-          <div class="reacg-reason-wrapper" style="display: none;">
+          <div class="reacg-reason-wrapper">
             <label>
-              <strong><?php esc_html_e("Please describe the deactivation reason:", 'regallery'); ?></strong>
-              <textarea class="reacg-reason" rows="4"></textarea>
+              <strong><?php esc_html_e("Would you like to tell us more?", 'regallery'); ?></strong>
+              <textarea class="reacg-reason" rows="4" placeholder="<?php esc_html_e("What were you trying to accomplish? Was there a feature you expected, something that was confusing, or anything we could do better?", 'regallery'); ?>"></textarea>
             </label>
           </div>
         </div>
