@@ -17,7 +17,7 @@ class REACG_Options {
       'columns' => 3, #number
       'gap' => 10, #number
       'itemBorder' => 0, #number
-      'itemBackgroundColor' => '#000000', #string
+      'itemBackgroundColor' => '', #string
       'itemBorderRadius' => 0, #number
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
@@ -71,7 +71,7 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '#000000', #string
+      'paddingColor' => '', #string
       'rowHeight' => 200, #number
       'columns' => 3, #number
       'borderRadius' => 0, #number
@@ -115,7 +115,7 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '#000000', #string
+      'paddingColor' => '', #string
       'rowHeight' => 300, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'overlay-icon-zoom', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
@@ -158,7 +158,7 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '#000000', #string
+      'paddingColor' => '', #string
       'columns' => 3, #number
       'borderRadius' => 0, #number
       'hoverEffect' => 'shine', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | soft-light | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | push | none
@@ -465,7 +465,7 @@ class REACG_Options {
       'backgroundColor' => '', #string
       'containerPadding' => 0, #number
       'padding' => 0, #number
-      'paddingColor' => '#000000', #string
+      'paddingColor' => '', #string
       'borderRadius' => 0, #number
       'gap' => 20, #number
       'pauseOnHover' => TRUE, #boolean
