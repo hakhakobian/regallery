@@ -637,7 +637,7 @@ class REACG_Gallery {
               $item += $this->get_item_extra_data($post_type, $post);
               $item['type'] = 'image'; // Overwrite type to show post as image in the gallery.
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
-              $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
+              $item['description'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($description))));
               $item['date'] = $post->post_date;
               $data[] = $item;
             }
@@ -656,7 +656,7 @@ class REACG_Gallery {
             $description = $post->post_content;
             $item += $this->get_item_extra_data($item['type'], $post);
           }
-          $item['description'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($description)), 100, '...'));
+          $item['description'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($description))));
           $item['date'] = $post->post_date;
           $data[] = $item;
         }
@@ -844,7 +844,7 @@ class REACG_Gallery {
       case "page":
       case "product": {
         $data['title'] = html_entity_decode(get_the_title($post->ID));
-        $data['caption'] = html_entity_decode(wp_trim_words(strip_shortcodes(wp_strip_all_tags($post->post_excerpt)), 10, '...'));
+        $data['caption'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($post->post_excerpt))));
         $data['author'] = html_entity_decode(get_the_author_meta('display_name', get_post_field('post_author', $post->ID)));
         $data['date_created'] = html_entity_decode(get_the_date( '', $post->ID ));
         $data['action_url'] = esc_url_raw(get_permalink($post->ID));
