@@ -42,13 +42,25 @@
 }
 
 .reacg_item_image {
-  background-repeat: no-repeat;
-  background-position: center;
   width: 100%;
   height: 100%;
   position: relative;
   cursor: move;
-  background-size: cover;
+  overflow: hidden;
+}
+
+.reacg_item_image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
+  pointer-events: none;
+}
+
+.reacg-cover,
+.reacg-overlay {
+  position: absolute;
 }
 
 .reacg_item_new p {

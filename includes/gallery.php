@@ -1884,8 +1884,10 @@ class REACG_Gallery {
            data-type="<?php echo esc_attr($data['type']); ?>"
            class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
     <div class="reacg_item_image"
-         title="<?php echo esc_attr($data['title']); ?>"
-         style="background-image: url('<?php echo esc_url($data['url']); ?>')">
+         title="<?php echo esc_attr($data['title']); ?>">
+      <?php if ( !empty($data['url']) ) : ?>
+        <img src="<?php echo esc_url($data['url']); ?>" alt="" />
+      <?php endif; ?>
       <div class="reacg-cover <?php echo esc_attr($cover_icon); ?>">
       </div>
       <div class="reacg-overlay">

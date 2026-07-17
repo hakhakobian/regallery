@@ -197,7 +197,7 @@ jQuery(document).ready(function () {
         else if ( typeof sizes.full.url !== 'undefined' ) {
           thumbnail_url = sizes.full.url;
         }
-        item.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')");
+        item.find(".reacg_item_image img").attr("src", thumbnail_url);
       }
 
       media_uploader.remove();
@@ -461,7 +461,13 @@ function reacg_media_uploader( e, that ) {
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
-        clone.find(".reacg_item_image").css("background-image", "url('" + thumbnail_url + "')").attr("title", title);
+        clone.find(".reacg_item_image").attr("title", title);
+        if ( thumbnail_url ) {
+          if ( !clone.find(".reacg_item_image img").length ) {
+            clone.find(".reacg_item_image").prepend('<img alt="" />');
+          }
+          clone.find(".reacg_item_image img").attr("src", thumbnail_url);
+        }
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(galleryItemsContainer.find(".reacg_item_new"));
         if ( type === "video" && reacg_should_generate_video_cover(selected_images[key], thumbnail_url) ) {
@@ -514,7 +520,7 @@ function reacg_generate_video_cover(selectedImage, item, galleryItemsContainer) 
       }
 
       if ( response.data.thumbnail_url ) {
-        item.find(".reacg_item_image").css("background-image", "url('" + response.data.thumbnail_url + "')");
+        item.find(".reacg_item_image img").attr("src", response.data.thumbnail_url);
       }
 
       return true;
