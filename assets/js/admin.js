@@ -23,7 +23,7 @@ jQuery(document).ready(function () {
   /* Check if user is pro.*/
   jQuery.ajax({
     type: "GET",
-    url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+    url: reacg.core_rest_url_v2 + "user",
     contentType: "application/json",
     complete: function (response) {
       reacg_isPro(!!response.responseJSON);
@@ -49,7 +49,7 @@ jQuery(document).ready(function () {
 
     jQuery.ajax({
       type: "POST",
-      url: "https://regallery.team/core/wp-json/reacgcore/v2/user",
+      url: reacg.core_rest_url_v2 + "user",
       contentType: "application/json",
       data: JSON.stringify({
         licenseKey: licenseKey,
@@ -1147,7 +1147,7 @@ function reacg_open_ai_generate_content_modal(images, options) {
 
       jQuery.ajax({
         type: 'GET',
-        url: 'https://regallery.team/core/wp-json/reacgcore/v2/ai',
+        url: reacg.core_rest_url_v2 + 'ai',
         contentType: 'application/json',
         data: {
           image_id: imageId,
@@ -1547,7 +1547,7 @@ function reacg_add_ai_button(that, field) {
 
       jQuery.ajax({
         type: "GET",
-        url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+        url: reacg.core_rest_url_v2 + "ai",
         contentType: "application/json",
         data: {
           "action": "check",
@@ -1582,7 +1582,7 @@ function reacg_add_ai_button(that, field) {
                 /* Perform AJAX request to generate AI text.*/
                 jQuery.ajax({
                   type: "GET",
-                  url: "https://regallery.team/core/wp-json/reacgcore/v2/ai",
+                  url: reacg.core_rest_url_v2 + "ai",
                   contentType: "application/json",
                   data: {
                     "image_url": url_cont.find("input").val(),
