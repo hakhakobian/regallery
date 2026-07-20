@@ -154,7 +154,7 @@ jQuery(document).ready(function () {
       const editButton = jQuery(this);
       const attachment = wp.media.attachment(image_id);
       attachment.fetch().then(function () {
-        reacg_open_attachment_edit_modal(editButton, attachment);
+        reacg_open_attachment_edit_modal(editButton, attachment, item);
       }).always(function () {
         editButton.removeAttr("disabled");
       });
@@ -802,7 +802,7 @@ function reacg_get_attachment_edit_link(attachmentId) {
   return '/wp-admin/post.php?post=' + id + '&action=edit&image-editor';
 }
 
-function reacg_attachment_edit_modal(attachment) {
+function reacg_attachment_edit_modal(attachment, item) {
   const sizes = attachment.get('sizes');
   const attachmentType = reacg_get_attachment_field_value(attachment, 'type');
   const mimeType = reacg_get_attachment_field_value(attachment, 'mime');
@@ -846,7 +846,7 @@ function reacg_attachment_edit_modal(attachment) {
                 '<div class="reacg-attachment-modal__field" data-setting="description"><label for="reacg-attachment-description">' + reacg_escape_html(reacg.attachment_description) + '</label><textarea id="reacg-attachment-description" rows="4">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'description')) + '</textarea></div>' +
                 '<div class="reacg-attachment-modal__field" data-setting="action_url"><label for="reacg-attachment-action-url">' + reacg_escape_html(reacg.attachment_action_url) + '</label><input type="url" id="reacg-attachment-action-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'action_url')) + '" placeholder="https://example.com" /></div>' +
                 '<div class="reacg-attachment-modal__field" data-setting="exif"><label for="reacg-attachment-exif">' + reacg_escape_html(reacg.attachment_metadata_exif) + '</label><textarea id="reacg-attachment-exif" rows="5">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'exif')) + '</textarea></div>' +
-                '<div class="reacg-attachment-modal__field reacg-hidden" data-setting="url"><label for="reacg-attachment-url">' + reacg_escape_html(reacg.attachment_url) + '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'url')) + '" /></div>' +
+                '<div class="reacg-attachment-modal__field reacg-hidden" data-setting="url"><label for="reacg-attachment-url">' + reacg_escape_html(reacg.attachment_url) + '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(isVideo && item && item.length ? item.find(".reacg_item_image img").attr("src") : reacg_get_attachment_field_value(attachment, 'url')) + '" /></div>' +
               '</div>' +
             '</div>' +
             '<div><p class="reacg-modal-error-note hidden"></p></div>' +
@@ -857,8 +857,8 @@ function reacg_attachment_edit_modal(attachment) {
     '</div>');
 }
 
-function reacg_open_attachment_edit_modal(button, attachment) {
-  const modal = reacg_attachment_edit_modal(attachment);
+function reacg_open_attachment_edit_modal(button, attachment, item) {
+  const modal = reacg_attachment_edit_modal(attachment, item);
   jQuery('body').append(modal);
   modal.css('display', 'flex').show();
   reacg_add_ai_button_to(jQuery('.reacg-modal__layout-content'));

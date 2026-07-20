@@ -431,7 +431,7 @@ to avoid a bug connected with preview.
     }
     .spinner.reacg-float-none {
       margin-left: 6px;
-      margin-bottom: 8px;
+      margin-top: -6px;
       vertical-align: middle;
     }
   }
