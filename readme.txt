@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, mosaic gallery, responsive gallery
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.9
+Stable tag: 1.20.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,10 +250,18 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.9: Preserved line breaks in item descriptions. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.10: Images smaller than their container are no longer stretched. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.10 =
+= Updated: 21.07.2026 =
+* **Added:** Scroller layout to the Templates filter list.
+* **Fixed:** Title, caption, description generation for videos.
+* **Fixed:** The Free Templates category is no longer shown for Pro users.
+* **Fixed:** Images smaller than their container are no longer stretched.
+* **Fixed:** An issue affecting the Scroller layout in certain cases.
+
 = 1.20.9 =
 = Updated: 14.07.2026 =
 * **Improved:** Preserved line breaks in item descriptions.
