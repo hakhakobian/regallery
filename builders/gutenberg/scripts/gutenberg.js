@@ -242,6 +242,9 @@
           if (shortcode_id != all_images_id) {
             container.classList.remove("reacg-hidden");
             container.innerHTML = data;
+            if (typeof reacg_update_item_image_fit === "function") {
+              container.querySelectorAll(".reacg_item_image img").forEach(reacg_update_item_image_fit);
+            }
             /* Make the image items sortable.*/
             reacg_make_items_sortable(container);
           }

@@ -197,15 +197,46 @@ jQuery(document).ready(function () {
         else if ( typeof sizes.full.url !== 'undefined' ) {
           thumbnail_url = sizes.full.url;
         }
-        item.find(".reacg_item_image img").attr("src", thumbnail_url);
+        item.find(".reacg_item_image img").attr("src", thumbnail_url).each(function () {
+          reacg_update_item_image_fit(this);
+        });
       }
 
       media_uploader.remove();
     } );
   });
 
+  jQuery(".reacg_item_image img").each(function () {
+    reacg_update_item_image_fit(this);
+  });
+
   reacg_add_ai_button_to_uploader();
 });
+
+function reacg_update_item_image_fit(image) {
+  const img = jQuery(image);
+  const container = img.closest(".reacg_item_image");
+
+  if ( !container.length ) {
+    return;
+  }
+
+  const update = function () {
+    const imageElement = img[0];
+    const isSmallImage = imageElement.naturalWidth > 0
+      && imageElement.naturalHeight > 0
+      && imageElement.naturalWidth < container.innerWidth()
+      && imageElement.naturalHeight < container.innerHeight();
+
+    img.toggleClass("reacg_item_image_img_natural", isSmallImage);
+  };
+
+  img.off("load.reacgImageFit").on("load.reacgImageFit", update);
+
+  if ( image.complete && image.naturalWidth ) {
+    update();
+  }
+}
 
 function reacg_isPro(isPro) {
   if (isPro) {
@@ -466,7 +497,9 @@ function reacg_media_uploader( e, that ) {
           if ( !clone.find(".reacg_item_image img").length ) {
             clone.find(".reacg_item_image").prepend('<img alt="" />');
           }
-          clone.find(".reacg_item_image img").attr("src", thumbnail_url);
+          clone.find(".reacg_item_image img").attr("src", thumbnail_url).each(function () {
+            reacg_update_item_image_fit(this);
+          });
         }
         clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
         clone.insertAfter(galleryItemsContainer.find(".reacg_item_new"));
@@ -520,7 +553,9 @@ function reacg_generate_video_cover(selectedImage, item, galleryItemsContainer) 
       }
 
       if ( response.data.thumbnail_url ) {
-        item.find(".reacg_item_image img").attr("src", response.data.thumbnail_url);
+        item.find(".reacg_item_image img").attr("src", response.data.thumbnail_url).each(function () {
+          reacg_update_item_image_fit(this);
+        });
       }
 
       return true;
