@@ -34,7 +34,9 @@ final class REACG {
   public $demo_url = 'https://regallery.team/core/demo/';
   public $blog_url = 'https://regallery.team/core/blog/';
   public $wp_plugin_url = "https://wordpress.org/support/plugin/regallery";
-  public $activate_trial_url = "https://regallery.team/core/wp-json/reacgcore/v2/trial/activate";
+  public $core_rest_url_v1 = "https://regallery.team/core/wp-json/reacgcore/v1/";
+  public $core_rest_url_v2 = "https://regallery.team/core/wp-json/reacgcore/v2/";
+  public $core_rest_url_v3 = "https://regallery.team/core/wp-json/reacgcore/v3/";
   public $nonce = 'reacg_nonce';
   public $rest_root = "";
   public $rest_nonce = "";
@@ -101,7 +103,6 @@ final class REACG {
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
     define('REACG_PLAYGROUND', strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE );
     define('REACG_FREE_TRIAL_DAYS', 7);
-    define('REACG_ACTIVATE_TRIAL_URL', $this->activate_trial_url);
   }
 
   /**
@@ -374,7 +375,9 @@ final class REACG {
       'compare_plans_url' => add_query_arg( ['utm_campaign' => 'see_all_features'], REACG_PRICING_URL_UTM . '#see-all-features' ),
       'support_url' => REACG_WP_PLUGIN_SUPPORT_URL,
       'trial_days' => REACG_FREE_TRIAL_DAYS,
-      'activate_trial_url' => REACG_ACTIVATE_TRIAL_URL,
+      'core_rest_url_v1' => $this->core_rest_url_v1,
+      'core_rest_url_v2' => $this->core_rest_url_v2,
+      'core_rest_url_v3' => $this->core_rest_url_v3,
       'text' => [
         'load_more' => __('Load more', 'regallery'),
         'view_more' => __('View more', 'regallery'),
@@ -462,6 +465,9 @@ final class REACG {
       'nonce' => wp_create_nonce( $this->nonce ),
       'allowed_post_types' => REACG_ALLOWED_POST_TYPES,
       'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
+      'core_rest_url_v1' => $this->core_rest_url_v1,
+      'core_rest_url_v2' => $this->core_rest_url_v2,
+      'core_rest_url_v3' => $this->core_rest_url_v3,
     ));
 
     // Register general styles/scripts.

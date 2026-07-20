@@ -190,7 +190,7 @@ function reacg_add_posts(media_uploader, images_ids, gallery_id) {
       if ( jQuery(this).data("type").includes("product") ) {
         jQuery.ajax({
           type: "GET",
-          url: "https://regallery.team/core/wp-json/reacgcore/v2/postTypes",
+          url: reacg.core_rest_url_v2 + "postTypes",
           contentType: "application/json",
           complete: function (response) {
             if (response.status === 204) {
