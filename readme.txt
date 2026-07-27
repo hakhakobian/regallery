@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.20.10
+Stable tag: 1.20.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,10 +212,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.10: Images smaller than their container are no longer stretched. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.11: Improved accessibility for Grid, Slider, and Lightbox controls. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.11 =
+= Updated: 28.07.2026 =
+* **Improved:** Accessibility for Grid, Slider, and Lightbox controls.
+* **Fixed:** Play icon for video covers on Slider layout and lightbox filmstrip.
+* **Fixed:** Small image stretching in the Slider filmstrip.
+
+
 = 1.20.10 =
 = Updated: 21.07.2026 =
 * **Added:** Scroller layout to the Templates filter list.
