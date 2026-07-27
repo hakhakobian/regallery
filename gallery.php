@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Re Gallery - Responsive Image & Photo Gallery
- * Description: Photo gallery plugin lets you create responsive, SEO-optimized image gallery with AI generated titles, descriptions & alt text.
+ * Plugin Name: Photo Gallery by Re Gallery: Responsive Image Gallery with AI SEO
+ * Description: Photo gallery plugin that writes your image SEO with a built-in AI. Create responsive image galleries in minutes.
  * Version: 1.20.10
  * Requires at least: 5.0
  * Requires PHP: 7.0
