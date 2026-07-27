@@ -221,6 +221,7 @@ Customize your website easily! Just upload images with the standard WordPress me
 * **Improved:** Accessibility for Grid, Slider, and Lightbox controls.
 * **Fixed:** Play icon for video covers on Slider layout and lightbox filmstrip.
 * **Fixed:** Small image stretching in the Slider filmstrip.
+* **Removed:** Warning notification displayed after changing options following a template import.
 
 
 = 1.20.10 =
