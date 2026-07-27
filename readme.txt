@@ -140,7 +140,7 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 13. Elegant Coverflow Gallery Layout
 14. Creative Cards Gallery Layout
 15. Modern Cube Gallery Layout
-12. Choose from 55+ Professionally Designed Templates
+16. Choose from 55+ Professionally Designed Templates
 17. Fully Responsive on Desktop, Tablet and Mobile
 
 
