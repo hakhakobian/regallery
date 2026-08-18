@@ -344,13 +344,19 @@ final class REACG {
 
     $used_fonts = is_admin() ? REACGLibrary::get_fonts(FALSE) : REACGLibrary::get_used_fonts();
     if ( !empty($used_fonts) ) {
-      $query = implode("|", str_replace(' ', '+', $used_fonts));
+      // Google Fonts CSS API allows a maximum of 120 font families per request.
+      // We chunk the font array into groups of 100 to avoid the "403: Too many font families requested" error.
+      $chunks = array_chunk($used_fonts, 100);
+      foreach ( $chunks as $i => $chunk ) {
+        $query = implode("|", str_replace(' ', '+', $chunk));
 
-      $url = 'https://fonts.googleapis.com/css?family=' . $query;
-      $url .= '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
-      $version = md5( $url ); // Cache bust when fonts change
-      wp_register_style($this->prefix . '_fonts', $url, [], $version);
-      $required_styles[] = $this->prefix . '_fonts';
+        $url = 'https://fonts.googleapis.com/css?family=' . $query;
+        $url .= '&subset=greek,latin,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic';
+        $version = md5( $url ); // Cache bust when fonts change
+        $handle = $this->prefix . '_fonts_' . $i;
+        wp_register_style($handle, $url, [], $version);
+        $required_styles[] = $handle;
+      }
     }
 
     wp_register_style($this->prefix . '_general', $this->plugin_url . '/assets/css/general.css', $required_styles, $this->version);
