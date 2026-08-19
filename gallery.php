@@ -512,6 +512,16 @@ final class REACG {
       $this->register_frontend_scripts();
       REACGLibrary::enqueue_scripts();
     }
+    // Canvas-only editor styles must also load inside the iframe (WP 7.1+).
+    // Sidebar styles stay on enqueue_block_editor_assets.
+    if ( is_admin() ) {
+      wp_enqueue_style(
+        $this->prefix . '_gutenberg_canvas',
+        $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css',
+        array( $this->prefix . '_general' ),
+        $this->version
+      );
+    }
   }
 
   /**

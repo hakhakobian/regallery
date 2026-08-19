@@ -683,21 +683,79 @@ function reacg_save_images(galleryItemsContainer) {
 }
 
 /**
+ * Documents that may contain the gallery preview (admin page and Gutenberg canvas iframe).
+ *
+ * @returns {Document[]}
+ */
+function reacg_get_preview_documents() {
+  const documents = [];
+  const add = function (doc) {
+    if (doc && documents.indexOf(doc) === -1) {
+      documents.push(doc);
+    }
+  };
+  add(document);
+  try {
+    const canvas = document.querySelector('iframe[name="editor-canvas"]');
+    if (canvas && canvas.contentDocument) {
+      add(canvas.contentDocument);
+    }
+  }
+  catch (error) {
+    /* Cross-origin iframe; ignore.*/
+  }
+  return documents;
+}
+
+/**
+ * Query the first matching node in the admin document or editor canvas.
+ *
+ * @param {string} selector
+ * @param {boolean} all
+ * @returns {Element|Element[]|null}
+ */
+function reacg_query_preview_docs(selector, all) {
+  const documents = reacg_get_preview_documents();
+  if (all) {
+    const results = [];
+    documents.forEach(function (doc) {
+      doc.querySelectorAll(selector).forEach(function (el) {
+        results.push(el);
+      });
+    });
+    return results;
+  }
+  for (let i = 0; i < documents.length; i++) {
+    const el = documents[i].querySelector(selector);
+    if (el) {
+      return el;
+    }
+  }
+  return null;
+}
+
+/**
  * Trigger hidden button click to reload the preview.
  */
 function reacg_reload_preview() {
   /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
-  document.querySelector(".reacg-preview").setAttribute("data-gallery-timestamp", Date.now());
+  const preview = reacg_query_preview_docs(".reacg-preview");
+  if (preview) {
+    preview.setAttribute("data-gallery-timestamp", Date.now());
+  }
 
   /* Remove all containers with the same ID except the last one. */
-  let containers = document.querySelectorAll("#reacg-reloadData");
-  if ( containers.length > 1 ) {
+  const containers = reacg_query_preview_docs("#reacg-reloadData", true);
+  if (containers.length > 1) {
     for (let i = 0; i < containers.length - 1; i++) {
-      containers[i].remove()
+      containers[i].remove();
     }
   }
 
-  jQuery("#reacg-reloadData").trigger("click");
+  const reload = containers.length ? containers[containers.length - 1] : reacg_query_preview_docs("#reacg-reloadData");
+  if (reload) {
+    reload.click();
+  }
 }
 
 /**
