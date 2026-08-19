@@ -3,9 +3,9 @@ Contributors: hakhakob, garikharutyunyan, regalleryteam
 Donate link: https://www.buymeacoffee.com/regallery
 Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsive gallery
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.12
+Stable tag: 1.20.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,10 +212,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.12: Fixed image fitting and cropping across all gallery layouts. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.13: Fixed Gutenberg block compatibility with WordPress 7.1. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.13 =
+= Updated: 20.08.2026 =
+* **Fixed:** Gutenberg block compatibility with WordPress 7.1.
+* **Fixed:** Google Fonts loading while editing a gallery.
+
 = 1.20.12 =
 = Updated: 11.08.2026 =
 * **Fixed:** Image fitting and cropping across all gallery layouts.
