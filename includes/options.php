@@ -775,15 +775,15 @@ class REACG_Options {
         'default' => 'below',
       ],
       'titleSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif', 'image_title', 'image_caption', 'image_alt', 'image_description' ],
         'default' => 'title',
       ],
       'captionSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif', 'image_title', 'image_caption', 'image_alt', 'image_description' ],
         'default' => 'caption',
       ],
       'descriptionSource' => [
-        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif' ],
+        'allowed' => [ 'title', 'caption', 'alt', 'price', 'description', 'author', 'date_created', 'exif', 'image_title', 'image_caption', 'image_alt', 'image_description' ],
         'default' => 'description',
       ],
       'textVerticalAlignment' => [

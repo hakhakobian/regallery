@@ -639,6 +639,7 @@ class REACG_Gallery {
               $description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
               $item['description'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($description))));
               $item['date'] = $post->post_date;
+              $item = $this->add_image_source_metas($item, $post);
               $data[] = $item;
             }
           }
@@ -658,6 +659,7 @@ class REACG_Gallery {
           }
           $item['description'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($description))));
           $item['date'] = $post->post_date;
+          $item = $this->add_image_source_metas($item, $post);
           $data[] = $item;
         }
       }
@@ -1778,6 +1780,38 @@ class REACG_Gallery {
     }
 
     return $alt;
+  }
+
+  /**
+   * Resolve image-specific source metas (Image title, Image caption, Image alt text, Image description).
+   *
+   * @param array $item The item array.
+   * @param WP_Post $post The post object.
+   * @return array The item array with image metadata.
+   */
+  private function add_image_source_metas($item, $post) {
+    if ( !empty($post) && $post->post_type === 'attachment' ) {
+      $item['image_title']       = isset($item['title']) ? $item['title'] : '';
+      $item['image_caption']     = isset($item['caption']) ? $item['caption'] : '';
+      $item['image_alt']         = isset($item['alt']) ? $item['alt'] : '';
+      $item['image_description'] = isset($item['description']) ? $item['description'] : '';
+    } else {
+      $post_thumbnail_id = !empty($post) ? get_post_thumbnail_id($post->ID) : 0;
+      if ( !empty($post_thumbnail_id) ) {
+        $item['image_title']       = html_entity_decode(get_the_title($post_thumbnail_id));
+        $item['image_caption']     = html_entity_decode(wp_get_attachment_caption($post_thumbnail_id));
+        $item['image_alt']         = html_entity_decode($this->get_the_alt($post_thumbnail_id));
+        $thumbnail_post            = get_post($post_thumbnail_id);
+        $thumbnail_description     = !empty($thumbnail_post) ? $thumbnail_post->post_content : '';
+        $item['image_description'] = html_entity_decode(wp_kses_post(strip_shortcodes(wp_strip_all_tags($thumbnail_description))));
+      } else {
+        $item['image_title']       = '';
+        $item['image_caption']     = '';
+        $item['image_alt']         = '';
+        $item['image_description'] = '';
+      }
+    }
+    return $item;
   }
 
   /**
