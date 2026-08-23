@@ -35,6 +35,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -84,6 +86,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
@@ -127,6 +131,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'simple', #string simple | none
@@ -170,6 +176,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleFontSize' => 25, #number
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'paginationType' => 'scroll', #string scroll | loadMore | none
@@ -267,6 +275,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -321,6 +331,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -370,6 +382,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -422,6 +436,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -480,6 +496,8 @@ class REACG_Options {
       'titleColor' => '#DDDDDD', #string
       'titleAlignment' => 'left', #string left | center | right
       'titleFontFamily' => 'Inherit', #string
+      'titleMaxRowsCount' => 1, #number
+      'captionMaxRowsCount' => 1, #number
       'overlayTextBackground' => '', #string
       'invertTextColor' => FALSE, #boolean
       'showCaption' => FALSE, #boolean
@@ -518,6 +536,8 @@ class REACG_Options {
       'titleFontSize' => 36, #number
       'titleColor' => '#000000', #string
       'titleAlignment' => 'left', #string left | center | right
+      'titleMaxRowsCount' => 4, #number
+      'captionMaxRowsCount' => 4, #number
       'showDescription' => TRUE, #boolean
       'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
       'descriptionFontSize' => 23, #number
@@ -652,6 +672,8 @@ class REACG_Options {
       'imagesCount',
       'perSlideOffset',
       'descriptionFontSize',
+      'titleMaxRowsCount',
+      'captionMaxRowsCount',
       'descriptionMaxRowsCount',
       'buttonFontSize',
       'imageWidth',
