@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.13
+Stable tag: 1.20.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,10 +212,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.13: Fixed Gutenberg block compatibility with WordPress 7.1. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.14: Added maximum row count option for titles and captions. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.14 =
+= Updated: 25.08.2026 =
+* **Added:** Maximum row count option for titles and captions.
+* **Added:** Image Title as an additional title source, allowing the post title to differ from the image title in post, page, and product galleries. The same option is available for captions, alt text, and descriptions.
+
 = 1.20.13 =
 = Updated: 20.08.2026 =
 * **Fixed:** Gutenberg block compatibility with WordPress 7.1.
