@@ -1276,7 +1276,7 @@ class REACG_Gallery {
     $this->remove_all_the_metaboxes();
 
     // Metabox for adding images.
-    add_meta_box( 'gallery-images', __( 'Images and Videos', 'regallery' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
+    add_meta_box( 'gallery-images', __( 'Media', 'regallery' ), [ $this, 'meta_box_images' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-settings', __( 'Settings', 'regallery' ), [ $this, 'meta_box_settings' ], 'reacg', 'normal', 'high' );
     add_meta_box( 'gallery-preview', __( 'Preview', 'regallery' ), [ $this, 'meta_box_preview' ], 'reacg', 'normal', 'low' );
 
