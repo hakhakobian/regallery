@@ -23,14 +23,15 @@
   background-color: #ffffff;
 }
 
-.reacg_item a, .reacg_item a:hover {
+.reacg_item a,
+.reacg_item a:hover {
   color: inherit;
   text-decoration: none;
 }
 
 .reacg_item_new .reacg_item_image {
   cursor: pointer;
-  background-color: var(--reacg-primary-color, #155C92);
+  background-color: var(--reacg-primary-color, #155c92);
   -webkit-mask-image: url(../images/add_new_image.svg);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
@@ -105,14 +106,17 @@
   border-radius: 18px;
   border: 3px solid #cacccb;
 }
+
 .reacg-cover.dashicons.dashicons-admin-post:before,
 .reacg-cover.dashicons.dashicons-admin-page:before,
 .reacg-cover.dashicons.dashicons-archive:before {
   font-size: 35px;
 }
+
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after {
   content: "\f109";
 }
+
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after {
   content: "\f105";
 }
@@ -120,6 +124,7 @@
 .reacg-cover.reacg-dynamic.dashicons.dashicons-archive:after {
   content: "\f480";
 }
+
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:after,
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:after,
 .reacg-cover.reacg-dynamic.dashicons.dashicons-archive:after {
@@ -129,11 +134,13 @@
   transform: translate(-30%, -40%);
   color: #9b9b9b;
 }
+
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-post:before,
 .reacg-cover.reacg-dynamic.dashicons.dashicons-archive:before,
 .reacg-cover.reacg-dynamic.dashicons.dashicons-admin-page:before {
   transform: translate(-35%, -40%);
 }
+
 .reacg-cover.dashicons:before,
 .reacg-cover.reacg-dynamic.dashicons:after {
   font-size: 45px;
@@ -179,7 +186,6 @@
   opacity: 0.5;
 }
 
-
 .column-reacg_shortcode {
   width: 140px;
 }
@@ -199,7 +205,7 @@
   }
 }
 
-.reacg_thumbnail.column-reacg_thumbnail>div {
+.reacg_thumbnail.column-reacg_thumbnail > div {
   background-repeat: no-repeat;
   background-position: center;
   width: 80px;
@@ -229,6 +235,7 @@ to avoid a bug connected with preview.
 .updated:not(.reacg-keep-notice):not(#message) {
   display: none !important;
 }
+
 .error {
   display: none;
 }
@@ -244,15 +251,18 @@ to avoid a bug connected with preview.
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   filter: drop-shadow(0 2px 3px rgba(26, 45, 89, 0.18));
 }
+
 #gallery-help ul li {
   list-style-type: disc;
   list-style-position: inside;
   list-style-image: none;
   font-size: 14px;
 }
+
 #gallery-help ul li::marker {
   color: green;
 }
+
 #gallery-help ul li a,
 #gallery-help ul li a:hover,
 #gallery-help ul li a:active,
@@ -269,17 +279,19 @@ to avoid a bug connected with preview.
 }
 
 .reacg-ai-button {
-  background: #FFC54D;
-  border: #FFC54D;
+  background: #ffc54d;
+  border: #ffc54d;
   border-radius: 6px;
   padding: 4px 6px 1px;
   margin: 2px;
   cursor: pointer;
+
   svg {
     width: 18px;
     height: 18px;
   }
 }
+
 .reacg-float-none {
   float: none !important;
 }
@@ -302,16 +314,17 @@ to avoid a bug connected with preview.
   justify-content: center;
   -webkit-box-align: center;
   align-items: center;
+  color: #3c434a;
 
   .reacg-modal-wrapper {
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 6px;
     position: relative;
     max-height: calc(100% - 64px);
     width: 600px;
     overflow-y: auto;
   }
-  
+
   .reacg-modal-close {
     position: absolute;
     right: 0;
@@ -320,6 +333,7 @@ to avoid a bug connected with preview.
     cursor: pointer;
     width: 24px;
     height: 24px;
+    box-sizing: content-box;
   }
 
   .reacg-modal-content {
@@ -328,9 +342,20 @@ to avoid a bug connected with preview.
     justify-content: center;
     align-items: start;
 
-    h1,
-    h3 {
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d2327;
       margin: 0;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1d2327;
+      margin: 0;
+      line-height: 1.4;
     }
 
     label {
@@ -339,12 +364,120 @@ to avoid a bug connected with preview.
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 7px;
+      color: #3c434a;
     }
+
     label span {
       font-weight: normal;
     }
-    input[type=radio] {
-      margin-top: 0;
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      box-sizing: border-box !important;
+      border: 1px solid #1e1e1e !important;
+      border-radius: 2px !important;
+      background: #fff !important;
+      background-image: none !important;
+      color: #1e1e1e !important;
+      clear: none !important;
+      cursor: pointer !important;
+      display: inline-block !important;
+      line-height: 0 !important;
+      height: 16px !important;
+      width: 16px !important;
+      min-height: 16px !important;
+      min-width: 16px !important;
+      max-height: 16px !important;
+      max-width: 16px !important;
+      margin: 0 6px 0 0 !important;
+      outline: 0 !important;
+      outline-offset: 0 !important;
+      padding: 0 !important;
+      text-align: center !important;
+      vertical-align: middle !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      box-shadow: none !important;
+      float: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+      visibility: visible !important;
+      font-size: 16px !important;
+      transition: 0.05s border-color ease-in-out !important;
+      accent-color: var(--reacg-primary-color, #155c92) !important;
+    }
+
+    input[type="radio"] {
+      display: inline-flex !important;
+      border-radius: 50% !important;
+      margin-right: 6px !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    input[type="checkbox"]::after,
+    input[type="radio"]::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    input[type="checkbox"]:focus,
+    input[type="radio"]:focus {
+      border-color: var(--reacg-primary-color, #155c92) !important;
+      box-shadow: 0 0 0 1px var(--reacg-primary-color, #155c92) !important;
+      outline: 2px solid transparent !important;
+      outline-offset: 0 !important;
+    }
+
+    input[type="checkbox"]:checked,
+    input[type="radio"]:checked {
+      background: var(--reacg-primary-color, #155c92) !important;
+      border-color: var(--reacg-primary-color, #155c92) !important;
+      box-shadow: none !important;
+    }
+
+    input[type="checkbox"]:checked::before,
+    input[type="radio"]:checked::before {
+      float: left !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+      width: 16px !important;
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      box-shadow: none !important;
+      border: none !important;
+      transform: none !important;
+    }
+
+    input[type="checkbox"]:checked::before {
+      content: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%23ffffff%27%2F%3E%3C%2Fsvg%3E) !important;
+      content: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%23ffffff%27%2F%3E%3C%2Fsvg%3E) /
+        "" !important;
+      margin: -3px 0 0 -4px !important;
+      height: 21px !important;
+      width: 21px !important;
+      min-width: 21px !important;
+      min-height: 21px !important;
+      max-width: none !important;
+      max-height: none !important;
+      background: transparent !important;
+    }
+
+    input[type="radio"]:checked::before {
+      content: "" !important;
+      display: block !important;
+      border-radius: 50% !important;
+      width: 8px !important;
+      height: 8px !important;
+      min-width: 8px !important;
+      min-height: 8px !important;
+      max-width: 8px !important;
+      max-height: 8px !important;
+      margin: auto !important;
+      background-color: #fff !important;
+      outline: 4px solid transparent !important;
     }
 
     p {
@@ -353,16 +486,65 @@ to avoid a bug connected with preview.
     }
 
     textarea {
-      width: 100%;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      background-color: #fff !important;
+      background: #fff !important;
+      color: #2c3338 !important;
+      border: 1px solid #8c8f94 !important;
+      border-radius: 4px !important;
+      padding: 8px 12px !important;
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+      box-shadow: none !important;
       resize: none;
+      -webkit-appearance: none !important;
+      appearance: none !important;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="url"]:focus,
+    input[type="number"]:focus,
+    input[type="search"]:focus {
+      border-color: var(--reacg-primary-color, #2271b1) !important;
+      box-shadow: 0 0 0 1px var(--reacg-primary-color, #2271b1) !important;
+      outline: 2px solid transparent !important;
+    }
+
+    textarea:disabled,
+    input[type="text"]:disabled,
+    input[type="url"]:disabled,
+    input[type="number"]:disabled,
+    input[type="search"]:disabled {
+      background-color: #f0f0f1 !important;
+      background: #f0f0f1 !important;
+      color: #646970 !important;
+      cursor: not-allowed !important;
     }
 
     div {
       width: 100%;
     }
+
     input[type="text"],
-    input[type="url"] {
-      width: 100%;
+    input[type="url"],
+    input[type="number"],
+    input[type="search"] {
+      box-sizing: border-box !important;
+      width: 100% !important;
+      height: 36px !important;
+      min-height: 36px !important;
+      background-color: #fff !important;
+      background: #fff !important;
+      color: #2c3338 !important;
+      border: 1px solid #8c8f94 !important;
+      border-radius: 4px !important;
+      padding: 0 12px !important;
+      font-size: 14px !important;
+      box-shadow: none !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
     }
 
     .reacg-modal-buttons-wrapper {
@@ -384,26 +566,26 @@ to avoid a bug connected with preview.
     .reacg-modal-note svg {
       width: 18px;
       height: 18px;
-      fill: #FFC54D;
+      fill: #ffc54d;
       margin-right: 5px;
       margin-bottom: -4px;
     }
 
     .reacg-modal-error-note {
-      color: #B32D2E;
+      color: #b32d2e;
     }
   }
-  
+
   .reacg-modal__header {
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #FFF;
+    background: #fff;
     padding: 24px 30px 20px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #E2E4E7;
+    border-bottom: 1px solid #e2e4e7;
     box-sizing: border-box;
   }
 
@@ -417,18 +599,21 @@ to avoid a bug connected with preview.
     grid-template-columns: minmax(280px, 38%) minmax(420px, 62%);
     gap: 24px;
   }
-  
+
   .reacg-modal__layout-content {
     display: flex;
     flex-direction: column;
     gap: 16px;
+
     label {
       display: inline-flex;
     }
+
     .reacg-ai-button {
       margin: 0 0 6px 8px;
       vertical-align: middle;
     }
+
     .spinner.reacg-float-none {
       margin-left: 6px;
       margin-top: -6px;
@@ -440,9 +625,9 @@ to avoid a bug connected with preview.
     position: sticky;
     bottom: 0;
     z-index: 2;
-    background: #FFF;
+    background: #fff;
     padding: 20px 30px 24px 30px;
-    border-top: 1px solid #E2E4E7;
+    border-top: 1px solid #e2e4e7;
     box-sizing: border-box;
   }
 }
@@ -451,14 +636,16 @@ to avoid a bug connected with preview.
   .reacg-modal-wrapper {
     width: min(1100px, calc(100% - 64px));
   }
+
   .reacg-attachment-modal__preview img,
   .reacg-attachment-modal__preview video {
     display: block;
     max-width: 100%;
     max-height: 360px;
     object-fit: contain;
-    background: #F6F7F7;
+    background: #f6f7f7;
   }
+
   .reacg-attachment-modal__details p {
     margin: 0 0 8px 0;
   }
@@ -470,6 +657,7 @@ to avoid a bug connected with preview.
       width: calc(100% - 24px);
       max-height: calc(100% - 24px);
     }
+
     .reacg-modal__layout {
       grid-template-columns: 1fr;
     }
@@ -485,15 +673,18 @@ to avoid a bug connected with preview.
   font-weight: 500;
   padding: 16px;
   overflow: visible;
-  background-color: #5A558C;
-  font-size: 0.875rem;
+  background-color: #5a558c;
+  font-size: 14px;
   line-height: 1.43;
   letter-spacing: 0.01071em;
   width: 272px;
   color: rgb(255, 255, 255);
   border-radius: 12px;
   font-family: lexend;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 5px 5px -3px,
+    rgba(0, 0, 0, 0.14) 0px 8px 10px 1px,
+    rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
 
   .reacg-tooltip-wrapper {
     width: 100%;
@@ -502,11 +693,13 @@ to avoid a bug connected with preview.
     gap: 8px;
     align-items: center;
   }
+
   .reacg-tooltip-icon-wrapper {
     display: flex;
     align-items: center;
   }
-.reacg-tooltip-arrow[data-popper-placement*="left"] {
+
+  .reacg-tooltip-arrow[data-popper-placement*="left"] {
     right: 0;
     width: 15px;
     height: 24px;
@@ -515,15 +708,16 @@ to avoid a bug connected with preview.
     top: calc(50% - 12px);
     overflow: hidden;
     box-sizing: border-box;
-    color: #5A558C;
+    color: #5a558c;
   }
+
   .reacg-tooltip-arrow[data-popper-placement*="left"]::before {
     content: "";
     margin: auto;
     display: block;
     width: 100%;
     height: 100%;
-    background-color: #5A558C;
+    background-color: #5a558c;
     transform: rotate(45deg);
     transform-origin: 0 0;
   }
@@ -537,15 +731,17 @@ to avoid a bug connected with preview.
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  background-color: var(--reacg-primary-color, #155C92);
+  background-color: var(--reacg-primary-color, #155c92);
   cursor: pointer;
   box-shadow: 0 0 10px 3px #aaaaaa;
   transition: transform 0.3s ease;
   padding: 16px;
   box-sizing: border-box;
+
   &:hover {
     transform: scale(1.03);
   }
+
   svg {
     width: 28px;
     height: 28px;
@@ -557,13 +753,16 @@ to avoid a bug connected with preview.
     width: 100%;
     margin-bottom: 5px;
   }
+
   .spinner {
     float: none;
     margin-top: 5px;
   }
+
   .reacg-activate-action {
     text-align: right;
   }
+
   .reacg-error {
     color: red;
   }
@@ -572,11 +771,13 @@ to avoid a bug connected with preview.
 .button.reacg-primary-button {
   background: rgb(147 177 77);
 }
+
 .button.reacg-primary-button:hover,
 .button.reacg-primary-button:active,
 .button.reacg-primary-button:focus {
   background: rgb(135 162 71);
 }
+
 .button.reacg-primary-button,
 .button.reacg-primary-button:hover,
 .button.reacg-primary-button:active,
@@ -586,6 +787,7 @@ to avoid a bug connected with preview.
   outline: none !important;
   box-shadow: none !important;
 }
+
 .wp-core-ui {
   .button,
   .button.button-primary,
@@ -597,7 +799,8 @@ to avoid a bug connected with preview.
 #gallery-custom-css h2.hndle {
   justify-content: normal;
 }
-label[for=gallery-custom-css-hide] svg {
+
+label[for="gallery-custom-css-hide"] svg {
   display: none;
 }
 
@@ -606,9 +809,17 @@ label[for=gallery-custom-css-hide] svg {
 }
 
 .reacg-modal.reacg-ai-generate-modal {
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0;
+    line-height: 1.4;
+  }
+
   .reacg-ai-generate-modal__fields {
-    border-top: 1px solid #E2E4E7;
-    border-bottom: 1px solid #E2E4E7;
+    border-top: 1px solid #e2e4e7;
+    border-bottom: 1px solid #e2e4e7;
     padding: 14px 0;
     display: grid;
     gap: 10px;
@@ -646,7 +857,7 @@ label[for=gallery-custom-css-hide] svg {
   .reacg-ai-generate-modal__progress {
     margin: 0 12px 0 auto;
     font-size: 13px;
-    color: #50575E;
+    color: #50575e;
     white-space: nowrap;
     align-content: center;
   }
@@ -656,7 +867,7 @@ label[for=gallery-custom-css-hide] svg {
     background-color: #ebf9f0;
     border-radius: 6px;
     padding: 8px 10px;
-    font-size: 0.85rem;
+    font-size: 13px;
   }
 
   .reacg-ai-generate-modal__notice--error {
@@ -664,6 +875,6 @@ label[for=gallery-custom-css-hide] svg {
     background-color: #f9f2f4;
     border-radius: 6px;
     padding: 8px 10px;
-    font-size: 0.85rem;
+    font-size: 13px;
   }
 }

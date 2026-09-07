@@ -264,6 +264,22 @@ function reacg_isPro(isPro) {
 function reacg_make_items_sortable(container) {
   jQuery(container).find(".reacg_items").sortable({
     items: ".reacg-sortable",
+    tolerance: "pointer",
+    placeholder: "ui-sortable-placeholder reacg_item",
+    start: function (event, ui) {
+      const itemW = ui.item.outerWidth() || 65;
+      const itemH = ui.item.outerHeight() || 65;
+      ui.placeholder.css({
+        width: itemW + "px",
+        height: itemH + "px"
+      });
+      ui.helper.css({
+        width: itemW + "px",
+        height: itemH + "px",
+        maxWidth: itemW + "px",
+        maxHeight: itemH + "px"
+      });
+    },
     update: function (event, tr) {
       let images_ids = [];
       jQuery(this).find("> .reacg-sortable").each(function () {
@@ -695,6 +711,8 @@ function reacg_get_preview_documents() {
     }
   };
   add(document);
+
+  // Gutenberg canvas iframe
   try {
     const canvas = document.querySelector('iframe[name="editor-canvas"]');
     if (canvas && canvas.contentDocument) {
@@ -704,6 +722,48 @@ function reacg_get_preview_documents() {
   catch (error) {
     /* Cross-origin iframe; ignore.*/
   }
+
+  // Elementor preview iframe
+  try {
+    const elCanvas = document.querySelector('#elementor-preview-iframe');
+    if (elCanvas && elCanvas.contentDocument) {
+      add(elCanvas.contentDocument);
+    }
+  }
+  catch (error) {
+    /* Cross-origin iframe; ignore.*/
+  }
+
+  // Bricks preview iframe
+  try {
+    const bricksCanvas = document.querySelector('#bricks-builder-iframe') ||
+      (window.top && window.top.document ? window.top.document.querySelector('#bricks-builder-iframe') : null);
+    if (bricksCanvas && bricksCanvas.contentDocument) {
+      add(bricksCanvas.contentDocument);
+    }
+  }
+  catch (error) {
+    /* Cross-origin iframe; ignore.*/
+  }
+
+  // Other editor preview iframes
+  try {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(function (frame) {
+      try {
+        if (frame.contentDocument && (
+          frame.id.indexOf('preview') !== -1
+          || frame.name.indexOf('preview') !== -1
+          || frame.className.indexOf('preview') !== -1
+        )) {
+          add(frame.contentDocument);
+        }
+      }
+      catch (e) {}
+    });
+  }
+  catch (error) {}
+
   return documents;
 }
 
@@ -735,26 +795,59 @@ function reacg_query_preview_docs(selector, all) {
 }
 
 /**
- * Trigger hidden button click to reload the preview.
+ * Trigger hidden button click to reload the preview across all preview documents.
  */
 function reacg_reload_preview() {
-  /* Update the gallery timestamp before the preview reload to prevent data from being read from the cache.*/
-  const preview = reacg_query_preview_docs(".reacg-preview");
-  if (preview) {
-    preview.setAttribute("data-gallery-timestamp", Date.now());
-  }
+  const now = Date.now();
+  const documents = reacg_get_preview_documents();
 
-  /* Remove all containers with the same ID except the last one. */
-  const containers = reacg_query_preview_docs("#reacg-reloadData", true);
-  if (containers.length > 1) {
-    for (let i = 0; i < containers.length - 1; i++) {
-      containers[i].remove();
+  documents.forEach(function (doc) {
+    if (!doc) return;
+    const win = doc.defaultView || window;
+
+    // 1. Clear cached in-memory reacg_data in canvas window so it doesn't serve stale images
+    if (win.reacg_data) {
+      Object.keys(win.reacg_data).forEach(function (key) {
+        delete win.reacg_data[key];
+      });
     }
-  }
 
-  const reload = containers.length ? containers[containers.length - 1] : reacg_query_preview_docs("#reacg-reloadData");
-  if (reload) {
-    reload.click();
+    // 2. Update data-gallery-timestamp on all gallery elements in this document
+    const previews = doc.querySelectorAll(".reacg-preview, .reacg-gallery, [id^='reacg-root']");
+    previews.forEach(function (p) {
+      p.setAttribute("data-gallery-timestamp", now);
+    });
+
+    // 3. Trigger reloadData if present in this document (preserves unsaved React options)
+    const reloadButtons = doc.querySelectorAll("#reacg-reloadData");
+    let reloaded = false;
+    reloadButtons.forEach(function (btn) {
+      try {
+        btn.click();
+        reloaded = true;
+      } catch (e) {}
+    });
+
+    // 4. Fallback: Trigger loadApp only if reloadData was not found
+    if (!reloaded) {
+      const loadApp = doc.getElementById("reacg-loadApp");
+      if (loadApp) {
+        previews.forEach(function (p) {
+          if (p.id) {
+            try {
+              loadApp.setAttribute("data-id", p.id);
+              loadApp.click();
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  });
+
+  if (window.reacg_data) {
+    Object.keys(window.reacg_data).forEach(function (key) {
+      delete window.reacg_data[key];
+    });
   }
 }
 
@@ -915,11 +1008,27 @@ function reacg_attachment_edit_modal(attachment, item) {
     '</div>');
 }
 
+function reacg_get_top_document() {
+  try {
+    if (window.top && window.top.document && window.top.document.body) {
+      return window.top.document;
+    }
+  } catch (e) {}
+  try {
+    if (window.parent && window.parent.document && window.parent.document.body) {
+      return window.parent.document;
+    }
+  } catch (e) {}
+  return document;
+}
+
 function reacg_open_attachment_edit_modal(button, attachment, item) {
   const modal = reacg_attachment_edit_modal(attachment, item);
-  jQuery('body').append(modal);
+  const targetDoc = reacg_get_top_document();
+  const targetWin = targetDoc.defaultView || window;
+  (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
   modal.css('display', 'flex').show();
-  reacg_add_ai_button_to(jQuery('.reacg-modal__layout-content'));
+  reacg_add_ai_button_to(modal.find('.reacg-modal__layout-content'));
 
   const closeModal = function () {
     modal.remove();
@@ -987,6 +1096,10 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
       : jQuery.when.apply(jQuery, saveRequests);
 
     saveRequest.done(function () {
+      if (item && item.length) {
+        const newTitle = modal.find('#reacg-attachment-title').val();
+        item.find('.reacg_item_image').attr('title', newTitle);
+      }
       reacg_reload_preview();
       closeModal();
     }).fail(function (response) {
@@ -1378,7 +1491,9 @@ function reacg_open_ai_generate_content_modal(images, options) {
     modal.remove();
   };
 
-  jQuery('body').append(modal);
+  const targetDoc = reacg_get_top_document();
+  const targetWin = targetDoc.defaultView || window;
+  (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
   modal.css('display', 'flex').show();
 
   modal.find('.reacg-modal-close').on('click', closeModal);
@@ -1648,9 +1763,12 @@ function reacg_add_ai_button(that, field) {
         complete: function (response) {
           if (response.status === 200) {
             /* Create modal if not exist and open.*/
-            if (!jQuery("body").find(".reacg-modal:not(.reacg-attachment-modal)").length) {
+            const targetDoc = reacg_get_top_document();
+            const targetWin = targetDoc.defaultView || window;
+            const targetBody = (targetWin.jQuery || jQuery)(targetDoc.body);
+            if (!targetBody.find(".reacg-modal:not(.reacg-attachment-modal)").length) {
               const modal = reacg_modal(field);
-              jQuery("body").append(modal);
+              targetBody.append(modal);
               const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
               const generatedText = modal.find(".reacg-modal-generated-text");
               const generateButton = modal.find(".reacg-modal-button-generate");
@@ -1833,7 +1951,9 @@ function reacg_tooltip(element, text) {
     '</div>' +
     '</div>');
 
-  jQuery("body").append(tooltip);
+  const targetDoc = reacg_get_top_document();
+  const targetWin = targetDoc.defaultView || window;
+  (targetWin.jQuery || jQuery)(targetDoc.body).append(tooltip);
 
   const offset = element.offset();
   const elementHeight = element.outerHeight();

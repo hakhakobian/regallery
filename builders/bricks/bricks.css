@@ -2,8 +2,7 @@
   font-family: "ReGallery";
   src: url("../../assets/css/fonts/ReGallery.eot");
   src:
-    url("../../assets/css/fonts/ReGallery.eot?#iefix")
-      format("embedded-opentype"),
+    url("../../assets/css/fonts/ReGallery.eot?#iefix") format("embedded-opentype"),
     url("../../assets/css/fonts/ReGallery.woff") format("woff"),
     url("../../assets/css/fonts/ReGallery.ttf") format("truetype"),
     url("../../assets/images/icon.svg#ReGallery") format("svg");
@@ -22,29 +21,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.brxe-reacg {
-  .button-primary {
-    background: var(--reacg-primary-color, #155c92);
-    border-color: var(--reacg-primary-color, #155c92);
-    color: #fff;
-    text-decoration: none;
-    text-shadow: none;
-  }
-  .button-primary:hover {
-    background: var(--reacg-primary-color-darker, #135e96);
-    border-color: var(--reacg-primary-color-darker, #135e96);
-    color: #fff;
-  }
-  .button-secondary {
-    background: #f6f7f7;
-    border-color: var(--reacg-primary-color, #155c92);
-    color: var(--reacg-primary-color, #155c92);
-    text-decoration: none;
-    text-shadow: none;
-  }
-  .button-secondary:hover {
-    background: #f0f0f1;
-    border-color: #0a4b78;
-    color: #0a4b78;
-  }
+/* Hide gallery_id control in Bricks panel */
+#bricks-panel [data-controlkey="gallery_id"],
+.bricks-control-gallery_id {
+  display: none !important;
 }

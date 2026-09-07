@@ -68,6 +68,7 @@ final class REACG {
     $this->plugin_dir = WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__));
 
     require_once $this->plugin_dir . '/framework/REACGLibrary.php';
+    require_once $this->plugin_dir . '/builders/class-builders-loader.php';
 
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
@@ -124,10 +125,8 @@ final class REACG {
     add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
     add_action('enqueue_block_assets', array($this, 'enqueue_block_assets'));
 
-    // Register widget for Elementor.
-    add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
-    // Fires after elementor editor styles are enqueued.
-    add_action('elementor/editor/after_enqueue_styles', array($this, 'enqueue_elementor_styles'), 11);
+    // Initialize builders (Elementor, Bricks).
+    REACG_Builders_Loader::init();
 
     // Register Divi module.
     add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
@@ -138,9 +137,6 @@ final class REACG {
 
     // Register Beaver Builder module.
     add_action( 'init', array($this, 'register_buiver_builder_widget') );
-
-    // Register Bricks Builder element.
-    add_action( 'init', array($this, 'register_bricks_builder_element'), 11);
 
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
@@ -193,28 +189,6 @@ final class REACG {
     load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
-  /**
-   * Register widget for Elementor.
-   */
-  public function register_elementor_widget() {
-    if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
-      require_once ($this->plugin_dir . '/builders/elementor/elementor.php');
-      if ( \Elementor\Plugin::instance()->preview->is_preview_mode() ) {
-        // Enqueue scripts only in preview mode.
-        REACGLibrary::enqueue_scripts();
-      }
-      \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
-    }
-  }
-
-  /**
-   * Enqueue Elementor widget styles.
-   *
-   * @return void
-   */
-  public function enqueue_elementor_styles() {
-    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/styles/elementor.css', [], $this->version);
-  }
 
   public function initialize_divi_extension() {
     // Check for Divi 5 support first.
@@ -277,13 +251,6 @@ final class REACG {
     }
   }
 
-  public function register_bricks_builder_element($elements_manager) {
-    if ( !class_exists('\Bricks\Elements') ) {
-      return;
-    }
-
-    \Bricks\Elements::register_element( $this->plugin_dir . '/builders/bricks/bricks.php' );
-  }
 
   /**
    * Create custom post types.
@@ -338,7 +305,7 @@ final class REACG {
   /**
    * Register general scripts/styles.
    */
-  private function register_general_scripts() {
+  public function register_general_scripts() {
     $required_scripts = [];
     $required_styles = [];
 
@@ -397,6 +364,8 @@ final class REACG {
    * Register admin pages scripts/styles.
    */
   public function register_admin_scripts() {
+    $this->register_general_scripts();
+
     $required_scripts = array(
       'jquery',
       'jquery-ui-sortable',
@@ -476,9 +445,7 @@ final class REACG {
       'core_rest_url_v3' => $this->core_rest_url_v3,
     ));
 
-    // Register general styles/scripts.
-    $this->register_general_scripts();
-
+    // Enqueue common assets.
     $this->enqueue_common_assets();
   }
 
