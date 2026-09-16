@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Photo Gallery by Re Gallery: Responsive Image Gallery with AI SEO
  * Description: Photo gallery plugin that writes your image SEO with a built-in AI. Create responsive image galleries in minutes.
- * Version: 1.20.14
+ * Version: 1.20.15
  * Requires at least: 5.0
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,7 +24,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.20.14';
+  public $version = '1.20.15';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
@@ -147,7 +147,6 @@ final class REACG {
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
 
-    add_action('init', array($this, 'load_string'), 8);
     add_action('admin_init', array($this, 'do_activation_redirect'));
 
     add_filter('body_class', [$this, 'add_body_class']);
@@ -187,13 +186,6 @@ final class REACG {
   }
 
   /**
-   * Load translated strings.
-   */
-  public function load_string() {
-    load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
-  }
-
-  /**
    * Register widget for Elementor.
    */
   public function register_elementor_widget() {
@@ -222,7 +214,7 @@ final class REACG {
     // so rely on the version constant here and let the module self-guard later.
     if ( defined( 'ET_CORE_VERSION' ) ) {
       $divi_version = (int) explode('.', ET_CORE_VERSION)[0];
-      
+
       // Load appropriate extension based on Divi version
       if ( $divi_version >= 5 ) {
         // $this->divi5_loaded = TRUE;

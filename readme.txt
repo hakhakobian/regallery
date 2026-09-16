@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.14
+Stable tag: 1.20.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,10 +212,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.14: Added maximum row count option for titles and captions. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.15: Grid galleries can preserve original image heights with configurable vertical alignment. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.15 =
+= Updated: 17.09.2026 =
+* **Added:** Auto-height and vertical alignment settings for Grid layout.
+* **Improved:** Preserved line breaks in media captions and descriptions across gallery layouts.
+* **Improved:** Overlay hover animation.
+
 = 1.20.14 =
 = Updated: 25.08.2026 =
 * **Added:** Maximum row count option for titles and captions.
