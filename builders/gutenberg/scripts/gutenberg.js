@@ -1,22 +1,25 @@
-(function (blocks, element, blockEditor) {
-  let el = element.createElement;
-  const {InspectorControls} = blockEditor;
+/**
+ * ReGallery Gutenberg Integration Script
+ *
+ * Uses the shared ReacgBuilderModal UI embedded in Gutenberg InspectorControls.
+ */
+(function (blocks, element, blockEditor, components) {
+  "use strict";
+
+  const el = element.createElement;
+  const { InspectorControls } = blockEditor;
   const { useEffect, useRef } = element;
+  const { PanelBody } = components;
+
   /* useBlockProps is required for apiVersion 3 in the iframed editor (WP 6.3+ / 7.1). */
-  const useBlockProps = blockEditor.useBlockProps || function (extra) {
-    return extra || {};
-  };
-  const all_images_id = -1;
-  const parsed = JSON.parse(reacg_gutenberg.data);
-  /* If it's an object, convert its values to array.*/
-  const shortcodes = Array.isArray(parsed) ? parsed : Object.values(parsed);
-  const existGalleries = shortcodes.length > 1;
-  /* Canvas nodes keyed by clientId so sidebar events can reach the iframe block. */
+  const useBlockProps =
+    blockEditor.useBlockProps ||
+    function (extra) {
+      return extra || {};
+    };
+
+  /* Canvas nodes keyed by clientId so sidebar/modal events can reach the iframe block. */
   const blockNodes = {};
-  const SETTINGS_SELECTORS = {
-    "#reacg_settings": true,
-    "#reacg-gallery-images": true
-  };
 
   /**
    * Admin document where the block script and InspectorControls live.
@@ -55,14 +58,15 @@
         return hintNode;
       }
       if (hintNode.closest) {
-        const closest = hintNode.closest("#reacg-gutenberg" + clientId)
-          || hintNode.closest(".reacg-gutenberg");
+        const closest =
+          hintNode.closest("#reacg-gutenberg" + clientId) ||
+          hintNode.closest(".reacg-gutenberg");
         if (closest) {
           return closest;
         }
       }
       const fromHint = getCanvasDocument(hintNode).getElementById(
-        "reacg-gutenberg" + clientId
+        "reacg-gutenberg" + clientId,
       );
       if (fromHint) {
         return fromHint;
@@ -70,7 +74,7 @@
     }
 
     const fromAdmin = getAdminDocument().getElementById(
-      "reacg-gutenberg" + clientId
+      "reacg-gutenberg" + clientId,
     );
     if (fromAdmin) {
       return fromAdmin;
@@ -92,575 +96,109 @@
     const names = [
       "reacg_open_ai_generate_content_modal",
       "reacg_open_free_trial_offer_dialog",
+      "reacg_open_free_trial_layout_dialog",
+      "reacg_open_premium_offer_dialog",
+      "reacg_open_pro_layout_dialog",
+      "reacg_open_need_help_dialog",
+      "reacg_open_new_here_dialog",
+      "reacg_open_error_dialog",
+      "reacg_open_special_offer_dialog",
+      "reacg_open_attachment_edit_modal",
       "reacg_reload_preview",
       "reacg_update_item_image_fit",
-      "reacg_make_items_sortable"
+      "reacg_make_items_sortable",
     ];
     names.forEach(function (name) {
-      if (typeof window[name] === "function") {
-        canvasWin[name] = window[name];
-      }
-    });
-  }
-
-  /**
-   * Let the canvas gallery app find sidebar targets that live in the admin document.
-   *
-   * @param {Document} canvasDoc
-   */
-  function enableSettingsPortal(canvasDoc) {
-    const adminDoc = getAdminDocument();
-    if (!canvasDoc || canvasDoc === adminDoc) {
-      return;
-    }
-
-    bridgeAdminApis(canvasDoc);
-
-    if (canvasDoc.__reacgSettingsPortal) {
-      return;
-    }
-
-    canvasDoc.__reacgSettingsPortal = true;
-    const origQuerySelector = canvasDoc.querySelector.bind(canvasDoc);
-    canvasDoc.querySelector = function (selector) {
-      const local = origQuerySelector(selector);
-      if (local) {
-        return local;
-      }
-      if (SETTINGS_SELECTORS[selector]) {
-        try {
-          return adminDoc.querySelector(selector);
-        }
-        catch (error) {
-          return null;
-        }
-      }
-      return null;
-    };
-
-    enableGalleryOverlayPortal(canvasDoc);
-    enableMuiPopoverFix(canvasDoc);
-  }
-
-  /**
-   * True when document.body is being read from the gallery app, not Gutenberg.
-   *
-   * @returns {boolean}
-   */
-  function isGalleryAppCaller() {
-    try {
-      const stack = new Error().stack || "";
-      return stack.indexOf("wp-gallery") !== -1;
-    }
-    catch (error) {
-      return false;
-    }
-  }
-
-  /**
-   * Native body accessor for a document, ignoring our instance getter.
-   *
-   * @param {Document} doc
-   * @returns {function|null}
-   */
-  function getNativeBodyGetter(doc) {
-    const win = doc.defaultView;
-    const protos = [];
-    if (win && win.Document) {
-      protos.push(win.Document.prototype);
-    }
-    if (win && win.HTMLDocument) {
-      protos.push(win.HTMLDocument.prototype);
-    }
-    protos.push(Document.prototype);
-    for (let i = 0; i < protos.length; i++) {
-      try {
-        const desc = Object.getOwnPropertyDescriptor(protos[i], "body");
-        if (desc && desc.get) {
-          return desc.get;
-        }
-      }
-      catch (error) {
-        /* Ignore.*/
-      }
-    }
-    return null;
-  }
-
-  /**
-   * MUI Dialog/Modal portals to document.body. Use the admin body so Template
-   * Library (and other overlays) render on the page, with React events attached
-   * there. Gutenberg still sees the real iframe body.
-   *
-   * @param {Document} canvasDoc
-   */
-  function enableGalleryOverlayPortal(canvasDoc) {
-    const adminDoc = getAdminDocument();
-    if (!canvasDoc || canvasDoc === adminDoc || canvasDoc.__reacgOverlayPortal) {
-      return;
-    }
-
-    const nativeBodyGet = getNativeBodyGetter(canvasDoc);
-    if (!nativeBodyGet) {
-      return;
-    }
-
-    canvasDoc.__reacgOverlayPortal = true;
-    Object.defineProperty(canvasDoc, "body", {
-      configurable: true,
-      enumerable: true,
-      get: function () {
-        if (isGalleryAppCaller()) {
-          return adminDoc.body;
-        }
-        return nativeBodyGet.call(canvasDoc);
-      }
-    });
-  }
-
-  /**
-   * Read CSS text from a style node, including Emotion/MUI rules inserted via CSSOM.
-   *
-   * @param {HTMLStyleElement} node
-   * @returns {string}
-   */
-  function getStyleSheetText(node) {
-    const inline = node && node.textContent ? node.textContent : "";
-    try {
-      const sheet = node && node.sheet;
-      const rules = sheet && (sheet.cssRules || sheet.rules);
-      if (rules && rules.length) {
-        let css = "";
-        for (let i = 0; i < rules.length; i++) {
-          css += rules[i].cssText + "\n";
-        }
-        if (css) {
-          return css;
-        }
-      }
-    }
-    catch (error) {
-      /* Cross-origin or unreadable stylesheet.*/
-    }
-    return inline;
-  }
-
-  /**
-   * Copy gallery CSS-in-JS from the canvas into the admin document for portaled settings.
-   * Emotion inserts rules with insertRule(), so cloneNode() would copy empty tags.
-   *
-   * @param {Document} canvasDoc
-   */
-  function syncGalleryStyles(canvasDoc) {
-    const adminDoc = getAdminDocument();
-    if (!canvasDoc || !canvasDoc.head || canvasDoc === adminDoc) {
-      return;
-    }
-
-    if (!canvasDoc.__reacgStyleSyncTargets) {
-      canvasDoc.__reacgStyleSyncTargets = [];
-    }
-
-    const isGalleryStyleNode = function (node) {
-      if (!node || !node.nodeName) {
-        return false;
-      }
-      if (node.getAttribute && node.getAttribute("data-reacg-synced-clone") === "1") {
-        return false;
-      }
-      const name = node.nodeName.toUpperCase();
-      if (name === "LINK") {
-        const rel = (node.getAttribute("rel") || "").toLowerCase();
-        const href = node.getAttribute("href") || "";
-        return rel.indexOf("stylesheet") !== -1 && (
-          href.indexOf("wp-gallery") !== -1
-          || href.indexOf("reacg") !== -1
-          || href.indexOf("/assets/") !== -1
-          || href.indexOf("fonts.googleapis") !== -1
-        );
-      }
-      if (name !== "STYLE") {
-        return false;
-      }
-      const id = node.id || "";
-      if (id.indexOf("wp-") === 0 || id.indexOf("core-block") === 0) {
-        return false;
-      }
+      // The gallery bundle exposes upgrade dialogs asynchronously. Copying a
+      // function only when the block mounts leaves the canvas without a
+      // handler when that bundle has not finished loading yet.
       if (
-        node.getAttribute("data-emotion")
-        || node.getAttribute("data-jss")
-        || node.getAttribute("data-styled")
+        typeof canvasWin[name] === "function" &&
+        !canvasWin[name].__reacgGutenbergDialogProxy
       ) {
-        return true;
-      }
-      const text = getStyleSheetText(node);
-      return text.indexOf("reacg-") !== -1
-        || text.indexOf("Mui") !== -1
-        || text.indexOf("notistack") !== -1
-        || text.indexOf("yarl__") !== -1;
-    };
-
-    const upsertStyle = function (node) {
-      if (!isGalleryStyleNode(node)) {
         return;
       }
 
-      const targets = canvasDoc.__reacgStyleSyncTargets;
-      let dest = null;
-      for (let i = 0; i < targets.length; i++) {
-        if (targets[i].source === node) {
-          dest = targets[i].dest;
-          break;
-        }
-      }
+      const proxy = function () {
+        const args = arguments;
+        const candidates = [window];
 
-      if (node.nodeName.toUpperCase() === "LINK") {
-        if (dest && dest.isConnected) {
+        try {
+          if (window.parent && window.parent !== window) {
+            candidates.push(window.parent);
+          }
+        } catch (error) {}
+        try {
+          if (window.top && window.top !== window.parent) {
+            candidates.push(window.top);
+          }
+        } catch (error) {}
+
+        const invoke = function () {
+          for (let i = 0; i < candidates.length; i++) {
+            const candidate = candidates[i];
+            if (
+              candidate &&
+              typeof candidate[name] === "function" &&
+              candidate[name] !== proxy &&
+              !candidate[name].__reacgGutenbergDialogProxy
+            ) {
+              candidate[name].apply(candidate, args);
+              return true;
+            }
+          }
+          return false;
+        };
+
+        if (invoke()) {
           return;
         }
-        dest = node.cloneNode(true);
-        dest.setAttribute("data-reacg-synced-clone", "1");
-        adminDoc.head.appendChild(dest);
-        targets.push({source: node, dest: dest});
-        return;
-      }
 
-      const css = getStyleSheetText(node);
-      if (!css && !node.getAttribute("data-emotion") && !node.getAttribute("data-jss")) {
-        return;
-      }
-      if (!dest || !dest.isConnected) {
-        dest = adminDoc.createElement("style");
-        dest.setAttribute("data-reacg-synced-clone", "1");
-        if (node.getAttribute("data-emotion")) {
-          dest.setAttribute("data-emotion", node.getAttribute("data-emotion"));
-        }
-        adminDoc.head.appendChild(dest);
-        targets.push({source: node, dest: dest});
-      }
-      if (css && dest.textContent !== css) {
-        dest.textContent = css;
-      }
-    };
-
-    const scan = function () {
-      const roots = [canvasDoc.head, canvasDoc.body];
-      for (let i = 0; i < roots.length; i++) {
-        if (!roots[i]) {
-          continue;
-        }
-        roots[i].querySelectorAll("style, link[rel='stylesheet']").forEach(upsertStyle);
-      }
-    };
-
-    scan();
-
-    if (canvasDoc.__reacgStyleSync) {
-      return;
-    }
-    canvasDoc.__reacgStyleSync = true;
-
-    const observer = new MutationObserver(function () {
-      scan();
-    });
-    observer.observe(canvasDoc.documentElement, {
-      childList: true,
-      subtree: true
+        // wp-gallery.js can finish loading after the block canvas is mounted.
+        // Resolve the dialog implementation once it becomes available.
+        let attempts = 0;
+        const retry = window.setInterval(function () {
+          attempts++;
+          if (invoke() || attempts >= 40) {
+            window.clearInterval(retry);
+          }
+        }, 100);
+      };
+      proxy.__reacgGutenbergDialogProxy = true;
+      canvasWin[name] = proxy;
     });
 
-    /* insertRule() does not mutate the DOM, so keep copying until lazy MUI chunks settle. */
-    let ticks = 0;
-    const interval = setInterval(function () {
-      ticks++;
-      scan();
-      if (ticks > 60) {
-        clearInterval(interval);
-      }
-    }, 250);
-  }
-
-  /**
-   * MUI menus are portaled with the iframe's window metrics against a sidebar
-   * anchor in the admin document, so the first open can land on the far left.
-   *
-   * @param {HTMLElement} node
-   * @returns {boolean}
-   */
-  function isMuiTooltip(node) {
-    if (!node || node.nodeType !== 1) {
-      return false;
-    }
-    const className = node.className && node.className.toString
-      ? node.className.toString()
-      : "";
-    return className.indexOf("MuiTooltip") !== -1
-      || node.getAttribute("role") === "tooltip"
-      || !!(node.querySelector && node.querySelector('[role="tooltip"], .MuiTooltip-tooltip'));
-  }
-
-  /**
-   * Full-screen MUI dialogs (Template Library) must not be snapped like selects.
-   *
-   * @param {HTMLElement} node
-   * @returns {boolean}
-   */
-  function isMuiDialog(node) {
-    if (!node || node.nodeType !== 1) {
-      return false;
-    }
-    const className = node.className && node.className.toString
-      ? node.className.toString()
-      : "";
-    return className.indexOf("MuiDialog") !== -1
-      || className.indexOf("reacg-templates-dialog") !== -1
-      || node.getAttribute("role") === "dialog"
-      || !!(node.querySelector && node.querySelector(
-        ".MuiDialog-root, .MuiDialog-container, .reacg-templates-dialog"
-      ));
-  }
-
-  /**
-   * @param {HTMLElement} node
-   * @returns {boolean}
-   */
-  function isMuiOverlay(node) {
-    if (!node || node.nodeType !== 1 || isMuiTooltip(node) || isMuiDialog(node)) {
-      return false;
-    }
-    const className = node.className && node.className.toString
-      ? node.className.toString()
-      : "";
-    return className.indexOf("MuiModal-root") !== -1
-      || className.indexOf("MuiPopover-root") !== -1
-      || className.indexOf("MuiMenu-root") !== -1;
-  }
-
-  /**
-   * Find the sidebar control that opened a MUI menu.
-   *
-   * @param {Document} adminDoc
-   * @returns {Element|null}
-   */
-  function getExpandedSettingsAnchor(adminDoc) {
-    const roots = [
-      adminDoc.getElementById("reacg_settings"),
-      adminDoc.querySelector(".reacg-gutenberg-settings")
-    ];
-    for (let i = 0; i < roots.length; i++) {
-      if (!roots[i]) {
-        continue;
-      }
-      const expanded = roots[i].querySelector('[aria-expanded="true"]');
-      if (expanded) {
-        return expanded;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Use the full MUI select field, not a nested aria-expanded child.
-   *
-   * @param {Element} anchor
-   * @returns {Element}
-   */
-  function getOverlayWidthSource(anchor) {
-    return anchor.closest(".MuiInputBase-root")
-      || anchor.closest(".MuiFormControl-root")
-      || anchor.closest(".MuiButton-root")
-      || anchor;
-  }
-
-  /**
-   * Recompute a MUI overlay against the admin viewport, then snap it to the anchor.
-   *
-   * @param {HTMLElement} node
-   * @param {Document} canvasDoc
-   */
-  function repositionMuiOverlay(node, canvasDoc) {
-    const adminDoc = getAdminDocument();
-    const canvasWin = canvasDoc.defaultView;
-    const adminWin = adminDoc.defaultView;
-
-    const apply = function () {
-      syncGalleryStyles(canvasDoc);
-      try {
-        if (canvasWin) {
-          canvasWin.dispatchEvent(new Event("resize"));
-        }
-        if (adminWin) {
-          adminWin.dispatchEvent(new Event("resize"));
-        }
-      }
-      catch (error) {
-        /* Ignore.*/
-      }
-
-      const anchor = getExpandedSettingsAnchor(adminDoc);
-      if (!anchor || !adminWin) {
-        return;
-      }
-
-      const positioned = node.querySelector("[data-popper-placement]")
-        || node.querySelector(".MuiPaper-root")
-        || node.firstElementChild;
-      if (!positioned || positioned.className && positioned.className.toString().indexOf("MuiBackdrop-root") !== -1) {
-        return;
-      }
-
-      const widthSource = getOverlayWidthSource(anchor);
-      const rect = widthSource.getBoundingClientRect();
-      const minWidth = Math.ceil(rect.width);
-      const viewportWidth = adminWin.innerWidth || adminDoc.documentElement.clientWidth;
-      let left = rect.left;
-      if (left + minWidth > viewportWidth - 8) {
-        left = Math.max(8, rect.right - minWidth);
-      }
-      const top = rect.bottom + 4;
-
-      positioned.style.setProperty("position", "fixed", "important");
-      positioned.style.setProperty("top", top + "px", "important");
-      positioned.style.setProperty("left", left + "px", "important");
-      positioned.style.setProperty("transform", "none", "important");
-      positioned.style.setProperty("margin", "0", "important");
-      positioned.style.setProperty("right", "auto", "important");
-      /* First open shrink-wraps before MUI copies the select width. */
-      positioned.style.setProperty("min-width", minWidth + "px", "important");
-      positioned.style.setProperty("width", minWidth + "px", "important");
-      positioned.style.setProperty("box-sizing", "border-box", "important");
-
-      const list = node.querySelector('.MuiList-root, .MuiMenu-list, [role="listbox"]');
-      if (list) {
-        list.style.setProperty("min-width", minWidth + "px", "important");
-      }
-    };
-
-    apply();
-    requestAnimationFrame(function () {
-      apply();
-      requestAnimationFrame(apply);
-    });
-    setTimeout(apply, 50);
-    setTimeout(apply, 150);
-  }
-
-  /**
-   * Watch iframe and admin bodies for MUI portals opened from the sidebar.
-   *
-   * @param {Document} canvasDoc
-   */
-  function enableMuiPopoverFix(canvasDoc) {
-    const adminDoc = getAdminDocument();
-    if (!canvasDoc || canvasDoc === adminDoc || canvasDoc.__reacgMuiPopoverFix) {
-      return;
-    }
-    canvasDoc.__reacgMuiPopoverFix = true;
-
-    const watchNode = function (node) {
-      if (isMuiTooltip(node) || isMuiDialog(node)) {
-        syncGalleryStyles(canvasDoc);
-        return;
-      }
-      if (isMuiOverlay(node)) {
-        repositionMuiOverlay(node, canvasDoc);
-        return;
-      }
-      if (!node || node.nodeType !== 1) {
-        return;
-      }
-      const attrObserver = new MutationObserver(function () {
-        if (isMuiTooltip(node) || isMuiDialog(node)) {
-          attrObserver.disconnect();
-          syncGalleryStyles(canvasDoc);
-          return;
-        }
-        if (isMuiOverlay(node)) {
-          attrObserver.disconnect();
-          repositionMuiOverlay(node, canvasDoc);
+    canvasWin.reacg_global = canvasWin.reacg_global || {};
+    if (window.reacg_global) {
+      Object.keys(window.reacg_global).forEach(function (k) {
+        if (
+          k !== "onOptionsChange" &&
+          canvasWin.reacg_global[k] === undefined
+        ) {
+          canvasWin.reacg_global[k] = window.reacg_global[k];
         }
       });
-      attrObserver.observe(node, {attributes: true, attributeFilter: ["class"]});
-      setTimeout(function () {
-        attrObserver.disconnect();
-      }, 1000);
-    };
-
-    const observeBody = function (target) {
-      if (!target || target.__reacgMuiObserved) {
-        return;
-      }
-      target.__reacgMuiObserved = true;
-      const observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-          mutation.addedNodes.forEach(watchNode);
-        });
-      });
-      observer.observe(target, {childList: true});
-    };
-
-    observeBody(canvasDoc.body);
-    observeBody(adminDoc.body);
-  }
-
-  const inspectorBindTimers = {};
-
-  /**
-   * Current sidebar panel (Post vs Block).
-   *
-   * @returns {string|null}
-   */
-  function getActiveInspectorArea() {
-    const iface = wp.data.select("core/interface");
-    if (iface && typeof iface.getActiveComplementaryArea === "function") {
-      return iface.getActiveComplementaryArea("core/edit-post")
-        || iface.getActiveComplementaryArea("core/edit-site")
-        || iface.getActiveComplementaryArea("core/edit-widgets");
     }
-    const editPost = wp.data.select("core/edit-post");
-    if (editPost && typeof editPost.getActiveGeneralSidebarName === "function") {
-      return editPost.getActiveGeneralSidebarName();
-    }
-    return null;
-  }
 
-  /**
-   * @param {string|null} area
-   * @returns {boolean}
-   */
-  function isBlockInspectorArea(area) {
-    return !!area && String(area).indexOf("block") !== -1;
-  }
-
-  /**
-   * Rebind images + options after InspectorControls remounts (Post/Block tab).
-   *
-   * @param {string} clientId
-   * @param {string|number} shortcodeId
-   * @param {Object} props
-   */
-  function scheduleInspectorBind(clientId, shortcodeId, props) {
-    if (inspectorBindTimers[clientId]) {
-      clearTimeout(inspectorBindTimers[clientId]);
+    if (!canvasWin.__reacgOnOptionsChangeBridged) {
+      canvasWin.__reacgOnOptionsChangeBridged = true;
+      const origCanvasOnOptionsChange = canvasWin.reacg_global.onOptionsChange;
+      canvasWin.reacg_global.onOptionsChange = function (options, context) {
+        if (
+          typeof origCanvasOnOptionsChange === "function" &&
+          origCanvasOnOptionsChange !== canvasWin.reacg_global.onOptionsChange
+        ) {
+          origCanvasOnOptionsChange(options, context);
+        }
+        if (
+          window.reacg_global &&
+          window.reacg_global !== canvasWin.reacg_global &&
+          typeof window.reacg_global.onOptionsChange === "function"
+        ) {
+          window.reacg_global.onOptionsChange(options, context);
+        }
+      };
     }
-    inspectorBindTimers[clientId] = setTimeout(function () {
-      delete inspectorBindTimers[clientId];
-      const adminDoc = getAdminDocument();
-      const settings = adminDoc.getElementById("reacg_settings");
-      const images = adminDoc.getElementById("reacg-gallery-images");
-      if (!settings && !images) {
-        return;
-      }
-      const needsImages = images && !images.innerHTML;
-      const needsSettings = settings && !settings.childElementCount;
-      if (!needsImages && !needsSettings) {
-        return;
-      }
-      const baseCont = getBlockNode(clientId);
-      if (!baseCont || !shortcodeId) {
-        return;
-      }
-      images_cont(baseCont, shortcodeId, props, false, true);
-    }, 50);
   }
 
   /**
@@ -678,312 +216,43 @@
         loadApp.onclick.call(loadApp);
         return true;
       }
-    }
-    catch (error) {
-      /* Ignore onclick errors.*/
+    } catch (error) {
+      /* Ignore onclick errors. */
     }
 
     try {
       loadApp.click();
       return true;
-    }
-    catch (error) {
-      /* Ignore click errors.*/
+    } catch (error) {
+      /* Ignore click errors. */
     }
 
-    const view = loadApp.ownerDocument && loadApp.ownerDocument.defaultView
-      ? loadApp.ownerDocument.defaultView
-      : window;
-    loadApp.dispatchEvent(new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: view
-    }));
+    const view =
+      loadApp.ownerDocument && loadApp.ownerDocument.defaultView
+        ? loadApp.ownerDocument.defaultView
+        : window;
+    loadApp.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: view,
+      }),
+    );
     return true;
   }
 
-  blocks.registerBlockType("reacg/gallery", {
-    apiVersion: 3,
-    title: reacg_gutenberg.title,
-    description: reacg_gutenberg.description,
-    icon: el('img', {
-      width: 24,
-      height: 24,
-      src: reacg_gutenberg.icon
-    }),
-    category: 'common',
-    // Disable support for Additional CSS Class(es) in the block sidebar.
-    supports: {
-      customClassName: false
-    },
-    example: {},
-    keywords: [
-      'gallery',
-      'photo gallery',
-      'image gallery',
-      're gallery',
-      'media',
-    ],
-    attributes: {
-      shortcode: {
-        type: "string",
-        value: ""
-      },
-      shortcode_id: {
-        type: "int",
-        value: 0
-      },
-      hidePreview: {
-        type: "boolean",
-        value: false
-      },
-    },
-    edit: function (props) {
-      const blockRef = useRef(null);
-      const latestProps = useRef(props);
-      latestProps.current = props;
-      const shortcode_id = props.attributes.shortcode_id;
-      const showPlaceholder = !props.attributes.hidePreview && !props.isSelected;
-      const onInspectorMount = useRef(function (node) {
-        if (!node) {
-          return;
-        }
-        const current = latestProps.current;
-        if (!current.isSelected || !current.attributes.shortcode_id) {
-          return;
-        }
-        scheduleInspectorBind(
-          current.clientId,
-          current.attributes.shortcode_id,
-          current
-        );
-      });
-
-      const setBlockRef = function (node) {
-        if (node) {
-          blockRef.current = node;
-          blockNodes[props.clientId] = node;
-          enableSettingsPortal(node.ownerDocument);
-          syncGalleryStyles(node.ownerDocument);
-        }
-        else {
-          if (blockNodes[props.clientId] === blockRef.current) {
-            delete blockNodes[props.clientId];
-          }
-          blockRef.current = null;
-        }
-      };
-
-      useEffect(() => {
-        if (showPlaceholder || props.attributes.hidePreview) {
-          return;
-        }
-        props.setAttributes({
-          hidePreview: true,
-        });
-      }, [showPlaceholder]);
-
-      useEffect(() => {
-        if (!props.isSelected) {
-          return;
-        }
-
-        if (typeof wp.data.select('core/edit-post') !== "undefined"
-          && typeof wp.data.dispatch('core/edit-post').openGeneralSidebar !== 'undefined') {
-          wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
-        }
-
-        if (!wp.data.select('core/edit-widgets')) {
-          return;
-        }
-
-        // Force BLOCK tab
-        wp.data.dispatch('core/interface').enableComplementaryArea(
-          'core/edit-widgets',
-          'edit-widgets/block'
-        );
-        setTimeout(() => {
-          const tab = getAdminDocument().getElementById(
-            'tabs-0-edit-widgets/block-inspector'
-          );
-          tab?.click();
-        }, 50);
-      }, [props.isSelected]);
-
-      useEffect(() => {
-        if (showPlaceholder) {
-          return;
-        }
-
-        const baseCont = blockRef.current || getBlockNode(props.clientId);
-        if (!baseCont) {
-          return;
-        }
-
-        if (!shortcode_id) {
-          const controls = baseCont.querySelector(".reacg-setup-controls");
-          if (controls) {
-            controls.classList.remove("reacg-hidden");
-          }
-          return;
-        }
-
-        images_cont(baseCont, shortcode_id, props, true, true);
-      }, [shortcode_id, props.isSelected, showPlaceholder, props.clientId]);
-
-      useEffect(() => {
-        if (showPlaceholder || !shortcode_id || !props.isSelected) {
-          return;
-        }
-
-        let lastIsBlock = isBlockInspectorArea(getActiveInspectorArea());
-        const unsubscribe = wp.data.subscribe(function () {
-          const isBlock = isBlockInspectorArea(getActiveInspectorArea());
-          if (isBlock === lastIsBlock) {
-            return;
-          }
-          lastIsBlock = isBlock;
-          if (!isBlock) {
-            return;
-          }
-          scheduleInspectorBind(props.clientId, shortcode_id, latestProps.current);
-        });
-
-        return unsubscribe;
-      }, [shortcode_id, props.isSelected, showPlaceholder, props.clientId]);
-
-      const blockProps = useBlockProps({
-        className: "reacg-gutenberg" + (showPlaceholder ? " reacg-block-preview" : ""),
-        id: "reacg-gutenberg" + props.clientId,
-        ref: setBlockRef
-      });
-
-      // Display block preview only on the block hover.
-      if (showPlaceholder) {
-        return el("div", blockProps, el("img", {
-          src: reacg_gutenberg.plugin_url + "/builders/gutenberg/images/preview.png",
-          style: {height: "auto", width: "100%"}
-        }));
-      }
-
-      const selected = wp.data.select('core/block-editor').getSelectedBlock();
-      const selectedBlockShortcodeId = selected?.attributes?.shortcode_id;
-
-      return regallery(props, selectedBlockShortcodeId, blockProps, onInspectorMount.current);
-    },
-    save: function (props) {
-      return props.attributes.shortcode;
-    }
-  });
-
   /**
-   * Gallery block.
+   * Reload gallery preview in canvas iframe or admin document.
    *
-   * @param props
-   * @param selectedBlockShortcodeId
-   * @param blockProps
-   * @param onInspectorMount
-   * @returns {*}
+   * @param {Object} props
+   * @param {Element|null} hintNode
    */
-  function regallery(props, selectedBlockShortcodeId, blockProps, onInspectorMount) {
-    const shortcode_id = typeof props.attributes.shortcode_id == "undefined" ? 0 : props.attributes.shortcode_id;
-
-    const loader = el('div', {class: "reacg-spinner__wrapper reacg-hidden"}, el('span', {
-      class: "spinner is-active",
-    }));
-
-    const setup_wizard = props.attributes.shortcode_id ? "" : el('div', {class: "reacg-setup-wizard"},
-      el('img', {
-        width: 50,
-        height: 50,
-        src: reacg_gutenberg.icon
-      }),
-      existGalleries ? el('p', {}, reacg_gutenberg.setup_wizard_description) : "",
-      el("div",
-        {
-          class: "reacg-setup-controls"
-        },
-        create_gallery_button(props),
-        existGalleries ? galleries_list(props) : ""
-      ),
-    );
-
-    return el(
-      "div",
-      blockProps,
-      loader,
-      setup_wizard,
-      gallery_container(shortcode_id, props),
-      shortcode_id && props.isSelected ? el(InspectorControls, {},
-        el("div",
-          {
-            class: "reacg-gutenberg-settings",
-            ref: onInspectorMount
-          },
-          galleries_list(props),
-          gallery_images_container(selectedBlockShortcodeId),
-          gallery_settings_container(),
-        )
-      ) : "",
-    );
-  }
-
-  function gallery_container(shortcode_id, props) {
-    const timestamp = Date.now();
-
-    return el('div', {
-      'data-options-section': 0,
-      'data-options-container': "#reacg_settings",
-      'data-gallery-id': shortcode_id,
-      'data-plugin-version': reacg_gutenberg.plugin_version,
-      'data-gallery-timestamp': timestamp,
-      'data-options-timestamp': timestamp,
-      class: "reacg-wrapper reacg-gallery reacg-preview" + (shortcode_id ? "" : " reacg-hidden"),
-      id: "reacg-root" + props.clientId,
-    });
-  }
-  function gallery_settings_container() {
-    return el("div", {
-        id: "reacg_settings",
-        class: "reacg-wrapper",
-      }
-    );
-  }
-  function gallery_images_container(shortcode_id) {
-    return el("div", {
-        class: (shortcode_id != all_images_id ? "" : "reacg-hidden"),
-      },
-      el('h2', {
-        class: 'reacg-gallery-images-section-title'
-      }, reacg_gutenberg.gallery_images_section_title),
-      el("div", {
-        id: "reacg-gallery-images",
-      })
-    );
-  }
-
-  function set_data(baseCont, shortcode_id, props, enableOptions) {
-    const galleryCont = baseCont.querySelector(".reacg-gallery");
-    if (galleryCont) {
-      const timestamp = Date.now();
-      galleryCont.classList.remove("reacg-hidden");
-      galleryCont.setAttribute('data-options-section', enableOptions ? 1 : 0);
-      galleryCont.setAttribute('data-options-container', "#reacg_settings");
-      galleryCont.setAttribute('data-gallery-id', shortcode_id);
-      galleryCont.setAttribute('data-plugin-version', reacg_gutenberg.plugin_version);
-      galleryCont.setAttribute('data-gallery-timestamp', timestamp);
-      galleryCont.setAttribute('data-options-timestamp', timestamp);
-      galleryCont.setAttribute('id', "reacg-root" + props.clientId);
-    }
-  }
-
   function reload_gallery(props, hintNode) {
     const rootId = "reacg-root" + props.clientId;
     const attempt = function (remaining) {
       const baseCont = getBlockNode(props.clientId, hintNode);
       const canvasDoc = getCanvasDocument(baseCont);
-      enableSettingsPortal(canvasDoc);
-      syncGalleryStyles(canvasDoc);
+      bridgeAdminApis(canvasDoc);
 
       let loadApp = canvasDoc.getElementById("reacg-loadApp");
       if (!loadApp && canvasDoc !== getAdminDocument()) {
@@ -992,7 +261,6 @@
 
       if (loadApp) {
         triggerLoadApp(loadApp, rootId);
-        syncGalleryStyles(canvasDoc);
         return;
       }
 
@@ -1006,185 +274,616 @@
     attempt(20);
   }
 
-  function images_cont(baseCont, shortcode_id, props, first_load, selectGallery) {
-    fetch(reacg_gutenberg.ajax_url + '&action=reacg_get_images&id=' + shortcode_id)
-      .then(response => response.json())
-      .then(data => {
-        const container = getAdminDocument().querySelector("#reacg-gallery-images");
-        if (container && (!first_load || !container.innerHTML)) {
-          if (shortcode_id != all_images_id) {
-            container.classList.remove("reacg-hidden");
-            container.innerHTML = data;
-            if (typeof reacg_update_item_image_fit === "function") {
-              container.querySelectorAll(".reacg_item_image img").forEach(reacg_update_item_image_fit);
-            }
-            /* Make the image items sortable.*/
-            reacg_make_items_sortable(container);
-          }
-          else {
-            container.classList.add("reacg-hidden");
-            container.innerHTML = "";
-          }
-        }
-
-        if (!selectGallery) {
-          const list = baseCont.querySelector(".reacg-galleries-list");
-          if (list) {
-            list.classList.add("reacg-hidden");
-          }
-        }
-
-        /* Options UI lives in InspectorControls (admin document), not in the canvas iframe. */
-        const enableOptions = !!getAdminDocument().querySelector("#reacg_settings");
-        set_data(baseCont, shortcode_id, props, enableOptions);
-        reload_gallery(props, baseCont);
-
-        const spinner = baseCont.querySelector(".reacg-spinner__wrapper");
-        if (spinner) {
-          spinner.classList.add("reacg-hidden");
-        }
-      })
-      .catch(error => console.error("Error fetching data:", error));
-  }
-
-  function showPreview(shortcode_id, props, hintNode) {
-    const baseCont = getBlockNode(props.clientId, hintNode);
-    if (baseCont) {
-      const spinner = baseCont.querySelector(".reacg-spinner__wrapper");
-      if (spinner) {
-        spinner.classList.remove("reacg-hidden");
-      }
-      if (shortcode_id === 0) {
-        const titleInput = baseCont.querySelector(".reacg-gallery-title-input");
-        fetch(reacg_gutenberg.ajax_url + '&action=reacg_save_gallery&gallery_title=' + (titleInput ? titleInput.value : ""))
-          .then(response => response.json())
-          .then(data => {
-            shortcode_id = data;
-            props.setAttributes({
-              shortcode: '[REACG id="' + shortcode_id + '"]',
-              shortcode_id: shortcode_id,
-            });
-            const controls = baseCont.querySelector(".reacg-setup-controls");
-            if (controls) {
-              controls.classList.add("reacg-hidden");
-            }
-            images_cont(baseCont, shortcode_id, props, false, false);
-          })
-          .catch(error => console.error("Error fetching data:", error));
-      }
-      else {
-        images_cont(baseCont, shortcode_id, props, false, true);
-      }
-    }
-  }
-
-  function create_gallery_button(props) {
-    const create_button = el('button', {
-      class: "reacg-create-gallery button button-primary button-large",
-      onClick: (event) => showPreview(0, props, event.target),
-    }, reacg_gutenberg.create_button);
-    const gallery_title_input = el('input', {
-      type: "text",
-      class: "reacg-gallery-title-input",
-      name: "reacg_gallery_title",
-      placeholder: reacg_gutenberg.gallery_title_placeholder,
-    });
-    return  el('div', '', gallery_title_input, create_button);
-  }
-
-  function galleries_list(props) {
-    // Add shortcodes to the html elements.
-    let shortcode_list = [];
-    shortcodes.forEach(function (shortcode_data) {
-      shortcode_list.push(
-        el('option', {
-          value: shortcode_data.id,
-          "data-shortcode": shortcode_data.shortcode,
-        }, shortcode_data.title)
-      );
-    });
-    return el('select', {
-        value: props.attributes.shortcode_id,
-        onChange: (event) => itemSelect(event, props),
-        class: 'reacg-galleries-list'
-      }, shortcode_list);
-  }
-
   /**
-   * Bind an event on the item select.
+   * Safe getter for ReacgBuilderModal across window hierarchies.
    *
-   * @param event
-   * @param props
+   * @returns {Object|null}
    */
-  function itemSelect(event, props) {
-    let selected = event.target.querySelector("option:checked");
-    if (typeof props.attributes.shortcode_id == "undefined") {
-      props.setAttributes({
-        shortcode_id: 0,
-      });
-    }
-    showPreview(selected.value, props, event.target);
-    // Get selected item's data.
-    props.setAttributes({
-      shortcode: selected.dataset.shortcode,
-      shortcode_id: selected.value,
-    });
-    event.preventDefault();
+  function getBuilderModal() {
+    try {
+      if (window.top && window.top.ReacgBuilderModal) {
+        return window.top.ReacgBuilderModal;
+      }
+    } catch (e) {}
+    try {
+      if (window.parent && window.parent.ReacgBuilderModal) {
+        return window.parent.ReacgBuilderModal;
+      }
+    } catch (e) {}
+    return window.ReacgBuilderModal || null;
   }
 
   /**
-   * Save gallery options from the sidebar or the canvas document.
+   * Helper to select block and open Gutenberg's block inspector sidebar.
+   *
+   * @param {Object} props
    */
-  function clickSaveSettingsButtons() {
-    const docs = [getAdminDocument()];
-    Object.keys(blockNodes).forEach(function (clientId) {
-      const node = blockNodes[clientId];
-      const canvasDoc = node && node.ownerDocument;
-      if (canvasDoc && docs.indexOf(canvasDoc) === -1) {
-        docs.push(canvasDoc);
+  function focusBlockInSidebar(props) {
+    if (window.wp && window.wp.data && props.clientId) {
+      try {
+        const blockEditor = window.wp.data.dispatch("core/block-editor");
+        if (blockEditor && typeof blockEditor.selectBlock === "function") {
+          blockEditor.selectBlock(props.clientId);
+        }
+        const editPost = window.wp.data.dispatch("core/edit-post");
+        if (editPost && typeof editPost.openGeneralSidebar === "function") {
+          editPost.openGeneralSidebar("edit-post/block");
+        } else {
+          const editSite = window.wp.data.dispatch("core/edit-site");
+          if (editSite && typeof editSite.openGeneralSidebar === "function") {
+            editSite.openGeneralSidebar("edit-site/block");
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
+  /**
+   * Helper to mount the embedded modal settings panel inside Gutenberg's InspectorControls.
+   *
+   * @param {Element} containerNode
+   * @param {Object} props Current Gutenberg block props
+   * @param {number} [retries=0] Retry count while waiting for ReacgBuilderModal to load
+   */
+  function mountEmbeddedSettings(containerNode, props, retries) {
+    if (!containerNode) return;
+    retries = typeof retries === "number" ? retries : 0;
+    const modal = getBuilderModal();
+    if (!modal || typeof modal.mountEmbedded !== "function") {
+      if (retries < 30) {
+        setTimeout(function () {
+          mountEmbeddedSettings(containerNode, props, retries + 1);
+        }, 100);
+        return;
       }
-    });
-    docs.forEach(function (doc) {
-      const buttons = doc.querySelectorAll(".save-settings-button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].click();
+      console.error("ReacgBuilderModal is not loaded.");
+      return;
+    }
+
+    const widgetId = props.clientId;
+    let currentGalleryId = parseInt(props.attributes.shortcode_id, 10) || 0;
+
+    // Check if DOM already has a non-zero gallery ID rendered for this widget
+    const baseCont = getBlockNode(widgetId);
+    if (baseCont) {
+      const galleryDom = baseCont.querySelector(".reacg-gallery");
+      if (galleryDom) {
+        const domGalleryId = parseInt(
+          galleryDom.getAttribute("data-gallery-id"),
+          10,
+        );
+        if (!isNaN(domGalleryId) && domGalleryId > 0) {
+          currentGalleryId = domGalleryId;
+        }
       }
+    }
+
+    modal.mountEmbedded(containerNode, {
+      galleryId: currentGalleryId,
+      widgetId: widgetId,
+      onSave: function (savedGalleryId) {
+        const idNum = parseInt(savedGalleryId, 10) || 0;
+        const currentAttrId = parseInt(props.attributes.shortcode_id, 10) || 0;
+        const node = getBlockNode(widgetId);
+        const gallery = node ? node.querySelector(".reacg-gallery") : null;
+        const alreadyRendered =
+          gallery &&
+          gallery.children.length > 0 &&
+          (gallery.querySelector(".reacg-gallery-wrapper") ||
+            gallery.querySelector("img") ||
+            gallery.querySelector(".reacg_item") ||
+            gallery.querySelector(".content-placeholder"));
+
+        // If gallery ID has not changed and canvas is already rendered, do not update timestamps or reload
+        if (idNum === currentAttrId && alreadyRendered) {
+          return;
+        }
+
+        const newShortcode = idNum ? '[REACG id="' + idNum + '"]' : "";
+
+        props.setAttributes({
+          shortcode_id: idNum,
+          shortcode: newShortcode,
+        });
+
+        // Also update via core block-editor store if available
+        if (window.wp && window.wp.data && widgetId) {
+          try {
+            const blockEditorStore =
+              window.wp.data.dispatch("core/block-editor");
+            if (
+              blockEditorStore &&
+              typeof blockEditorStore.updateBlockAttributes === "function"
+            ) {
+              blockEditorStore.updateBlockAttributes(widgetId, {
+                shortcode_id: idNum,
+                shortcode: newShortcode,
+              });
+            }
+          } catch (e) {}
+        }
+
+        // Live-update canvas placeholder & gallery container
+        if (node) {
+          const placeholder = node.querySelector(".reacg-builder-placeholder");
+          const gallery = node.querySelector(".reacg-gallery");
+          if (idNum === 0) {
+            if (placeholder) {
+              placeholder.classList.remove("reacg-hidden");
+            }
+            if (gallery) {
+              gallery.classList.add("reacg-hidden");
+              gallery.setAttribute("data-options-section", "0");
+              gallery.setAttribute("data-gallery-id", "0");
+            }
+          } else {
+            if (placeholder) {
+              placeholder.classList.add("reacg-hidden");
+            }
+            if (gallery) {
+              gallery.classList.remove("reacg-hidden");
+              gallery.setAttribute("data-options-section", "1");
+              gallery.setAttribute("data-options-container", "#reacg_settings");
+              gallery.setAttribute("data-gallery-id", idNum);
+              gallery.setAttribute(
+                "data-plugin-version",
+                reacg_gutenberg.plugin_version,
+              );
+              gallery.setAttribute("data-gallery-timestamp", Date.now());
+              gallery.setAttribute("data-options-timestamp", Date.now());
+            }
+            reload_gallery(props, node);
+          }
+        }
+      },
     });
   }
 
+  /**
+   * Render placeholder element matching Elementor and other visual page builders.
+   *
+   * @param {Object} props
+   * @param {boolean} isHidden
+   * @returns {Element}
+   */
+  function renderPlaceholder(props, isHidden) {
+    return el(
+      "div",
+      {
+        className:
+          "reacg-builder-placeholder" + (isHidden ? " reacg-hidden" : ""),
+        "data-widget-id": props.clientId,
+        onClick: function (e) {
+          e.preventDefault();
+          focusBlockInSidebar(props);
+        },
+      },
+      el(
+        "div",
+        { className: "reacg-builder-placeholder-icon" },
+        el("img", {
+          src: reacg_gutenberg.icon,
+          alt: reacg_gutenberg.title || "ReGallery",
+        }),
+      ),
+      el(
+        "div",
+        { className: "reacg-builder-placeholder-title" },
+        reacg_gutenberg.title || "ReGallery",
+      ),
+      el(
+        "p",
+        { className: "reacg-builder-placeholder-desc" },
+        reacg_gutenberg.text_no_gallery_selected ||
+          "No gallery selected yet. Select an existing gallery or create a new one.",
+      ),
+      el(
+        "button",
+        {
+          type: "button",
+          className: "reacg-builder-open-modal-btn button button-primary",
+          onClick: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            focusBlockInSidebar(props);
+          },
+        },
+        el("span", { className: "dashicons dashicons-format-gallery" }),
+        " " +
+          (reacg_gutenberg.text_select_or_create || "Select or Create Gallery"),
+      ),
+    );
+  }
+
+  /**
+   * Render gallery container for canvas live preview.
+   *
+   * @param {number} shortcodeId
+   * @param {Object} props
+   * @returns {Element}
+   */
+  function renderGalleryContainer(shortcodeId, props) {
+    const hasGallery = shortcodeId !== 0;
+
+    return el("div", {
+      "data-options-section": hasGallery ? 1 : 0,
+      "data-options-container": "#reacg_settings",
+      "data-gallery-id": shortcodeId,
+      "data-plugin-version": reacg_gutenberg.plugin_version,
+      className:
+        "reacg-wrapper reacg-gallery reacg-preview" +
+        (hasGallery ? "" : " reacg-hidden"),
+      id: "reacg-root" + props.clientId,
+      onClick: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        focusBlockInSidebar(props);
+      },
+    });
+  }
+
+  /**
+   * React component managing lifecycle of embedded builder modal in InspectorControls.
+   *
+   * @param {Object} componentProps
+   * @returns {Element}
+   */
+  function EmbeddedSettingsPanel(componentProps) {
+    const containerRef = useRef(null);
+    const props = componentProps.props;
+
+    useEffect(
+      function () {
+        const node = containerRef.current;
+        if (node) {
+          mountEmbeddedSettings(node, props);
+        }
+
+        return function () {
+          const modal = getBuilderModal();
+          if (
+            modal &&
+            typeof modal.unmountEmbedded === "function" &&
+            // Only unmount if this block still owns the panel.
+            // If another ReGallery block has already claimed it, skip — otherwise
+            // we would park the freshly-mounted panel of the new block.
+            modal.currentWidgetId === String(props.clientId)
+          ) {
+            modal.unmountEmbedded(props.clientId);
+          }
+        };
+      },
+      [props.clientId],
+    );
+
+    return el("div", {
+      className: "reacg-gutenberg-settings-container",
+      ref: containerRef,
+    });
+  }
+
+  /**
+   * Render sidebar InspectorControls panel mounting the embedded builder modal.
+   *
+   * @param {Object} props
+   * @returns {Element}
+   */
+  function renderSidebarPanel(props) {
+    return el(
+      PanelBody,
+      {
+        // title: reacg_gutenberg.text_settings || "Gallery Settings",
+        initialOpen: true,
+        className: "reacg-gutenberg-panel-body",
+      },
+      el(EmbeddedSettingsPanel, { props: props }),
+    );
+  }
+
+  // Register the ReGallery block
+  blocks.registerBlockType("reacg/gallery", {
+    apiVersion: 3,
+    title: reacg_gutenberg.title,
+    description: reacg_gutenberg.description,
+    icon: el("img", {
+      width: 24,
+      height: 24,
+      src: reacg_gutenberg.icon,
+    }),
+    category: "common",
+    supports: {
+      customClassName: false,
+    },
+    example: {
+      attributes: {
+        isExample: true,
+      },
+    },
+    keywords: [
+      "gallery",
+      "photo gallery",
+      "image gallery",
+      "re gallery",
+      "media",
+    ],
+    attributes: {
+      shortcode: {
+        type: "string",
+        value: "",
+      },
+      shortcode_id: {
+        type: "int",
+        value: 0,
+      },
+      isExample: {
+        type: "boolean",
+        value: false,
+      },
+    },
+    edit: function (props) {
+      const blockRef = useRef(null);
+      const shortcodeId = parseInt(props.attributes.shortcode_id, 10) || 0;
+      const isExample = !!(props.attributes && props.attributes.isExample);
+
+      const setBlockRef = function (node) {
+        if (node) {
+          blockRef.current = node;
+          blockNodes[props.clientId] = node;
+          bridgeAdminApis(node.ownerDocument);
+        } else {
+          if (blockNodes[props.clientId] === blockRef.current) {
+            delete blockNodes[props.clientId];
+          }
+          blockRef.current = null;
+        }
+      };
+
+      // Initial mount when gallery is first rendered or shortcode_id changes
+      useEffect(
+        function () {
+          if (isExample || !shortcodeId) {
+            return;
+          }
+
+          const baseCont = blockRef.current || getBlockNode(props.clientId);
+          if (!baseCont) {
+            return;
+          }
+
+          const gallery = baseCont.querySelector(".reacg-gallery");
+          if (gallery) {
+            gallery.classList.remove("reacg-hidden");
+            gallery.setAttribute("data-options-section", "1");
+            gallery.setAttribute("data-options-container", "#reacg_settings");
+            gallery.setAttribute("data-gallery-id", shortcodeId);
+            gallery.setAttribute(
+              "data-plugin-version",
+              reacg_gutenberg.plugin_version,
+            );
+
+            // If the gallery DOM already has rendered content for this exact shortcodeId, do not reload!
+            const alreadyRendered =
+              gallery.children.length > 0 &&
+              (gallery.querySelector(".reacg-gallery-wrapper") ||
+                gallery.querySelector("img") ||
+                gallery.querySelector(".reacg_item") ||
+                gallery.querySelector(".content-placeholder"));
+            if (alreadyRendered) {
+              return;
+            }
+          }
+
+          reload_gallery(props, baseCont);
+        },
+        [shortcodeId, props.clientId, isExample],
+      );
+
+      // When block unselects or selects, toggle sidebar class and manage embedded modal.
+      // Canvas gallery is never reloaded on select/unselect since nothing changed.
+      useEffect(
+        function () {
+          const SIDEBAR_CLASS = "reacg-gutenberg-sidebar-active";
+          const sidebar =
+            document.querySelector(".interface-interface-skeleton__sidebar") ||
+            document.querySelector(".edit-post-sidebar") ||
+            document.querySelector('[role="complementary"]');
+
+          /**
+           * Returns true when a *different* ReGallery block is currently selected.
+           * Used to avoid removing the sidebar class when React's effect order means
+           * the deselecting block's effect runs after the selecting block's effect.
+           */
+          function anotherReacgBlockIsSelected() {
+            try {
+              const sel =
+                window.wp &&
+                window.wp.data &&
+                window.wp.data.select("core/block-editor").getSelectedBlock();
+              return (
+                sel &&
+                sel.name === "reacg/gallery" &&
+                sel.clientId !== props.clientId
+              );
+            } catch (e) {
+              return false;
+            }
+          }
+
+          if (props.isSelected) {
+            if (sidebar) sidebar.classList.add(SIDEBAR_CLASS);
+          } else {
+            // Only remove the class if no other ReGallery block has taken over.
+            if (!anotherReacgBlockIsSelected()) {
+              if (sidebar) sidebar.classList.remove(SIDEBAR_CLASS);
+            }
+
+            const modal = getBuilderModal();
+            if (
+              modal &&
+              typeof modal.unmountEmbedded === "function" &&
+              // Only unmount if this block still owns the panel.
+              modal.currentWidgetId === String(props.clientId)
+            ) {
+              modal.unmountEmbedded(props.clientId);
+            }
+          }
+
+          return function () {
+            // On component teardown, only strip the class if no other ReGallery
+            // block is selected (avoids stripping class mounted by the new block).
+            if (!anotherReacgBlockIsSelected()) {
+              if (sidebar) sidebar.classList.remove(SIDEBAR_CLASS);
+            }
+          };
+        },
+        [props.isSelected, props.clientId],
+      );
+
+      const blockProps = useBlockProps({
+        className: "reacg-gutenberg",
+        id: "reacg-gutenberg" + props.clientId,
+        ref: setBlockRef,
+      });
+
+      // Display block preview only on the block inserter hover
+      if (isExample) {
+        return el(
+          "div",
+          blockProps,
+          el("img", {
+            src:
+              reacg_gutenberg.plugin_url +
+              "/builders/gutenberg/images/preview.png",
+            style: { height: "auto", width: "100%" },
+          }),
+        );
+      }
+
+      const loader = el(
+        "div",
+        { className: "reacg-spinner__wrapper reacg-hidden" },
+        el("span", { className: "spinner is-active" }),
+      );
+
+      return el(
+        "div",
+        blockProps,
+        loader,
+        renderPlaceholder(props, shortcodeId !== 0),
+        renderGalleryContainer(shortcodeId, props),
+        props.isSelected
+          ? el(InspectorControls, {}, renderSidebarPanel(props))
+          : null,
+      );
+    },
+    save: function (props) {
+      return props.attributes.shortcode;
+    },
+  });
+
+  // Global capture click listener on document/window for canvas clicks
+  if (window.jQuery) {
+    window
+      .jQuery(document)
+      .on("click", ".reacg-builder-open-modal-btn", function (e) {
+        e.preventDefault();
+        const $placeholder = window
+          .jQuery(this)
+          .closest(".reacg-builder-placeholder");
+        const widgetId =
+          $placeholder.attr("data-widget-id") ||
+          ($placeholder.closest(".reacg-gutenberg").attr("id") || "").replace(
+            "reacg-gutenberg",
+            "",
+          );
+
+        if (widgetId && window.wp && window.wp.data) {
+          try {
+            window.wp.data.dispatch("core/block-editor").selectBlock(widgetId);
+            const editPost = window.wp.data.dispatch("core/edit-post");
+            if (editPost && typeof editPost.openGeneralSidebar === "function") {
+              editPost.openGeneralSidebar("edit-post/block");
+            }
+          } catch (err) {}
+        }
+      });
+  }
+
+  // Auto-close modal when switching away to edit a different block (matching Elementor behavior)
   wp.domReady(function () {
     const { select, subscribe } = wp.data;
-
-    let wasSaving = false;
+    let lastSelectedBlockId = null;
 
     subscribe(function () {
-      const blockEditorStore = select('core/block-editor');
-      if (!blockEditorStore || typeof blockEditorStore.getBlocks !== 'function') {
+      const blockEditorStore = select("core/block-editor");
+      if (
+        !blockEditorStore ||
+        typeof blockEditorStore.getSelectedBlock !== "function"
+      ) {
+        return;
+      }
+
+      const selectedBlock = blockEditorStore.getSelectedBlock();
+      const selectedBlockId = selectedBlock ? selectedBlock.clientId : null;
+
+      if (selectedBlockId !== lastSelectedBlockId) {
+        const prevBlockId = lastSelectedBlockId;
+        lastSelectedBlockId = selectedBlockId;
+        if (!selectedBlock || selectedBlock.name !== "reacg/gallery") {
+          const modal = getBuilderModal();
+          if (modal) {
+            if (typeof modal.unmountEmbedded === "function") {
+              modal.unmountEmbedded(prevBlockId);
+            }
+            if (modal.isOpen) {
+              modal.close();
+            }
+          }
+        }
+      }
+    });
+
+    // Save gallery options when post is being saved in Gutenberg
+    let wasSaving = false;
+    subscribe(function () {
+      const blockEditorStore = select("core/block-editor");
+      if (
+        !blockEditorStore ||
+        typeof blockEditorStore.getBlocks !== "function"
+      ) {
         return;
       }
 
       const blocks = blockEditorStore.getBlocks();
-      const hasGalleryBlock = blocks.some(
-        block => block.name === 'reacg/gallery'
-      );
+      const hasGalleryBlock = blocks.some(function (block) {
+        return block.name === "reacg/gallery";
+      });
 
       if (!hasGalleryBlock) {
-        return; /* Exit early if block not present.*/
+        return;
       }
 
-      const editor = select('core/editor');
-      if (!editor || typeof editor.isSavingPost !== 'function') {
+      const editor = select("core/editor");
+      if (!editor || typeof editor.isSavingPost !== "function") {
         return;
       }
 
       const isSaving = editor.isSavingPost();
-      const isAutosaving = typeof editor.isAutosavingPost === 'function'
-        && editor.isAutosavingPost();
+      const isAutosaving =
+        typeof editor.isAutosavingPost === "function" &&
+        editor.isAutosavingPost();
 
       if (isSaving && !isAutosaving && !wasSaving) {
         wasSaving = true;
-        /* Save options on saving the gallery.*/
-        clickSaveSettingsButtons();
+        const modal = getBuilderModal();
+        if (modal) {
+          if (typeof modal.flushAutoSave === "function") {
+            modal.flushAutoSave();
+          }
+          if (typeof modal.triggerReactSave === "function") {
+            modal.triggerReactSave();
+          }
+        }
       }
 
       if (!isSaving) {
@@ -1196,5 +895,5 @@
   window.wp.blocks,
   window.wp.element,
   window.wp.blockEditor,
-  window.wp.components
+  window.wp.components,
 );

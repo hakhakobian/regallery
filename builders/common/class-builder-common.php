@@ -74,7 +74,7 @@ class REACG_Builder_Common {
   public static function render_builder_editor( $gallery_id, $widget_id = '' ) {
     $gallery_id = (int) $gallery_id;
     $output = self::get_builder_placeholder( $gallery_id, $widget_id );
-    $output .= REACGLibrary::get_rest_routs( $gallery_id, TRUE, $widget_id );
+    $output .= REACGLibrary::get_rest_routs( $gallery_id, FALSE, $widget_id );
 
     if ( 0 !== $gallery_id ) {
       $root_id = REACGLibrary::get_root_element_id( $gallery_id, $widget_id );
@@ -133,14 +133,14 @@ class REACG_Builder_Common {
       REACG_PREFIX . '_builder_modal',
       REACG_PLUGIN_URL . '/builders/common/builder-modal.css',
       ['dashicons', REACG_PREFIX . '_admin', REACG_PREFIX . '_general'],
-      REACG_VERSION
+      filemtime( REACG_PLUGIN_DIR . '/builders/common/builder-modal.css' )
     );
 
     wp_enqueue_script(
       REACG_PREFIX . '_builder_modal',
       REACG_PLUGIN_URL . '/builders/common/builder-modal.js',
       ['jquery', 'jquery-ui-sortable', REACG_PREFIX . '_admin', REACG_PREFIX . '_thumbnails'],
-      REACG_VERSION,
+      filemtime( REACG_PLUGIN_DIR . '/builders/common/builder-modal.js' ),
       true
     );
 

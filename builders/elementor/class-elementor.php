@@ -57,9 +57,6 @@ class REACG_Elementor_Manager {
    * @return void
    */
   public static function enqueue_editor_styles() {
-    if ( class_exists( 'REACG' ) && method_exists( REACG(), 'register_admin_scripts' ) ) {
-      REACG()->register_admin_scripts();
-    }
     REACG_Builder_Common::enqueue_builder_assets();
     wp_enqueue_style(
       REACG_PREFIX . '_elementor',
@@ -75,9 +72,6 @@ class REACG_Elementor_Manager {
    * @return void
    */
   public static function enqueue_editor_scripts() {
-    if ( class_exists( 'REACG' ) && method_exists( REACG(), 'register_admin_scripts' ) ) {
-      REACG()->register_admin_scripts();
-    }
     REACG_Builder_Common::enqueue_builder_assets();
     wp_enqueue_script(
       REACG_PREFIX . '_elementor',

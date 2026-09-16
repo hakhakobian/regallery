@@ -197,7 +197,7 @@
       (target && target.id) || '';
 
     // If DOM already has a non-zero gallery ID rendered for this widget, prioritize it over default 0
-    if (widgetId) {
+    if (widgetId && currentPostId === 0) {
       const canvasDoc = (window.elementor && window.elementor.$preview && window.elementor.$preview[0] && window.elementor.$preview[0].contentDocument) || document;
       const galleryDom = canvasDoc.getElementById('reacg-root' + widgetId) || canvasDoc.querySelector('.elementor-element-' + widgetId + ' .reacg-gallery');
       if (galleryDom) {

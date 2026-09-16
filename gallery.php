@@ -121,11 +121,7 @@ final class REACG {
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
 
-    // Enqueue block editor assets for Gutenberg.
-    add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
-    add_action('enqueue_block_assets', array($this, 'enqueue_block_assets'));
-
-    // Initialize builders (Elementor, Bricks).
+    // Initialize shared builder integrations.
     REACG_Builders_Loader::init();
 
     // Register Divi module.
@@ -134,9 +130,6 @@ final class REACG {
 
     // Register WP Bakery widget.
     add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
-
-    // Register Beaver Builder module.
-    add_action( 'init', array($this, 'register_buiver_builder_widget') );
 
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
@@ -244,13 +237,6 @@ final class REACG {
 
     new REACG_WPBakery($this);
   }
-
-  public function register_buiver_builder_widget() {
-    if ( class_exists( 'FLBuilder' ) ) {
-      require_once $this->plugin_dir . '/builders/beaverbuilder/beaverbuilder.php';
-    }
-  }
-
 
   /**
    * Create custom post types.
@@ -465,73 +451,6 @@ final class REACG {
     if ( isset($_GET['bricks']) && $_GET['bricks'] === 'run' ) {
       wp_enqueue_style($this->prefix . '_bricks', $this->plugin_url . '/builders/bricks/bricks.css', [], '1.0');
     }
-  }
-
-  /**
-   * Enqueue scripts/styles for Gutenberg.
-   *
-   * @return void
-   */
-  public function enqueue_block_assets() {
-    // Always load inside editor iframe (Need to correctly enqueue frontend scripts/styles in iframe for changing between Tablet/Mobile views.)
-    // Frontend: load ONLY if block exists․
-    if ( is_admin() || ( function_exists( 'has_block' ) && has_block( 'reacg/gallery' ) ) ) {
-      $this->register_frontend_scripts();
-      REACGLibrary::enqueue_scripts();
-    }
-    // Canvas-only editor styles must also load inside the iframe (WP 7.1+).
-    // Sidebar styles stay on enqueue_block_editor_assets.
-    if ( is_admin() ) {
-      wp_enqueue_style(
-        $this->prefix . '_gutenberg_canvas',
-        $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css',
-        array( $this->prefix . '_general' ),
-        $this->version
-      );
-    }
-  }
-
-  /**
-   * Enqueue scripts/styles for Gutenberg.
-   *
-   * @return void
-   */
-  public function enqueue_block_editor_assets() {
-    $required_scripts = [
-      $this->prefix . '_thumbnails',
-      'wp-blocks',
-      'wp-element',
-      'wp-block-editor',
-      'wp-components',
-      $this->prefix . '_admin'
-    ];
-    $required_styles = [
-      $this->prefix . '_general',
-      'wp-edit-blocks',
-      $this->prefix . '_admin'
-    ];
-
-    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version, TRUE);
-    wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
-      'title' => $this->nicename,
-      'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
-      'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
-      'gallery_images_section_title' => __("Media", "regallery"),
-      'create_button' => __("Create", "regallery"),
-      'gallery_title_placeholder' => __("Enter gallery title", "regallery"),
-      'plugin_url' => $this->plugin_url,
-      'plugin_version' => $this->version,
-      'icon' => $this->plugin_url . '/assets/images/icon.svg',
-      'data' => REACGLibrary::get_shortcodes($this, TRUE),
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
-    ));
-    $gallery_ids = REACGLibrary::get_galleries();
-    $data = [];
-    foreach ( $gallery_ids as $galleryId ) {
-      $data[$galleryId] = REACGLibrary::get_data($galleryId);
-    }
-    wp_localize_script(REACG_PREFIX . '_gutenberg', 'reacg_data', $data);
-    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
 
   /**

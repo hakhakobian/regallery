@@ -17,149 +17,51 @@
    * @returns {Document}
    */
   function getAdminDocument() {
-    return document;
-  }
+    try {
+      if (
+        window.top &&
+        window.top.document &&
+        window.top.document.getElementById("reacg_settings")
+      ) {
+        return window.top.document;
+      }
+    } catch (e) {}
 
-  /**
-   * Setup click interceptor on canvas document to prevent lightbox/links and open modal.
-   *
-   * @param {Document} canvasDoc
-   */
-  function setupCanvasClickInterceptor(canvasDoc) {
-    if (!canvasDoc || canvasDoc._reacgClickInterceptorAttached) {
-      return;
+    try {
+      if (
+        window.parent &&
+        window.parent.document &&
+        window.parent.document.getElementById("reacg_settings")
+      ) {
+        return window.parent.document;
+      }
+    } catch (e) {}
+
+    if (document.getElementById("reacg_settings")) {
+      return document;
     }
-    canvasDoc._reacgClickInterceptorAttached = true;
 
-    canvasDoc.addEventListener(
-      "click",
-      function (e) {
-        const topWin = window.top || window.parent;
-        const isEditorActive = Boolean(
-          topWin &&
-          (topWin.elementor ||
-            topWin.bricksData ||
-            topWin.bricks ||
-            (topWin.document &&
-              topWin.document.getElementById("bricks-builder-iframe")) ||
-            topWin.ReacgBuilderModal),
-        );
-        if (!isEditorActive) {
-          return;
-        }
+    try {
+      if (
+        window.top &&
+        window.top.document &&
+        window.top.document.documentElement
+      ) {
+        return window.top.document;
+      }
+    } catch (e) {}
 
-        if (
-          topWin.elementor &&
-          typeof topWin.elementor.isEditMode === "function" &&
-          !topWin.elementor.isEditMode()
-        ) {
-          return;
-        }
-        if (
-          canvasDoc.body &&
-          canvasDoc.body.classList.contains("elementor-editor-preview")
-        ) {
-          return;
-        }
+    try {
+      if (
+        window.parent &&
+        window.parent.document &&
+        window.parent.document.documentElement
+      ) {
+        return window.parent.document;
+      }
+    } catch (e) {}
 
-        const gallery =
-          e.target && e.target.closest && e.target.closest(".reacg-gallery");
-        const placeholderBtn =
-          e.target &&
-          e.target.closest &&
-          e.target.closest(".reacg-builder-open-modal-btn");
-        if (!gallery && !placeholderBtn) {
-          return;
-        }
-
-        // Intercept: Prevent inner lightbox popup and link navigation
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-
-        const targetEl = gallery || placeholderBtn;
-        const widgetWrapper =
-          targetEl.closest(".elementor-element") ||
-          targetEl.closest(".brxe-reacg") ||
-          targetEl.closest("[data-bricks-element-id]") ||
-          targetEl.closest("[data-script-id]");
-
-        const rawWidgetId = widgetWrapper
-          ? widgetWrapper.getAttribute("data-id") ||
-            widgetWrapper.getAttribute("data-bricks-element-id") ||
-            widgetWrapper.getAttribute("data-script-id") ||
-            (widgetWrapper.id ? widgetWrapper.id.replace("brxe-", "") : "")
-          : gallery && gallery.id && gallery.id.indexOf("reacg-root") === 0
-            ? gallery.id.replace("reacg-root", "")
-            : "";
-
-        const widgetId = (rawWidgetId || "")
-          .trim()
-          .replace(/[^a-zA-Z0-9_-]/g, "");
-
-        let galleryId = gallery
-          ? gallery.getAttribute("data-gallery-id") || 0
-          : 0;
-        if (!galleryId && widgetWrapper) {
-          const innerGal = widgetWrapper.querySelector(".reacg-gallery");
-          if (innerGal) {
-            galleryId = innerGal.getAttribute("data-gallery-id") || 0;
-          }
-        }
-
-        const modal = topWin.ReacgBuilderModal || window.ReacgBuilderModal;
-        if (modal) {
-          modal.open({
-            galleryId: parseInt(galleryId, 10) || 0,
-            widgetId: widgetId || "",
-            onSave: function (savedGalleryId) {
-              // Elementor save
-              if (topWin.elementor && widgetId) {
-                const container =
-                  typeof topWin.elementor.getContainer === "function"
-                    ? topWin.elementor.getContainer(widgetId)
-                    : null;
-                let model = container ? container.model : null;
-                if (
-                  !model &&
-                  topWin.elementor.elements &&
-                  typeof topWin.findElementorModelDeep === "function"
-                ) {
-                  model = topWin.findElementorModelDeep(
-                    widgetId,
-                    topWin.elementor.elements,
-                  );
-                }
-                if (typeof topWin.setPostIdOnTarget === "function") {
-                  topWin.setPostIdOnTarget(
-                    model,
-                    container || (model && model.container),
-                    savedGalleryId,
-                  );
-                }
-              }
-
-              // Bricks save
-              if (typeof topWin.setBricksGalleryId === "function") {
-                topWin.setBricksGalleryId(widgetId, savedGalleryId);
-              } else if (
-                topWin.bricksData &&
-                Array.isArray(topWin.bricksData.elements)
-              ) {
-                const el = topWin.bricksData.elements.find(function (item) {
-                  return String(item.id) === String(widgetId);
-                });
-                if (el) {
-                  if (!el.settings) el.settings = {};
-                  el.settings.gallery_id = parseInt(savedGalleryId, 10);
-                }
-              }
-            },
-          });
-        }
-      },
-      true,
-    );
+    return document;
   }
 
   /**
@@ -222,39 +124,143 @@
    * @returns {Document}
    */
   function getCanvasDocument() {
+    const topWin = window.top || window;
+    const topDoc = (topWin && topWin.document) || document;
     let doc = document;
+
+    // 1. If current document already has .reacg-gallery or placeholder, it is already the canvas
+    if (
+      document.querySelector(".reacg-gallery") ||
+      document.querySelector(".reacg-builder-placeholder")
+    ) {
+      ensureDashicons(document);
+      return document;
+    }
+
+    // 2. Beaver Builder Responsive iFrame UI API
     try {
-      const elIframe = document.querySelector("#elementor-preview-iframe");
+      const FLBuilder = topWin.FLBuilder || window.FLBuilder;
       if (
-        elIframe &&
-        elIframe.contentDocument &&
-        elIframe.contentDocument.body
+        FLBuilder &&
+        FLBuilder.UIIFrame &&
+        typeof FLBuilder.UIIFrame.getIFrameWindow === "function"
       ) {
-        doc = elIframe.contentDocument;
+        const bbWin = FLBuilder.UIIFrame.getIFrameWindow();
+        if (bbWin && bbWin.document && bbWin.document.body) {
+          doc = bbWin.document;
+          ensureDashicons(doc);
+          return doc;
+        }
       }
     } catch (e) {}
 
+    // 3. Known page builder preview iframes
+    const iframeSelectors = [
+      "#elementor-preview-iframe",
+      "#bricks-builder-iframe",
+      'iframe[name="editor-canvas"]',
+      "iframe.fl-builder-ui-iframe",
+      ".fl-builder-frame iframe",
+      "iframe[src*='fl_builder']",
+    ];
+
+    for (let i = 0; i < iframeSelectors.length; i++) {
+      try {
+        const frame =
+          topDoc.querySelector(iframeSelectors[i]) ||
+          document.querySelector(iframeSelectors[i]);
+        if (frame && frame.contentDocument && frame.contentDocument.body) {
+          doc = frame.contentDocument;
+          ensureDashicons(doc);
+          return doc;
+        }
+      } catch (e) {}
+    }
+
+    // 4. Heuristic: Check any iframe for .reacg-gallery, .reacg-builder-placeholder, or builder modules
     try {
-      const bricksIframe = document.querySelector("#bricks-builder-iframe");
-      if (
-        bricksIframe &&
-        bricksIframe.contentDocument &&
-        bricksIframe.contentDocument.body
-      ) {
-        doc = bricksIframe.contentDocument;
+      const iframes = topDoc.querySelectorAll("iframe");
+      for (let j = 0; j < iframes.length; j++) {
+        try {
+          const frameDoc = iframes[j].contentDocument;
+          if (frameDoc && frameDoc.body) {
+            if (
+              frameDoc.querySelector(".reacg-gallery") ||
+              frameDoc.querySelector(".reacg-builder-placeholder") ||
+              frameDoc.querySelector(".fl-module") ||
+              frameDoc.querySelector(".fl-builder-content")
+            ) {
+              doc = frameDoc;
+              break;
+            }
+          }
+        } catch (err) {}
       }
     } catch (e) {}
 
-    try {
-      const gIframe = document.querySelector('iframe[name="editor-canvas"]');
-      if (gIframe && gIframe.contentDocument && gIframe.contentDocument.body) {
-        doc = gIframe.contentDocument;
-      }
-    } catch (e) {}
-
-    setupCanvasClickInterceptor(doc);
     ensureDashicons(doc);
     return doc;
+  }
+
+  /**
+   * Find the document that owns a specific gallery instance. Some builders
+   * keep their control UI and canvas in separate iframes; selecting a gallery
+   * by its instance root avoids falling back to another copy of that gallery.
+   *
+   * @param {string} rootId
+   * @param {Document} fallbackDoc
+   * @returns {Document}
+   */
+  function getCanvasDocumentForRoot(rootId, fallbackDoc) {
+    if (!rootId) {
+      return fallbackDoc || getCanvasDocument();
+    }
+
+    const documents = [];
+    const addDocument = function (candidate) {
+      if (candidate && documents.indexOf(candidate) === -1) {
+        documents.push(candidate);
+      }
+    };
+
+    addDocument(fallbackDoc);
+    addDocument(document);
+
+    try {
+      addDocument(window.top && window.top.document);
+    } catch (e) {}
+
+    try {
+      const topWin = window.top || window;
+      const FLBuilder = topWin.FLBuilder || window.FLBuilder;
+      if (
+        FLBuilder &&
+        FLBuilder.UIIFrame &&
+        typeof FLBuilder.UIIFrame.getIFrameWindow === "function"
+      ) {
+        const builderWin = FLBuilder.UIIFrame.getIFrameWindow();
+        addDocument(builderWin && builderWin.document);
+      }
+    } catch (e) {}
+
+    try {
+      const topDoc = (window.top && window.top.document) || document;
+      const frames = topDoc.querySelectorAll("iframe");
+      for (let i = 0; i < frames.length; i++) {
+        addDocument(frames[i].contentDocument);
+      }
+    } catch (e) {}
+
+    for (let i = 0; i < documents.length; i++) {
+      try {
+        if (documents[i].getElementById(rootId)) {
+          ensureDashicons(documents[i]);
+          return documents[i];
+        }
+      } catch (e) {}
+    }
+
+    return fallbackDoc || getCanvasDocument();
   }
 
   /**
@@ -264,9 +270,9 @@
    */
   function bridgeAdminApis(canvasDoc) {
     const canvasWin = canvasDoc && canvasDoc.defaultView;
-    if (!canvasWin || canvasWin === window) {
-      return;
-    }
+    const adminDoc = getAdminDocument();
+    const adminWin = (adminDoc && adminDoc.defaultView) || window;
+
     const names = [
       "reacg_open_ai_generate_content_modal",
       "reacg_open_free_trial_offer_dialog",
@@ -283,15 +289,22 @@
       "reacg_make_items_sortable",
     ];
 
-    const windows = [window, canvasWin];
+    const windows = [];
+    const addWin = function (w) {
+      try {
+        if (w && windows.indexOf(w) === -1) {
+          windows.push(w);
+        }
+      } catch (e) {}
+    };
+    addWin(window);
+    addWin(adminWin);
+    addWin(canvasWin);
     try {
-      if (
-        window.top &&
-        window.top !== window &&
-        windows.indexOf(window.top) === -1
-      ) {
-        windows.push(window.top);
-      }
+      addWin(window.top);
+    } catch (e) {}
+    try {
+      addWin(window.parent);
     } catch (e) {}
 
     names.forEach(function (name) {
@@ -306,19 +319,43 @@
             if (currentDoc) {
               syncGalleryStyles(currentDoc);
             }
-            const allWins = [window, canvasWin];
+            const allWins = [];
+            windows.forEach(function (w) {
+              if (w && allWins.indexOf(w) === -1) allWins.push(w);
+            });
             if (currentWin && allWins.indexOf(currentWin) === -1) {
               allWins.push(currentWin);
             }
-            try {
-              if (
-                window.top &&
-                window.top !== window &&
-                allWins.indexOf(window.top) === -1
+
+            let callArgs = args;
+            if (name === "reacg_open_free_trial_layout_dialog") {
+              let first = args[0];
+              if (typeof first === "string") {
+                first = {
+                  utm_medium: "free_trial_layout_" + first,
+                  showFreeTrialForm: true,
+                  buttonConfig: {
+                    label: "START FREE TRIAL",
+                    backgroundColor: "#8769ff",
+                    width: "100%",
+                    onClick: function () {},
+                  },
+                };
+                callArgs = [first];
+              } else if (
+                first &&
+                typeof first === "object" &&
+                !first.buttonConfig
               ) {
-                allWins.push(window.top);
+                first.buttonConfig = {
+                  label: "START FREE TRIAL",
+                  backgroundColor: "#8769ff",
+                  width: "100%",
+                  onClick: function () {},
+                };
+                callArgs = [first];
               }
-            } catch (e) {}
+            }
 
             for (let i = 0; i < allWins.length; i++) {
               const w = allWins[i];
@@ -327,7 +364,7 @@
                 typeof w[name] === "function" &&
                 !w[name].__reacgBridgeProxy
               ) {
-                return w[name].apply(w, args);
+                return w[name].apply(w, callArgs);
               }
             }
             let retries = 0;
@@ -338,19 +375,13 @@
               if (dynDoc) {
                 syncGalleryStyles(dynDoc);
               }
-              const wins = [window, canvasWin];
+              const wins = [];
+              windows.forEach(function (w) {
+                if (w && wins.indexOf(w) === -1) wins.push(w);
+              });
               if (dynWin && wins.indexOf(dynWin) === -1) {
                 wins.push(dynWin);
               }
-              try {
-                if (
-                  window.top &&
-                  window.top !== window &&
-                  wins.indexOf(window.top) === -1
-                ) {
-                  wins.push(window.top);
-                }
-              } catch (e) {}
 
               for (let i = 0; i < wins.length; i++) {
                 const w = wins[i];
@@ -360,7 +391,7 @@
                   !w[name].__reacgBridgeProxy
                 ) {
                   clearInterval(timer);
-                  return w[name].apply(w, args);
+                  return w[name].apply(w, callArgs);
                 }
               }
               if (retries > 40) {
@@ -390,6 +421,59 @@
         }
         if (!implementation) return;
 
+        if (name === "reacg_open_free_trial_layout_dialog") {
+          const rawImpl = implementation;
+          implementation = function (configOrLayout) {
+            let config = configOrLayout;
+            if (typeof config === "string") {
+              config = {
+                utm_medium: "free_trial_layout_" + config,
+                showFreeTrialForm: true,
+                buttonConfig: {
+                  label: "START FREE TRIAL",
+                  backgroundColor: "#8769ff",
+                  width: "100%",
+                  onClick: function () {},
+                },
+              };
+            } else if (!config || typeof config !== "object") {
+              config = {
+                utm_medium: "free_trial_layout",
+                showFreeTrialForm: true,
+                buttonConfig: {
+                  label: "START FREE TRIAL",
+                  backgroundColor: "#8769ff",
+                  width: "100%",
+                  onClick: function () {},
+                },
+              };
+            } else if (!config.buttonConfig) {
+              config.buttonConfig = {
+                label: "START FREE TRIAL",
+                backgroundColor: "#8769ff",
+                width: "100%",
+                onClick: function () {},
+              };
+            }
+            let offerFn = null;
+            for (let j = 0; j < windows.length; j++) {
+              const w = windows[j];
+              if (
+                w &&
+                typeof w.reacg_open_free_trial_offer_dialog === "function" &&
+                !w.reacg_open_free_trial_offer_dialog.__reacgBridgeProxy
+              ) {
+                offerFn = w.reacg_open_free_trial_offer_dialog;
+                break;
+              }
+            }
+            if (offerFn) {
+              return offerFn(config);
+            }
+            return rawImpl(config);
+          };
+        }
+
         windows.forEach(function (targetWin) {
           if (
             targetWin &&
@@ -410,40 +494,50 @@
       }
     }, 100);
 
-    canvasWin.reacg_global = canvasWin.reacg_global || {};
-    if (window.reacg_global) {
-      Object.keys(window.reacg_global).forEach(function (k) {
-        if (
-          k !== "onOptionsChange" &&
-          canvasWin.reacg_global[k] === undefined
-        ) {
-          canvasWin.reacg_global[k] = window.reacg_global[k];
-        }
-      });
-    }
-
-    if (!canvasWin.__reacgProActivatedBridged) {
-      canvasWin.__reacgProActivatedBridged = true;
-      try {
-        canvasWin.addEventListener("reacg:pro-activated", function () {
-          window.dispatchEvent(new Event("reacg:pro-activated"));
+    if (canvasWin && canvasWin !== window) {
+      canvasWin.reacg_global = canvasWin.reacg_global || {};
+      if (window.reacg_global) {
+        Object.keys(window.reacg_global).forEach(function (k) {
+          if (
+            k !== "onOptionsChange" &&
+            canvasWin.reacg_global[k] === undefined
+          ) {
+            canvasWin.reacg_global[k] = window.reacg_global[k];
+          }
         });
-      } catch (e) {}
-    }
+      }
 
-    // Bridge onOptionsChange so layout changes in canvas notify admin window
-    const origCanvasOnOptionsChange = canvasWin.reacg_global.onOptionsChange;
-    canvasWin.reacg_global.onOptionsChange = function (options, context) {
-      if (typeof origCanvasOnOptionsChange === "function") {
-        origCanvasOnOptionsChange(options, context);
+      if (!canvasWin.__reacgProActivatedBridged) {
+        canvasWin.__reacgProActivatedBridged = true;
+        try {
+          canvasWin.addEventListener("reacg:pro-activated", function () {
+            window.dispatchEvent(new Event("reacg:pro-activated"));
+          });
+        } catch (e) {}
       }
-      if (
-        window.reacg_global &&
-        typeof window.reacg_global.onOptionsChange === "function"
-      ) {
-        window.reacg_global.onOptionsChange(options, context);
+
+      // Bridge onOptionsChange so layout changes in canvas notify admin window
+      if (!canvasWin.__reacgOnOptionsChangeBridged) {
+        canvasWin.__reacgOnOptionsChangeBridged = true;
+        const origCanvasOnOptionsChange =
+          canvasWin.reacg_global.onOptionsChange;
+        canvasWin.reacg_global.onOptionsChange = function (options, context) {
+          if (
+            typeof origCanvasOnOptionsChange === "function" &&
+            origCanvasOnOptionsChange !== canvasWin.reacg_global.onOptionsChange
+          ) {
+            origCanvasOnOptionsChange(options, context);
+          }
+          if (
+            window.reacg_global &&
+            window.reacg_global !== canvasWin.reacg_global &&
+            typeof window.reacg_global.onOptionsChange === "function"
+          ) {
+            window.reacg_global.onOptionsChange(options, context);
+          }
+        };
       }
-    };
+    }
   }
 
   let latestOptions = null;
@@ -497,46 +591,60 @@
 
   window.reacg_global = window.reacg_global || {};
   const prevAdminOnOptionsChange = window.reacg_global.onOptionsChange;
+  let isHandlingOptionsChange = false;
   window.reacg_global.onOptionsChange = function (options, context) {
-    if (typeof prevAdminOnOptionsChange === "function") {
-      prevAdminOnOptionsChange(options, context);
-    }
-
-    const canvasDoc = getCanvasDocument();
-    syncGalleryStyles(canvasDoc);
-
-    latestOptions = options;
-    const currentGalId =
-      (context && context.galleryId) ||
-      (window.ReacgBuilderModal && window.ReacgBuilderModal.currentGalleryId);
-    if (currentGalId) {
-      latestGalleryId = currentGalId;
-      updateReacgDataOptions(currentGalId, options);
-    }
-
-    if (context && context.hasChanges === false) {
+    if (isHandlingOptionsChange) return;
+    isHandlingOptionsChange = true;
+    try {
       if (
-        window.ReacgBuilderModal &&
-        typeof window.ReacgBuilderModal.updateSaveStatus === "function"
+        typeof prevAdminOnOptionsChange === "function" &&
+        prevAdminOnOptionsChange !== window.reacg_global.onOptionsChange
       ) {
-        window.ReacgBuilderModal.updateSaveStatus("saved");
+        prevAdminOnOptionsChange(options, context);
       }
-      if (canvasDoc && currentGalId) {
-        const galleryEl =
-          canvasDoc.querySelector(
-            '.reacg-gallery[data-gallery-id="' + currentGalId + '"]',
-          ) || canvasDoc.querySelector(".reacg-gallery");
-        if (galleryEl) {
-          galleryEl.setAttribute("data-options-timestamp", Date.now());
+
+      const canvasDoc = getCanvasDocument();
+      syncGalleryStyles(canvasDoc);
+
+      latestOptions = options;
+      // The floating panel edits one gallery at a time. React can emit an
+      // options event from a previously mounted root during a builder redraw,
+      // so the active modal gallery must take precedence over that stale event.
+      const currentGalId =
+        (window.ReacgBuilderModal &&
+          window.ReacgBuilderModal.currentGalleryId) ||
+        (context && context.galleryId);
+      if (currentGalId) {
+        latestGalleryId = currentGalId;
+        updateReacgDataOptions(currentGalId, options);
+      }
+
+      if (context && context.hasChanges === false) {
+        if (
+          window.ReacgBuilderModal &&
+          typeof window.ReacgBuilderModal.updateSaveStatus === "function"
+        ) {
+          window.ReacgBuilderModal.updateSaveStatus("saved");
+        }
+        if (canvasDoc && currentGalId) {
+          const galleryEl =
+            canvasDoc.querySelector(
+              '.reacg-gallery[data-gallery-id="' + currentGalId + '"]',
+            ) || canvasDoc.querySelector(".reacg-gallery");
+          if (galleryEl) {
+            galleryEl.setAttribute("data-options-timestamp", Date.now());
+          }
+        }
+      } else if (context && context.hasChanges === true) {
+        if (
+          window.ReacgBuilderModal &&
+          typeof window.ReacgBuilderModal.scheduleAutoSave === "function"
+        ) {
+          window.ReacgBuilderModal.scheduleAutoSave();
         }
       }
-    } else if (context && context.hasChanges === true) {
-      if (
-        window.ReacgBuilderModal &&
-        typeof window.ReacgBuilderModal.scheduleAutoSave === "function"
-      ) {
-        window.ReacgBuilderModal.scheduleAutoSave();
-      }
+    } finally {
+      isHandlingOptionsChange = false;
     }
   };
 
@@ -609,7 +717,8 @@
         id.indexOf("wp-") === 0 ||
         id.indexOf("core-block") === 0 ||
         id.indexOf("elementor") === 0 ||
-        id.indexOf("bricks") === 0
+        id.indexOf("bricks") === 0 ||
+        id.indexOf("fl-") === 0
       ) {
         return false;
       }
@@ -714,53 +823,6 @@
   }
 
   /**
-   * Native body accessor for a document.
-   *
-   * @param {Document} doc
-   * @returns {function|null}
-   */
-  function getNativeBodyGetter(doc) {
-    const win = doc.defaultView;
-    const protos = [];
-    if (win && win.Document) protos.push(win.Document.prototype);
-    if (win && win.HTMLDocument) protos.push(win.HTMLDocument.prototype);
-    protos.push(Document.prototype);
-    for (let i = 0; i < protos.length; i++) {
-      try {
-        const desc = Object.getOwnPropertyDescriptor(protos[i], "body");
-        if (desc && desc.get) return desc.get;
-      } catch (e) {}
-    }
-    return null;
-  }
-
-  function isGalleryAppCaller() {
-    try {
-      const stack = new Error().stack || "";
-      const isGalleryCaller =
-        stack.indexOf("wp-gallery") !== -1 ||
-        stack.indexOf("react") !== -1 ||
-        stack.indexOf("Portal") !== -1 ||
-        stack.indexOf("Dialog") !== -1 ||
-        stack.indexOf("Modal") !== -1 ||
-        stack.indexOf("Popover") !== -1 ||
-        stack.indexOf("Mui") !== -1 ||
-        stack.indexOf("chunk") !== -1 ||
-        stack.indexOf("trial") !== -1 ||
-        stack.indexOf("alert") !== -1;
-      if (
-        (stack.indexOf("elementor") !== -1 || stack.indexOf("bricks") !== -1) &&
-        !isGalleryCaller
-      ) {
-        return false;
-      }
-      return isGalleryCaller;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /**
    * Portal MUI dialogs / modals to admin document body.
    *
    * @param {Document} canvasDoc
@@ -775,20 +837,44 @@
       return;
     }
 
-    const nativeBodyGet = getNativeBodyGetter(canvasDoc);
-    if (!nativeBodyGet) {
+    const canvasWin = canvasDoc.defaultView;
+    const prototypes = [];
+    if (canvasWin && canvasWin.Document) {
+      prototypes.push(canvasWin.Document.prototype);
+    }
+    if (canvasWin && canvasWin.HTMLDocument) {
+      prototypes.push(canvasWin.HTMLDocument.prototype);
+    }
+
+    let nativeBodyGetter = null;
+    for (let i = 0; i < prototypes.length; i++) {
+      const descriptor = Object.getOwnPropertyDescriptor(prototypes[i], "body");
+      if (descriptor && descriptor.get) {
+        nativeBodyGetter = descriptor.get;
+        break;
+      }
+    }
+    if (!nativeBodyGetter) {
       return;
     }
 
     canvasDoc.__reacgOverlayPortal = true;
+    // While builder settings are mounted, all React portals from the gallery
+    // must use the parent document. Lazy chunks can create a dialog well after
+    // the originating click, so a short time window is not reliable here.
+    canvasWin.__reacgPortalToAdmin = true;
+    canvasWin.__reacgOpenOverlayInAdmin = function () {
+      canvasWin.__reacgPortalToAdmin = true;
+    };
+
     Object.defineProperty(canvasDoc, "body", {
       configurable: true,
       enumerable: true,
       get: function () {
-        if (isGalleryAppCaller()) {
+        if (canvasWin.__reacgPortalToAdmin && adminDoc.body) {
           return adminDoc.body;
         }
-        return nativeBodyGet.call(canvasDoc);
+        return nativeBodyGetter.call(canvasDoc);
       },
     });
   }
@@ -839,11 +925,26 @@
         : "";
     return (
       className.indexOf("MuiPopover-root") !== -1 ||
-      className.indexOf("MuiMenu-root") !== -1
+      className.indexOf("MuiMenu-root") !== -1 ||
+      className.indexOf("reacg-settings-panel-tabs__menu") !== -1 ||
+      !!(
+        node.querySelector &&
+        node.querySelector(".reacg-settings-panel-tabs__menu")
+      )
     );
   }
 
+  // Captured before React creates a portalled menu, so its first placement can
+  // use the real trigger instead of Popper's temporary (0, 0) origin.
+  let lastSettingsMenuTrigger = null;
+
   function getExpandedSettingsAnchor(adminDoc) {
+    if (lastSettingsMenuTrigger && lastSettingsMenuTrigger.isConnected) {
+      const triggerRect = lastSettingsMenuTrigger.getBoundingClientRect();
+      if (triggerRect.width && triggerRect.height) {
+        return lastSettingsMenuTrigger;
+      }
+    }
     const roots = [
       adminDoc.getElementById("reacg_settings"),
       adminDoc.querySelector(".reacg-builder-panel"),
@@ -865,16 +966,85 @@
     );
   }
 
+  function isMoreMenuTrigger(anchor) {
+    if (!anchor) return false;
+    return [
+      anchor.getAttribute("aria-label"),
+      anchor.getAttribute("title"),
+      anchor.textContent,
+    ]
+      .join(" ")
+      .toLowerCase()
+      .indexOf("more") !== -1;
+  }
+
+  function repositionMuiTooltip(node, canvasDoc) {
+    const adminDoc = getAdminDocument();
+    const adminWin = adminDoc.defaultView;
+    if (!node || !canvasDoc || !adminWin) return;
+
+    const tooltip =
+      node.getAttribute("role") === "tooltip"
+        ? node
+        : node.querySelector('[role="tooltip"], .MuiTooltip-tooltip');
+    const tooltipId = tooltip && tooltip.id;
+    if (!tooltipId) return;
+
+    let anchor = null;
+    try {
+      anchor = canvasDoc.querySelector(
+        '[aria-describedby~="' + CSS.escape(tooltipId) + '"]',
+      );
+    } catch (e) {}
+    if (!anchor) return;
+
+    let frameRect = { left: 0, top: 0 };
+    try {
+      const canvasWin = canvasDoc.defaultView;
+      const frames = adminDoc.querySelectorAll("iframe");
+      for (let i = 0; i < frames.length; i++) {
+        if (frames[i].contentWindow === canvasWin) {
+          frameRect = frames[i].getBoundingClientRect();
+          break;
+        }
+      }
+    } catch (e) {}
+
+    const anchorRect = anchor.getBoundingClientRect();
+    const placement = String(
+      node.getAttribute("data-popper-placement") || "bottom",
+    );
+    const left = frameRect.left + anchorRect.left + anchorRect.width / 2;
+    const top =
+      frameRect.top +
+      (placement.indexOf("top") === 0
+        ? anchorRect.top - 8
+        : anchorRect.bottom + 8);
+
+    // Popper calculated its transform in iframe coordinates. Once portalled
+    // to the admin document it must use parent-document coordinates instead.
+    node.style.setProperty("position", "fixed", "important");
+    node.style.setProperty("left", left + "px", "important");
+    node.style.setProperty("top", top + "px", "important");
+    node.style.setProperty("transform", "translateX(-50%)", "important");
+    node.style.setProperty("z-index", "1000003", "important");
+    node.style.setProperty("pointer-events", "none", "important");
+  }
+
   function repositionMuiOverlay(node, canvasDoc) {
     if (!node || isMuiDialog(node) || isMuiTooltip(node)) return;
     const adminDoc = getAdminDocument();
     const canvasWin = canvasDoc.defaultView;
     const adminWin = adminDoc.defaultView;
 
-    node.style.setProperty("z-index", "1000000", "important");
+    node.style.setProperty("z-index", "1000003", "important");
+    // A portalled MUI menu is inserted at its fallback edge coordinate before
+    // Popper and the builder bridge calculate its anchor. Hide that first
+    // paint; the node is revealed only once a real position is applied.
+    node.style.setProperty("visibility", "hidden", "important");
 
     const apply = function () {
-      if (isMuiDialog(node)) return;
+      if (isMuiDialog(node)) return false;
       syncGalleryStyles(canvasDoc);
       try {
         if (canvasWin) canvasWin.dispatchEvent(new Event("resize"));
@@ -882,7 +1052,9 @@
       } catch (e) {}
 
       const anchor = getExpandedSettingsAnchor(adminDoc);
-      if (!anchor || !adminWin) return;
+      if (!anchor || !adminWin) {
+        return false;
+      }
 
       const positioned =
         node.querySelector("[data-popper-placement]") ||
@@ -892,67 +1064,123 @@
         !positioned ||
         (positioned.className &&
           positioned.className.toString().indexOf("MuiBackdrop-root") !== -1)
-      )
-        return;
-      if (isMuiDialog(positioned)) return;
+      ) {
+        return false;
+      }
+      if (isMuiDialog(positioned)) return false;
 
-      const widthSource = getOverlayWidthSource(anchor);
-      const rect = widthSource.getBoundingClientRect();
-      const minWidth = Math.ceil(rect.width);
+      const rect = anchor.getBoundingClientRect();
       const viewportWidth =
         adminWin.innerWidth || adminDoc.documentElement.clientWidth;
       let left = rect.left;
-      if (left + minWidth > viewportWidth - 8) {
-        left = Math.max(8, rect.right - minWidth);
+      if (left > viewportWidth - 8) {
+        left = Math.max(8, rect.right - 8);
       }
       const top = rect.bottom + 4;
 
-      node.style.setProperty("z-index", "1000000", "important");
-      positioned.style.setProperty("z-index", "1000000", "important");
+      node.style.setProperty("z-index", "1000003", "important");
+      positioned.style.setProperty("z-index", "1000003", "important");
       positioned.style.setProperty("position", "fixed", "important");
       positioned.style.setProperty("top", top + "px", "important");
       positioned.style.setProperty("left", left + "px", "important");
       positioned.style.setProperty("transform", "none", "important");
       positioned.style.setProperty("margin", "0", "important");
       positioned.style.setProperty("right", "auto", "important");
-      positioned.style.setProperty("min-width", minWidth + "px", "important");
-      positioned.style.setProperty("width", minWidth + "px", "important");
-      positioned.style.setProperty("box-sizing", "border-box", "important");
-
-      const list = node.querySelector(
-        '.MuiList-root, .MuiMenu-list, [role="listbox"]',
-      );
-      if (list) {
-        list.style.setProperty("min-width", minWidth + "px", "important");
+      if (isMoreMenuTrigger(anchor)) {
+        // Let More size itself to its labels rather than the narrow trigger.
+        positioned.style.removeProperty("min-width");
+      } else {
+        // Layout selects need a roomier list than their field, but must not
+        // force the field itself to resize while the menu is open.
+        const selectRect = getOverlayWidthSource(anchor).getBoundingClientRect();
+        const menuWidth = Math.max(Math.ceil(selectRect.width) + 32, 240);
+        positioned.style.setProperty(
+          "min-width",
+          menuWidth + "px",
+          "important",
+        );
       }
+      positioned.style.removeProperty("width");
+      positioned.style.setProperty("box-sizing", "border-box", "important");
+      node.style.setProperty("visibility", "visible", "important");
+      return true;
     };
 
     apply();
     requestAnimationFrame(function () {
       apply();
-      requestAnimationFrame(apply);
+      requestAnimationFrame(function () {
+        apply();
+        adminDoc.documentElement.classList.remove("reacg-settings-menu-opening");
+      });
     });
-    setTimeout(apply, 50);
-    setTimeout(apply, 150);
+    // Keep a safe fallback for menus that do not have an anchor (for example,
+    // a builder's own context menu) so they never remain hidden.
+    window.setTimeout(function () {
+      if (node.isConnected && node.style.visibility === "hidden") {
+        node.style.setProperty("visibility", "visible", "important");
+      }
+    }, 250);
   }
 
   function enableMuiPopoverFix(canvasDoc) {
     const adminDoc = getAdminDocument();
-    if (
-      !canvasDoc ||
-      canvasDoc === adminDoc ||
-      canvasDoc.__reacgMuiPopoverFix
-    ) {
+    if (!canvasDoc) {
+      return;
+    }
+    if (canvasDoc.__reacgMuiPopoverFix && adminDoc.__reacgMuiPopoverFix) {
       return;
     }
     canvasDoc.__reacgMuiPopoverFix = true;
+    adminDoc.__reacgMuiPopoverFix = true;
+
+    const captureSettingsMenuTrigger = function (event) {
+      const target = event.target;
+      if (!target || !target.closest) return;
+      const trigger = target.closest(
+        "#reacg_settings button, #reacg_settings [role='button'], #reacg_settings [aria-haspopup]",
+      );
+      if (trigger) {
+        lastSettingsMenuTrigger = trigger;
+        adminDoc.documentElement.classList.add("reacg-settings-menu-opening");
+        window.setTimeout(function () {
+          adminDoc.documentElement.classList.remove(
+            "reacg-settings-menu-opening",
+          );
+        }, 500);
+      }
+    };
+    adminDoc.addEventListener("pointerdown", captureSettingsMenuTrigger, true);
+    if (canvasDoc !== adminDoc) {
+      canvasDoc.addEventListener(
+        "pointerdown",
+        captureSettingsMenuTrigger,
+        true,
+      );
+    }
 
     const watchNode = function (node) {
       if (!node || node.nodeType !== 1) return;
       if (isMuiTooltip(node) || isMuiDialog(node)) {
-        if (isMuiDialog(node) && node.style) {
-          node.style.setProperty("z-index", "10000000", "important");
+        if (isMuiTooltip(node)) {
+          repositionMuiTooltip(node, canvasDoc);
         }
+        if (isMuiDialog(node)) {
+          // React owns this portal in the canvas document. Moving the node to
+          // the builder/admin document detaches it from React's reconciliation
+          // tree, which leaves the Pro dialog visible but impossible to close.
+          if (node.style) {
+            node.style.setProperty("z-index", "10000000", "important");
+            node.style.setProperty("position", "fixed", "important");
+            node.style.setProperty("inset", "0", "important");
+            node.style.setProperty("display", "block", "important");
+          }
+        }
+        requestAnimationFrame(function () {
+          if (isMuiTooltip(node)) {
+            repositionMuiTooltip(node, canvasDoc);
+          }
+        });
         syncGalleryStyles(canvasDoc);
         return;
       }
@@ -964,8 +1192,16 @@
       const attrObserver = new MutationObserver(function () {
         if (isMuiTooltip(node) || isMuiDialog(node)) {
           attrObserver.disconnect();
-          if (isMuiDialog(node) && node.style) {
-            node.style.setProperty("z-index", "10000000", "important");
+          if (isMuiTooltip(node)) {
+            repositionMuiTooltip(node, canvasDoc);
+          }
+          if (isMuiDialog(node)) {
+            if (node.style) {
+              node.style.setProperty("z-index", "10000000", "important");
+              node.style.setProperty("position", "fixed", "important");
+              node.style.setProperty("inset", "0", "important");
+              node.style.setProperty("display", "block", "important");
+            }
           }
           syncGalleryStyles(canvasDoc);
           return;
@@ -995,52 +1231,435 @@
       observer.observe(target, { childList: true });
     };
 
-    observeBody(canvasDoc.body);
-    observeBody(adminDoc.body);
+    if (canvasDoc.body) observeBody(canvasDoc.body);
+    if (adminDoc.body) observeBody(adminDoc.body);
   }
 
   function enableBuilderProControls(canvasDoc) {
     const adminDoc = getAdminDocument();
-    const docs = [canvasDoc, adminDoc];
+    const docs = [canvasDoc];
+    if (adminDoc && docs.indexOf(adminDoc) === -1) {
+      docs.push(adminDoc);
+    }
+
+    const wins = [];
+    const addWin = function (w) {
+      try {
+        if (w && wins.indexOf(w) === -1) wins.push(w);
+      } catch (e) {}
+    };
+    addWin(window);
+    if (adminDoc) addWin(adminDoc.defaultView);
+    if (canvasDoc) addWin(canvasDoc.defaultView);
+    try {
+      addWin(window.top);
+    } catch (e) {}
+    try {
+      addWin(window.parent);
+    } catch (e) {}
+
+    // Defensively wrap layout dialog on all windows to prevent missing buttonConfig crashes
+    wins.forEach(function (w) {
+      if (!w) return;
+      const original = w.reacg_open_free_trial_layout_dialog;
+      if (original && original.__reacgSafeWrapped) return;
+
+      const safeWrapper = function (configOrLayout) {
+        let config = configOrLayout;
+        if (typeof config === "string") {
+          config = {
+            utm_medium: "free_trial_layout_" + config,
+            showFreeTrialForm: true,
+            buttonConfig: {
+              label: "START FREE TRIAL",
+              backgroundColor: "#8769ff",
+              width: "100%",
+              onClick: function () {},
+            },
+          };
+        } else if (!config || typeof config !== "object") {
+          config = {
+            utm_medium: "free_trial_layout",
+            showFreeTrialForm: true,
+            buttonConfig: {
+              label: "START FREE TRIAL",
+              backgroundColor: "#8769ff",
+              width: "100%",
+              onClick: function () {},
+            },
+          };
+        } else if (!config.buttonConfig) {
+          config.buttonConfig = {
+            label: "START FREE TRIAL",
+            backgroundColor: "#8769ff",
+            width: "100%",
+            onClick: function () {},
+          };
+        }
+
+        if (
+          typeof w.reacg_open_free_trial_offer_dialog === "function" &&
+          !w.reacg_open_free_trial_offer_dialog.__reacgBridgeProxy
+        ) {
+          return w.reacg_open_free_trial_offer_dialog(config);
+        }
+        if (
+          typeof original === "function" &&
+          original !== safeWrapper &&
+          !original.__reacgBridgeProxy
+        ) {
+          return original.call(w, config);
+        }
+        if (typeof w.reacg_open_free_trial_offer_dialog === "function") {
+          return w.reacg_open_free_trial_offer_dialog(config);
+        }
+      };
+      safeWrapper.__reacgSafeWrapped = true;
+      w.reacg_open_free_trial_layout_dialog = safeWrapper;
+    });
+
+    const triggerProOffer = function (utmMedium, layoutType) {
+      try {
+        const canvasWin = canvasDoc && canvasDoc.defaultView;
+        if (
+          canvasWin &&
+          typeof canvasWin.__reacgOpenOverlayInAdmin === "function"
+        ) {
+          canvasWin.__reacgOpenOverlayInAdmin();
+        }
+      } catch (e) {}
+      // Re-collect active windows
+      const activeWins = [];
+      const addActiveWin = function (w) {
+        try {
+          if (w && activeWins.indexOf(w) === -1) activeWins.push(w);
+        } catch (e) {}
+      };
+      addActiveWin(window);
+      if (adminDoc) addActiveWin(adminDoc.defaultView);
+      if (canvasDoc) addActiveWin(canvasDoc.defaultView);
+      try {
+        addActiveWin(window.top);
+      } catch (e) {}
+      try {
+        addActiveWin(window.parent);
+      } catch (e) {}
+
+      // Close open MUI dropdown menus (like "More" menu or select popover)
+      try {
+        docs.forEach(function (d) {
+          if (!d) return;
+          const popovers = d.querySelectorAll(
+            ".MuiPopover-root, .MuiMenu-root",
+          );
+          popovers.forEach(function (popover) {
+            const backdrop = popover.querySelector(".MuiBackdrop-root");
+            if (backdrop) {
+              backdrop.click();
+            }
+          });
+        });
+      } catch (e) {}
+
+      const effectiveMedium =
+        utmMedium ||
+        (layoutType ? "free_trial_layout_" + layoutType : "builder");
+      const config = {
+        utm_medium: effectiveMedium,
+        showFreeTrialForm: true,
+        buttonConfig: {
+          label: "START FREE TRIAL",
+          backgroundColor: "#8769ff",
+          width: "100%",
+          onClick: function () {},
+        },
+      };
+
+      // Prioritize free_trial_offer_dialog since it is completely crash-proof and has full layout
+      const fnNames = [
+        "reacg_open_free_trial_offer_dialog",
+        "reacg_open_free_trial_layout_dialog",
+        "reacg_open_premium_offer_dialog",
+        "reacg_open_pro_layout_dialog",
+      ];
+
+      for (let f = 0; f < fnNames.length; f++) {
+        const name = fnNames[f];
+        for (let w = 0; w < activeWins.length; w++) {
+          const win = activeWins[w];
+          if (
+            win &&
+            typeof win[name] === "function" &&
+            !win[name].__reacgBridgeProxy
+          ) {
+            try {
+              win[name](config);
+              return;
+            } catch (err) {
+              console.error("Error opening pro offer dialog:", err);
+            }
+          }
+        }
+      }
+
+      // If not yet available without proxy, try triggering reacg-loadApp to request chunk 753
+      try {
+        let loadApp =
+          (adminDoc && adminDoc.getElementById("reacg-loadApp")) ||
+          document.getElementById("reacg-loadApp") ||
+          (canvasDoc && canvasDoc.getElementById("reacg-loadApp"));
+        if (loadApp) {
+          loadApp.click();
+        }
+      } catch (e) {}
+
+      // Retry every 80ms for up to 3.5 seconds
+      let retryCount = 0;
+      const retryTimer = setInterval(function () {
+        retryCount++;
+        for (let f = 0; f < fnNames.length; f++) {
+          const name = fnNames[f];
+          for (let w = 0; w < activeWins.length; w++) {
+            const win = activeWins[w];
+            if (
+              win &&
+              typeof win[name] === "function" &&
+              !win[name].__reacgBridgeProxy
+            ) {
+              clearInterval(retryTimer);
+              try {
+                win[name](config);
+              } catch (e) {}
+              return;
+            }
+          }
+        }
+        if (retryCount > 40) {
+          clearInterval(retryTimer);
+          // Fallback to proxy
+          for (let f = 0; f < fnNames.length; f++) {
+            const name = fnNames[f];
+            for (let w = 0; w < activeWins.length; w++) {
+              const win = activeWins[w];
+              if (win && typeof win[name] === "function") {
+                try {
+                  win[name](config);
+                  return;
+                } catch (e) {}
+              }
+            }
+          }
+        }
+      }, 80);
+    };
+
+    const getProLayoutType = function (title) {
+      const normalized = String(title || "").toLowerCase();
+      const layouts = [
+        ["coverflow", "depthflow"],
+        ["justified", "smart rows"],
+        ["cards", "spotlight"],
+        ["scroller", "active drift"],
+      ];
+      for (let i = 0; i < layouts.length; i++) {
+        if (
+          normalized.indexOf(layouts[i][0]) !== -1 ||
+          normalized.indexOf(layouts[i][1]) !== -1
+        ) {
+          return layouts[i][0];
+        }
+      }
+      return "pro";
+    };
+
     const bind = function (doc) {
       if (!doc || !doc.body) return;
+
+      // Locked layout cards in gallery tab.
       doc
-        .querySelectorAll(".reacg-settings-panel-tabs__tab")
-        .forEach(function (button) {
-          if (button.textContent.trim() !== "Lightbox") return;
-          button.classList.remove("Mui-disabled");
-          button.removeAttribute("disabled");
-          if (button.__reacgProControlBound) return;
-          button.__reacgProControlBound = true;
-          button.addEventListener(
+        .querySelectorAll(".type-option__locked, .type-option")
+        .forEach(function (card) {
+          const titleEl = card.querySelector(".type-option__title");
+          const title = titleEl
+            ? titleEl.textContent.trim().toLowerCase()
+            : (card.textContent || "").trim().toLowerCase();
+          const isProLayout =
+            card.classList.contains("type-option__locked") ||
+            !!card.querySelector(".type-option__pro-badge") ||
+            getProLayoutType(title) !== "pro";
+          if (!isProLayout) return;
+
+          if (card.__reacgProCardBound) return;
+          card.__reacgProCardBound = true;
+          card.addEventListener(
+            "click",
+            function (event) {
+              const val = getProLayoutType(title);
+              event.preventDefault();
+              event.stopPropagation();
+              triggerProOffer("layout_" + val, val);
+            },
+            true,
+          );
+        });
+
+      // 4. Pro badges / options in layout dropdown / select menu
+      doc
+        .querySelectorAll(
+          ".type-panel-select__pro-badge, .type-panel-select__body, .MuiMenuItem-root, [role='option']",
+        )
+        .forEach(function (el) {
+          const item = el.closest(".MuiMenuItem-root, [role='option']") || el;
+          if (!item || item.__reacgProItemBound) return;
+          const titleEl = item.querySelector(".type-panel-select__title");
+          const title = titleEl
+            ? titleEl.textContent.trim().toLowerCase()
+            : (item.textContent || "").trim().toLowerCase();
+          const isProLayout =
+            getProLayoutType(title) !== "pro" ||
+            !!item.querySelector(".type-panel-select__pro-badge");
+          if (!isProLayout) return;
+
+          item.__reacgProItemBound = true;
+          item.classList.remove("Mui-disabled");
+          item.removeAttribute("disabled");
+          item.removeAttribute("aria-disabled");
+          item.addEventListener(
+            "click",
+            function (event) {
+              const val = getProLayoutType(title);
+              event.preventDefault();
+              event.stopPropagation();
+              triggerProOffer("layout_" + val, val);
+            },
+            true,
+          );
+        });
+
+      // 5. Direct pro badges anywhere in settings
+      doc
+        .querySelectorAll(
+          ".type-panel-select__pro-badge, .type-option__pro-badge, .reacg-pro-badge",
+        )
+        .forEach(function (badge) {
+          if (badge.__reacgBadgeBound) return;
+          badge.__reacgBadgeBound = true;
+          badge.style.pointerEvents = "auto";
+          badge.style.cursor = "pointer";
+          badge.addEventListener(
             "click",
             function (event) {
               event.preventDefault();
               event.stopPropagation();
-              const win = doc.defaultView || window;
-              const topWin = win.top || win;
-              const openDialog =
-                topWin.reacg_open_premium_offer_dialog ||
-                win.reacg_open_premium_offer_dialog;
-              if (typeof openDialog === "function") {
-                openDialog({ utm_medium: "builder" });
-              }
+              triggerProOffer("badge");
             },
             true,
           );
         });
     };
 
-    docs.forEach(bind);
-    if (canvasDoc && !canvasDoc.__reacgProControlsObserver) {
-      canvasDoc.__reacgProControlsObserver = new MutationObserver(function () {
+    // 6. Global delegated capture click interceptor for instant, reliable response
+    const attachGlobalProClickInterceptor = function (doc) {
+      if (!doc || doc.__reacgProGlobalClickAttached) return;
+      doc.__reacgProGlobalClickAttached = true;
+
+      doc.addEventListener(
+        "click",
+        function (event) {
+          const target = event.target;
+          if (!target) return;
+
+          // Layout options in dropdown select menu or card grid.
+          const proLayoutItem = target.closest(
+            ".type-option__locked, .type-option, .MuiMenuItem-root, [role='option'], .type-panel-select__body",
+          );
+          if (proLayoutItem) {
+            const isProBadge =
+              proLayoutItem.querySelector(
+                ".type-option__pro-badge, .type-panel-select__pro-badge",
+              ) ||
+              target.closest(
+                ".type-option__pro-badge, .type-panel-select__pro-badge",
+              );
+            const isLocked = proLayoutItem.classList.contains(
+              "type-option__locked",
+            );
+            const titleEl = proLayoutItem.querySelector(
+              ".type-option__title, .type-panel-select__title",
+            );
+            const title = titleEl
+              ? titleEl.textContent.trim().toLowerCase()
+              : (proLayoutItem.textContent || "").trim().toLowerCase();
+            const isProLayoutTitle =
+              getProLayoutType(title) !== "pro";
+
+            if (isProBadge || isLocked || isProLayoutTitle) {
+              const val = getProLayoutType(title);
+              event.preventDefault();
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              triggerProOffer("layout_" + val, val);
+              return;
+            }
+          }
+
+          // Any direct pro badge click.
+          const badge = target.closest(
+            ".type-option__pro-badge, .type-panel-select__pro-badge, .reacg-pro-badge",
+          );
+          if (badge) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            triggerProOffer("badge");
+            return;
+          }
+        },
+        true,
+      );
+    };
+
+    docs.forEach(function (doc) {
+      if (!doc) return;
+      bind(doc);
+      attachGlobalProClickInterceptor(doc);
+      if (!doc.__reacgTemplatePortalClickBound) {
+        doc.__reacgTemplatePortalClickBound = true;
+        doc.addEventListener(
+          "click",
+          function (event) {
+            const target =
+              event.target && event.target.closest
+                ? event.target.closest("button, [role='button']")
+                : null;
+            const label = target
+              ? (target.textContent || "").toLowerCase()
+              : "";
+            if (label.indexOf("template") === -1) {
+              return;
+            }
+            try {
+              const canvasWin = canvasDoc && canvasDoc.defaultView;
+              if (
+                canvasWin &&
+                typeof canvasWin.__reacgOpenOverlayInAdmin === "function"
+              ) {
+                canvasWin.__reacgOpenOverlayInAdmin();
+              }
+            } catch (e) {}
+          },
+          true,
+        );
+      }
+      if (!doc.body || doc.__reacgProControlsObserver) return;
+      doc.__reacgProControlsObserver = new MutationObserver(function () {
         docs.forEach(bind);
       });
-      canvasDoc.__reacgProControlsObserver.observe(canvasDoc.body, {
+      doc.__reacgProControlsObserver.observe(doc.body, {
         childList: true,
         subtree: true,
       });
-    }
+    });
   }
 
   /**
@@ -1050,7 +1669,7 @@
    */
   function enableSettingsPortal(canvasDoc) {
     const adminDoc = getAdminDocument();
-    if (!canvasDoc || canvasDoc === adminDoc) {
+    if (!canvasDoc) {
       return;
     }
 
@@ -1060,23 +1679,88 @@
     enableBuilderProControls(canvasDoc);
     syncGalleryStyles(canvasDoc);
 
-    if (canvasDoc.__reacgSettingsPortal) {
+    // Gutenberg without the editor iframe uses one document for both canvas and
+    // InspectorControls. Redirecting that document's own selector methods back
+    // into itself recurses indefinitely as soon as the settings panel mounts.
+    if (canvasDoc === adminDoc) {
       return;
     }
 
-    canvasDoc.__reacgSettingsPortal = true;
-    const origQuerySelector = canvasDoc.querySelector.bind(canvasDoc);
-    canvasDoc.querySelector = function (selector) {
-      if (SETTINGS_SELECTORS[selector]) {
-        try {
-          const adminTarget = adminDoc.querySelector(selector);
-          if (adminTarget) {
-            return adminTarget;
-          }
-        } catch (error) {}
+    const resolveTarget = function (selector) {
+      const candidates = [
+        adminDoc,
+        (window.top && window.top.document) || null,
+        (window.parent && window.parent.document) || null,
+        document,
+      ];
+      for (let i = 0; i < candidates.length; i++) {
+        const d = candidates[i];
+        if (d && typeof d.querySelector === "function") {
+          try {
+            const target = d.querySelector(selector);
+            if (target) {
+              return target;
+            }
+          } catch (e) {}
+        }
       }
-      return origQuerySelector(selector);
+
+      // If #reacg_settings not found anywhere yet, ensure DOM is built in adminDoc and retry
+      if (selector === "#reacg_settings") {
+        try {
+          const modal =
+            (window.top && window.top.ReacgBuilderModal) ||
+            window.ReacgBuilderModal;
+          if (modal && typeof modal.buildDom === "function") {
+            modal.buildDom();
+            for (let j = 0; j < candidates.length; j++) {
+              const d2 = candidates[j];
+              if (d2 && typeof d2.querySelector === "function") {
+                const target2 = d2.querySelector(selector);
+                if (target2) return target2;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      return null;
     };
+
+    const patchDoc = function (targetDoc) {
+      if (!targetDoc || targetDoc.__reacgSettingsPortal) {
+        return;
+      }
+      targetDoc.__reacgSettingsPortal = true;
+
+      const origQuerySelector = targetDoc.querySelector.bind(targetDoc);
+      targetDoc.querySelector = function (selector) {
+        if (SETTINGS_SELECTORS[selector]) {
+          const target = resolveTarget(selector);
+          if (target) {
+            return target;
+          }
+        }
+        return origQuerySelector(selector);
+      };
+
+      const origGetElementById = targetDoc.getElementById.bind(targetDoc);
+      targetDoc.getElementById = function (id) {
+        const selector = "#" + id;
+        if (SETTINGS_SELECTORS[selector]) {
+          const target = resolveTarget(selector);
+          if (target) {
+            return target;
+          }
+        }
+        return origGetElementById(id);
+      };
+    };
+
+    // The gallery React app runs in the canvas document. Keep this bridge scoped
+    // to that document; patching the builder's admin document breaks unrelated
+    // builder and WordPress selectors.
+    patchDoc(canvasDoc);
   }
 
   /**
@@ -1118,8 +1802,11 @@
 
   const ReacgBuilderModal = {
     isOpen: false,
+    isEmbedded: false,
     currentGalleryId: 0,
     currentWidgetId: "",
+    lastLoadedWidgetRootId: null,
+    lastLoadedGalleryId: null,
     onSaveCallback: null,
     onCloseCallback: null,
     isInitialized: false,
@@ -1148,22 +1835,54 @@
     },
 
     buildDom: function () {
+      const adminDoc = getAdminDocument();
       ensureDashicons(document);
+      ensureDashicons(adminDoc);
       if (
         window.top &&
         window.top.document &&
-        window.top.document !== document
+        window.top.document !== document &&
+        window.top.document !== adminDoc
       ) {
         ensureDashicons(window.top.document);
       }
 
-      if ($("#reacg-builder-panel-backdrop").length) {
+      const $existingBackdrop = $(adminDoc)
+        .find("#reacg-builder-panel-backdrop")
+        .add($("#reacg-builder-panel-backdrop"));
+      const $existingPanel = $(adminDoc)
+        .find("#reacg-builder-panel")
+        .add($("#reacg-builder-panel"));
+
+      if ($existingBackdrop.length && $existingPanel.length) {
         return;
+      }
+
+      // If one exists without the other, clean up before rebuilding
+      if ($existingBackdrop.length && !$existingPanel.length) {
+        $existingBackdrop.remove();
+      } else if (!$existingBackdrop.length && $existingPanel.length) {
+        $existingPanel.remove();
       }
 
       const data = this.getData();
       const pluginUrl = data.plugin_url || "";
       const iconUrl = pluginUrl + "/assets/images/icon.svg";
+
+      // Ensure modal stylesheet is in adminDoc
+      try {
+        if (
+          !adminDoc.getElementById("reacg-builder-modal-css") &&
+          !adminDoc.querySelector('link[href*="builder-modal.css"]')
+        ) {
+          const cssLink = adminDoc.createElement("link");
+          cssLink.rel = "stylesheet";
+          cssLink.id = "reacg-builder-modal-css";
+          cssLink.href =
+            (pluginUrl || "") + "/builders/common/builder-modal.css";
+          (adminDoc.head || adminDoc.documentElement).appendChild(cssLink);
+        }
+      } catch (e) {}
 
       const html = `
         <div id="reacg-builder-panel-backdrop" class="reacg-builder-panel-backdrop reacg-hidden">
@@ -1205,6 +1924,11 @@
 
             <!-- Body -->
             <div class="reacg-bp-body">
+              <!-- Empty State when no gallery is selected (ID: 0) -->
+              <div class="reacg-bp-empty-state reacg-hidden">
+                <p class="reacg-bp-empty-desc">No gallery selected. Choose an existing gallery above or click <strong>+ New</strong> to create one.</p>
+              </div>
+
               <!-- Media (Gallery Images) Section -->
               <div class="reacg-bp-images-section">
                 <h3 class="reacg-gallery-images-section-title">Media</h3>
@@ -1221,7 +1945,7 @@
         </div>
       `;
 
-      $("body").append(html);
+      $(adminDoc.body || document.body).append(html);
     },
 
     /**
@@ -1238,6 +1962,9 @@
       let initialTop = 0;
 
       $header.on("mousedown touchstart", function (e) {
+        if (ReacgBuilderModal.isEmbedded) {
+          return;
+        }
         // Don't drag if clicking buttons or actions inside header
         if ($(e.target).closest("button, input, select, a").length) {
           return;
@@ -1496,13 +2223,14 @@
 
       $(".reacg-bp-create-form").addClass("reacg-hidden");
 
-      // Notify host builder / Elementor model in real time
-      if (typeof self.onSaveCallback === "function") {
+      // Notify host builder / Elementor model in real time (only when user actively changes gallery, NOT when simply opening settings)
+      if (!isOpening && typeof self.onSaveCallback === "function") {
         self.onSaveCallback(self.currentGalleryId);
       }
 
       if (self.currentGalleryId === 0) {
         // "Select gallery" (ID: 0) - no gallery data in DB, mounts empty gallery state like Gutenberg
+        $(".reacg-bp-empty-state").removeClass("reacg-hidden");
         $(".reacg-bp-images-section").addClass("reacg-hidden");
         $(".reacg-bp-settings-section").addClass("reacg-hidden");
         $("#reacg-gallery-images").empty();
@@ -1510,6 +2238,7 @@
         return;
       }
 
+      $(".reacg-bp-empty-state").addClass("reacg-hidden");
       $(".reacg-bp-settings-section").removeClass("reacg-hidden");
 
       if (self.currentGalleryId === -1) {
@@ -1602,7 +2331,17 @@
     },
 
     mountReactSettingsInCanvas: function (galleryId, isOpening) {
-      const canvasDoc = getCanvasDocument();
+      const self = this;
+      let canvasDoc = getCanvasDocument();
+      const requestedWidgetId = String(this.currentWidgetId || "")
+        .trim()
+        .replace(/[^a-zA-Z0-9_-]/g, "");
+      if (requestedWidgetId) {
+        canvasDoc = getCanvasDocumentForRoot(
+          "reacg-root" + requestedWidgetId,
+          canvasDoc,
+        );
+      }
       const adminDoc = getAdminDocument();
       enableSettingsPortal(canvasDoc);
       syncGalleryStyles(canvasDoc);
@@ -1619,33 +2358,16 @@
         const safeWidgetId = String(this.currentWidgetId)
           .trim()
           .replace(/[^a-zA-Z0-9_-]/g, "");
-        let widgetWrapper = null;
         try {
           if (safeWidgetId) {
-            widgetWrapper =
-              canvasDoc.querySelector(".elementor-element-" + safeWidgetId) ||
-              canvasDoc.querySelector('[data-id="' + safeWidgetId + '"]') ||
-              canvasDoc.querySelector(
-                '.brxe-reacg[data-script-id="' + safeWidgetId + '"]',
-              ) ||
-              canvasDoc.querySelector(
-                '.brxe-reacg[data-bricks-element-id="' + safeWidgetId + '"]',
-              ) ||
-              canvasDoc.querySelector("#brxe-" + safeWidgetId) ||
-              canvasDoc.querySelector(
-                '[data-bricks-element-id="' + safeWidgetId + '"]',
-              );
+            galleryEl = canvasDoc.getElementById("reacg-root" + safeWidgetId);
+            placeholder = canvasDoc.querySelector(
+              '.reacg-builder-placeholder[data-widget-id="' +
+                safeWidgetId +
+                '"]',
+            );
           }
         } catch (e) {}
-
-        if (widgetWrapper) {
-          placeholder = widgetWrapper.classList.contains(
-            "reacg-builder-placeholder",
-          )
-            ? widgetWrapper
-            : widgetWrapper.querySelector(".reacg-builder-placeholder");
-          galleryEl = widgetWrapper.querySelector(".reacg-gallery");
-        }
 
         if (!placeholder && safeWidgetId) {
           try {
@@ -1659,11 +2381,7 @@
 
         if (!galleryEl && safeWidgetId) {
           try {
-            galleryEl =
-              canvasDoc.getElementById("reacg-root" + safeWidgetId) ||
-              (widgetWrapper
-                ? widgetWrapper.querySelector(".reacg-gallery")
-                : null);
+            galleryEl = canvasDoc.getElementById("reacg-root" + safeWidgetId);
           } catch (e) {}
         }
       } else {
@@ -1679,23 +2397,34 @@
       // Ensure all other galleries on the canvas have options disabled so settings only connect to this active gallery
       const allGalleries = canvasDoc.querySelectorAll(".reacg-gallery");
       let loadApp = canvasDoc.getElementById("reacg-loadApp");
-      if (!loadApp && canvasDoc !== adminDoc) {
-        loadApp = adminDoc.getElementById("reacg-loadApp");
-      }
 
+      const galleriesToUnmount = [];
       for (let i = 0; i < allGalleries.length; i++) {
         const gal = allGalleries[i];
         if (galleryEl && gal !== galleryEl) {
           if (gal.getAttribute("data-options-section") === "1") {
             gal.setAttribute("data-options-section", "0");
-            if (loadApp && gal.id) {
-              triggerLoadApp(loadApp, gal.id);
-            }
+            gal.setAttribute("data-options-timestamp", String(Date.now()));
+            galleriesToUnmount.push(gal);
           }
         }
       }
 
+      const unmountOtherGalleries = function (app) {
+        if (!app || !galleriesToUnmount.length) {
+          return;
+        }
+        for (let i = 0; i < galleriesToUnmount.length; i++) {
+          const gal = galleriesToUnmount[i];
+          if (gal.id) {
+            triggerLoadApp(app, gal.id);
+          }
+        }
+      };
+
       if (galleryId === 0) {
+        this.lastLoadedWidgetRootId = null;
+        this.lastLoadedGalleryId = null;
         if (placeholder) {
           placeholder.classList.remove("reacg-hidden");
         }
@@ -1703,6 +2432,7 @@
           galleryEl.classList.add("reacg-hidden");
           galleryEl.setAttribute("data-options-section", "0");
           galleryEl.setAttribute("data-gallery-id", "0");
+          galleryEl.setAttribute("data-options-timestamp", String(Date.now()));
           if (loadApp && galleryEl.id) {
             triggerLoadApp(loadApp, galleryEl.id);
           }
@@ -1715,7 +2445,11 @@
       }
 
       if (galleryEl) {
-        const rootId = galleryEl.id;
+        const rootId =
+          galleryEl.id || "reacg-root" + (this.currentWidgetId || galleryId);
+        if (!galleryEl.id) {
+          galleryEl.id = rootId;
+        }
         const currentMountedId = galleryEl.getAttribute("data-gallery-id");
         const settingsContainer =
           adminDoc.getElementById("reacg_settings") ||
@@ -1723,8 +2457,8 @@
 
         // Check if gallery is already rendered with options enabled
         const isSameWidgetAndSameGallery =
-          (this.lastLoadedWidgetRootId === rootId ||
-            !this.lastLoadedWidgetRootId) &&
+          this.lastLoadedWidgetRootId === rootId &&
+          String(this.lastLoadedGalleryId) === String(galleryId) &&
           String(currentMountedId) === String(galleryId) &&
           galleryEl.getAttribute("data-options-section") === "1";
         const hasSettingsMounted =
@@ -1733,11 +2467,13 @@
         // If already rendered for this exact widget and settings are in place, do not reload or flash!
         if (isOpening && isSameWidgetAndSameGallery && hasSettingsMounted) {
           this.lastLoadedWidgetRootId = rootId;
+          this.lastLoadedGalleryId = galleryId;
           galleryEl.classList.remove("reacg-hidden");
           return;
         }
 
         this.lastLoadedWidgetRootId = rootId;
+        this.lastLoadedGalleryId = galleryId;
 
         galleryEl.classList.remove("reacg-hidden");
         galleryEl.setAttribute("data-options-section", "1");
@@ -1745,28 +2481,30 @@
         galleryEl.setAttribute("data-gallery-id", galleryId);
         galleryEl.setAttribute("data-plugin-version", version);
 
-        // Only update timestamps if switching gallery or not yet mounted
-        if (
-          String(currentMountedId) !== String(galleryId) ||
-          !hasSettingsMounted
-        ) {
-          const timestamp = Date.now();
+        const timestamp = String(Date.now());
+        galleryEl.setAttribute("data-options-timestamp", timestamp);
+        if (String(currentMountedId) !== String(galleryId)) {
           galleryEl.setAttribute("data-gallery-timestamp", timestamp);
-          galleryEl.setAttribute("data-options-timestamp", timestamp);
         }
 
         const attempt = function (remaining) {
           if (!loadApp) {
-            loadApp =
-              canvasDoc.getElementById("reacg-loadApp") ||
-              (canvasDoc !== adminDoc
-                ? adminDoc.getElementById("reacg-loadApp")
-                : null);
+            loadApp = canvasDoc.getElementById("reacg-loadApp");
           }
 
           if (loadApp) {
-            triggerLoadApp(loadApp, rootId);
-            syncGalleryStyles(canvasDoc);
+            unmountOtherGalleries(loadApp);
+            // Both gallery roots render into the one settings portal. Let the
+            // previous root commit with controls disabled before mounting the
+            // selected root, otherwise React can leave the first root owning
+            // the portal after a Beaver partial render.
+            setTimeout(
+              function () {
+                triggerLoadApp(loadApp, rootId);
+                syncGalleryStyles(canvasDoc);
+              },
+              galleriesToUnmount.length ? 50 : 0,
+            );
             return;
           }
 
@@ -1778,6 +2516,25 @@
         };
 
         attempt(20);
+      } else if (galleryId > 0) {
+        // If gallery element not yet in DOM, poll briefly until Elementor/builder renders it
+        let retries = 10;
+        const retryInterval = setInterval(function () {
+          retries--;
+          const retryGallery =
+            (self.currentWidgetId &&
+              canvasDoc.getElementById("reacg-root" + self.currentWidgetId)) ||
+            (!self.currentWidgetId &&
+              canvasDoc.querySelector(
+                '.reacg-gallery[data-gallery-id="' + galleryId + '"]',
+              ));
+          if (retryGallery || retries <= 0) {
+            clearInterval(retryInterval);
+            if (retryGallery) {
+              self.mountReactSettingsInCanvas(galleryId, false);
+            }
+          }
+        }, 200);
       }
     },
 
@@ -1848,24 +2605,13 @@
 
     triggerReactSave: function () {
       this.pendingSave = false;
-      const adminDoc = getAdminDocument();
-      const canvasDoc = getCanvasDocument();
-      const settingsEl =
-        adminDoc.getElementById("reacg_settings") ||
-        document.getElementById("reacg_settings") ||
-        (canvasDoc ? canvasDoc.getElementById("reacg_settings") : null);
+      const galleryId = this.currentGalleryId || latestGalleryId;
 
-      if (settingsEl) {
-        const reactSave = settingsEl.querySelector(".save-settings-button");
-        if (reactSave) {
-          reactSave.click();
-          return true;
-        }
-      }
-
-      // Fallback: direct REST POST if React button wasn't found
-      if (latestOptions && latestGalleryId) {
-        this.saveOptionsDirect(latestGalleryId, latestOptions);
+      // Save against the active modal gallery, rather than clicking a React
+      // button in the shared portal. That button can belong to a previously
+      // mounted gallery after a builder partial render.
+      if (latestOptions && galleryId) {
+        this.saveOptionsDirect(galleryId, latestOptions);
         return true;
       }
 
@@ -1931,10 +2677,82 @@
           saveImagesFn($mediaContainer);
         }
       }
+    },
 
-      if (typeof this.onSaveCallback === "function" && this.currentGalleryId) {
-        this.onSaveCallback(this.currentGalleryId);
+    mountEmbedded: function (container, options) {
+      options = options || {};
+      ensureDashicons(document);
+      if (
+        window.top &&
+        window.top.document &&
+        window.top.document !== document
+      ) {
+        ensureDashicons(window.top.document);
       }
+      this.init();
+      this.isEmbedded = true;
+
+      let $panel = $("#reacg-builder-panel");
+      let $backdrop = $("#reacg-builder-panel-backdrop");
+
+      if (!$panel.length) {
+        this.isInitialized = false;
+        this.init();
+        $panel = $("#reacg-builder-panel");
+        $backdrop = $("#reacg-builder-panel-backdrop");
+      }
+
+      $backdrop.addClass("reacg-embedded-mode reacg-hidden");
+      $panel
+        .addClass("reacg-builder-panel-embedded")
+        .removeClass("reacg-hidden");
+
+      if (container) {
+        const domContainer = container.jquery ? container.get(0) : container;
+        if (domContainer && $panel.parent().get(0) !== domContainer) {
+          $(domContainer).empty().append($panel);
+        }
+      }
+
+      this.currentWidgetId =
+        options.widgetId !== undefined && options.widgetId !== null
+          ? String(options.widgetId)
+          : "";
+      this.onSaveCallback = options.onSave || null;
+      this.onCloseCallback = options.onClose || null;
+
+      let targetGalleryId =
+        typeof options.galleryId !== "undefined"
+          ? parseInt(options.galleryId, 10)
+          : 0;
+      if (isNaN(targetGalleryId)) {
+        targetGalleryId = 0;
+      }
+
+      this.populateGalleriesDropdown(targetGalleryId);
+      this.isOpen = true;
+
+      this.loadGallery(targetGalleryId, true);
+    },
+
+    unmountEmbedded: function (widgetId) {
+      this.flushAutoSave();
+      this.isEmbedded = false;
+      this.isOpen = false;
+
+      const $panel = $("#reacg-builder-panel");
+      const $backdrop = $("#reacg-builder-panel-backdrop");
+
+      // Park #reacg-builder-panel safely inside $backdrop in document.body so it is never destroyed
+      if (
+        $backdrop.length &&
+        $panel.length &&
+        $panel.parent().get(0) !== $backdrop.get(0)
+      ) {
+        $backdrop.append($panel);
+      }
+      $backdrop.addClass("reacg-hidden").removeClass("reacg-embedded-mode");
+      $panel.removeClass("reacg-builder-panel-embedded");
     },
 
     open: function (options) {
@@ -1948,6 +2766,23 @@
         ensureDashicons(window.top.document);
       }
       this.init();
+
+      const adminDoc = getAdminDocument();
+      const $panel = $(adminDoc)
+        .find("#reacg-builder-panel")
+        .add($("#reacg-builder-panel"));
+      const $backdrop = $(adminDoc)
+        .find("#reacg-builder-panel-backdrop")
+        .add($("#reacg-builder-panel-backdrop"));
+
+      if (this.isEmbedded) {
+        this.isEmbedded = false;
+        $panel.removeClass("reacg-builder-panel-embedded");
+        $backdrop.removeClass("reacg-embedded-mode");
+        if ($panel.parent().get(0) !== $backdrop.get(0)) {
+          $backdrop.append($panel);
+        }
+      }
 
       this.currentWidgetId =
         options.widgetId !== undefined && options.widgetId !== null
@@ -1966,7 +2801,7 @@
 
       this.populateGalleriesDropdown(targetGalleryId);
 
-      $("#reacg-builder-panel-backdrop").removeClass("reacg-hidden");
+      $backdrop.removeClass("reacg-hidden");
       this.isOpen = true;
 
       this.loadGallery(targetGalleryId, true);
@@ -1975,12 +2810,56 @@
     close: function () {
       this.flushAutoSave();
 
-      $("#reacg-builder-panel-backdrop").addClass("reacg-hidden");
-      $(".reacg-bp-create-form").addClass("reacg-hidden");
+      const adminDoc = getAdminDocument();
+      if (!this.isEmbedded) {
+        $(adminDoc)
+          .find("#reacg-builder-panel-backdrop")
+          .add($("#reacg-builder-panel-backdrop"))
+          .addClass("reacg-hidden");
+      }
+      $(adminDoc)
+        .find(".reacg-bp-create-form")
+        .add($(".reacg-bp-create-form"))
+        .addClass("reacg-hidden");
       this.isOpen = false;
+      this.lastLoadedWidgetRootId = null;
+      this.lastLoadedGalleryId = null;
 
-      if (typeof this.onSaveCallback === "function" && this.currentGalleryId) {
-        this.onSaveCallback(this.currentGalleryId);
+      // Unmount options from canvas gallery so options never stay lingering in canvas
+      if (this.currentWidgetId || this.currentGalleryId) {
+        try {
+          const rootId = this.currentWidgetId
+            ? "reacg-root" +
+              String(this.currentWidgetId).replace(/[^a-zA-Z0-9_-]/g, "")
+            : "";
+          const canvasDoc = getCanvasDocumentForRoot(
+            rootId,
+            getCanvasDocument(),
+          );
+          const activeGal =
+            (this.currentWidgetId &&
+              canvasDoc.getElementById("reacg-root" + this.currentWidgetId)) ||
+            (this.currentGalleryId &&
+              canvasDoc.querySelector(
+                '.reacg-gallery[data-gallery-id="' +
+                  this.currentGalleryId +
+                  '"]',
+              ));
+          if (
+            activeGal &&
+            activeGal.getAttribute("data-options-section") === "1"
+          ) {
+            activeGal.setAttribute("data-options-section", "0");
+            activeGal.setAttribute(
+              "data-options-timestamp",
+              String(Date.now()),
+            );
+            let loadApp = canvasDoc.getElementById("reacg-loadApp");
+            if (loadApp && activeGal.id) {
+              triggerLoadApp(loadApp, activeGal.id);
+            }
+          }
+        } catch (e) {}
       }
 
       if (typeof this.onCloseCallback === "function") {
@@ -1990,15 +2869,13 @@
   };
 
   try {
-    if (window.top && window.top !== window) {
-      if (window.top.ReacgBuilderModal) {
-        window.ReacgBuilderModal = window.top.ReacgBuilderModal;
-      } else {
-        window.top.ReacgBuilderModal = ReacgBuilderModal;
-        window.ReacgBuilderModal = ReacgBuilderModal;
-      }
-    } else {
-      window.ReacgBuilderModal = ReacgBuilderModal;
+    window.ReacgBuilderModal = ReacgBuilderModal;
+    // The floating panel is owned by the top/admin document. Builder canvas
+    // iframes also load this script, but must never replace that owner: their
+    // callbacks would then be stored on a different object from the one whose
+    // dropdown event listener receives the user's selection.
+    if (window.top === window) {
+      window.top.ReacgBuilderModal = ReacgBuilderModal;
     }
   } catch (e) {
     window.ReacgBuilderModal = ReacgBuilderModal;
@@ -2010,5 +2887,11 @@
       ensureDashicons(window.top.document);
     }
     ReacgBuilderModal.init();
+    try {
+      const canvasDoc = getCanvasDocument();
+      if (canvasDoc) {
+        enableSettingsPortal(canvasDoc);
+      }
+    } catch (e) {}
   });
 })(jQuery);

@@ -1,3 +1,14 @@
+.reacg-hidden {
+  display: none !important;
+}
+
+/* Builders can apply compact global rules to every div. Keep the gallery
+ * bundle's dialog content metrics independent of those builder resets. */
+.MuiDialog-root div,
+.MuiModal-root[role="dialog"] div {
+  box-sizing: content-box !important;
+  line-height: normal !important;
+}
 .reacg-builder-panel-backdrop {
   position: fixed;
   top: 0;
@@ -8,7 +19,8 @@
   height: 100vh;
   background: transparent;
   pointer-events: none;
-  z-index: 99990;
+  /* Beaver Builder's top bar is 999999. */
+  z-index: 1000002;
   display: block;
   visibility: visible;
   box-sizing: border-box;
@@ -28,7 +40,7 @@
     0 2px 8px rgba(0, 0, 0, 0.12);
   border: 1px solid #cbd5e1;
   border-radius: 12px;
-  z-index: 99999;
+  z-index: 1000002;
   display: flex;
   flex-direction: column;
   pointer-events: auto;
@@ -734,7 +746,48 @@ li.MuiMenuItem-root:focus-visible {
 /* MUI Popovers, Menus, Select lists, More tabs dropdowns */
 .MuiPopover-root,
 .MuiMenu-root {
-  z-index: 1000000 !important;
+  /* Above the floating panel (1000002), below full dialogs. */
+  z-index: 1000003 !important;
+}
+
+/* The React settings menu is initially created at Popper's temporary origin.
+ * It is revealed by builder-modal.js after its trigger position is applied. */
+html.reacg-settings-menu-opening .MuiPopover-root,
+html.reacg-settings-menu-opening .MuiMenu-root,
+html.reacg-settings-menu-opening .reacg-settings-panel-tabs__menu {
+  visibility: hidden !important;
+}
+
+/* Tooltips are portalled from the gallery iframe into the builder document.
+ * Keep their MUI appearance intact even when a builder's global CSS is loaded
+ * only in that parent document. */
+.MuiTooltip-popper,
+[role="tooltip"] {
+  z-index: 1000003 !important;
+  pointer-events: none !important;
+}
+
+.MuiTooltip-tooltip,
+[role="tooltip"] .MuiTooltip-tooltip,
+[role="tooltip"]:not(.MuiTooltip-popper) {
+  display: block !important;
+  box-sizing: border-box !important;
+  max-width: 320px !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: rgba(97, 97, 97, 0.96) !important;
+  color: #fff !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+  text-align: left !important;
+  white-space: normal !important;
+  text-transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28) !important;
 }
 
 .reacg-builder-placeholder {
@@ -833,4 +886,376 @@ div[role="dialog"].MuiModal-root,
 
 .alert {
   pointer-events: auto !important;
+}
+
+/* Embedded Panel Mode (Gutenberg Sidebar InspectorControls) */
+.reacg-builder-panel-backdrop.reacg-embedded-mode {
+  display: none !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  z-index: auto !important;
+  overflow: visible !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-header {
+  cursor: default !important;
+  background: transparent !important;
+  padding: 8px 0 10px 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-drag-handle,
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-close-btn {
+  display: none !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-select-bar {
+  padding: 12px 0 !important;
+  background: transparent !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-create-form {
+  padding: 10px 0 14px 0 !important;
+  background: transparent !important;
+}
+
+.reacg-builder-panel.reacg-builder-panel-embedded .reacg-bp-body {
+  overflow-y: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  background: transparent !important;
+}
+
+.reacg-bp-empty-state {
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.reacg-bp-empty-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================================
+   MUI Dialog, Backdrop, and Free Trial Modal Styles
+   Ensures the Free Trial / PRO Dialog displays centered with high z-index
+   ========================================================================== */
+
+/* The gallery bundle owns the Pro dialog's visual spacing. This legacy
+ * builder-specific copy is retained only for reference and deliberately
+ * disabled; its !important values made builders diverge from Gallery Edit. */
+@media not all {
+
+.MuiDialog-root.MuiModal-root {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000000 !important;
+  display: block !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+.MuiDialog-root .MuiBackdrop-root {
+  position: fixed !important;
+  inset: 0 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: -1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.MuiDialog-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  outline: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.MuiDialog-container .MuiPaper-root {
+  overflow: visible !important;
+  margin: 0 !important;
+  position: relative !important;
+  background-color: #ffffff !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  box-sizing: border-box !important;
+}
+
+.MuiDialog-container .MuiPaper-root .modal-close {
+  position: absolute !important;
+  right: 6px !important;
+  top: 6px !important;
+  padding: 10px !important;
+  color: #1e293b !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.MuiDialog-container .MuiPaper-root .modal-close:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+.MuiDialog-container .MuiPaper-root .modal-close svg {
+  width: 20px !important;
+  height: 20px !important;
+  fill: currentColor !important;
+}
+
+.alert {
+  max-width: 440px !important;
+  min-width: 340px !important;
+  padding: 28px 24px 24px !important;
+  border-radius: 12px !important;
+  margin: 0 auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+}
+
+.alert a,
+.alert a:hover,
+.alert a:focus,
+.alert a:active {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+
+.trial-email-input-wrap {
+  margin-bottom: 16px !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 6px !important;
+  min-height: 45px !important;
+  padding: 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
+.trial-email-input,
+.trial-email-input:hover,
+.trial-email-input:focus,
+.trial-email-input:focus-visible,
+.trial-email-input:active {
+  width: 100% !important;
+  font-size: 15px !important;
+  color: #344054 !important;
+  line-height: 1.4 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.trial-email-input-wrap:hover,
+.trial-email-input-wrap:focus,
+.trial-email-input-wrap:focus-visible,
+.trial-email-input-wrap:focus-within,
+.trial-email-input-wrap:active {
+  border-color: #8769ff !important;
+  box-shadow: 0 0 0 2px rgba(135, 105, 255, 0.15) !important;
+  outline: none !important;
+}
+
+.trial-email-input::placeholder {
+  color: #98a2b3 !important;
+  opacity: 1 !important;
+}
+
+.trial-email-input-icon {
+  width: 20px !important;
+  height: 20px !important;
+  color: #999 !important;
+  pointer-events: none !important;
+  stroke-width: 1.5 !important;
+  flex-shrink: 0 !important;
+}
+
+.free-trial-intro-banner {
+  margin-bottom: 14px !important;
+  background: #f4f3ff !important;
+  border-radius: 6px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
+}
+
+.free-trial-intro-banner-icon-wrap {
+  color: #ffffff !important;
+  background-color: #8769ff !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.free-trial-intro-banner-title {
+  font-weight: 700 !important;
+  color: #1d2327 !important;
+  font-size: 14px !important;
+}
+
+.free-trial-intro-banner-subtitle {
+  color: #5f6368 !important;
+  font-size: 13px !important;
+}
+
+.free-trial-email-label {
+  margin-bottom: 8px !important;
+  color: #1d2327 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  text-align: left !important;
+}
+
+.free-trial-submit-error {
+  margin-bottom: 16px !important;
+  color: #c7254e !important;
+  background-color: #f9f2f4 !important;
+  border-radius: 6px !important;
+  padding: 8px 10px !important;
+  font-size: 14px !important;
+}
+
+.free-trial-submit-success {
+  margin-bottom: 16px !important;
+  color: #1d6f42 !important;
+  background-color: #ebf9f0 !important;
+  border-radius: 6px !important;
+  padding: 8px 10px !important;
+  font-size: 14px !important;
+}
+
+.free-trial-heading-kicker {
+  font-size: 13px !important;
+  color: #8769ff !important;
+  text-transform: uppercase !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+}
+
+.free-trial-heading-title {
+  color: #1d2327 !important;
+  font-size: 22px !important;
+  margin: 4px 0 !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+.free-trial-heading-subtitle {
+  color: #8769ff !important;
+  font-size: 18px !important;
+  margin-bottom: 6px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.free-trial-heading-description {
+  color: #5f6368 !important;
+  font-size: 14px !important;
+  margin: 0 0 16px 0 !important;
+  text-align: center !important;
+}
+
+.free-trial-feature-item {
+  margin: 6px 0 !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  color: #334155 !important;
+}
+
+.free-trial-feature-icon {
+  color: #8769ff !important;
+  margin: 0 6px 0 0 !important;
+  font-size: 18px !important;
+}
+
+.free-trial-additional-text {
+  color: #8769ff !important;
+  font-size: 13px !important;
+  text-align: center !important;
+}
+
+.free-trial-additional-link {
+  color: #8769ff !important;
+  text-decoration: underline !important;
+}
+
+.free-trial-button-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.trial-success-state {
+  padding: 48px 24px 36px !important;
+  text-align: center !important;
+}
+
+.trial-success-state__icon-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  margin-bottom: 20px !important;
+}
+
+.trial-success-state__title {
+  color: #111111 !important;
+  font-weight: 700 !important;
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  margin: 0 0 14px !important;
+}
+
+.trial-success-state__message {
+  color: #6f6f6f !important;
+  font-size: 16px !important;
+  line-height: 1.25 !important;
+  white-space: pre-line !important;
+  margin: 0 !important;
+}
 }
