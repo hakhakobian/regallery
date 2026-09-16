@@ -179,9 +179,9 @@ class REACG_Migration_Provider_FooGallery implements REACG_Migration_Provider_In
       return false;
     }
 
-    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
-    $posts = $wpdb->get_results("SELECT ID, post_type, post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})", ARRAY_A);
+    $ids_placeholder = implode(', ', array_fill(0, count($candidate_ids), '%d'));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- The interpolated value contains only generated %d placeholders.
+    $posts = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type, post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})", $candidate_ids), ARRAY_A);
 
     foreach ((array) $posts as $post_row) {
       if (empty($post_row['post_type']) || !$this->is_replaceable_post_type($post_row['post_type'])) {

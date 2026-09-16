@@ -75,24 +75,27 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
     $gallery_table = $this->table_name('bwg_gallery');
     $image_table = $this->table_name('bwg_image');
 
-    $where = ' WHERE 1=1 ';
-    $params = [];
-
     if ($search !== '') {
-      $where .= ' AND g.`name` LIKE %s ';
-      $params[] = '%' . $wpdb->esc_like($search) . '%';
+      $rows = $wpdb->get_results($wpdb->prepare(
+        'SELECT g.`id`, g.`name`, COUNT(i.`id`) AS image_count
+        FROM `' . esc_sql($gallery_table) . '` g
+        LEFT JOIN `' . esc_sql($image_table) . '` i ON i.`gallery_id` = g.`id` AND i.`published` = 1
+        WHERE g.`name` LIKE %s
+        GROUP BY g.`id`, g.`name`
+        ORDER BY g.`name` ASC',
+        '%' . $wpdb->esc_like($search) . '%'
+      ), ARRAY_A);
     }
-
-    $sql = 'SELECT g.`id`, g.`name`, COUNT(i.`id`) AS image_count
-      FROM `' . esc_sql($gallery_table) . '` g
-      LEFT JOIN `' . esc_sql($image_table) . '` i ON i.`gallery_id` = g.`id` AND i.`published` = 1'
-      . $where .
-      ' GROUP BY g.`id`, g.`name`
-      ORDER BY g.`name` ASC';
-
-    $rows = !empty($params)
-      ? $wpdb->get_results($wpdb->prepare($sql, $params), ARRAY_A)
-      : $wpdb->get_results($sql, ARRAY_A);
+    else {
+      $rows = $wpdb->get_results(
+        'SELECT g.`id`, g.`name`, COUNT(i.`id`) AS image_count
+        FROM `' . esc_sql($gallery_table) . '` g
+        LEFT JOIN `' . esc_sql($image_table) . '` i ON i.`gallery_id` = g.`id` AND i.`published` = 1
+        GROUP BY g.`id`, g.`name`
+        ORDER BY g.`name` ASC',
+        ARRAY_A
+      );
+    }
 
     $items = [];
     foreach ((array) $rows as $row) {
@@ -1528,6 +1531,7 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       )));
 
       $title = !empty($gallery_title) ? sanitize_text_field($gallery_title) : __('(no title)', 'regallery');
+      /* translators: %d: 10Web gallery shortcode ID. */
       $title .= ' ' . sprintf(__('(Shortcode #%d)', 'regallery'), $shortcode_id);
 
       $items[] = [
@@ -1948,7 +1952,7 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       return $results;
     }
 
-    $path = parse_url($url, PHP_URL_PATH);
+    $path = wp_parse_url($url, PHP_URL_PATH);
     if (!is_string($path) || $path === '') {
       return $results;
     }
@@ -2097,8 +2101,8 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       return 0;
     }
 
-    $path = parse_url($url, PHP_URL_PATH);
-    $file_name = $path ? wp_basename($path) : '';
+    $path = wp_parse_url($url, PHP_URL_PATH);
+    $file_name = is_string($path) ? wp_basename($path) : '';
     if ($file_name === '') {
       $file_name = 'reacg-10web-' . time() . '.jpg';
     }
@@ -2110,7 +2114,7 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
 
     $attachment_id = media_handle_sideload($file_array, 0, '');
     if (is_wp_error($attachment_id)) {
-      @unlink($tmp_file);
+      wp_delete_file($tmp_file);
       return 0;
     }
 
@@ -2134,7 +2138,6 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       'fields' => 'ids',
       'meta_key' => '_wp_attached_file',
       'meta_value' => $relative_path,
-      'suppress_filters' => true,
     ]);
 
     $attachment_id = !empty($posts[0]) ? intval($posts[0]) : 0;
@@ -2307,9 +2310,9 @@ class REACG_Migration_Provider_10Web implements REACG_Migration_Provider_Interfa
       return false;
     }
 
-    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
-    $contents = $wpdb->get_col("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})");
+    $ids_placeholder = implode(', ', array_fill(0, count($candidate_ids), '%d'));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- The interpolated value contains only generated %d placeholders.
+    $contents = $wpdb->get_col($wpdb->prepare("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})", $candidate_ids));
 
     foreach ((array) $contents as $content) {
       foreach ((array) $verify_regexes as $regex) {

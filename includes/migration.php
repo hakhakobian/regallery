@@ -258,7 +258,7 @@ class REACG_Migration {
 
     $gallery_ids = [];
     if (!empty($_POST['gallery_ids'])) {
-      $raw = wp_unslash($_POST['gallery_ids']);
+      $raw = map_deep(wp_unslash($_POST['gallery_ids']), 'sanitize_text_field');
       if (is_string($raw)) {
         $decoded = json_decode($raw, true);
         if (is_array($decoded)) {
