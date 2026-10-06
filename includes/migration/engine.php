@@ -260,7 +260,6 @@ class REACG_Migration_Engine {
         'fields' => 'ids',
         'meta_key' => '_wp_attached_file',
         'meta_value' => $relative,
-        'suppress_filters' => true,
       ]);
       if (!empty($existing[0])) {
         return intval($existing[0]);
@@ -350,7 +349,8 @@ class REACG_Migration_Engine {
       return 0;
     }
 
-    $file_name = wp_basename(parse_url($url, PHP_URL_PATH));
+    $url_path = wp_parse_url($url, PHP_URL_PATH);
+    $file_name = is_string($url_path) ? wp_basename($url_path) : '';
     if (empty($file_name)) {
       $file_name = 'reacg-migration-' . time() . '.jpg';
     }
@@ -363,7 +363,7 @@ class REACG_Migration_Engine {
     $attachment_id = media_handle_sideload($file_array, 0, !empty($item['description']) ? sanitize_text_field($item['description']) : '');
 
     if (is_wp_error($attachment_id)) {
-      @unlink($tmp_file);
+      wp_delete_file($tmp_file);
       return 0;
     }
 

@@ -11,6 +11,8 @@ class REACG_Options {
     'type' => 'mosaic', #string thumbnails | mosaic | justified | masonry | slideshow | cube | carousel | coverflow | cards | blog | scroller
     'thumbnails' => [
       'fillContainer' => FALSE, #boolean
+      'autoHeight' => FALSE, #boolean
+      'alignment' => 'top', #string top | center | bottom
       'aspectRatio' => '1.77', #string
       'width' => 430, #number
       'height' => 380, #number
@@ -734,6 +736,7 @@ class REACG_Options {
       'isFullCoverImage',
       'showCaption',
       'fillContainer',
+      'autoHeight',
       'invertTextColor',
       'enableWatermark',
       'enableSearch',
@@ -811,6 +814,10 @@ class REACG_Options {
       'textVerticalAlignment' => [
         'allowed' => [ 'bottom', 'top', 'center' ],
         'default' => 'center',
+      ],
+      'alignment' => [
+        'allowed' => [ 'top', 'center', 'bottom' ],
+        'default' => 'top',
       ],
       'titleAlignment' => [
         'allowed' => [ 'left', 'center', 'right' ],

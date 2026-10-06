@@ -172,9 +172,9 @@ class REACG_Migration_Provider_Envira implements REACG_Migration_Provider_Interf
       return false;
     }
 
-    $ids_placeholder = implode(',', array_map('intval', $candidate_ids));
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared
-    $contents = $wpdb->get_col("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})");
+    $ids_placeholder = implode(', ', array_fill(0, count($candidate_ids), '%d'));
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- The interpolated value contains only generated %d placeholders.
+    $contents = $wpdb->get_col($wpdb->prepare("SELECT post_content FROM {$wpdb->posts} WHERE ID IN ({$ids_placeholder})", $candidate_ids));
 
     foreach ((array) $contents as $content) {
       foreach ((array) $verify_regexes as $regex) {
