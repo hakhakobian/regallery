@@ -860,6 +860,36 @@ function reacg_get_attachment_edit_link(attachmentId) {
   return '/wp-admin/post.php?post=' + id + '&action=edit&image-editor';
 }
 
+function reacg_crop_position_picker() {
+  const positions = [
+    ['left top', reacg.crop_position_left_top],
+    ['center top', reacg.crop_position_center_top],
+    ['right top', reacg.crop_position_right_top],
+    ['left center', reacg.crop_position_left_center],
+    ['center center', reacg.crop_position_center_center],
+    ['right center', reacg.crop_position_right_center],
+    ['left bottom', reacg.crop_position_left_bottom],
+    ['center bottom', reacg.crop_position_center_bottom],
+    ['right bottom', reacg.crop_position_right_bottom],
+  ];
+
+  return '<div class="reacg-attachment-modal__field reacg-crop-position-picker" data-setting="crop_position">' +
+    '<div class="reacg-crop-position-picker__label-row"><label id="reacg-attachment-crop-position-label">' + reacg_escape_html(reacg.attachment_crop_position) + '</label>' +
+      '<button type="button" class="reacg-crop-position-picker__help dashicons dashicons-info-outline" aria-label="' + reacg_escape_html(reacg.attachment_crop_position_description) + '" data-tooltip="' + reacg_escape_html(reacg.attachment_crop_position_description) + '"><span class="screen-reader-text">' + reacg_escape_html(reacg.attachment_crop_position_description) + '</span></button></div>' +
+    '<div class="reacg-crop-position-picker__grid" role="radiogroup" aria-labelledby="reacg-attachment-crop-position-label">' +
+      positions.map(function (position) {
+        const value = position[0];
+        const label = position[1];
+        return '<label class="reacg-crop-position-picker__option reacg-crop-position-picker__option--' + value.replace(' ', '-') + '" title="' + reacg_escape_html(label) + '">' +
+          '<input type="radio" name="reacg-attachment-crop-position" value="' + value + '" />' +
+          '<span aria-hidden="true"></span>' +
+          '<span class="screen-reader-text">' + reacg_escape_html(label) + '</span>' +
+        '</label>';
+      }).join('') +
+    '</div>' +
+  '</div>';
+}
+
 function reacg_attachment_edit_modal(attachment, item) {
   const sizes = attachment.get('sizes');
   const attachmentType = reacg_get_attachment_field_value(attachment, 'type');
@@ -896,6 +926,7 @@ function reacg_attachment_edit_modal(attachment, item) {
                   (fileSize ? '<p><strong>' + reacg_escape_html(reacg.attachment_file_size) + ':</strong> ' + reacg_escape_html(fileSize) + '</p>' : '') +
                   '<p class="reacg-attachment-modal__edit-link"><a href="' + reacg_escape_html(editLink) + '" target="_blank" rel="noopener noreferrer">' + reacg.edit + '</a></p>' +
                 '</div>' +
+                reacg_crop_position_picker() +
               '</div>' +
               '<div class="reacg-modal__layout-content">' +
                 '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' + reacg_escape_html(reacg.attachment_title) + '</label><input type="text" id="reacg-attachment-title" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'title')) + '" /></div>' +
@@ -919,6 +950,7 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
   const modal = reacg_attachment_edit_modal(attachment, item);
   jQuery('body').append(modal);
   modal.css('display', 'flex').show();
+  modal.find('input[name="reacg-attachment-crop-position"][value="' + (reacg_get_attachment_field_value(attachment, 'crop_position') || 'center center') + '"]').prop('checked', true);
   reacg_add_ai_button_to(jQuery('.reacg-modal__layout-content'));
 
   const closeModal = function () {
@@ -952,6 +984,7 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
     compatChanges.attachments[attachmentId] = {
       action_url: modal.find('#reacg-attachment-action-url').val(),
       exif: modal.find('#reacg-attachment-exif').val(),
+      crop_position: modal.find('input[name="reacg-attachment-crop-position"]:checked').val(),
     };
 
     const normalizeValue = function (value) {
@@ -962,7 +995,8 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
       || normalizeValue(coreChanges.alt) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'alt'))
       || normalizeValue(coreChanges.description) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'description'));
     const hasCompatChanges = normalizeValue(compatChanges.attachments[attachmentId].action_url) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'action_url'))
-      || normalizeValue(compatChanges.attachments[attachmentId].exif) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'exif'));
+      || normalizeValue(compatChanges.attachments[attachmentId].exif) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'exif'))
+      || normalizeValue(compatChanges.attachments[attachmentId].crop_position) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'crop_position') || 'center center');
 
     if ( !hasCoreChanges && !hasCompatChanges ) {
       closeModal();

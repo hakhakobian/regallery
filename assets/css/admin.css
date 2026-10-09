@@ -23,14 +23,15 @@
   background-color: #ffffff;
 }
 
-.reacg_item a, .reacg_item a:hover {
+.reacg_item a,
+.reacg_item a:hover {
   color: inherit;
   text-decoration: none;
 }
 
 .reacg_item_new .reacg_item_image {
   cursor: pointer;
-  background-color: var(--reacg-primary-color, #155C92);
+  background-color: var(--reacg-primary-color, #155c92);
   -webkit-mask-image: url(../images/add_new_image.svg);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
@@ -179,7 +180,6 @@
   opacity: 0.5;
 }
 
-
 .column-reacg_shortcode {
   width: 140px;
 }
@@ -199,7 +199,7 @@
   }
 }
 
-.reacg_thumbnail.column-reacg_thumbnail>div {
+.reacg_thumbnail.column-reacg_thumbnail > div {
   background-repeat: no-repeat;
   background-position: center;
   width: 80px;
@@ -269,8 +269,8 @@ to avoid a bug connected with preview.
 }
 
 .reacg-ai-button {
-  background: #FFC54D;
-  border: #FFC54D;
+  background: #ffc54d;
+  border: #ffc54d;
   border-radius: 6px;
   padding: 4px 6px 1px;
   margin: 2px;
@@ -304,14 +304,14 @@ to avoid a bug connected with preview.
   align-items: center;
 
   .reacg-modal-wrapper {
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 6px;
     position: relative;
     max-height: calc(100% - 64px);
     width: 600px;
     overflow-y: auto;
   }
-  
+
   .reacg-modal-close {
     position: absolute;
     right: 0;
@@ -340,10 +340,13 @@ to avoid a bug connected with preview.
       font-weight: bold;
       margin-bottom: 7px;
     }
+    button {
+      margin-bottom: 7px;
+    }
     label span {
       font-weight: normal;
     }
-    input[type=radio] {
+    input[type="radio"] {
       margin-top: 0;
     }
 
@@ -384,26 +387,26 @@ to avoid a bug connected with preview.
     .reacg-modal-note svg {
       width: 18px;
       height: 18px;
-      fill: #FFC54D;
+      fill: #ffc54d;
       margin-right: 5px;
       margin-bottom: -4px;
     }
 
     .reacg-modal-error-note {
-      color: #B32D2E;
+      color: #b32d2e;
     }
   }
-  
+
   .reacg-modal__header {
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #FFF;
+    background: #fff;
     padding: 24px 30px 20px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #E2E4E7;
+    border-bottom: 1px solid #e2e4e7;
     box-sizing: border-box;
   }
 
@@ -417,7 +420,7 @@ to avoid a bug connected with preview.
     grid-template-columns: minmax(280px, 38%) minmax(420px, 62%);
     gap: 24px;
   }
-  
+
   .reacg-modal__layout-content {
     display: flex;
     flex-direction: column;
@@ -440,9 +443,9 @@ to avoid a bug connected with preview.
     position: sticky;
     bottom: 0;
     z-index: 2;
-    background: #FFF;
+    background: #fff;
     padding: 20px 30px 24px 30px;
-    border-top: 1px solid #E2E4E7;
+    border-top: 1px solid #e2e4e7;
     box-sizing: border-box;
   }
 }
@@ -457,10 +460,90 @@ to avoid a bug connected with preview.
     max-width: 100%;
     max-height: 360px;
     object-fit: contain;
-    background: #F6F7F7;
+    background: #f6f7f7;
   }
   .reacg-attachment-modal__details p {
     margin: 0 0 8px 0;
+  }
+  .reacg-crop-position-picker {
+    margin: 0;
+  }
+  .reacg-crop-position-picker__label-row {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+  }
+  .reacg-crop-position-picker__help {
+    background: none;
+    border: 0;
+    color: #50575e;
+    cursor: help;
+    font-size: 16px;
+    height: 18px;
+    padding: 0;
+    position: relative;
+    width: 18px;
+  }
+  .reacg-crop-position-picker__help::after {
+    background: #2c3338;
+    border-radius: 3px;
+    color: #fff;
+    content: attr(data-tooltip);
+    display: none;
+    font: 12px/1.4 sans-serif;
+    left: 24px;
+    padding: 8px 10px;
+    position: absolute;
+    text-align: left;
+    top: -5px;
+    width: 230px;
+    z-index: 10;
+  }
+  .reacg-crop-position-picker__help:hover::after,
+  .reacg-crop-position-picker__help:focus-visible::after {
+    display: block;
+  }
+  .reacg-crop-position-picker__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 28px);
+    gap: 3px;
+  }
+  .reacg-crop-position-picker__option {
+    display: block;
+    height: 28px;
+    position: relative;
+    margin: 0;
+  }
+  .reacg-crop-position-picker__option input {
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+  }
+  .reacg-crop-position-picker__option > span[aria-hidden="true"] {
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+    width: 100%;
+  }
+  .reacg-crop-position-picker__option input:checked + span {
+    background: #2271b1;
+    border-color: #135e96;
+  }
+  .reacg-crop-position-picker__option input:focus-visible + span {
+    outline: 2px solid #2271b1;
+    outline-offset: 2px;
+  }
+  .reacg-crop-position-picker__option:hover > span[aria-hidden="true"] {
+    border-color: #2271b1;
   }
 }
 
@@ -485,7 +568,7 @@ to avoid a bug connected with preview.
   font-weight: 500;
   padding: 16px;
   overflow: visible;
-  background-color: #5A558C;
+  background-color: #5a558c;
   font-size: 0.875rem;
   line-height: 1.43;
   letter-spacing: 0.01071em;
@@ -493,7 +576,10 @@ to avoid a bug connected with preview.
   color: rgb(255, 255, 255);
   border-radius: 12px;
   font-family: lexend;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 5px 5px -3px,
+    rgba(0, 0, 0, 0.14) 0px 8px 10px 1px,
+    rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
 
   .reacg-tooltip-wrapper {
     width: 100%;
@@ -506,7 +592,7 @@ to avoid a bug connected with preview.
     display: flex;
     align-items: center;
   }
-.reacg-tooltip-arrow[data-popper-placement*="left"] {
+  .reacg-tooltip-arrow[data-popper-placement*="left"] {
     right: 0;
     width: 15px;
     height: 24px;
@@ -515,7 +601,7 @@ to avoid a bug connected with preview.
     top: calc(50% - 12px);
     overflow: hidden;
     box-sizing: border-box;
-    color: #5A558C;
+    color: #5a558c;
   }
   .reacg-tooltip-arrow[data-popper-placement*="left"]::before {
     content: "";
@@ -523,7 +609,7 @@ to avoid a bug connected with preview.
     display: block;
     width: 100%;
     height: 100%;
-    background-color: #5A558C;
+    background-color: #5a558c;
     transform: rotate(45deg);
     transform-origin: 0 0;
   }
@@ -537,7 +623,7 @@ to avoid a bug connected with preview.
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  background-color: var(--reacg-primary-color, #155C92);
+  background-color: var(--reacg-primary-color, #155c92);
   cursor: pointer;
   box-shadow: 0 0 10px 3px #aaaaaa;
   transition: transform 0.3s ease;
@@ -597,7 +683,7 @@ to avoid a bug connected with preview.
 #gallery-custom-css h2.hndle {
   justify-content: normal;
 }
-label[for=gallery-custom-css-hide] svg {
+label[for="gallery-custom-css-hide"] svg {
   display: none;
 }
 
@@ -607,8 +693,8 @@ label[for=gallery-custom-css-hide] svg {
 
 .reacg-modal.reacg-ai-generate-modal {
   .reacg-ai-generate-modal__fields {
-    border-top: 1px solid #E2E4E7;
-    border-bottom: 1px solid #E2E4E7;
+    border-top: 1px solid #e2e4e7;
+    border-bottom: 1px solid #e2e4e7;
     padding: 14px 0;
     display: grid;
     gap: 10px;
@@ -646,7 +732,7 @@ label[for=gallery-custom-css-hide] svg {
   .reacg-ai-generate-modal__progress {
     margin: 0 12px 0 auto;
     font-size: 13px;
-    color: #50575E;
+    color: #50575e;
     white-space: nowrap;
     align-content: center;
   }
