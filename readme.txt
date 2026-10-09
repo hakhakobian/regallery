@@ -29,17 +29,17 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 
 With Re Gallery, managing your WordPress photo gallery just got easier.
 Our built-in AI tools automatically generate:
-* Image Titles
-* Alt Text
-* Captions
-* Descriptions
+*  **Image Titles**
+*  **Alt Text**
+*  **Captions**
+*  **Descriptions**
 
 Perfect for photographers, bloggers, WooCommerce stores, and anyone using WordPress, these features improve SEO and accessibility without any extra effort.
 
 Unlike many AI tools, Re Gallery works immediately:
-* No account.
-* No external registration.
-* Works directly inside WordPress.
+*  **No account.**
+*  **No external registration.**
+*  **Works directly inside WordPress.**
 
 Just upload your images and let Re Gallery do the work.
 
