@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.15
+Stable tag: 1.20.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -212,10 +212,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.15: Grid galleries can preserve original image heights with configurable vertical alignment. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.16: Per-media crop-position picker with nine focal-point positions in the image and video edit modal. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.16 =
+= Updated: 10.10.2026 =
+* **Added:** Per-media crop-position picker with nine focal-point positions in the image and video edit modal.
+
 = 1.20.15 =
 = Updated: 17.09.2026 =
 * **Added:** Auto-height and vertical alignment settings for Grid layout.
