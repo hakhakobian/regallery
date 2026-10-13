@@ -55,6 +55,9 @@ class REACG_Elementor extends \Elementor\Widget_Base {
       [
         'type' => \Elementor\Controls_Manager::HIDDEN,
         'default' => 0,
+        // The floating panel changes this value through the commands API; the
+        // widget must re-render so the canvas shows the selected gallery.
+        'render_type' => 'template',
       ]
     );
 
@@ -85,7 +88,7 @@ class REACG_Elementor extends \Elementor\Widget_Base {
     } else {
       if ( $post_id !== 0 ) {
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo REACGLibrary::get_rest_routs($post_id, FALSE, $this->get_id());
+        echo REACGLibrary::render_gallery($post_id, $this->get_id());
       }
     }
   }

@@ -146,6 +146,47 @@ class REACGLibrary {
    *
    * @return string
    */
+  /**
+   * Whether a gallery can be rendered: an existing, non-trashed gallery post,
+   * or the dynamic "All images" gallery (-1).
+   *
+   * @param int|string $gallery_id
+   *
+   * @return bool
+   */
+  public static function gallery_exists( $gallery_id ) {
+    $gallery_id = (int) $gallery_id;
+    if ( -1 === $gallery_id ) {
+      return TRUE;
+    }
+    if ( $gallery_id <= 0 ) {
+      return FALSE;
+    }
+    $post = get_post( $gallery_id );
+
+    return $post instanceof WP_Post
+      && REACG_CUSTOM_POST_TYPE === $post->post_type
+      && in_array( $post->post_status, [ 'publish', 'private', 'draft', 'pending', 'future' ], TRUE );
+  }
+
+  /**
+   * Frontend / builder output for a gallery reference: nothing when the
+   * gallery no longer exists (deleted galleries must not leave broken
+   * instances on the pages that embed them).
+   *
+   * @param int|string $gallery_id
+   * @param string     $instance_id
+   *
+   * @return string
+   */
+  public static function render_gallery( $gallery_id, $instance_id = '' ) {
+    if ( ! self::gallery_exists( $gallery_id ) ) {
+      return '';
+    }
+
+    return self::get_rest_routs( $gallery_id, FALSE, $instance_id );
+  }
+
   public static function get_root_element_id( $gallery_id, $instance_id = '' ) {
     if ( '' !== $instance_id && null !== $instance_id ) {
       $safe_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', (string) $instance_id );

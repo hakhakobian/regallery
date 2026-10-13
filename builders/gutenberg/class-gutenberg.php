@@ -34,11 +34,11 @@ class REACG_Gutenberg_Manager {
 
     // Canvas-only editor styles also need to be available in the WP 7.1+ iframe.
     if ( is_admin() ) {
-      wp_enqueue_style( 'dashicons' );
+      REACG_Builder_Common::enqueue_placeholder_styles();
       wp_enqueue_style(
         REACG_PREFIX . '_gutenberg_canvas',
         REACG_PLUGIN_URL . '/builders/gutenberg/styles/gutenberg.css',
-        [ REACG_PREFIX . '_general' ],
+        [ REACG_PREFIX . '_general', REACG_PREFIX . '_builder_placeholder' ],
         REACG_VERSION
       );
     }
@@ -74,7 +74,7 @@ class REACG_Gutenberg_Manager {
       $script_handle,
       REACG_PLUGIN_URL . '/builders/gutenberg/scripts/gutenberg.js',
       $required_scripts,
-      REACG_VERSION,
+      filemtime( REACG_PLUGIN_DIR . '/builders/gutenberg/scripts/gutenberg.js' ),
       true
     );
     wp_localize_script( $script_handle, 'reacg_gutenberg', [

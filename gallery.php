@@ -179,7 +179,7 @@ final class REACG {
    * Load translated strings.
    */
   public function load_string() {
-    load_plugin_textdomain( 'reacg', false, plugin_basename(dirname(__FILE__)) . '/languages' );
+    load_plugin_textdomain( 'regallery', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
 
@@ -357,11 +357,16 @@ final class REACG {
       'jquery-ui-sortable',
     );
     $required_styles = array(
-      'wp-admin', // admin styles
       'buttons', // buttons styles
       'media-views', // media uploader styles
-      'wp-auth-check', // check all
     );
+    // The full wp-admin stylesheet (forms, common, ...) only belongs to admin
+    // screens. Frontend page builders (Bricks, Beaver Builder) load these
+    // assets in their own UI document, where wp-admin CSS restyles the builder.
+    if ( is_admin() ) {
+      array_unshift( $required_styles, 'wp-admin' );
+      $required_styles[] = 'wp-auth-check';
+    }
 
     wp_register_style($this->prefix . '_select2', $this->plugin_url . '/assets/css/select2.min.css', [], '4.0.3');
     wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [$this->prefix . '_select2'], $this->version);
@@ -389,6 +394,17 @@ final class REACG {
       'attachment_description' => __('Description', 'regallery'),
       'attachment_action_url' => __('Action URL', 'regallery'),
       'attachment_metadata_exif' => __('Metadata (EXIF)', 'regallery'),
+      'attachment_crop_position' => __('Crop position', 'regallery'),
+      'attachment_crop_position_description' => __('Choose which part of the image or video cover remains visible when it is cropped to fit a gallery item.', 'regallery'),
+      'crop_position_left_top' => __('Left top', 'regallery'),
+      'crop_position_center_top' => __('Center top', 'regallery'),
+      'crop_position_right_top' => __('Right top', 'regallery'),
+      'crop_position_left_center' => __('Left center', 'regallery'),
+      'crop_position_center_center' => __('Center center', 'regallery'),
+      'crop_position_right_center' => __('Right center', 'regallery'),
+      'crop_position_left_bottom' => __('Left bottom', 'regallery'),
+      'crop_position_center_bottom' => __('Center bottom', 'regallery'),
+      'crop_position_right_bottom' => __('Right bottom', 'regallery'),
       'choose_images' => __('Choose images', 'regallery'),
       'generate' => __('Generate', 'regallery'),
       'regenerate' => __('Regenerate', 'regallery'),

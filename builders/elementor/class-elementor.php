@@ -18,7 +18,7 @@ class REACG_Elementor_Manager {
     add_action( 'elementor/widgets/widgets_registered', [ __CLASS__, 'register_widget' ] );
     add_action( 'elementor/editor/after_enqueue_styles', [ __CLASS__, 'enqueue_editor_styles' ], 11 );
     add_action( 'elementor/editor/after_enqueue_scripts', [ __CLASS__, 'enqueue_editor_scripts' ], 11 );
-    add_action( 'elementor/preview/enqueue_styles', [ __CLASS__, 'enqueue_editor_styles' ], 11 );
+    add_action( 'elementor/preview/enqueue_styles', [ __CLASS__, 'enqueue_preview_styles' ], 11 );
   }
 
   /**
@@ -42,13 +42,29 @@ class REACG_Elementor_Manager {
           REACG_PREFIX . '_elementor_preview',
           REACG_PLUGIN_URL . '/builders/elementor/scripts/elementor.js',
           [ 'jquery' ],
-          REACG_VERSION,
+          filemtime( REACG_PLUGIN_DIR . '/builders/elementor/scripts/elementor.js' ),
           true
         );
       }
 
       \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
     }
+  }
+
+  /**
+   * Enqueue preview (canvas iframe) styles only. The panel and the admin
+   * stack live in the editor document, never in the preview.
+   *
+   * @return void
+   */
+  public static function enqueue_preview_styles() {
+    REACG_Builder_Common::enqueue_placeholder_styles();
+    wp_enqueue_style(
+      REACG_PREFIX . '_elementor',
+      REACG_PLUGIN_URL . '/builders/elementor/styles/elementor.css',
+      [],
+      REACG_VERSION
+    );
   }
 
   /**
@@ -77,7 +93,7 @@ class REACG_Elementor_Manager {
       REACG_PREFIX . '_elementor',
       REACG_PLUGIN_URL . '/builders/elementor/scripts/elementor.js',
       [ 'jquery', REACG_PREFIX . '_builder_modal' ],
-      REACG_VERSION,
+      filemtime( REACG_PLUGIN_DIR . '/builders/elementor/scripts/elementor.js' ),
       true
     );
   }

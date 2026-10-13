@@ -1,0 +1,86 @@
+/* Canvas placeholder shown by every page builder when no gallery is selected.
+ * Loaded in the builder canvas (preview iframe or editor document). */
+.reacg-builder-placeholder {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  margin: 10px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu,
+    Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.reacg-builder-placeholder.reacg-hidden {
+  display: none !important;
+}
+
+.reacg-builder-placeholder:hover {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.reacg-builder-placeholder-icon {
+  margin-bottom: 12px;
+}
+
+.reacg-builder-placeholder-icon img {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+}
+
+.reacg-builder-placeholder-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.reacg-builder-placeholder-desc {
+  font-size: 13px;
+  color: #64748b;
+  max-width: 400px;
+  margin: 0 auto 18px auto;
+  line-height: 1.5;
+}
+
+.reacg-builder-open-modal-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: var(--reacg-primary-color, #2271b1) !important;
+  border: 1px solid var(--reacg-primary-color, #2271b1) !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  padding: 8px 18px !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease !important;
+}
+
+.reacg-builder-open-modal-btn:hover {
+  background: var(--reacg-primary-color-darker, #135e96) !important;
+  border-color: var(--reacg-primary-color-darker, #135e96) !important;
+  color: #ffffff !important;
+}
+
+.reacg-builder-open-modal-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: currentColor;
+  display: inline-block;
+}

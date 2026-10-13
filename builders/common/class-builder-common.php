@@ -55,7 +55,9 @@ class REACG_Builder_Common {
       <div class="reacg-builder-placeholder-title"><?php echo esc_html( REACG_NICENAME ); ?></div>
       <p class="reacg-builder-placeholder-desc"><?php esc_html_e( 'No gallery selected yet. Select an existing gallery or create a new one.', 'regallery' ); ?></p>
       <button type="button" class="reacg-builder-open-modal-btn button button-primary">
-        <span class="dashicons dashicons-format-gallery"></span> <?php esc_html_e( 'Select or Create Gallery', 'regallery' ); ?>
+        <?php // Inline SVG: builder canvases (e.g. Bricks) do not load dashicons. ?>
+        <svg class="reacg-builder-open-modal-btn__icon" aria-hidden="true" viewBox="0 0 20 20" focusable="false"><path d="M16 4h1.96c.57 0 1.04.47 1.04 1.04v12.92c0 .57-.47 1.04-1.04 1.04H5.04C4.47 19 4 18.53 4 17.96V16H2.04C1.47 16 1 15.53 1 14.96V2.04C1 1.47 1.47 1 2.04 1h12.92c.57 0 1.04.47 1.04 1.04V4zM6 6v11h11V6H6zm1 9l2.5-3 1.5 2 2.5-4L15 15H7zM3 3v11h1V5.04C4 4.47 4.47 4 5.04 4H14V3H3z"/></svg>
+        <?php esc_html_e( 'Select or Create Gallery', 'regallery' ); ?>
       </button>
     </div>
     <?php
@@ -72,14 +74,27 @@ class REACG_Builder_Common {
    * @return string HTML output.
    */
   public static function render_builder_editor( $gallery_id, $widget_id = '' ) {
-    $gallery_id = (int) $gallery_id;
+    $gallery_id = REACGLibrary::gallery_exists( $gallery_id ) ? (int) $gallery_id : 0;
     $output = self::get_builder_placeholder( $gallery_id, $widget_id );
+
+    // No gallery yet: only the placeholder. A gallery root with id 0 would be
+    // mounted by the bundle and show the empty "no data" state under it. The
+    // builder re-renders this widget once a gallery is selected.
+    if ( 0 === $gallery_id ) {
+      return $output;
+    }
+
     $output .= REACGLibrary::get_rest_routs( $gallery_id, FALSE, $widget_id );
 
     if ( 0 !== $gallery_id ) {
       $root_id = REACGLibrary::get_root_element_id( $gallery_id, $widget_id );
       $output .= '<script type="text/javascript">';
       $output .= '(function() {';
+      $output .= '  var root = document.getElementById("' . esc_js( $root_id ) . '");';
+      $output .= '  if (root && typeof window.reacg_mount_gallery === "function") {';
+      $output .= '    window.reacg_mount_gallery(root);';
+      $output .= '    return;';
+      $output .= '  }';
       $output .= '  var reacgLoadApp = document.getElementById("reacg-loadApp");';
       $output .= '  if (reacgLoadApp) {';
       $output .= '    reacgLoadApp.setAttribute("data-id", "' . esc_js( $root_id ) . '");';
@@ -90,6 +105,21 @@ class REACG_Builder_Common {
     }
 
     return $output;
+  }
+
+  /**
+   * Enqueue the canvas placeholder styles. Call this wherever a builder renders
+   * the canvas (preview iframe or editor document).
+   *
+   * @return void
+   */
+  public static function enqueue_placeholder_styles() {
+    wp_enqueue_style(
+      REACG_PREFIX . '_builder_placeholder',
+      REACG_PLUGIN_URL . '/builders/common/builder-placeholder.css',
+      [],
+      filemtime( REACG_PLUGIN_DIR . '/builders/common/builder-placeholder.css' )
+    );
   }
 
   /**
@@ -129,10 +159,12 @@ class REACG_Builder_Common {
     wp_enqueue_script(REACG_PREFIX . '_admin');
     wp_enqueue_script(REACG_PREFIX . '_thumbnails');
 
+    self::enqueue_placeholder_styles();
+
     wp_enqueue_style(
       REACG_PREFIX . '_builder_modal',
       REACG_PLUGIN_URL . '/builders/common/builder-modal.css',
-      ['dashicons', REACG_PREFIX . '_admin', REACG_PREFIX . '_general'],
+      ['dashicons', REACG_PREFIX . '_admin', REACG_PREFIX . '_general', REACG_PREFIX . '_builder_placeholder'],
       filemtime( REACG_PLUGIN_DIR . '/builders/common/builder-modal.css' )
     );
 
@@ -153,22 +185,35 @@ class REACG_Builder_Common {
       'nonce' => wp_create_nonce(REACG_NONCE),
       'rest_nonce' => defined('REACG_REST_NONCE') ? REACG_REST_NONCE : wp_create_nonce('wp_rest'),
       'plugin_url' => REACG_PLUGIN_URL,
-      'dashicons_url' => includes_url('css/dashicons.min.css'),
       'version' => REACG_VERSION,
+      'text_brand' => REACG_NICENAME,
       'text_gallery' => __('Gallery', 'regallery'),
       'text_select_gallery' => __('Select gallery', 'regallery'),
-      'text_new_gallery' => __('New Gallery', 'regallery'),
+      'text_new_gallery' => __('+ New', 'regallery'),
       'text_create_new' => __('Create New Gallery', 'regallery'),
       'text_enter_title' => __('Enter gallery title...', 'regallery'),
       'text_create' => __('Create', 'regallery'),
       'text_cancel' => __('Cancel', 'regallery'),
-      'text_media' => __('Media & Photos', 'regallery'),
-      'text_settings' => __('Layout & Settings', 'regallery'),
-      'text_media_hint' => sprintf(__('Click %1$s+%2$s to add photos from your Media Library. Drag items to reorder.', 'regallery'), '<strong>', '</strong>'),
-      'text_apply_save' => __('Apply & Save Gallery', 'regallery'),
+      'text_close' => __('Close', 'regallery'),
+      'text_drag_to_move' => __('Drag to move panel', 'regallery'),
+      'text_no_title' => __('(no title)', 'regallery'),
+      'text_create_failed' => __('Unable to create gallery.', 'regallery'),
+      'text_empty_state' => sprintf(
+        /* translators: 1: opening strong tag, 2: closing strong tag */
+        __('No gallery selected. Choose an existing gallery above or click %1$s+ New%2$s to create one.', 'regallery'),
+        '<strong>',
+        '</strong>'
+      ),
+      'text_media' => __('Media', 'regallery'),
+      'text_settings' => __('Settings', 'regallery'),
       'text_saving' => __('Saving...', 'regallery'),
       'text_saved' => __('Saved', 'regallery'),
       'text_no_galleries' => __('No galleries found', 'regallery'),
+      'text_select_or_create' => __('Select or Create Gallery', 'regallery'),
+      'text_selected_gallery' => __('Selected gallery:', 'regallery'),
+      'text_no_gallery_selected' => __('No gallery selected', 'regallery'),
+      'text_placeholder_desc' => __('No gallery selected yet. Select an existing gallery or create a new one.', 'regallery'),
+      'text_field_description' => wp_kses_post( self::get_builder_control_description() ),
     ]);
   }
 }

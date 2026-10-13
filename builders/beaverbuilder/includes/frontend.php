@@ -20,6 +20,6 @@ if ( class_exists('FLBuilderModel') && FLBuilderModel::is_builder_active() ) {
 } else {
   if ( $gallery_id !== 0 ) {
     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-    echo REACGLibrary::get_rest_routs($gallery_id, FALSE, $node_id);
+    echo REACGLibrary::render_gallery($gallery_id, $node_id);
   }
 }

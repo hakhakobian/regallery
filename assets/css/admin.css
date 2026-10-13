@@ -707,13 +707,28 @@ to avoid a bug connected with preview.
     position: relative;
     margin: 0;
   }
+  /* Visually hidden radios behind the grid. The generic
+     .reacg-modal .reacg-modal-content input[type="radio"] rules above are
+     !important, so these must be too. */
   .reacg-crop-position-picker__option input {
-    height: 1px;
-    margin: -1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    width: 1px;
+    display: block !important;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+  }
+  .reacg-crop-position-picker__option input::before,
+  .reacg-crop-position-picker__option input::after {
+    display: none !important;
+    content: none !important;
   }
   .reacg-crop-position-picker__option > span[aria-hidden="true"] {
     border: 1px solid #8c8f94;

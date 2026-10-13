@@ -878,6 +878,20 @@ function reacg_get_preview_documents() {
     /* Cross-origin iframe; ignore.*/
   }
 
+  // Divi app frames (Divi 4: #et-fb-app-frame, Divi 5: #et-vb-app-frame)
+  try {
+    const diviFrame =
+      document.querySelector("#et-fb-app-frame, #et-vb-app-frame") ||
+      (window.top && window.top.document
+        ? window.top.document.querySelector("#et-fb-app-frame, #et-vb-app-frame")
+        : null);
+    if (diviFrame && diviFrame.contentDocument) {
+      add(diviFrame.contentDocument);
+    }
+  } catch (error) {
+    /* Cross-origin iframe; ignore.*/
+  }
+
   // Other editor preview iframes
   try {
     const iframes = document.querySelectorAll("iframe");
@@ -1310,6 +1324,14 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
   const targetWin = targetDoc.defaultView || window;
   (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
   modal.css("display", "flex").show();
+  modal
+    .find(
+      'input[name="reacg-attachment-crop-position"][value="' +
+        (reacg_get_attachment_field_value(attachment, "crop_position") ||
+          "center center") +
+        '"]',
+    )
+    .prop("checked", true);
   reacg_add_ai_button_to(modal.find(".reacg-modal__layout-content"));
 
   const closeModal = function () {

@@ -1,4 +1,16 @@
 <?php
+/**
+ * ReGallery Divi 5 module.
+ *
+ * Divi 5 runs the Visual Builder in two windows: the top window hosts the
+ * builder UI and the settings modals, the app window (`app_window=1`) hosts the
+ * page. The module script is registered for the app window through Divi's
+ * PackageBuildManager; the floating ReGallery panel and the admin stack are
+ * enqueued in the top window. The module's settings field opens the panel,
+ * and the chosen gallery is written to the module attributes through Divi's
+ * edit-post store.
+ */
+
 defined('ABSPATH') || die('Access Denied');
 
 use ET\Builder\FrontEnd\Module\Style;
@@ -6,13 +18,18 @@ use ET\Builder\Packages\Module\Options\Css\CssStyle;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 use ET\Builder\VisualBuilder\Assets\PackageBuildManager;
 
+require_once REACG_PLUGIN_DIR . '/builders/divi/includes/class-divi-assets.php';
+
 class REACG_Divi5Module {
+  const MODULE_NAME = 'regallery/divi-gallery-selector';
+  const PACKAGE_NAME = 'regallery-divi';
+
   private static $module_registered = FALSE;
-  protected $localized_data = array();
 
   public function __construct() {
     add_action( 'init', array( $this, 'register_module' ) );
-    add_action( 'divi_visual_builder_assets_before_enqueue_scripts', array( $this, 'enqueue_visual_builder_assets' ) );
+    add_action( 'divi_visual_builder_assets_before_enqueue_scripts', array( $this, 'register_package_build' ) );
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_window_assets' ), 20 );
     add_action( 'wp_ajax_reacg_divi_preview', array( $this, 'preview' ) );
   }
 
@@ -21,7 +38,7 @@ class REACG_Divi5Module {
       return;
     }
 
-    if ( class_exists( 'WP_Block_Type_Registry' ) && WP_Block_Type_Registry::get_instance()->is_registered( 'regallery/divi-gallery-selector' ) ) {
+    if ( class_exists( 'WP_Block_Type_Registry' ) && WP_Block_Type_Registry::get_instance()->is_registered( self::MODULE_NAME ) ) {
       self::$module_registered = TRUE;
       return;
     }
@@ -36,8 +53,11 @@ class REACG_Divi5Module {
     self::$module_registered = TRUE;
   }
 
-  public function enqueue_visual_builder_assets() {
-    if ( ! function_exists( 'et_core_is_fb_enabled' ) || ! et_core_is_fb_enabled() ) {
+  /**
+   * Register the module script for the app window.
+   */
+  public function register_package_build() {
+    if ( ! REACG_Divi_Assets::is_visual_builder() ) {
       return;
     }
 
@@ -45,20 +65,18 @@ class REACG_Divi5Module {
       return;
     }
 
-    REACGLibrary::enqueue_scripts();
-
-    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
     PackageBuildManager::register_package_build(
       array(
-        'name'    => 'regallery-divi',
-        'version' => REACG_VERSION,
+        'name'    => self::PACKAGE_NAME,
+        'version' => REACG_VERSION . '.' . filemtime( REACG_PLUGIN_DIR . '/builders/divi/scripts/reacg-divi-modern.js' ),
         'script'  => array(
           'src'                => REACG_PLUGIN_URL . '/builders/divi/scripts/reacg-divi-modern.js',
           'deps'               => array(
             'react',
             'jquery',
             'divi-module-library',
+            'divi-field-library',
+            'divi-data',
             'wp-hooks',
             'divi-rest',
             REACG_PREFIX . '_thumbnails',
@@ -71,43 +89,55 @@ class REACG_Divi5Module {
     );
   }
 
+  /**
+   * Top window: floating panel + admin stack. App window: bundle + placeholder styles.
+   */
+  public function enqueue_window_assets() {
+    if ( ! REACG_Divi_Assets::is_visual_builder() ) {
+      return;
+    }
+
+    if ( REACG_Divi_Assets::is_app_window() ) {
+      REACG_Divi_Assets::enqueue_app_window_assets();
+      return;
+    }
+
+    REACG_Divi_Assets::enqueue_top_window_assets();
+  }
+
   public function get_localized_data() {
-    return array_merge(
-      array(
-        'galleries'        => $this->get_gallery_options(),
-        'settingsGroup'    => array(
-          'label' => esc_html__( 'Gallery Settings', 'regallery' ),
-        ),
-        'plugin_url'       => REACG_PLUGIN_URL,
-        'galleryId'        => array(
-          'label'       => esc_html__( 'Select Gallery', 'regallery' ),
-          'placeholder' => esc_html__( 'Select gallery', 'regallery' ),
-        ),
-        'enableOptions'    => array(
-          'label' => esc_html__( 'Enable options section', 'regallery' ),
-        ),
-        'ajax_url'         => admin_url( 'admin-ajax.php' ),
-        'nonce'            => wp_create_nonce( 'reacg_divi_builder' ),
-        'loading_text'     => esc_html__( 'Loading gallery preview...', 'regallery' ),
-        'empty_text'       => esc_html__( 'Select a gallery to preview it.', 'regallery' ),
-        'error_text'       => esc_html__( 'Unable to load gallery preview. Please try again.', 'regallery' ),
-      ),
-      $this->localized_data
+    return array(
+      'galleries'        => $this->get_gallery_options(),
+      'plugin_url'       => REACG_PLUGIN_URL,
+      'brand'            => REACG_NICENAME,
+      'ajax_url'         => admin_url( 'admin-ajax.php' ),
+      'nonce'            => wp_create_nonce( 'reacg_divi_builder' ),
+      'settingsGroup'    => esc_html__( 'Gallery', 'regallery' ),
+      'fieldLabel'       => esc_html__( 'Gallery', 'regallery' ),
+      'selectedGallery'  => esc_html__( 'Selected gallery:', 'regallery' ),
+      'noGallery'        => esc_html__( 'No gallery selected', 'regallery' ),
+      'selectOrCreate'   => esc_html__( 'Select or Create Gallery', 'regallery' ),
+      'fieldDescription' => wp_kses_post( REACG_Builder_Common::get_builder_control_description() ),
+      'placeholderDesc'  => esc_html__( 'No gallery selected yet. Select an existing gallery or create a new one.', 'regallery' ),
+      'loadingText'      => esc_html__( 'Loading gallery preview...', 'regallery' ),
+      'errorText'        => esc_html__( 'Unable to load gallery preview. Please try again.', 'regallery' ),
     );
   }
 
   public function get_gallery_options() {
     $gallery_options = REACGLibrary::get_shortcodes( false, true, false );
+    $options = array();
 
     foreach ( $gallery_options as $gallery_id => $gallery_label ) {
-      $gallery_options[ $gallery_id ] = array(
-        'label' => $gallery_label,
-      );
+      $options[ (string) $gallery_id ] = (string) $gallery_label;
     }
 
-    return $gallery_options;
+    return $options;
   }
 
+  /**
+   * AJAX: data and markup for the canvas preview of a gallery.
+   */
   public function preview() {
     check_ajax_referer( 'reacg_divi_builder', 'nonce', false );
 
@@ -115,51 +145,31 @@ class REACG_Divi5Module {
       wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to preview this gallery.', 'regallery' ) ), 403 );
     }
 
-    $gallery_id     = isset( $_POST['gallery_id'] ) ? self::parse_gallery_id( wp_unslash( $_POST['gallery_id'] ) ) : 0;
-    $module_id      = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
-    $enable_options = ! empty( $_POST['enable_options'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['enable_options'] ) );
+    $gallery_id = isset( $_POST['gallery_id'] ) ? (int) wp_unslash( $_POST['gallery_id'] ) : 0;
+    $module_id  = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
 
     wp_send_json_success(
       array(
-        'html'        => self::get_preview_markup( $gallery_id, $enable_options, $module_id ),
-        'galleryData' => REACGLibrary::get_data( $gallery_id ),
-        'galleryId'   => $gallery_id,
-        'rootId'      => REACGLibrary::get_root_element_id( $gallery_id, $module_id ),
+        'galleryData'       => REACGLibrary::get_data( $gallery_id ),
+        'galleryId'         => $gallery_id,
+        'rootId'            => REACGLibrary::get_root_element_id( $gallery_id, $module_id ),
+        'pluginVersion'     => REACG_VERSION,
+        'galleryTimestamp'  => (string) get_post_meta( $gallery_id, 'gallery_timestamp', true ),
+        'optionsTimestamp'  => (string) get_post_meta( $gallery_id, 'options_timestamp', true ),
       )
     );
   }
 
-  private static function get_preview_markup( int $gallery_id, bool $enable_options, string $module_id = '' ): string {
-    $root_id = REACGLibrary::get_root_element_id( $gallery_id, $module_id );
-    ob_start();
-    ?>
-    <div id="<?php echo esc_attr( $root_id ); ?>"
-         class="reacg-wrapper reacg-gallery reacg-preview"
-          data-options-section="<?php echo esc_attr( (int) $enable_options ); ?>"
-         data-options-container="#reacg_settings"
-         data-plugin-version="<?php echo esc_attr( REACG_VERSION ); ?>"
-         data-gallery-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'gallery_timestamp', true ) ); ?>"
-         data-options-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'options_timestamp', true ) ); ?>"
-         data-gallery-id="<?php echo esc_attr( $gallery_id ); ?>"></div>
-    <?php
-
-    return (string) ob_get_clean();
-  }
-
+  /**
+   * Frontend render.
+   */
   public static function render_callback( array $attrs, string $content, object $block, object $elements ): string {
     $new_attrs = $block->parsed_block['attrs'];
     $module_id = $block->parsed_block['id'] ?? '';
 
-    $gallery_id = self::parse_gallery_id(
-      self::get_attribute_value( $new_attrs, 'galleryId', self::get_attribute_value( $new_attrs, 'post_id', 0 ) )
-    );
+    $gallery_id = (int) self::get_attribute_value( $new_attrs, 'galleryId', self::get_attribute_value( $new_attrs, 'post_id', 0 ) );
 
-    if ( 0 === $gallery_id ) {
-      return self::get_empty_markup();
-    }
-
-
-    return REACGLibrary::get_rest_routs( $gallery_id, FALSE, $module_id );
+    return REACGLibrary::render_gallery( $gallery_id, $module_id );
   }
 
   public static function module_classnames( array $args ): array {
@@ -199,23 +209,6 @@ class REACG_Divi5Module {
     );
   }
 
-  private static function get_empty_markup(): string {
-    ob_start();
-    ?>
-    <div class="reacg-wrapper reacg-gallery reacg-preview reacg-preview--empty">
-      <div class="reacg-gallery__content-placeholder">
-        <?php echo esc_html__( 'Select a gallery to display it here.', 'regallery' ); ?>
-      </div>
-    </div>
-    <?php
-
-    return (string) ob_get_clean();
-  }
-
-  private static function parse_gallery_id( $value ): int {
-    return (int) $value;
-  }
-
   private static function get_attribute_value( array $attrs, string $attribute_name, $default_value = null ) {
     if ( isset( $attrs[ $attribute_name ]['desktop']['value'] ) ) {
       return $attrs[ $attribute_name ]['desktop']['value'];
@@ -231,28 +224,4 @@ class REACG_Divi5Module {
 
     return $default_value;
   }
-
-  private static function find_first_matching_value( array $attrs, array $attribute_names, $default_value = null ) {
-    foreach ( $attribute_names as $attribute_name ) {
-      $value = self::get_attribute_value( $attrs, $attribute_name, null );
-
-      if ( null !== $value && '' !== $value ) {
-        return $value;
-      }
-    }
-
-    foreach ( $attrs as $value ) {
-      if ( is_array( $value ) ) {
-        $nested_value = self::find_first_matching_value( $value, $attribute_names, null );
-
-        if ( null !== $nested_value && '' !== $nested_value ) {
-          return $nested_value;
-        }
-      }
-    }
-
-    return $default_value;
-  }
 }
-
-new REACG_Divi5Module();

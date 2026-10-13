@@ -38,17 +38,25 @@ function reacg_loadApp() {
   } catch (e) {}
 
   const mountDocumentGalleries = function (doc) {
+    const win = doc.defaultView;
+    const mount = win && typeof win.reacg_mount_gallery === "function" ? win.reacg_mount_gallery : null;
     const reacgLoadApp = doc.getElementById("reacg-loadApp");
-    if (!reacgLoadApp) {
+    if (!mount && !reacgLoadApp) {
       return false;
     }
 
     doc.querySelectorAll("div.reacg-gallery").forEach(function (div) {
-      const rootId =
-        div.id || "reacg-root" + div.getAttribute("data-gallery-id");
-      if (!rootId) return;
-
-      reacgLoadApp.setAttribute("data-id", rootId);
+      if (div.hasChildNodes()) {
+        return; // Already mounted; a partial refresh returns an empty root.
+      }
+      if (!div.id) {
+        div.id = "reacg-root" + div.getAttribute("data-gallery-id");
+      }
+      if (mount) {
+        mount(div);
+        return;
+      }
+      reacgLoadApp.setAttribute("data-id", div.id);
       try {
         reacgLoadApp.click();
       } catch (e) {}
@@ -315,35 +323,16 @@ function reacg_loadApp() {
           }
         } catch (e) {}
 
-        const refreshModalSettings = function () {
-          // loadGallery mounts settings before this asynchronous Beaver node
-          // update finishes. Mount once more from the returned module markup,
-          // which now includes the newly selected gallery's data.
-          if (
-            modal.currentWidgetId === activeNodeId &&
-            parseInt(modal.currentGalleryId, 10) === parseInt(savedGalleryId, 10)
-          ) {
-            window.setTimeout(function () {
-              modal.mountReactSettingsInCanvas(savedGalleryId, false);
-            }, 0);
-          }
-        };
-
+        // The settings app in the panel is independent of the canvas: the
+        // re-rendered module mounts a preview gallery that asks the settings
+        // app for the current options over postMessage.
         if (
           targetWindow !== window &&
           typeof targetWindow.setBeaverBuilderGalleryId === "function"
         ) {
-          targetWindow.setBeaverBuilderGalleryId(
-            activeNodeId,
-            savedGalleryId,
-            refreshModalSettings,
-          );
+          targetWindow.setBeaverBuilderGalleryId(activeNodeId, savedGalleryId);
         } else {
-          setBeaverBuilderGalleryId(
-            activeNodeId,
-            savedGalleryId,
-            refreshModalSettings,
-          );
+          setBeaverBuilderGalleryId(activeNodeId, savedGalleryId);
         }
       },
     });

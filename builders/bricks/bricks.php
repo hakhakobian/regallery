@@ -25,8 +25,7 @@ class REACGBricksElement extends \Bricks\Element {
   }
 
   public function enqueue_scripts() {
-    wp_enqueue_style('dashicons');
-    wp_enqueue_script(REACG_PREFIX . '_bricks', REACG_PLUGIN_URL . '/builders/bricks/bricks.js', [ 'jquery', REACG_PREFIX . '_thumbnails' ], REACG_VERSION, true);
+    wp_enqueue_script(REACG_PREFIX . '_bricks', REACG_PLUGIN_URL . '/builders/bricks/bricks.js', [ 'jquery', REACG_PREFIX . '_thumbnails' ], filemtime( REACG_PLUGIN_DIR . '/builders/bricks/bricks.js' ), true);
     // Set nonce to make the rest calls work in builder (the admin scripts are not available).
     wp_localize_script(REACG_PREFIX . '_bricks', 'reacg', array(
       'rest_nonce' => REACG_REST_NONCE,
@@ -34,7 +33,9 @@ class REACGBricksElement extends \Bricks\Element {
     ));
 
     if ( $this->is_bricks_edit_context() ) {
-      REACG_Builder_Common::enqueue_builder_assets();
+      // Canvas needs the placeholder styles only; the panel and admin stack
+      // are loaded in the builder UI document by REACG_Bricks_Manager.
+      REACG_Builder_Common::enqueue_placeholder_styles();
     }
   }
 
@@ -51,7 +52,7 @@ class REACGBricksElement extends \Bricks\Element {
     } else {
       if ( $gallery_id !== 0 ) {
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo REACGLibrary::get_rest_routs($gallery_id, FALSE, $this->id);
+        echo REACGLibrary::render_gallery($gallery_id, $this->id);
       }
     }
     echo "</div>";

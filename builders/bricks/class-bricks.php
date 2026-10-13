@@ -38,19 +38,33 @@ class REACG_Bricks_Manager {
    * @return void
    */
   public static function enqueue_builder_assets() {
-    if ( ( function_exists( 'bricks_is_builder' ) && bricks_is_builder() ) || ( function_exists( 'bricks_is_builder_main' ) && bricks_is_builder_main() ) ) {
-      wp_enqueue_style( 'dashicons' );
+    if ( ! function_exists( 'bricks_is_builder' ) || ! bricks_is_builder() ) {
+      return;
+    }
+
+    $is_main = function_exists( 'bricks_is_builder_main' ) && bricks_is_builder_main();
+
+    if ( $is_main ) {
+      // Builder UI document: hosts the floating panel and the admin stack.
       if ( class_exists( 'REACG' ) && method_exists( REACG(), 'register_admin_scripts' ) ) {
         REACG()->register_admin_scripts();
       }
       REACG_Builder_Common::enqueue_builder_assets();
-      wp_enqueue_script(
-        REACG_PREFIX . '_bricks',
-        REACG_PLUGIN_URL . '/builders/bricks/bricks.js',
-        [ 'jquery', REACG_PREFIX . '_builder_modal', REACG_PREFIX . '_thumbnails' ],
-        REACG_VERSION,
-        true
-      );
+      $deps = [ 'jquery', REACG_PREFIX . '_builder_modal', REACG_PREFIX . '_thumbnails' ];
+    } else {
+      // Canvas iframe: only what the preview needs. The admin stylesheets must
+      // not load here, they restyle Bricks' own elements.
+      REACG_Builder_Common::enqueue_placeholder_styles();
+      REACGLibrary::enqueue_scripts();
+      $deps = [ 'jquery', REACG_PREFIX . '_thumbnails' ];
     }
+
+    wp_enqueue_script(
+      REACG_PREFIX . '_bricks',
+      REACG_PLUGIN_URL . '/builders/bricks/bricks.js',
+      $deps,
+      filemtime( REACG_PLUGIN_DIR . '/builders/bricks/bricks.js' ),
+      true
+    );
   }
 }

@@ -38,7 +38,7 @@ class REACG_BeaverBuilder_Manager {
    */
   public static function enqueue_builder_assets() {
     if ( class_exists( 'FLBuilderModel' ) && FLBuilderModel::is_builder_active() ) {
-      wp_enqueue_style( 'dashicons' );
+      REACG_Builder_Common::enqueue_placeholder_styles();
       REACG_Builder_Common::enqueue_builder_assets();
       wp_enqueue_style(
         REACG_PREFIX . '_beaver_builder',

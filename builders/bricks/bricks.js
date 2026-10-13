@@ -1,18 +1,44 @@
 /**
  * ReGallery Bricks Builder Integration Script
  */
+/**
+ * Bricks calls this after it renders or re-renders the element (see
+ * `$scripts` in bricks.php). Mount every gallery root that is not mounted yet.
+ */
 function reacg_loadApp() {
+  const mount = typeof window.reacg_mount_gallery === "function" ? window.reacg_mount_gallery : null;
   const reacgLoadApp = document.getElementById("reacg-loadApp");
-  if (reacgLoadApp) {
-    document.querySelectorAll("div.reacg-gallery").forEach((div) => {
-      const rootId =
-        div.id || "reacg-root" + div.getAttribute("data-gallery-id");
-      if (!rootId) return;
-
-      reacgLoadApp.setAttribute("data-id", rootId);
-      reacgLoadApp.click();
-    });
+  if (!mount && !reacgLoadApp) {
+    // The gallery bundle has not finished loading yet; retry briefly.
+    if (!window.__reacgBricksLoadRetry) {
+      let attempts = 0;
+      window.__reacgBricksLoadRetry = window.setInterval(function () {
+        attempts += 1;
+        const ready = typeof window.reacg_mount_gallery === "function" || document.getElementById("reacg-loadApp");
+        if (ready || attempts >= 40) {
+          window.clearInterval(window.__reacgBricksLoadRetry);
+          window.__reacgBricksLoadRetry = null;
+          if (ready) reacg_loadApp();
+        }
+      }, 250);
+    }
+    return;
   }
+
+  document.querySelectorAll("div.reacg-gallery").forEach((div) => {
+    if (div.hasChildNodes()) {
+      return; // Already mounted; a re-rendered element comes back empty.
+    }
+    if (!div.id) {
+      div.id = "reacg-root" + div.getAttribute("data-gallery-id");
+    }
+    if (mount) {
+      mount(div);
+    } else {
+      reacgLoadApp.setAttribute("data-id", div.id);
+      reacgLoadApp.click();
+    }
+  });
 }
 
 (function ($) {
@@ -168,6 +194,81 @@ function reacg_loadApp() {
     } catch (e) {}
   }
 
+  /**
+   * Bricks has no public "element selected" event. In the builder UI document
+   * watch the Vue state's active element and open/close the panel when the
+   * ReGallery element gains or loses selection (via canvas click or the
+   * Structure panel).
+   */
+  function getBricksState() {
+    try {
+      const brxBody = document.querySelector(".brx-body");
+      const vueApp = brxBody && brxBody.__vue_app__;
+      const globalProps =
+        vueApp && vueApp.config && vueApp.config.globalProperties;
+      let state = globalProps && globalProps.$_state;
+      if (state && state.value && typeof state.value === "object") {
+        state = state.value;
+      }
+      return state || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function getActiveBricksElement() {
+    const state = getBricksState();
+    if (!state) return null;
+    let active = state.activeElement;
+    if (active && active.value !== undefined && active.id === undefined) {
+      active = active.value;
+    }
+    return active && active.id ? active : null;
+  }
+
+  function watchBricksSelection() {
+    const isMain =
+      typeof bricks_is_builder_main === "undefined"
+        ? window.top === window && !!document.querySelector(".brx-body")
+        : bricks_is_builder_main;
+    if (!isMain) {
+      return;
+    }
+
+    let lastActiveId = null;
+    let lastGalleryId = null;
+
+    window.setInterval(function () {
+      const modal = window.ReacgBuilderModal;
+      if (!modal) return;
+
+      const active = getActiveBricksElement();
+      const activeId = active ? String(active.id) : null;
+      const isGallery = !!(active && active.name === "reacg");
+      const galleryId = isGallery
+        ? parseInt((active.settings && active.settings.gallery_id) || 0, 10) || 0
+        : null;
+
+      if (activeId === lastActiveId && galleryId === lastGalleryId) {
+        return;
+      }
+      lastActiveId = activeId;
+      lastGalleryId = galleryId;
+
+      if (isGallery) {
+        modal.open({
+          galleryId: galleryId,
+          widgetId: activeId,
+          onSave: function (savedGalleryId) {
+            setBricksGalleryId(activeId, savedGalleryId);
+          },
+        });
+      } else if (modal.isOpen && !modal.isEmbedded) {
+        modal.close();
+      }
+    }, 300);
+  }
+
   // Expose helper globally on current and top window
   window.setBricksGalleryId = setBricksGalleryId;
   try {
@@ -175,6 +276,10 @@ function reacg_loadApp() {
       window.top.setBricksGalleryId = setBricksGalleryId;
     }
   } catch (e) {}
+
+  $(function () {
+    watchBricksSelection();
+  });
 
   // Open modal handler for Bricks placeholder button
   $(document).on("click", ".reacg-builder-open-modal-btn", function (e) {
