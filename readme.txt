@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.16
+Stable tag: 1.20.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,7 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 
 With Re Gallery, managing your WordPress photo gallery just got easier.
 Our built-in AI tools automatically generate:
+
 *  **Image Titles**
 *  **Alt Text**
 *  **Captions**
@@ -37,6 +38,7 @@ Our built-in AI tools automatically generate:
 Perfect for photographers, bloggers, WooCommerce stores, and anyone using WordPress, these features improve SEO and accessibility without any extra effort.
 
 Unlike many AI tools, Re Gallery works immediately:
+
 *  **No account.**
 *  **No external registration.**
 *  **Works directly inside WordPress.**
@@ -212,10 +214,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.16: Per-media crop-position picker with nine focal-point positions in the image and video edit modal. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.17: Unified floating gallery panel across Gutenberg, Elementor, Divi 4/5, Bricks, Beaver Builder and WPBakery with live preview and auto-save. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.17 =
+= Updated: 14.10.2026 =
+* **Added:** Unified floating gallery panel for page builders (Gutenberg, Elementor, Divi 4, Divi 5, Bricks, Beaver Builder, WPBakery): select or create a gallery, manage media and edit all settings in one place while the canvas preview updates live.
+* **Improved:** Gallery settings auto-save from the builder panel.
+* **Improved:** Placeholder in builder canvases until a gallery is selected.
+* **Fixed:** Deleted galleries left broken instances on pages that embedded them; they now render nothing and show the placeholder in editors.
+
 = 1.20.16 =
 = Updated: 10.10.2026 =
 * **Added:** Per-media crop-position picker with nine focal-point positions in the image and video edit modal.
