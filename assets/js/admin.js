@@ -3,12 +3,15 @@ jQuery(document).ready(function () {
 
   const max_edit_count = 3;
   const max_minutes_spent = 1;
-  if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
+  if (!localStorage.getItem("reacg-opened-contact-us-dialog")) {
     setTimeout(function () {
-      if ( jQuery(".reacg_items").data("edit-count") > max_edit_count ) {
+      if (jQuery(".reacg_items").data("edit-count") > max_edit_count) {
         const reacg_open_need_help_dialog_exist = setInterval(function () {
-          if ( typeof reacg_open_need_help_dialog !== "undefined" ) {
-            reacg_open_need_help_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
+          if (typeof reacg_open_need_help_dialog !== "undefined") {
+            reacg_open_need_help_dialog({
+              onClose: () =>
+                localStorage.setItem("reacg-opened-contact-us-dialog", true),
+            });
             clearInterval(reacg_open_need_help_dialog_exist);
           }
         }, 100);
@@ -27,7 +30,7 @@ jQuery(document).ready(function () {
     contentType: "application/json",
     complete: function (response) {
       reacg_isPro(!!response.responseJSON);
-    }
+    },
   });
 
   jQuery(document).on("click", ".reacg-license-activate-button", function () {
@@ -35,8 +38,8 @@ jQuery(document).ready(function () {
     const container = jQuery(this).closest("#gallery-license");
     const licenseKey = container.find(".reacg-license-key").val();
     const errorNoteCont = container.find(".reacg-error");
-    
-    if ( activate && !licenseKey ) {
+
+    if (activate && !licenseKey) {
       errorNoteCont.removeClass("hidden").html(reacg.enter_license_key);
       return;
     }
@@ -58,32 +61,43 @@ jQuery(document).ready(function () {
       complete: function (response) {
         spinner.removeClass("is-active");
         button.removeAttr("disabled");
-        if (response.status === 200 && response.success && response.responseJSON) {
+        if (
+          response.status === 200 &&
+          response.success &&
+          response.responseJSON
+        ) {
           container.find(".reacg-success").html(response.responseJSON.message);
           reacg_isPro(!!activate);
+        } else {
+          errorNoteCont
+            .removeClass("hidden")
+            .html(response.responseJSON.errors.message);
         }
-        else {
-          errorNoteCont.removeClass("hidden").html(response.responseJSON.errors.message);
-        }
-      }
+      },
     });
   });
 
-  if ( !localStorage.getItem("reacg-opened-contact-us-dialog") ) {
-    setTimeout(function () {
-      if ( typeof reacg_open_new_here_dialog !== "undefined" ) {
-        reacg_open_new_here_dialog({onClose: () => localStorage.setItem("reacg-opened-contact-us-dialog", true)});
-      }
-    }, max_minutes_spent * 60 * 1000);
+  if (!localStorage.getItem("reacg-opened-contact-us-dialog")) {
+    setTimeout(
+      function () {
+        if (typeof reacg_open_new_here_dialog !== "undefined") {
+          reacg_open_new_here_dialog({
+            onClose: () =>
+              localStorage.setItem("reacg-opened-contact-us-dialog", true),
+          });
+        }
+      },
+      max_minutes_spent * 60 * 1000,
+    );
   }
 
   /* Save options on saving the gallery.*/
   jQuery("#publish").on("click", function () {
-    jQuery( ".save-settings-button" ).trigger("click");
+    jQuery(".save-settings-button").trigger("click");
   });
   /* Bind an event to the add image button.*/
   jQuery(document).on("click", ".reacg_item_new", function (event) {
-    reacg_media_uploader( event, this );
+    reacg_media_uploader(event, this);
   });
 
   /* Make the image items sortable.*/
@@ -96,8 +110,10 @@ jQuery(document).ready(function () {
     /* The image id to be deleted.*/
     let image_id = item.data("id");
     let type = item.data("type");
-    if ( reacg.allowed_post_types.hasOwnProperty(type)
-      && String(image_id).includes("dynamic") ) {
+    if (
+      reacg.allowed_post_types.hasOwnProperty(type) &&
+      String(image_id).includes("dynamic")
+    ) {
       /* Reset additional data on dynamic gallery delete.*/
       galleryItemsContainer.find(".additional_data").val("");
     }
@@ -117,33 +133,43 @@ jQuery(document).ready(function () {
     /* The image id to be edited.*/
     let image_id = item.data("id");
     let type = item.data("type");
-    
-    if ( reacg.allowed_post_types.hasOwnProperty(type)
-      && String(image_id).includes("dynamic") ) {
+
+    if (
+      reacg.allowed_post_types.hasOwnProperty(type) &&
+      String(image_id).includes("dynamic")
+    ) {
       /* If dynamic is edited.*/
       let media_uploader = wp.media({
         title: reacg.edit,
-        button: {text: reacg.update},
-        multiple: false
+        button: { text: reacg.update },
+        multiple: false,
       });
-      media_uploader.on('open', function () {
-        reacg_add_posts_tab(media_uploader, type.replace("dynamic", ""), galleryItemsContainer.data("post-id"));
+      media_uploader.on("open", function () {
+        reacg_add_posts_tab(
+          media_uploader,
+          type.replace("dynamic", ""),
+          galleryItemsContainer.data("post-id"),
+        );
       });
-      media_uploader.on('select', function () {
-        const selected_images = media_uploader.state().get('selection').toJSON();
-        galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[0].additional_data));
+      media_uploader.on("select", function () {
+        const selected_images = media_uploader
+          .state()
+          .get("selection")
+          .toJSON();
+        galleryItemsContainer
+          .find(".additional_data")
+          .val(JSON.stringify(selected_images[0].additional_data));
         reacg_save_images(galleryItemsContainer);
         media_uploader.remove();
       });
-      media_uploader.on('close', function () {
+      media_uploader.on("close", function () {
         delete wp.Uploader.defaults.multipart_params.reacg;
         delete wp.Uploader.defaults.multipart_params.reacg_nonce;
         media_uploader.remove();
       });
       media_uploader.open();
-    }
-    else {
-      if ( jQuery(this).attr('disabled') ) {
+    } else {
+      if (jQuery(this).attr("disabled")) {
         /* To prevent multiple clicks.*/
         e.preventDefault();
         e.stopPropagation();
@@ -153,58 +179,72 @@ jQuery(document).ready(function () {
       jQuery(this).attr("disabled", true);
       const editButton = jQuery(this);
       const attachment = wp.media.attachment(image_id);
-      attachment.fetch().then(function () {
-        reacg_open_attachment_edit_modal(editButton, attachment, item);
-      }).always(function () {
-        editButton.removeAttr("disabled");
-      });
+      attachment
+        .fetch()
+        .then(function () {
+          reacg_open_attachment_edit_modal(editButton, attachment, item);
+        })
+        .always(function () {
+          editButton.removeAttr("disabled");
+        });
       return false;
     }
   });
 
   /* Bind an edit thumbnail event to the every video item.*/
-  jQuery(document).on("click", ".reacg_item .reacg-edit-thumbnail", function () {
-    wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
-    wp.Uploader.defaults.multipart_params.reacg = 'gallery';
-    wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
-    let item = jQuery(this).closest(".reacg_item");
-    const galleryItemsContainer = item.closest(".reacg_items");
-    /* The image id to be edited.*/
-    let image_id = item.data("id");
+  jQuery(document).on(
+    "click",
+    ".reacg_item .reacg-edit-thumbnail",
+    function () {
+      wp.Uploader.defaults.multipart_params =
+        wp.Uploader.defaults.multipart_params || {};
+      wp.Uploader.defaults.multipart_params.reacg = "gallery";
+      wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
+      let item = jQuery(this).closest(".reacg_item");
+      const galleryItemsContainer = item.closest(".reacg_items");
+      /* The image id to be edited.*/
+      let image_id = item.data("id");
 
-    let media_uploader = wp.media( {
-      title: reacg.edit_thumbnail,
-      library: { type: 'image' },
-      button: { text: reacg.update_thumbnail },
-      multiple: false
-    } );
-    media_uploader.on('close', function () {
-      delete wp.Uploader.defaults.multipart_params.reacg;
-      delete wp.Uploader.defaults.multipart_params.reacg_nonce;
-      media_uploader.remove();
-    });
-    media_uploader.open();
-    media_uploader.on( 'select', function () {
-      let selected_image = media_uploader.state().get('selection').toJSON();
-      if ( typeof selected_image[0] !== "undefined" ) {
-        reacg_save_thumbnail(galleryItemsContainer, image_id, selected_image[0].id);
-        /* Change the item thumbnail in item view.*/
-        let sizes = selected_image[0].sizes;
-        let thumbnail_url = reacg.no_image;
-        if ( typeof sizes.thumbnail !== 'undefined' ) {
-          thumbnail_url = sizes.thumbnail.url;
+      let media_uploader = wp.media({
+        title: reacg.edit_thumbnail,
+        library: { type: "image" },
+        button: { text: reacg.update_thumbnail },
+        multiple: false,
+      });
+      media_uploader.on("close", function () {
+        delete wp.Uploader.defaults.multipart_params.reacg;
+        delete wp.Uploader.defaults.multipart_params.reacg_nonce;
+        media_uploader.remove();
+      });
+      media_uploader.open();
+      media_uploader.on("select", function () {
+        let selected_image = media_uploader.state().get("selection").toJSON();
+        if (typeof selected_image[0] !== "undefined") {
+          reacg_save_thumbnail(
+            galleryItemsContainer,
+            image_id,
+            selected_image[0].id,
+          );
+          /* Change the item thumbnail in item view.*/
+          let sizes = selected_image[0].sizes;
+          let thumbnail_url = reacg.no_image;
+          if (typeof sizes.thumbnail !== "undefined") {
+            thumbnail_url = sizes.thumbnail.url;
+          } else if (typeof sizes.full.url !== "undefined") {
+            thumbnail_url = sizes.full.url;
+          }
+          item
+            .find(".reacg_item_image img")
+            .attr("src", thumbnail_url)
+            .each(function () {
+              reacg_update_item_image_fit(this);
+            });
         }
-        else if ( typeof sizes.full.url !== 'undefined' ) {
-          thumbnail_url = sizes.full.url;
-        }
-        item.find(".reacg_item_image img").attr("src", thumbnail_url).each(function () {
-          reacg_update_item_image_fit(this);
-        });
-      }
 
-      media_uploader.remove();
-    } );
-  });
+        media_uploader.remove();
+      });
+    },
+  );
 
   jQuery(".reacg_item_image img").each(function () {
     reacg_update_item_image_fit(this);
@@ -217,23 +257,24 @@ function reacg_update_item_image_fit(image) {
   const img = jQuery(image);
   const container = img.closest(".reacg_item_image");
 
-  if ( !container.length ) {
+  if (!container.length) {
     return;
   }
 
   const update = function () {
     const imageElement = img[0];
-    const isSmallImage = imageElement.naturalWidth > 0
-      && imageElement.naturalHeight > 0
-      && imageElement.naturalWidth < container.innerWidth()
-      && imageElement.naturalHeight < container.innerHeight();
+    const isSmallImage =
+      imageElement.naturalWidth > 0 &&
+      imageElement.naturalHeight > 0 &&
+      imageElement.naturalWidth < container.innerWidth() &&
+      imageElement.naturalHeight < container.innerHeight();
 
     img.toggleClass("reacg_item_image_img_natural", isSmallImage);
   };
 
   img.off("load.reacgImageFit").on("load.reacgImageFit", update);
 
-  if ( image.complete && image.naturalWidth ) {
+  if (image.complete && image.naturalWidth) {
     update();
   }
 }
@@ -242,15 +283,15 @@ function reacg_isPro(isPro) {
   if (isPro) {
     jQuery("#reacg-metabox-widget-why-upgrade").remove();
     jQuery("#gallery-custom-css").find(".postbox-header h2 svg").remove();
-    window.dispatchEvent(new Event('reacg:pro-activated'));
+    window.dispatchEvent(new Event("reacg:pro-activated"));
   }
   jQuery(".reacg-pro-not-active").toggle(!isPro);
   jQuery(".reacg-pro-active").toggle(isPro);
   jQuery("textarea[name=custom_css]").on("input", function () {
     let text = jQuery(this).val();
-    if ( !isPro && text.length > 100) {
+    if (!isPro && text.length > 100) {
       jQuery(this).val(text.substring(0, 100));
-      reacg_open_free_trial_offer_dialog({utm_medium: 'custom_css'});
+      reacg_open_free_trial_offer_dialog({ utm_medium: "custom_css" });
     }
   });
   localStorage.setItem("reacg-pro", isPro);
@@ -262,47 +303,53 @@ function reacg_isPro(isPro) {
  * @param container
  */
 function reacg_make_items_sortable(container) {
-  jQuery(container).find(".reacg_items").sortable({
-    items: ".reacg-sortable",
-    tolerance: "pointer",
-    placeholder: "ui-sortable-placeholder reacg_item",
-    start: function (event, ui) {
-      const itemW = ui.item.outerWidth() || 65;
-      const itemH = ui.item.outerHeight() || 65;
-      ui.placeholder.css({
-        width: itemW + "px",
-        height: itemH + "px"
-      });
-      ui.helper.css({
-        width: itemW + "px",
-        height: itemH + "px",
-        maxWidth: itemW + "px",
-        maxHeight: itemH + "px"
-      });
-    },
-    update: function (event, tr) {
-      let images_ids = [];
-      jQuery(this).find("> .reacg-sortable").each(function () {
-        images_ids.push(jQuery(this).data('id'));
-      });
-      const galleryItemsContainer = jQuery(this);
-      reacg_set_image_ids(galleryItemsContainer, images_ids);
-      /* Save images on reorder.*/
-      reacg_save_images(galleryItemsContainer);
-    }
-  });
+  jQuery(container)
+    .find(".reacg_items")
+    .sortable({
+      items: ".reacg-sortable",
+      tolerance: "pointer",
+      placeholder: "ui-sortable-placeholder reacg_item",
+      start: function (event, ui) {
+        const itemW = ui.item.outerWidth() || 65;
+        const itemH = ui.item.outerHeight() || 65;
+        ui.placeholder.css({
+          width: itemW + "px",
+          height: itemH + "px",
+        });
+        ui.helper.css({
+          width: itemW + "px",
+          height: itemH + "px",
+          maxWidth: itemW + "px",
+          maxHeight: itemH + "px",
+        });
+      },
+      update: function (event, tr) {
+        let images_ids = [];
+        jQuery(this)
+          .find("> .reacg-sortable")
+          .each(function () {
+            images_ids.push(jQuery(this).data("id"));
+          });
+        const galleryItemsContainer = jQuery(this);
+        reacg_set_image_ids(galleryItemsContainer, images_ids);
+        /* Save images on reorder.*/
+        reacg_save_images(galleryItemsContainer);
+      },
+    });
 }
 
 function reacg_track_unsaved_changes() {
   /* Track only the newly added not yet saved galleries (not for builders).*/
-  if ( jQuery("#post_type").val() === "reacg"
-    && jQuery("#original_post_status").val() === "auto-draft" ) {
+  if (
+    jQuery("#post_type").val() === "reacg" &&
+    jQuery("#original_post_status").val() === "auto-draft"
+  ) {
     let isEmpty = false;
-    const hiddenInput = document.getElementById('images_ids');
+    const hiddenInput = document.getElementById("images_ids");
 
-    if ( hiddenInput ) {
+    if (hiddenInput) {
       /* Monitor changes.*/
-      hiddenInput.addEventListener('added-images', function () {
+      hiddenInput.addEventListener("added-images", function () {
         isEmpty = true;
       });
       /* Trigger warning if changes are unsaved.*/
@@ -312,7 +359,7 @@ function reacg_track_unsaved_changes() {
         }
       };
       /* Reset isEmpty when the form is submitted.*/
-      jQuery('form').on('submit', function () {
+      jQuery("form").on("submit", function () {
         isEmpty = false;
       });
     }
@@ -328,10 +375,9 @@ function reacg_track_unsaved_changes() {
  */
 function reacg_get_image_ids(galleryItemsContainer, parsed) {
   let data = galleryItemsContainer.find(".images_ids").val();
-  if ( parsed === true ) {
+  if (parsed === true) {
     return data !== "" ? JSON.parse(data) : [];
-  }
-  else {
+  } else {
     return data;
   }
 }
@@ -346,9 +392,11 @@ function reacg_set_image_ids(galleryItemsContainer, arr) {
   const images_ids = galleryItemsContainer.find(".images_ids");
   images_ids.val(JSON.stringify(arr));
   /* Dispatch event for newly added and not yet saved posts (not for builders).*/
-  if ( jQuery("#post_type").val() === "reacg"
-    && jQuery("#original_post_status").val() === "auto-draft" ) {
-    const event = new Event('added-images');
+  if (
+    jQuery("#post_type").val() === "reacg" &&
+    jQuery("#original_post_status").val() === "auto-draft"
+  ) {
+    const event = new Event("added-images");
     /* Use [0] to get the raw DOM element.*/
     images_ids[0].dispatchEvent(event);
   }
@@ -361,11 +409,15 @@ function reacg_set_image_ids(galleryItemsContainer, arr) {
  */
 function reacg_check_images(images_ids) {
   jQuery("ul.attachments li").each(function () {
-    if ( jQuery.inArray(jQuery(this).data("id"), images_ids) !== -1 ) {
-      jQuery(this).attr("title", "Already added").addClass("reacg-already-added");
-      jQuery(this).find(".thumbnail").on("click", function (e) {
-        e.stopPropagation();
-      });
+    if (jQuery.inArray(jQuery(this).data("id"), images_ids) !== -1) {
+      jQuery(this)
+        .attr("title", "Already added")
+        .addClass("reacg-already-added");
+      jQuery(this)
+        .find(".thumbnail")
+        .on("click", function (e) {
+          e.stopPropagation();
+        });
     }
   });
 }
@@ -377,33 +429,47 @@ function reacg_check_images(images_ids) {
  */
 function reacg_check_image(images_ids) {
   /* Select the container for images inside the media modal for the current uploader.*/
-  let container = jQuery('.media-frame-content .attachments:visible');
-  if ( container.length > 0 ) {
+  let container = jQuery(".media-frame-content .attachments:visible");
+  if (container.length > 0) {
     /* Create a MutationObserver to watch for changes in the container.*/
     let observer = new MutationObserver(function (mutationsList) {
       /* Check if the .attachment container is added to the DOM.*/
-      let attachmentContainer = container.find('.attachment');
-      if ( attachmentContainer.length > 0 ) {
+      let attachmentContainer = container.find(".attachment");
+      if (attachmentContainer.length > 0) {
         /* Attach load event listener to its images.*/
-        attachmentContainer.find('img').one('load', function () {
-          /* Disable the image if it is already inserted into the gallery.*/
-          if ( jQuery.inArray(jQuery(this).closest("li").data("id"), images_ids) !== -1 ) {
-            jQuery(this).closest("li").attr("title", "Already added").addClass("reacg-already-added");
-            jQuery(this).closest("li").find(".thumbnail").on("click", function (e) {
-              e.stopPropagation();
-            });
-          }
-        }).each(function () {
-          if ( this.complete ) {
-            jQuery(this).trigger('load');
-          }
-        });
+        attachmentContainer
+          .find("img")
+          .one("load", function () {
+            /* Disable the image if it is already inserted into the gallery.*/
+            if (
+              jQuery.inArray(
+                jQuery(this).closest("li").data("id"),
+                images_ids,
+              ) !== -1
+            ) {
+              jQuery(this)
+                .closest("li")
+                .attr("title", "Already added")
+                .addClass("reacg-already-added");
+              jQuery(this)
+                .closest("li")
+                .find(".thumbnail")
+                .on("click", function (e) {
+                  e.stopPropagation();
+                });
+            }
+          })
+          .each(function () {
+            if (this.complete) {
+              jQuery(this).trigger("load");
+            }
+          });
         /* Stop observing mutations once the container is found.*/
         observer.disconnect();
       }
     });
     /* Start observing mutations in the container.*/
-    observer.observe(container[0], {childList: true, subtree: true});
+    observer.observe(container[0], { childList: true, subtree: true });
   }
 }
 
@@ -413,25 +479,30 @@ function reacg_check_image(images_ids) {
  * @param e
  * @param that
  */
-function reacg_media_uploader( e, that ) {
+function reacg_media_uploader(e, that) {
   e.preventDefault();
-  wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
-  wp.Uploader.defaults.multipart_params.reacg = 'gallery';
+  wp.Uploader.defaults.multipart_params =
+    wp.Uploader.defaults.multipart_params || {};
+  wp.Uploader.defaults.multipart_params.reacg = "gallery";
   wp.Uploader.defaults.multipart_params.reacg_nonce = reacg.nonce;
   const galleryItemsContainer = jQuery(that).closest(".reacg_items");
 
-  let media_uploader = wp.media.frames.file_frame = wp.media( {
+  let media_uploader = (wp.media.frames.file_frame = wp.media({
     title: reacg.choose_images,
     button: { text: reacg.insert },
-    multiple: 'add'
-  } );
+    multiple: "add",
+  }));
 
   /* Disable the images which are already added to the gallery.*/
-  media_uploader.on('open', function () {
+  media_uploader.on("open", function () {
     /* Get the added images.*/
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
 
-    reacg_add_posts(media_uploader, images_ids, galleryItemsContainer.data("post-id"));
+    reacg_add_posts(
+      media_uploader,
+      images_ids,
+      galleryItemsContainer.data("post-id"),
+    );
 
     /* On clicking Media library tab inside the uploader.*/
     jQuery(document).on("click", ".media-menu-item", function () {
@@ -458,29 +529,30 @@ function reacg_media_uploader( e, that ) {
 
   media_uploader.open();
 
-  media_uploader.on( 'select', function () {
+  media_uploader.on("select", function () {
     /* Get images ids already added.*/
     let images_ids = reacg_get_image_ids(galleryItemsContainer, true);
     let coverPromises = [];
 
     /* Get selected images.*/
-    let selected_images = media_uploader.state().get( 'selection' ).toJSON();
-    for ( let key in selected_images ) {
+    let selected_images = media_uploader.state().get("selection").toJSON();
+    for (let key in selected_images) {
       let title = selected_images[key].title;
       let sizes = selected_images[key].sizes;
       let type = selected_images[key].type;
       let thumbnail_url = reacg.no_image;
-      if ( selected_images[key].type === "video" && typeof selected_images[key].thumb.src !== 'undefined' ) {
+      if (
+        selected_images[key].type === "video" &&
+        typeof selected_images[key].thumb.src !== "undefined"
+      ) {
         /* If there is thumbnail for the video and it is not a default image (video.png/video.svg)*/
-        if ( selected_images[key].thumb.src.search("media/video.") === -1 )  {
+        if (selected_images[key].thumb.src.search("media/video.") === -1) {
           thumbnail_url = selected_images[key].thumb.src;
         }
-      }
-      else if ( sizes ) {
-        if (typeof sizes.thumbnail !== 'undefined') {
+      } else if (sizes) {
+        if (typeof sizes.thumbnail !== "undefined") {
           thumbnail_url = sizes.thumbnail.url;
-        }
-        else if (sizes.full && typeof sizes.full.url !== 'undefined') {
+        } else if (sizes.full && typeof sizes.full.url !== "undefined") {
           thumbnail_url = sizes.full.url;
         }
       }
@@ -488,39 +560,59 @@ function reacg_media_uploader( e, that ) {
       let image_id = selected_images[key].id;
 
       /* Add an image to the gallery, if it doesn't already exist.*/
-      if ( jQuery.inArray(image_id, images_ids) === -1 ) {
+      if (jQuery.inArray(image_id, images_ids) === -1) {
         /* Add selected image to the existing list of visual items.*/
         let clone = galleryItemsContainer.find(".reacg-template").clone();
-        if ( type === "video" ) {
+        if (type === "video") {
           clone.find(".reacg-edit-thumbnail").removeClass("reacg-hidden");
-          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons dashicons-controls-play");
-        }
-        else if ( reacg.allowed_post_types.hasOwnProperty(type) ) {
+          clone
+            .find(".reacg-cover")
+            .removeClass("reacg-hidden")
+            .addClass("dashicons dashicons-controls-play");
+        } else if (reacg.allowed_post_types.hasOwnProperty(type)) {
           /* Any of the allowed post types.*/
-          if ( String(image_id).includes("dynamic") ) {
+          if (String(image_id).includes("dynamic")) {
             thumbnail_url = "";
-            galleryItemsContainer.find(".additional_data").val(JSON.stringify(selected_images[key].additional_data));
-          }
-          else {
+            galleryItemsContainer
+              .find(".additional_data")
+              .val(JSON.stringify(selected_images[key].additional_data));
+          } else {
             clone.find(".reacg-edit").addClass("reacg-hidden");
           }
-          clone.find(".reacg-cover").removeClass("reacg-hidden").addClass("dashicons " + reacg.allowed_post_types[type]['class']);
+          clone
+            .find(".reacg-cover")
+            .removeClass("reacg-hidden")
+            .addClass("dashicons " + reacg.allowed_post_types[type]["class"]);
         }
         clone.attr("data-id", image_id);
         clone.attr("data-type", type);
         clone.find(".reacg_item_image").attr("title", title);
-        if ( thumbnail_url ) {
-          if ( !clone.find(".reacg_item_image img").length ) {
+        if (thumbnail_url) {
+          if (!clone.find(".reacg_item_image img").length) {
             clone.find(".reacg_item_image").prepend('<img alt="" />');
           }
-          clone.find(".reacg_item_image img").attr("src", thumbnail_url).each(function () {
-            reacg_update_item_image_fit(this);
-          });
+          clone
+            .find(".reacg_item_image img")
+            .attr("src", thumbnail_url)
+            .each(function () {
+              reacg_update_item_image_fit(this);
+            });
         }
-        clone.removeClass("reacg-hidden reacg-template").addClass("reacg-sortable");
+        clone
+          .removeClass("reacg-hidden reacg-template")
+          .addClass("reacg-sortable");
         clone.insertAfter(galleryItemsContainer.find(".reacg_item_new"));
-        if ( type === "video" && reacg_should_generate_video_cover(selected_images[key], thumbnail_url) ) {
-          coverPromises.push(reacg_generate_video_cover(selected_images[key], clone, galleryItemsContainer));
+        if (
+          type === "video" &&
+          reacg_should_generate_video_cover(selected_images[key], thumbnail_url)
+        ) {
+          coverPromises.push(
+            reacg_generate_video_cover(
+              selected_images[key],
+              clone,
+              galleryItemsContainer,
+            ),
+          );
         }
         /* Add selected image id to the existing list.*/
         images_ids.unshift(image_id);
@@ -533,69 +625,94 @@ function reacg_media_uploader( e, that ) {
     /* Save the images.*/
     reacg_save_images(galleryItemsContainer);
 
-    if ( coverPromises.length ) {
+    if (coverPromises.length) {
       Promise.all(coverPromises).then(function (results) {
-        if ( results.some(function (result) { return !!result; }) ) {
+        if (
+          results.some(function (result) {
+            return !!result;
+          })
+        ) {
           reacg_reload_preview();
         }
       });
     }
 
     media_uploader.remove();
-  } );
+  });
 }
 
 function reacg_should_generate_video_cover(selectedImage, thumbnailUrl) {
-  if ( !selectedImage || selectedImage.type !== "video" || !selectedImage.id || !selectedImage.url ) {
+  if (
+    !selectedImage ||
+    selectedImage.type !== "video" ||
+    !selectedImage.id ||
+    !selectedImage.url
+  ) {
     return false;
   }
 
-  if ( selectedImage.thumb && typeof selectedImage.thumb.src !== 'undefined'
-    && selectedImage.thumb.src.search("media/video.") === -1 ) {
+  if (
+    selectedImage.thumb &&
+    typeof selectedImage.thumb.src !== "undefined" &&
+    selectedImage.thumb.src.search("media/video.") === -1
+  ) {
     return false;
   }
 
   return thumbnailUrl === reacg.no_image;
 }
 
-function reacg_generate_video_cover(selectedImage, item, galleryItemsContainer) {
+function reacg_generate_video_cover(
+  selectedImage,
+  item,
+  galleryItemsContainer,
+) {
   return reacg_capture_video_frame(selectedImage.url)
     .then(function (blob) {
-      return reacg_upload_video_cover(selectedImage.id, blob, selectedImage.filename || selectedImage.title || ("video-" + selectedImage.id));
+      return reacg_upload_video_cover(
+        selectedImage.id,
+        blob,
+        selectedImage.filename ||
+          selectedImage.title ||
+          "video-" + selectedImage.id,
+      );
     })
     .then(function (response) {
-      if ( !response || !response.success || !response.data ) {
+      if (!response || !response.success || !response.data) {
         return false;
       }
 
-      if ( response.data.thumbnail_url ) {
-        item.find(".reacg_item_image img").attr("src", response.data.thumbnail_url).each(function () {
-          reacg_update_item_image_fit(this);
-        });
+      if (response.data.thumbnail_url) {
+        item
+          .find(".reacg_item_image img")
+          .attr("src", response.data.thumbnail_url)
+          .each(function () {
+            reacg_update_item_image_fit(this);
+          });
       }
 
       return true;
     })
     .catch(function (error) {
-      console.warn('Video cover generation failed.', error);
+      console.warn("Video cover generation failed.", error);
       return false;
     });
 }
 
 function reacg_capture_video_frame(videoUrl) {
   return new Promise(function (resolve, reject) {
-    const video = document.createElement('video');
+    const video = document.createElement("video");
     let settled = false;
 
     function cleanup() {
       video.pause();
-      video.removeAttribute('src');
+      video.removeAttribute("src");
       video.load();
       video.remove();
     }
 
     function finish(callback, value) {
-      if ( settled ) {
+      if (settled) {
         return;
       }
       settled = true;
@@ -604,45 +721,57 @@ function reacg_capture_video_frame(videoUrl) {
     }
 
     function drawFrame() {
-      if ( !video.videoWidth || !video.videoHeight ) {
-        finish(reject, new Error('Video frame is not available.'));
+      if (!video.videoWidth || !video.videoHeight) {
+        finish(reject, new Error("Video frame is not available."));
         return;
       }
 
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      const context = canvas.getContext('2d');
-      if ( !context ) {
-        finish(reject, new Error('Canvas context is not available.'));
+      const context = canvas.getContext("2d");
+      if (!context) {
+        finish(reject, new Error("Canvas context is not available."));
         return;
       }
 
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(function (blob) {
-        if ( !blob ) {
-          finish(reject, new Error('Failed to create image blob.'));
-          return;
-        }
+      canvas.toBlob(
+        function (blob) {
+          if (!blob) {
+            finish(reject, new Error("Failed to create image blob."));
+            return;
+          }
 
-        finish(resolve, blob);
-      }, 'image/jpeg', 0.92);
+          finish(resolve, blob);
+        },
+        "image/jpeg",
+        0.92,
+      );
     }
 
-    video.preload = 'auto';
+    video.preload = "auto";
     video.muted = true;
     video.playsInline = true;
-    video.style.position = 'fixed';
-    video.style.left = '-9999px';
-    video.style.top = '-9999px';
+    video.style.position = "fixed";
+    video.style.left = "-9999px";
+    video.style.top = "-9999px";
 
-    video.addEventListener('error', function () {
-      finish(reject, new Error('Video element failed to load.'));
-    }, { once: true });
+    video.addEventListener(
+      "error",
+      function () {
+        finish(reject, new Error("Video element failed to load."));
+      },
+      { once: true },
+    );
 
-    video.addEventListener('loadeddata', function () {
-      window.requestAnimationFrame(drawFrame);
-    }, { once: true });
+    video.addEventListener(
+      "loadeddata",
+      function () {
+        window.requestAnimationFrame(drawFrame);
+      },
+      { once: true },
+    );
 
     document.body.appendChild(video);
     video.src = videoUrl;
@@ -652,14 +781,16 @@ function reacg_capture_video_frame(videoUrl) {
 
 function reacg_upload_video_cover(videoId, blob, filename) {
   const formData = new FormData();
-  const safeName = String(filename || ("video-" + videoId)).replace(/\.[^.]+$/, '') + '-cover.jpg';
-  formData.append('action', 'reacg_auto_upload_video_cover');
-  formData.append('video_id', videoId);
-  formData.append('filename', safeName);
-  formData.append('cover', blob, safeName);
+  const safeName =
+    String(filename || "video-" + videoId).replace(/\.[^.]+$/, "") +
+    "-cover.jpg";
+  formData.append("action", "reacg_auto_upload_video_cover");
+  formData.append("video_id", videoId);
+  formData.append("filename", safeName);
+  formData.append("cover", blob, safeName);
 
   return jQuery.ajax({
-    type: 'POST',
+    type: "POST",
     url: reacg.ajax_url,
     data: formData,
     processData: false,
@@ -678,11 +809,12 @@ function reacg_save_images(galleryItemsContainer) {
     type: "POST",
     url: galleryItemsContainer.data("ajax-url"),
     data: {
-      "action": "reacg_save_images",
-      "post_id": galleryItemsContainer.data("post-id"),
-      "images_ids": reacg_get_image_ids(galleryItemsContainer, false),
-      "additional_data": galleryItemsContainer.find(".additional_data").val(),
-      "gallery_timestamp": Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/
+      action: "reacg_save_images",
+      post_id: galleryItemsContainer.data("post-id"),
+      images_ids: reacg_get_image_ids(galleryItemsContainer, false),
+      additional_data: galleryItemsContainer.find(".additional_data").val(),
+      gallery_timestamp:
+        Date.now() /* Update the gallery timestamp on images save to prevent data from being read from the cache.*/,
     },
     complete: function (data) {
       reacg_toggle_loading();
@@ -690,11 +822,11 @@ function reacg_save_images(galleryItemsContainer) {
       reacg_reload_preview();
 
       /* Highlight templates list for newly added and not yet saved posts.*/
-      if ( jQuery("#original_post_status").val() === "auto-draft" ) {
-        const event = new Event('highlight-template-select');
+      if (jQuery("#original_post_status").val() === "auto-draft") {
+        const event = new Event("highlight-template-select");
         window.dispatchEvent(event);
       }
-    }
+    },
   });
 }
 
@@ -718,51 +850,50 @@ function reacg_get_preview_documents() {
     if (canvas && canvas.contentDocument) {
       add(canvas.contentDocument);
     }
-  }
-  catch (error) {
+  } catch (error) {
     /* Cross-origin iframe; ignore.*/
   }
 
   // Elementor preview iframe
   try {
-    const elCanvas = document.querySelector('#elementor-preview-iframe');
+    const elCanvas = document.querySelector("#elementor-preview-iframe");
     if (elCanvas && elCanvas.contentDocument) {
       add(elCanvas.contentDocument);
     }
-  }
-  catch (error) {
+  } catch (error) {
     /* Cross-origin iframe; ignore.*/
   }
 
   // Bricks preview iframe
   try {
-    const bricksCanvas = document.querySelector('#bricks-builder-iframe') ||
-      (window.top && window.top.document ? window.top.document.querySelector('#bricks-builder-iframe') : null);
+    const bricksCanvas =
+      document.querySelector("#bricks-builder-iframe") ||
+      (window.top && window.top.document
+        ? window.top.document.querySelector("#bricks-builder-iframe")
+        : null);
     if (bricksCanvas && bricksCanvas.contentDocument) {
       add(bricksCanvas.contentDocument);
     }
-  }
-  catch (error) {
+  } catch (error) {
     /* Cross-origin iframe; ignore.*/
   }
 
   // Other editor preview iframes
   try {
-    const iframes = document.querySelectorAll('iframe');
+    const iframes = document.querySelectorAll("iframe");
     iframes.forEach(function (frame) {
       try {
-        if (frame.contentDocument && (
-          frame.id.indexOf('preview') !== -1
-          || frame.name.indexOf('preview') !== -1
-          || frame.className.indexOf('preview') !== -1
-        )) {
+        if (
+          frame.contentDocument &&
+          (frame.id.indexOf("preview") !== -1 ||
+            frame.name.indexOf("preview") !== -1 ||
+            frame.className.indexOf("preview") !== -1)
+        ) {
           add(frame.contentDocument);
         }
-      }
-      catch (e) {}
+      } catch (e) {}
     });
-  }
-  catch (error) {}
+  } catch (error) {}
 
   return documents;
 }
@@ -813,7 +944,9 @@ function reacg_reload_preview() {
     }
 
     // 2. Update data-gallery-timestamp on all gallery elements in this document
-    const previews = doc.querySelectorAll(".reacg-preview, .reacg-gallery, [id^='reacg-root']");
+    const previews = doc.querySelectorAll(
+      ".reacg-preview, .reacg-gallery, [id^='reacg-root']",
+    );
     previews.forEach(function (p) {
       p.setAttribute("data-gallery-timestamp", now);
     });
@@ -864,15 +997,15 @@ function reacg_save_thumbnail(galleryItemsContainer, id, thumbnail_id) {
     type: "POST",
     url: galleryItemsContainer.data("ajax-url"),
     data: {
-      "action": "reacg_save_thumbnail",
-      "id": id,
-      "thumbnail_id": thumbnail_id
+      action: "reacg_save_thumbnail",
+      id: id,
+      thumbnail_id: thumbnail_id,
     },
     complete: function (data) {
       reacg_toggle_loading();
 
       reacg_reload_preview();
-    }
+    },
   });
 }
 
@@ -888,12 +1021,12 @@ function reacg_remove_thumbnail(galleryItemsContainer, id) {
     type: "POST",
     url: galleryItemsContainer.data("ajax-url"),
     data: {
-      "action": "reacg_delete_thumbnail",
-      "id": id,
+      action: "reacg_delete_thumbnail",
+      id: id,
     },
     complete: function (data) {
       reacg_toggle_loading();
-    }
+    },
   });
 }
 
@@ -905,11 +1038,12 @@ function reacg_toggle_loading() {
   jQuery("#publishing-action #publish").toggleClass("disabled");
 }
 
-
 function reacg_ai_icon() {
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+  return (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
     '<path fill="#FFFFFF" d="m19.026,12v6c0,.552-.448,1-1,1s-1-.448-1-1v-6c0-.552.448-1,1-1s1,.448,1,1Zm-7.42-5.283l3.071,11.029c.175.63-.298,1.254-.953,1.254-.443,0-.831-.294-.952-.72l-.643-2.28h-5.206l-.643,2.28c-.12.426-.509.72-.952.72h0c-.654,0-1.128-.624-.953-1.254l3.091-11.108c.141-.608.541-1.12,1.098-1.405.568-.292,1.22-.31,1.839-.05.587.246,1.037.817,1.204,1.535Zm-.041,7.283l-1.929-6.835c-.029-.114-.191-.114-.219,0l-1.929,6.835h4.077Zm11.462-4c-.552,0-1,.448-1,1v8c0,1.654-1.346,3-3,3H5.026c-1.654,0-3-1.346-3-3V5c0-1.654,1.346-3,3-3h8c.552,0,1-.448,1-1S13.578,0,13.026,0H5.026C2.269,0,.026,2.243.026,5v14c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5v-8c0-.552-.448-1-1-1Zm-6.85-4.82l1.868.787.745,1.865c.161.404.552.668.987.668s.825-.265.987-.668l.741-1.854,1.854-.741c.404-.161.668-.552.668-.987s-.265-.825-.668-.987l-1.854-.741-.741-1.854C20.601.265,20.21,0,19.776,0s-.825.265-.987.668l-.737,1.843-1.84.697c-.406.154-.678.54-.686.974-.008.435.25.83.65.999Z"/>' +
-    '</svg>';
+    "</svg>"
+  );
 }
 
 function reacg_info_icon() {
@@ -917,13 +1051,13 @@ function reacg_info_icon() {
 }
 
 function reacg_escape_html(value) {
-  const stringValue = value == null ? '' : String(value);
+  const stringValue = value == null ? "" : String(value);
   const htmlEntityMap = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
   };
 
   return stringValue.replace(/[&<>"']/g, function (character) {
@@ -933,79 +1067,223 @@ function reacg_escape_html(value) {
 
 function reacg_get_attachment_field_value(attachment, fieldName) {
   const value = attachment.get(fieldName);
-  if ( value && typeof value === 'object' ) {
-    return value.raw || value.rendered || '';
+  if (value && typeof value === "object") {
+    return value.raw || value.rendered || "";
   }
 
-  return value || '';
+  return value || "";
 }
 
 function reacg_get_attachment_edit_link(attachmentId) {
   const id = parseInt(attachmentId, 10) || 0;
-  if ( !id ) {
-    return '#';
+  if (!id) {
+    return "#";
   }
 
-  if ( typeof ajaxurl === 'string' && ajaxurl.length ) {
-    return ajaxurl.replace('admin-ajax.php', 'post.php') + '?post=' + id + '&action=edit&image-editor';
+  if (typeof ajaxurl === "string" && ajaxurl.length) {
+    return (
+      ajaxurl.replace("admin-ajax.php", "post.php") +
+      "?post=" +
+      id +
+      "&action=edit&image-editor"
+    );
   }
 
-  return '/wp-admin/post.php?post=' + id + '&action=edit&image-editor';
+  return "/wp-admin/post.php?post=" + id + "&action=edit&image-editor";
+}
+
+function reacg_crop_position_picker() {
+  const positions = [
+    ["left top", reacg.crop_position_left_top],
+    ["center top", reacg.crop_position_center_top],
+    ["right top", reacg.crop_position_right_top],
+    ["left center", reacg.crop_position_left_center],
+    ["center center", reacg.crop_position_center_center],
+    ["right center", reacg.crop_position_right_center],
+    ["left bottom", reacg.crop_position_left_bottom],
+    ["center bottom", reacg.crop_position_center_bottom],
+    ["right bottom", reacg.crop_position_right_bottom],
+  ];
+
+  return (
+    '<div class="reacg-attachment-modal__field reacg-crop-position-picker" data-setting="crop_position">' +
+    '<div class="reacg-crop-position-picker__label-row"><label id="reacg-attachment-crop-position-label">' +
+    reacg_escape_html(reacg.attachment_crop_position) +
+    "</label>" +
+    '<button type="button" class="reacg-crop-position-picker__help dashicons dashicons-info-outline" aria-label="' +
+    reacg_escape_html(reacg.attachment_crop_position_description) +
+    '" data-tooltip="' +
+    reacg_escape_html(reacg.attachment_crop_position_description) +
+    '"><span class="screen-reader-text">' +
+    reacg_escape_html(reacg.attachment_crop_position_description) +
+    "</span></button></div>" +
+    '<div class="reacg-crop-position-picker__grid" role="radiogroup" aria-labelledby="reacg-attachment-crop-position-label">' +
+    positions
+      .map(function (position) {
+        const value = position[0];
+        const label = position[1];
+        return (
+          '<label class="reacg-crop-position-picker__option reacg-crop-position-picker__option--' +
+          value.replace(" ", "-") +
+          '" title="' +
+          reacg_escape_html(label) +
+          '">' +
+          '<input type="radio" name="reacg-attachment-crop-position" value="' +
+          value +
+          '" />' +
+          '<span aria-hidden="true"></span>' +
+          '<span class="screen-reader-text">' +
+          reacg_escape_html(label) +
+          "</span>" +
+          "</label>"
+        );
+      })
+      .join("") +
+    "</div>" +
+    "</div>"
+  );
 }
 
 function reacg_attachment_edit_modal(attachment, item) {
-  const sizes = attachment.get('sizes');
-  const attachmentType = reacg_get_attachment_field_value(attachment, 'type');
-  const mimeType = reacg_get_attachment_field_value(attachment, 'mime');
-  const isVideo = attachmentType === 'video' || (typeof mimeType === 'string' && mimeType.indexOf('video/') === 0);
-  const attachmentUrl = reacg_get_attachment_field_value(attachment, 'url');
-  const previewSize = sizes && sizes.thumbnail ? sizes.thumbnail : sizes && sizes.full ? sizes.full : null;
-  const previewUrl = previewSize && previewSize.url ? previewSize.url : attachmentUrl || reacg.no_image;
-  const previewMedia = isVideo && attachmentUrl
-    ? '<video controls preload="metadata" src="' + reacg_escape_html(attachmentUrl) + '"></video>'
-    : '<img src="' + reacg_escape_html(previewUrl) + '" alt="" />';
-  const filename = reacg_get_attachment_field_value(attachment, 'filename');
-  const dimensions = reacg_get_attachment_field_value(attachment, 'width') && reacg_get_attachment_field_value(attachment, 'height')
-    ? reacg_get_attachment_field_value(attachment, 'width') + ' x ' + reacg_get_attachment_field_value(attachment, 'height')
-    : '';
-  const fileSize = reacg_get_attachment_field_value(attachment, 'filesizeHumanReadable') || '';
-  const editLink = reacg_get_attachment_edit_link(attachment.get('id'));
+  const sizes = attachment.get("sizes");
+  const attachmentType = reacg_get_attachment_field_value(attachment, "type");
+  const mimeType = reacg_get_attachment_field_value(attachment, "mime");
+  const isVideo =
+    attachmentType === "video" ||
+    (typeof mimeType === "string" && mimeType.indexOf("video/") === 0);
+  const attachmentUrl = reacg_get_attachment_field_value(attachment, "url");
+  const previewSize =
+    sizes && sizes.thumbnail
+      ? sizes.thumbnail
+      : sizes && sizes.full
+        ? sizes.full
+        : null;
+  const previewUrl =
+    previewSize && previewSize.url
+      ? previewSize.url
+      : attachmentUrl || reacg.no_image;
+  const previewMedia =
+    isVideo && attachmentUrl
+      ? '<video controls preload="metadata" src="' +
+        reacg_escape_html(attachmentUrl) +
+        '"></video>'
+      : '<img src="' + reacg_escape_html(previewUrl) + '" alt="" />';
+  const filename = reacg_get_attachment_field_value(attachment, "filename");
+  const dimensions =
+    reacg_get_attachment_field_value(attachment, "width") &&
+    reacg_get_attachment_field_value(attachment, "height")
+      ? reacg_get_attachment_field_value(attachment, "width") +
+        " x " +
+        reacg_get_attachment_field_value(attachment, "height")
+      : "";
+  const fileSize =
+    reacg_get_attachment_field_value(attachment, "filesizeHumanReadable") || "";
+  const editLink = reacg_get_attachment_edit_link(attachment.get("id"));
 
-  return jQuery('' +
-    '<div class="reacg-modal reacg-attachment-modal" style="display:none;">' +
+  return jQuery(
+    "" +
+      '<div class="reacg-modal reacg-attachment-modal" style="display:none;">' +
       '<div class="reacg-modal-wrapper">' +
-        '<div class="reacg-modal-content">' +
-          '<div class="reacg-modal__header">' +
-            '<h1>' + reacg.edit + '</h1>' +
-            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
-          '</div>' +
-          '<div class="reacg-modal__body">' +
-            '<div class="reacg-modal__layout">' +
-              '<div class="reacg-modal__layout-content">' +
-                '<div class="reacg-attachment-modal__preview">' + previewMedia + '</div>' +
-                '<div class="reacg-attachment-modal__details">' +
-                  (filename ? '<p><strong>' + reacg_escape_html(reacg.attachment_filename) + ':</strong> ' + reacg_escape_html(filename) + '</p>' : '') +
-                  (dimensions ? '<p><strong>' + reacg_escape_html(reacg.attachment_dimensions) + ':</strong> ' + reacg_escape_html(dimensions) + 'px</p>' : '') +
-                  (fileSize ? '<p><strong>' + reacg_escape_html(reacg.attachment_file_size) + ':</strong> ' + reacg_escape_html(fileSize) + '</p>' : '') +
-                  '<p class="reacg-attachment-modal__edit-link"><a href="' + reacg_escape_html(editLink) + '" target="_blank" rel="noopener noreferrer">' + reacg.edit + '</a></p>' +
-                '</div>' +
-              '</div>' +
-              '<div class="reacg-modal__layout-content">' +
-                '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' + reacg_escape_html(reacg.attachment_title) + '</label><input type="text" id="reacg-attachment-title" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'title')) + '" /></div>' +
-                '<div class="reacg-attachment-modal__field" data-setting="caption"><label for="reacg-attachment-caption">' + reacg_escape_html(reacg.attachment_caption) + '</label><textarea id="reacg-attachment-caption" rows="3">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'caption')) + '</textarea></div>' +
-                '<div class="reacg-attachment-modal__field" data-setting="alt"><label for="reacg-attachment-alt">' + reacg_escape_html(reacg.attachment_alt_text) + '</label><input type="text" id="reacg-attachment-alt" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'alt')) + '" /></div>' +
-                '<div class="reacg-attachment-modal__field" data-setting="description"><label for="reacg-attachment-description">' + reacg_escape_html(reacg.attachment_description) + '</label><textarea id="reacg-attachment-description" rows="4">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'description')) + '</textarea></div>' +
-                '<div class="reacg-attachment-modal__field" data-setting="action_url"><label for="reacg-attachment-action-url">' + reacg_escape_html(reacg.attachment_action_url) + '</label><input type="url" id="reacg-attachment-action-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'action_url')) + '" placeholder="https://example.com" /></div>' +
-                '<div class="reacg-attachment-modal__field" data-setting="exif"><label for="reacg-attachment-exif">' + reacg_escape_html(reacg.attachment_metadata_exif) + '</label><textarea id="reacg-attachment-exif" rows="5">' + reacg_escape_html(reacg_get_attachment_field_value(attachment, 'exif')) + '</textarea></div>' +
-                '<div class="reacg-attachment-modal__field reacg-hidden" data-setting="url"><label for="reacg-attachment-url">' + reacg_escape_html(reacg.attachment_url) + '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' + reacg_escape_html(isVideo && item && item.length ? item.find(".reacg_item_image img").attr("src") : reacg_get_attachment_field_value(attachment, 'url')) + '" /></div>' +
-              '</div>' +
-            '</div>' +
-            '<div><p class="reacg-modal-error-note hidden"></p></div>' +
-          '</div>' +
-          '<div class="reacg-modal__footer"><div class="reacg-modal-buttons-wrapper"><span class="spinner"></span><button class="reacg-modal-button-save button button-primary button-large">' + reacg.update + '</button></div></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>');
+      '<div class="reacg-modal-content">' +
+      '<div class="reacg-modal__header">' +
+      "<h1>" +
+      reacg.edit +
+      "</h1>" +
+      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+      "</div>" +
+      '<div class="reacg-modal__body">' +
+      '<div class="reacg-modal__layout">' +
+      '<div class="reacg-modal__layout-content">' +
+      '<div class="reacg-attachment-modal__preview">' +
+      previewMedia +
+      "</div>" +
+      '<div class="reacg-attachment-modal__details">' +
+      (filename
+        ? "<p><strong>" +
+          reacg_escape_html(reacg.attachment_filename) +
+          ":</strong> " +
+          reacg_escape_html(filename) +
+          "</p>"
+        : "") +
+      (dimensions
+        ? "<p><strong>" +
+          reacg_escape_html(reacg.attachment_dimensions) +
+          ":</strong> " +
+          reacg_escape_html(dimensions) +
+          "px</p>"
+        : "") +
+      (fileSize
+        ? "<p><strong>" +
+          reacg_escape_html(reacg.attachment_file_size) +
+          ":</strong> " +
+          reacg_escape_html(fileSize) +
+          "</p>"
+        : "") +
+      '<p class="reacg-attachment-modal__edit-link"><a href="' +
+      reacg_escape_html(editLink) +
+      '" target="_blank" rel="noopener noreferrer">' +
+      reacg.edit +
+      "</a></p>" +
+      "</div>" +
+      reacg_crop_position_picker() +
+      "</div>" +
+      '<div class="reacg-modal__layout-content">' +
+      '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' +
+      reacg_escape_html(reacg.attachment_title) +
+      '</label><input type="text" id="reacg-attachment-title" class="reacg-attachment-modal__input" value="' +
+      reacg_escape_html(reacg_get_attachment_field_value(attachment, "title")) +
+      '" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="caption"><label for="reacg-attachment-caption">' +
+      reacg_escape_html(reacg.attachment_caption) +
+      '</label><textarea id="reacg-attachment-caption" rows="3">' +
+      reacg_escape_html(
+        reacg_get_attachment_field_value(attachment, "caption"),
+      ) +
+      "</textarea></div>" +
+      '<div class="reacg-attachment-modal__field" data-setting="alt"><label for="reacg-attachment-alt">' +
+      reacg_escape_html(reacg.attachment_alt_text) +
+      '</label><input type="text" id="reacg-attachment-alt" class="reacg-attachment-modal__input" value="' +
+      reacg_escape_html(reacg_get_attachment_field_value(attachment, "alt")) +
+      '" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="description"><label for="reacg-attachment-description">' +
+      reacg_escape_html(reacg.attachment_description) +
+      '</label><textarea id="reacg-attachment-description" rows="4">' +
+      reacg_escape_html(
+        reacg_get_attachment_field_value(attachment, "description"),
+      ) +
+      "</textarea></div>" +
+      '<div class="reacg-attachment-modal__field" data-setting="action_url"><label for="reacg-attachment-action-url">' +
+      reacg_escape_html(reacg.attachment_action_url) +
+      '</label><input type="url" id="reacg-attachment-action-url" class="reacg-attachment-modal__input" value="' +
+      reacg_escape_html(
+        reacg_get_attachment_field_value(attachment, "action_url"),
+      ) +
+      '" placeholder="https://example.com" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="exif"><label for="reacg-attachment-exif">' +
+      reacg_escape_html(reacg.attachment_metadata_exif) +
+      '</label><textarea id="reacg-attachment-exif" rows="5">' +
+      reacg_escape_html(reacg_get_attachment_field_value(attachment, "exif")) +
+      "</textarea></div>" +
+      '<div class="reacg-attachment-modal__field reacg-hidden" data-setting="url"><label for="reacg-attachment-url">' +
+      reacg_escape_html(reacg.attachment_url) +
+      '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' +
+      reacg_escape_html(
+        isVideo && item && item.length
+          ? item.find(".reacg_item_image img").attr("src")
+          : reacg_get_attachment_field_value(attachment, "url"),
+      ) +
+      '" /></div>' +
+      "</div>" +
+      "</div>" +
+      '<div><p class="reacg-modal-error-note hidden"></p></div>' +
+      "</div>" +
+      '<div class="reacg-modal__footer"><div class="reacg-modal-buttons-wrapper"><span class="spinner"></span><button class="reacg-modal-button-save button button-primary button-large">' +
+      reacg.update +
+      "</button></div></div>" +
+      "</div>" +
+      "</div>" +
+      "</div>",
+  );
 }
 
 function reacg_get_top_document() {
@@ -1015,7 +1293,11 @@ function reacg_get_top_document() {
     }
   } catch (e) {}
   try {
-    if (window.parent && window.parent.document && window.parent.document.body) {
+    if (
+      window.parent &&
+      window.parent.document &&
+      window.parent.document.body
+    ) {
       return window.parent.document;
     }
   } catch (e) {}
@@ -1027,107 +1309,146 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
   const targetDoc = reacg_get_top_document();
   const targetWin = targetDoc.defaultView || window;
   (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
-  modal.css('display', 'flex').show();
-  reacg_add_ai_button_to(modal.find('.reacg-modal__layout-content'));
+  modal.css("display", "flex").show();
+  reacg_add_ai_button_to(modal.find(".reacg-modal__layout-content"));
 
   const closeModal = function () {
     modal.remove();
   };
 
-  modal.find('.reacg-modal-close').on('click', closeModal);
-  modal.on('click', function (e) {
-    if ( e.target === this ) {
+  modal.find(".reacg-modal-close").on("click", closeModal);
+  modal.on("click", function (e) {
+    if (e.target === this) {
       closeModal();
     }
   });
-  modal.find('.reacg-modal-wrapper').on('click', function (e) {
+  modal.find(".reacg-modal-wrapper").on("click", function (e) {
     e.stopPropagation();
   });
 
-  modal.find('.reacg-modal-button-save').on('click', function () {
+  modal.find(".reacg-modal-button-save").on("click", function () {
     const saveButton = jQuery(this);
-    const spinner = saveButton.closest('.reacg-modal-buttons-wrapper').find('> .spinner').first();
-    const errorNoteCont = modal.find('.reacg-modal-error-note');
-    const attachmentId = attachment.get('id');
+    const spinner = saveButton
+      .closest(".reacg-modal-buttons-wrapper")
+      .find("> .spinner")
+      .first();
+    const errorNoteCont = modal.find(".reacg-modal-error-note");
+    const attachmentId = attachment.get("id");
     const coreChanges = {
-      title: modal.find('#reacg-attachment-title').val(),
-      caption: modal.find('#reacg-attachment-caption').val(),
-      alt: modal.find('#reacg-attachment-alt').val(),
-      description: modal.find('#reacg-attachment-description').val(),
+      title: modal.find("#reacg-attachment-title").val(),
+      caption: modal.find("#reacg-attachment-caption").val(),
+      alt: modal.find("#reacg-attachment-alt").val(),
+      description: modal.find("#reacg-attachment-description").val(),
     };
     const compatChanges = {
-      attachments: {}
+      attachments: {},
     };
     compatChanges.attachments[attachmentId] = {
-      action_url: modal.find('#reacg-attachment-action-url').val(),
-      exif: modal.find('#reacg-attachment-exif').val(),
+      action_url: modal.find("#reacg-attachment-action-url").val(),
+      exif: modal.find("#reacg-attachment-exif").val(),
+      crop_position: modal
+        .find('input[name="reacg-attachment-crop-position"]:checked')
+        .val(),
     };
 
     const normalizeValue = function (value) {
-      return value == null ? '' : String(value);
+      return value == null ? "" : String(value);
     };
-    const hasCoreChanges = normalizeValue(coreChanges.title) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'title'))
-      || normalizeValue(coreChanges.caption) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'caption'))
-      || normalizeValue(coreChanges.alt) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'alt'))
-      || normalizeValue(coreChanges.description) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'description'));
-    const hasCompatChanges = normalizeValue(compatChanges.attachments[attachmentId].action_url) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'action_url'))
-      || normalizeValue(compatChanges.attachments[attachmentId].exif) !== normalizeValue(reacg_get_attachment_field_value(attachment, 'exif'));
+    const hasCoreChanges =
+      normalizeValue(coreChanges.title) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "title")) ||
+      normalizeValue(coreChanges.caption) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "caption"),
+        ) ||
+      normalizeValue(coreChanges.alt) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
+      normalizeValue(coreChanges.description) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "description"),
+        );
+    const hasCompatChanges =
+      normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "action_url"),
+        ) ||
+      normalizeValue(compatChanges.attachments[attachmentId].exif) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "exif")) ||
+      normalizeValue(compatChanges.attachments[attachmentId].crop_position) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "crop_position") ||
+            "center center",
+        );
 
-    if ( !hasCoreChanges && !hasCompatChanges ) {
+    if (!hasCoreChanges && !hasCompatChanges) {
       closeModal();
-      button.removeAttr('disabled');
+      button.removeAttr("disabled");
       return;
     }
 
-    errorNoteCont.addClass('hidden').empty();
-    saveButton.attr('disabled', true);
-    spinner.addClass('is-active');
+    errorNoteCont.addClass("hidden").empty();
+    saveButton.attr("disabled", true);
+    spinner.addClass("is-active");
 
     const saveRequests = [];
-    if ( hasCoreChanges ) {
+    if (hasCoreChanges) {
       saveRequests.push(attachment.save(coreChanges));
     }
-    if ( hasCompatChanges ) {
+    if (hasCompatChanges) {
       saveRequests.push(attachment.saveCompat(compatChanges));
     }
 
-    const saveRequest = saveRequests.length === 1
-      ? saveRequests[0]
-      : jQuery.when.apply(jQuery, saveRequests);
+    const saveRequest =
+      saveRequests.length === 1
+        ? saveRequests[0]
+        : jQuery.when.apply(jQuery, saveRequests);
 
-    saveRequest.done(function () {
-      if (item && item.length) {
-        const newTitle = modal.find('#reacg-attachment-title').val();
-        item.find('.reacg_item_image').attr('title', newTitle);
-      }
-      reacg_reload_preview();
-      closeModal();
-    }).fail(function (response) {
-      const message = response && response.responseJSON && response.responseJSON.data && response.responseJSON.data.message
-        ? response.responseJSON.data.message
-        : reacg.save_failed;
-      errorNoteCont.removeClass('hidden').html(message);
-    }).always(function () {
-      spinner.removeClass('is-active');
-      saveButton.removeAttr('disabled');
-      button.removeAttr('disabled');
-    });
+    saveRequest
+      .done(function () {
+        if (item && item.length) {
+          const newTitle = modal.find("#reacg-attachment-title").val();
+          item.find(".reacg_item_image").attr("title", newTitle);
+        }
+        reacg_reload_preview();
+        closeModal();
+      })
+      .fail(function (response) {
+        const message =
+          response &&
+          response.responseJSON &&
+          response.responseJSON.data &&
+          response.responseJSON.data.message
+            ? response.responseJSON.data.message
+            : reacg.save_failed;
+        errorNoteCont.removeClass("hidden").html(message);
+      })
+      .always(function () {
+        spinner.removeClass("is-active");
+        saveButton.removeAttr("disabled");
+        button.removeAttr("disabled");
+      });
   });
 
   return modal;
 }
 
 function reacg_ai_button() {
-  return jQuery('<button class="reacg-ai-button" title="' + reacg.generate + '">' + reacg_ai_icon() + '</button>');
+  return jQuery(
+    '<button class="reacg-ai-button" title="' +
+      reacg.generate +
+      '">' +
+      reacg_ai_icon() +
+      "</button>",
+  );
 }
 
 function reacg_open_ai_generate_content_modal(images, options) {
-  const imagesData = images && typeof images === 'object' ? images : {};
+  const imagesData = images && typeof images === "object" ? images : {};
   const chunkObject = function (source, size) {
     const entries = Object.entries(source || {});
     const chunks = [];
 
-    for ( let i = 0; i < entries.length; i += size ) {
+    for (let i = 0; i < entries.length; i += size) {
       chunks.push(Object.fromEntries(entries.slice(i, i + size)));
     }
 
@@ -1139,67 +1460,82 @@ function reacg_open_ai_generate_content_modal(images, options) {
     const deferred = jQuery.Deferred();
     const responses = [];
     const errors = [];
-    const notifyProgress = typeof onProgress === 'function' ? onProgress : function () {};
+    const notifyProgress =
+      typeof onProgress === "function" ? onProgress : function () {};
 
     const readPayloadCode = function (payload) {
       const source = payload || {};
 
-      if ( source.responseJSON ) {
-        if ( source.responseJSON.code ) {
+      if (source.responseJSON) {
+        if (source.responseJSON.code) {
           return String(source.responseJSON.code);
         }
-        if ( source.responseJSON.data && source.responseJSON.data.code ) {
+        if (source.responseJSON.data && source.responseJSON.data.code) {
           return String(source.responseJSON.data.code);
         }
-        if ( source.responseJSON.error_data && typeof source.responseJSON.error_data === 'object' ) {
+        if (
+          source.responseJSON.error_data &&
+          typeof source.responseJSON.error_data === "object"
+        ) {
           const errorDataKeys = Object.keys(source.responseJSON.error_data);
-          if ( errorDataKeys.length ) {
+          if (errorDataKeys.length) {
             return String(errorDataKeys[0]);
           }
         }
-        if ( source.responseJSON.errors && typeof source.responseJSON.errors === 'object' ) {
+        if (
+          source.responseJSON.errors &&
+          typeof source.responseJSON.errors === "object"
+        ) {
           const errorKeys = Object.keys(source.responseJSON.errors);
-          if ( errorKeys.length ) {
+          if (errorKeys.length) {
             return String(errorKeys[0]);
           }
         }
       }
 
-      if ( source.responseText && typeof source.responseText === 'string' ) {
+      if (source.responseText && typeof source.responseText === "string") {
         try {
           const parsed = JSON.parse(source.responseText);
-          if ( parsed && parsed.code ) {
+          if (parsed && parsed.code) {
             return String(parsed.code);
           }
-          if ( parsed && parsed.data && parsed.data.code ) {
+          if (parsed && parsed.data && parsed.data.code) {
             return String(parsed.data.code);
           }
-          if ( parsed && parsed.error_data && typeof parsed.error_data === 'object' ) {
+          if (
+            parsed &&
+            parsed.error_data &&
+            typeof parsed.error_data === "object"
+          ) {
             const errorDataKeys = Object.keys(parsed.error_data);
-            if ( errorDataKeys.length ) {
+            if (errorDataKeys.length) {
               return String(errorDataKeys[0]);
             }
           }
-          if ( parsed && parsed.errors && typeof parsed.errors === 'object' ) {
+          if (parsed && parsed.errors && typeof parsed.errors === "object") {
             const errorKeys = Object.keys(parsed.errors);
-            if ( errorKeys.length ) {
+            if (errorKeys.length) {
               return String(errorKeys[0]);
             }
           }
-        }
-        catch (ignored) {}
+        } catch (ignored) {}
       }
 
-      return '';
+      return "";
     };
 
     const isNothingToGeneratePayload = function (payload) {
-      return readPayloadCode(payload) === 'nothing_to_generate';
+      return readPayloadCode(payload) === "nothing_to_generate";
     };
 
-    if ( !imageEntries.length ) {
+    if (!imageEntries.length) {
       notifyProgress(0, 0);
-      deferred.resolve({ responses: [], errors: [], images: imagesData, closeOnStatus200: false });
+      deferred.resolve({
+        responses: [],
+        errors: [],
+        images: imagesData,
+        closeOnStatus200: false,
+      });
       return deferred.promise();
     }
 
@@ -1207,40 +1543,48 @@ function reacg_open_ai_generate_content_modal(images, options) {
 
     const normalizeGeneratedResponse = function (response) {
       let responseObject = response;
-      if ( typeof responseObject === 'string' ) {
+      if (typeof responseObject === "string") {
         try {
           responseObject = JSON.parse(responseObject);
-        }
-        catch (e) {
+        } catch (e) {
           responseObject = {};
         }
       }
 
-      if ( responseObject && responseObject.responseJSON ) {
+      if (responseObject && responseObject.responseJSON) {
         responseObject = responseObject.responseJSON;
       }
 
-      const source = responseObject && typeof responseObject === 'object'
-        ? (responseObject.data && typeof responseObject.data === 'object' ? responseObject.data : responseObject)
-        : {};
+      const source =
+        responseObject && typeof responseObject === "object"
+          ? responseObject.data && typeof responseObject.data === "object"
+            ? responseObject.data
+            : responseObject
+          : {};
 
       const normalized = {};
-      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
-        if ( Object.prototype.hasOwnProperty.call(source, fieldName) ) {
-          normalized[fieldName] = source[fieldName] == null ? '' : String(source[fieldName]);
+      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+        if (Object.prototype.hasOwnProperty.call(source, fieldName)) {
+          normalized[fieldName] =
+            source[fieldName] == null ? "" : String(source[fieldName]);
         }
       });
 
       return normalized;
     };
 
-    const applyGeneratedDataToImage = function (imageId, imageData, generatedFields) {
-      const baseImage = imageData && typeof imageData === 'object' ? imageData : {};
+    const applyGeneratedDataToImage = function (
+      imageId,
+      imageData,
+      generatedFields,
+    ) {
+      const baseImage =
+        imageData && typeof imageData === "object" ? imageData : {};
       const nextImage = jQuery.extend({}, baseImage);
       let changed = false;
 
-      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
-        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+        if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
           return;
         }
 
@@ -1248,56 +1592,63 @@ function reacg_open_ai_generate_content_modal(images, options) {
         changed = true;
       });
 
-      if ( changed ) {
+      if (changed) {
         imagesData[imageId] = nextImage;
       }
 
       return nextImage;
     };
 
-    const saveGeneratedDataToAttachment = function (imageId, previousImageData, generatedFields) {
+    const saveGeneratedDataToAttachment = function (
+      imageId,
+      previousImageData,
+      generatedFields,
+    ) {
       const deferredSave = jQuery.Deferred();
       const normalizedImageId = parseInt(imageId, 10);
       const saveData = {};
       const normalizeValue = function (value) {
-        return value == null ? '' : String(value);
+        return value == null ? "" : String(value);
       };
 
-      ['title', 'alt', 'caption', 'description'].forEach(function (fieldName) {
-        if ( !Object.prototype.hasOwnProperty.call(generatedFields, fieldName) ) {
+      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+        if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
           return;
         }
 
-        const previousValue = normalizeValue(previousImageData && previousImageData[fieldName]);
+        const previousValue = normalizeValue(
+          previousImageData && previousImageData[fieldName],
+        );
         const nextValue = normalizeValue(generatedFields[fieldName]);
-        if ( previousValue !== nextValue ) {
+        if (previousValue !== nextValue) {
           saveData[fieldName] = nextValue;
         }
       });
 
-      if ( !Object.keys(saveData).length ) {
+      if (!Object.keys(saveData).length) {
         deferredSave.resolve();
         return deferredSave.promise();
       }
 
-      if ( !normalizedImageId ) {
+      if (!normalizedImageId) {
         deferredSave.resolve();
         return deferredSave.promise();
       }
 
-      if ( !wp || !wp.media || typeof wp.media.attachment !== 'function' ) {
+      if (!wp || !wp.media || typeof wp.media.attachment !== "function") {
         deferredSave.resolve();
         return deferredSave.promise();
       }
 
       const attachment = wp.media.attachment(normalizedImageId);
-      if ( !attachment || typeof attachment.save !== 'function' ) {
+      if (!attachment || typeof attachment.save !== "function") {
         deferredSave.resolve();
         return deferredSave.promise();
       }
 
       const persist = function () {
-        attachment.save(saveData)
+        attachment
+          .save(saveData)
           .done(function (response) {
             deferredSave.resolve(response);
           })
@@ -1306,16 +1657,16 @@ function reacg_open_ai_generate_content_modal(images, options) {
           });
       };
 
-      if ( typeof attachment.fetch === 'function' ) {
-        attachment.fetch()
+      if (typeof attachment.fetch === "function") {
+        attachment
+          .fetch()
           .done(function () {
             persist();
           })
           .fail(function (xhr) {
             deferredSave.reject(xhr);
           });
-      }
-      else {
+      } else {
         persist();
       }
 
@@ -1323,10 +1674,14 @@ function reacg_open_ai_generate_content_modal(images, options) {
     };
 
     const runChunk = function (index) {
-      if ( index >= imageEntries.length ) {
+      if (index >= imageEntries.length) {
         notifyProgress(imageEntries.length, imageEntries.length);
-        if ( errors.length ) {
-          deferred.reject({ responses: responses, errors: errors, images: imagesData });
+        if (errors.length) {
+          deferred.reject({
+            responses: responses,
+            errors: errors,
+            images: imagesData,
+          });
           return;
         }
 
@@ -1347,73 +1702,110 @@ function reacg_open_ai_generate_content_modal(images, options) {
       const imageEntry = imageEntries[index];
       const imageId = imageEntry[0];
       const imageData = imageEntry[1];
-      const singleImageData = imageData && typeof imageData === 'object' ? imageData : {};
+      const singleImageData =
+        imageData && typeof imageData === "object" ? imageData : {};
 
       notifyProgress(index + 1, imageEntries.length);
 
-      jQuery.ajax({
-        type: 'GET',
-        url: reacg.core_rest_url_v2 + 'ai',
-        contentType: 'application/json',
-        data: {
-          image_id: imageId,
-          image_url: singleImageData.url || '',
-          title: singleImageData.title || '',
-          alt: singleImageData.alt || '',
-          caption: singleImageData.caption || '',
-          description: singleImageData.description || '',
-          website_language: reacg.website_language || '',
-          user_language: reacg.user_language || document.documentElement.lang || '',
-          fields: JSON.stringify(state.fields),
-          overwrite_mode: state.overwriteMode,
-          action: 'get_content',
-        },
-      }).done(function (response, textStatus, xhr) {
-        const statusCode = xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 0;
-        const previousImageData = jQuery.extend({}, singleImageData);
-        const generatedFields = normalizeGeneratedResponse(response);
-        const updatedImageData = applyGeneratedDataToImage(imageId, singleImageData, generatedFields);
+      jQuery
+        .ajax({
+          type: "GET",
+          url: reacg.core_rest_url_v2 + "ai",
+          contentType: "application/json",
+          data: {
+            image_id: imageId,
+            image_url: singleImageData.url || "",
+            title: singleImageData.title || "",
+            alt: singleImageData.alt || "",
+            caption: singleImageData.caption || "",
+            description: singleImageData.description || "",
+            website_language: reacg.website_language || "",
+            user_language:
+              reacg.user_language || document.documentElement.lang || "",
+            fields: JSON.stringify(state.fields),
+            overwrite_mode: state.overwriteMode,
+            action: "get_content",
+          },
+        })
+        .done(function (response, textStatus, xhr) {
+          const statusCode =
+            xhr && typeof xhr.status !== "undefined"
+              ? parseInt(xhr.status, 10)
+              : 0;
+          const previousImageData = jQuery.extend({}, singleImageData);
+          const generatedFields = normalizeGeneratedResponse(response);
+          const updatedImageData = applyGeneratedDataToImage(
+            imageId,
+            singleImageData,
+            generatedFields,
+          );
 
-        saveGeneratedDataToAttachment(imageId, previousImageData, generatedFields)
-          .done(function (saveResponse) {
+          saveGeneratedDataToAttachment(
+            imageId,
+            previousImageData,
+            generatedFields,
+          )
+            .done(function (saveResponse) {
+              responses.push({
+                index: index,
+                imageId: imageId,
+                statusCode: statusCode,
+                response: response,
+                saveResponse: saveResponse,
+                generated: generatedFields,
+                image: updatedImageData,
+              });
+            })
+            .fail(function (xhr) {
+              errors.push({
+                index: index,
+                imageId: imageId,
+                stage: "save",
+                xhr: xhr,
+              });
+            })
+            .always(function () {
+              if (errors.length) {
+                deferred.reject({
+                  responses: responses,
+                  errors: errors,
+                  images: imagesData,
+                });
+                return;
+              }
+
+              runChunk(index + 1);
+            });
+        })
+        .fail(function (xhr) {
+          if (isNothingToGeneratePayload(xhr)) {
             responses.push({
               index: index,
               imageId: imageId,
-              statusCode: statusCode,
-              response: response,
-              saveResponse: saveResponse,
-              generated: generatedFields,
-              image: updatedImageData,
+              statusCode:
+                xhr && typeof xhr.status !== "undefined"
+                  ? parseInt(xhr.status, 10)
+                  : 400,
+              response: xhr,
+              skipped: true,
+              image: singleImageData,
             });
-          })
-          .fail(function (xhr) {
-            errors.push({ index: index, imageId: imageId, stage: 'save', xhr: xhr });
-          })
-          .always(function () {
-            if ( errors.length ) {
-              deferred.reject({ responses: responses, errors: errors, images: imagesData });
-              return;
-            }
-
             runChunk(index + 1);
-          });
-      }).fail(function (xhr) {
-        if ( isNothingToGeneratePayload(xhr) ) {
-          responses.push({
+            return;
+          }
+
+          errors.push({
             index: index,
             imageId: imageId,
-            statusCode: xhr && typeof xhr.status !== 'undefined' ? parseInt(xhr.status, 10) : 400,
-            response: xhr,
-            skipped: true,
-            image: singleImageData,
+            stage: "generate",
+            xhr: xhr,
           });
-          runChunk(index + 1);
-          return;
-        }
-
-        errors.push({ index: index, imageId: imageId, stage: 'generate', xhr: xhr });
-        deferred.reject({ responses: responses, errors: errors, images: imagesData });
-      });
+          deferred.reject({
+            responses: responses,
+            errors: errors,
+            images: imagesData,
+          });
+        });
     };
 
     runChunk(0);
@@ -1421,69 +1813,113 @@ function reacg_open_ai_generate_content_modal(images, options) {
     return deferred.promise();
   };
 
-  const settings = jQuery.extend(true, {
-    chunkSize: 5,
-    fields: {
-      title: true,
-      alt: false,
-      caption: false,
-      description: false,
+  const settings = jQuery.extend(
+    true,
+    {
+      chunkSize: 5,
+      fields: {
+        title: true,
+        alt: false,
+        caption: false,
+        description: false,
+      },
+      overwriteMode: "empty",
+      onGenerate: null,
     },
-    overwriteMode: 'empty',
-    onGenerate: null,
-  }, options || {});
+    options || {},
+  );
 
   const checkedAttr = function (value) {
-    return value ? ' checked="checked"' : '';
+    return value ? ' checked="checked"' : "";
   };
-  const selectedOverwrite = settings.overwriteMode === 'replace' ? 'replace' : 'empty';
+  const selectedOverwrite =
+    settings.overwriteMode === "replace" ? "replace" : "empty";
 
-  const modal = jQuery('' +
-    '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
+  const modal = jQuery(
+    "" +
+      '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
       '<div class="reacg-modal-wrapper">' +
-        '<div class="reacg-modal-content">' +
-          '<div class="reacg-modal__header">' +
-            '<h1>' + reacg_escape_html(reacg.ai_generate_content) + '</h1>' +
-            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
-          '</div>' +
-          '<div class="reacg-modal__body">' +
-            '<div class="reacg-modal__layout-content">' +
-              '<div><p class="reacg-modal-note">' + reacg_info_icon() + reacg_escape_html(reacg.content_generated_based_on_image) + '</p></div>' +
-              '<h3>' + reacg_escape_html(reacg.choose_what_to_generate) + '</h3>' +
-              '<div class="reacg-ai-generate-modal__fields">' +
-                '<label><input type="checkbox" name="title" value="1"' + checkedAttr(settings.fields.title) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_title) + '</span></label>' +
-                '<label><input type="checkbox" name="caption" value="1"' + checkedAttr(settings.fields.caption) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_caption) + '</span></label>' +
-                '<label><input type="checkbox" name="alt" value="1"' + checkedAttr(settings.fields.alt) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_alt_text) + '</span></label>' +
-                '<label><input type="checkbox" name="description" value="1"' + checkedAttr(settings.fields.description) + ' /><span class="reacg-ai-generate-modal__field-name">' + reacg_escape_html(reacg.attachment_description) + '</span></label>' +
-              '</div>' +
-              '<h3>' + reacg_escape_html(reacg.overwrite_existing) + '</h3>' +
-              '<div class="reacg-ai-generate-modal__overwrite">' +
-                '<label><input type="radio" name="reacg-overwrite" value="empty"' + checkedAttr(selectedOverwrite === 'empty') + ' /><span>' + reacg_escape_html(reacg.only_empty_fields) + '</span></label>' +
-                '<label><input type="radio" name="reacg-overwrite" value="replace"' + checkedAttr(selectedOverwrite === 'replace') + ' /><span>' + reacg_escape_html(reacg.replace_existing) + '</span></label>' +
-              '</div>' +
-              '<p class="reacg-ai-generate-modal__notice hidden"></p>' +
-            '</div>' +
-          '</div>' +
-          '<div class="reacg-modal__footer">' +
-            '<div class="reacg-modal-buttons-wrapper">' +
-              '<span class="reacg-ai-generate-modal__progress hidden"></span>' +
-              '<span class="spinner"></span>' +
-              '<button class="button button-primary button-large reacg-modal-button-generate">' + reacg_ai_icon() + reacg_escape_html(reacg.generate) + '</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>');
+      '<div class="reacg-modal-content">' +
+      '<div class="reacg-modal__header">' +
+      "<h1>" +
+      reacg_escape_html(reacg.ai_generate_content) +
+      "</h1>" +
+      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+      "</div>" +
+      '<div class="reacg-modal__body">' +
+      '<div class="reacg-modal__layout-content">' +
+      '<div><p class="reacg-modal-note">' +
+      reacg_info_icon() +
+      reacg_escape_html(reacg.content_generated_based_on_image) +
+      "</p></div>" +
+      "<h3>" +
+      reacg_escape_html(reacg.choose_what_to_generate) +
+      "</h3>" +
+      '<div class="reacg-ai-generate-modal__fields">' +
+      '<label><input type="checkbox" name="title" value="1"' +
+      checkedAttr(settings.fields.title) +
+      ' /><span class="reacg-ai-generate-modal__field-name">' +
+      reacg_escape_html(reacg.attachment_title) +
+      "</span></label>" +
+      '<label><input type="checkbox" name="caption" value="1"' +
+      checkedAttr(settings.fields.caption) +
+      ' /><span class="reacg-ai-generate-modal__field-name">' +
+      reacg_escape_html(reacg.attachment_caption) +
+      "</span></label>" +
+      '<label><input type="checkbox" name="alt" value="1"' +
+      checkedAttr(settings.fields.alt) +
+      ' /><span class="reacg-ai-generate-modal__field-name">' +
+      reacg_escape_html(reacg.attachment_alt_text) +
+      "</span></label>" +
+      '<label><input type="checkbox" name="description" value="1"' +
+      checkedAttr(settings.fields.description) +
+      ' /><span class="reacg-ai-generate-modal__field-name">' +
+      reacg_escape_html(reacg.attachment_description) +
+      "</span></label>" +
+      "</div>" +
+      "<h3>" +
+      reacg_escape_html(reacg.overwrite_existing) +
+      "</h3>" +
+      '<div class="reacg-ai-generate-modal__overwrite">' +
+      '<label><input type="radio" name="reacg-overwrite" value="empty"' +
+      checkedAttr(selectedOverwrite === "empty") +
+      " /><span>" +
+      reacg_escape_html(reacg.only_empty_fields) +
+      "</span></label>" +
+      '<label><input type="radio" name="reacg-overwrite" value="replace"' +
+      checkedAttr(selectedOverwrite === "replace") +
+      " /><span>" +
+      reacg_escape_html(reacg.replace_existing) +
+      "</span></label>" +
+      "</div>" +
+      '<p class="reacg-ai-generate-modal__notice hidden"></p>' +
+      "</div>" +
+      "</div>" +
+      '<div class="reacg-modal__footer">' +
+      '<div class="reacg-modal-buttons-wrapper">' +
+      '<span class="reacg-ai-generate-modal__progress hidden"></span>' +
+      '<span class="spinner"></span>' +
+      '<button class="button button-primary button-large reacg-modal-button-generate">' +
+      reacg_ai_icon() +
+      reacg_escape_html(reacg.generate) +
+      "</button>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</div>",
+  );
 
   const getState = function () {
     return {
       fields: {
-        title: modal.find('input[name="title"]').is(':checked'),
-        alt: modal.find('input[name="alt"]').is(':checked'),
-        caption: modal.find('input[name="caption"]').is(':checked'),
-        description: modal.find('input[name="description"]').is(':checked'),
+        title: modal.find('input[name="title"]').is(":checked"),
+        alt: modal.find('input[name="alt"]').is(":checked"),
+        caption: modal.find('input[name="caption"]').is(":checked"),
+        description: modal.find('input[name="description"]').is(":checked"),
       },
-      overwriteMode: modal.find('input[name="reacg-overwrite"]:checked').val() || 'empty',
+      overwriteMode:
+        modal.find('input[name="reacg-overwrite"]:checked').val() || "empty",
     };
   };
 
@@ -1494,86 +1930,103 @@ function reacg_open_ai_generate_content_modal(images, options) {
   const targetDoc = reacg_get_top_document();
   const targetWin = targetDoc.defaultView || window;
   (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
-  modal.css('display', 'flex').show();
+  modal.css("display", "flex").show();
 
-  modal.find('.reacg-modal-close').on('click', closeModal);
-  modal.on('click', function (e) {
-    if ( e.target === this ) {
+  modal.find(".reacg-modal-close").on("click", closeModal);
+  modal.on("click", function (e) {
+    if (e.target === this) {
       closeModal();
     }
   });
-  modal.find('.reacg-modal-wrapper').on('click', function (e) {
+  modal.find(".reacg-modal-wrapper").on("click", function (e) {
     e.stopPropagation();
   });
 
-  modal.find('.reacg-modal-button-generate').on('click', function (e) {
+  modal.find(".reacg-modal-button-generate").on("click", function (e) {
     e.preventDefault();
     const button = jQuery(this);
-    const spinner = modal.find('.reacg-modal__footer .spinner');
-    const progressNote = modal.find('.reacg-ai-generate-modal__progress');
-    const statusNote = modal.find('.reacg-ai-generate-modal__notice');
+    const spinner = modal.find(".reacg-modal__footer .spinner");
+    const progressNote = modal.find(".reacg-ai-generate-modal__progress");
+    const statusNote = modal.find(".reacg-ai-generate-modal__notice");
     const state = getState();
     const errorText = reacg_escape_html(reacg.no_fields_to_generate);
     let shouldCloseAfterSuccess = false;
 
     const updateProgress = function (current, total) {
-      if ( !total ) {
-        progressNote.addClass('hidden').text('');
+      if (!total) {
+        progressNote.addClass("hidden").text("");
         return;
       }
 
-      progressNote.text(reacg.processing + ' ' + current + '/' + total).removeClass('hidden');
+      progressNote
+        .text(reacg.processing + " " + current + "/" + total)
+        .removeClass("hidden");
     };
 
     const setStatus = function (type, message) {
-      const statusMessage = message == null ? '' : String(message);
-      const upgradeLinkMarkup = 'reacg-upgrade-link';
+      const statusMessage = message == null ? "" : String(message);
+      const upgradeLinkMarkup = "reacg-upgrade-link";
       const hasUpgradeLink = statusMessage.indexOf(upgradeLinkMarkup) !== -1;
 
       statusNote
-        .removeClass('hidden reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error reacg-ai-generate-modal__notice--animate')
-        .addClass(type === 'success' ? 'reacg-ai-generate-modal__notice--success' : 'reacg-ai-generate-modal__notice--error');
+        .removeClass(
+          "hidden reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error reacg-ai-generate-modal__notice--animate",
+        )
+        .addClass(
+          type === "success"
+            ? "reacg-ai-generate-modal__notice--success"
+            : "reacg-ai-generate-modal__notice--error",
+        );
 
-      if ( hasUpgradeLink ) {
+      if (hasUpgradeLink) {
         statusNote.html(statusMessage);
-        statusNote.find('.reacg-upgrade-link').off('click').on('click', function (event) {
-          event.preventDefault();
-          reacg_open_free_trial_offer_dialog({utm_medium: 'ai'});
-        });
-      }
-      else {
+        statusNote
+          .find(".reacg-upgrade-link")
+          .off("click")
+          .on("click", function (event) {
+            event.preventDefault();
+            reacg_open_free_trial_offer_dialog({ utm_medium: "ai" });
+          });
+      } else {
         statusNote.text(statusMessage);
       }
 
-      if ( statusNote.length ) {
+      if (statusNote.length) {
         const statusNode = statusNote.get(0);
         /* Force reflow, then add class on next frame to ensure animation visibly plays. */
         void statusNode.offsetWidth;
         window.requestAnimationFrame(function () {
-          statusNote.addClass('reacg-ai-generate-modal__notice--animate');
+          statusNote.addClass("reacg-ai-generate-modal__notice--animate");
         });
       }
 
-      const wrapper = modal.find('.reacg-modal-wrapper').first();
-      if ( wrapper.length && statusNote.length ) {
+      const wrapper = modal.find(".reacg-modal-wrapper").first();
+      if (wrapper.length && statusNote.length) {
         const wrapperNode = wrapper.get(0);
         const statusNode = statusNote.get(0);
         const wrapperTop = wrapper.offset().top;
         const statusTop = statusNote.offset().top;
-        const targetScrollTop = wrapper.scrollTop() + (statusTop - wrapperTop) - 24;
+        const targetScrollTop =
+          wrapper.scrollTop() + (statusTop - wrapperTop) - 24;
 
-        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+        if (wrapperNode && typeof wrapperNode.scrollTo === "function") {
           wrapperNode.scrollTo({
             top: Math.max(0, targetScrollTop),
-            behavior: 'smooth',
+            behavior: "smooth",
           });
+        } else {
+          wrapper
+            .stop(true)
+            .animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
         }
-        else {
-          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
-        }
-      }
-      else if ( statusNote.length && statusNote.get(0) && typeof statusNote.get(0).scrollIntoView === 'function' ) {
-        statusNote.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (
+        statusNote.length &&
+        statusNote.get(0) &&
+        typeof statusNote.get(0).scrollIntoView === "function"
+      ) {
+        statusNote
+          .get(0)
+          .scrollIntoView({ behavior: "smooth", block: "center" });
       }
     };
 
@@ -1581,51 +2034,52 @@ function reacg_open_ai_generate_content_modal(images, options) {
       const fallback = fallbackMessage || errorText;
       const source = payload || {};
 
-      if ( source.responseJSON ) {
-        if ( source.responseJSON.data && source.responseJSON.data.message ) {
+      if (source.responseJSON) {
+        if (source.responseJSON.data && source.responseJSON.data.message) {
           return source.responseJSON.data.message;
         }
-        if ( source.responseJSON.errors && source.responseJSON.errors.message ) {
+        if (source.responseJSON.errors && source.responseJSON.errors.message) {
           return source.responseJSON.errors.message;
         }
-        if ( source.responseJSON.message ) {
+        if (source.responseJSON.message) {
           return source.responseJSON.message;
         }
       }
 
-      if ( source.data && source.data.message ) {
+      if (source.data && source.data.message) {
         return source.data.message;
       }
-      if ( source.errors && source.errors.message ) {
+      if (source.errors && source.errors.message) {
         return source.errors.message;
       }
-      if ( source.message ) {
+      if (source.message) {
         return source.message;
       }
 
-      if ( source.responseText && typeof source.responseText === 'string' ) {
+      if (source.responseText && typeof source.responseText === "string") {
         try {
           const parsed = JSON.parse(source.responseText);
-          if ( parsed && parsed.data && parsed.data.message ) {
+          if (parsed && parsed.data && parsed.data.message) {
             return parsed.data.message;
           }
-          if ( parsed && parsed.errors && parsed.errors.message ) {
+          if (parsed && parsed.errors && parsed.errors.message) {
             return parsed.errors.message;
           }
-          if ( parsed && parsed.message ) {
+          if (parsed && parsed.message) {
             return parsed.message;
           }
-        }
-        catch (ignored) {}
+        } catch (ignored) {}
       }
 
       return fallback;
     };
 
     statusNote
-      .addClass('hidden')
-      .removeClass('reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error')
-      .text('');
+      .addClass("hidden")
+      .removeClass(
+        "reacg-ai-generate-modal__notice--success reacg-ai-generate-modal__notice--error",
+      )
+      .text("");
 
     const defaultGenerateHandler = function (currentState) {
       const parsedChunkSize = parseInt(settings.chunkSize, 10);
@@ -1633,57 +2087,79 @@ function reacg_open_ai_generate_content_modal(images, options) {
       return runBulkGenerateInChunks(currentState, chunkSize, updateProgress);
     };
 
-    let result = typeof settings.onGenerate === 'function'
-      ? settings.onGenerate(state, modal)
-      : defaultGenerateHandler(state);
+    let result =
+      typeof settings.onGenerate === "function"
+        ? settings.onGenerate(state, modal)
+        : defaultGenerateHandler(state);
 
-    if ( result === false ) {
+    if (result === false) {
       return;
     }
 
-    if ( !result || typeof result.then !== 'function' ) {
+    if (!result || typeof result.then !== "function") {
       result = defaultGenerateHandler(state);
     }
 
-    if ( result && typeof result.then === 'function' ) {
-      button.attr('disabled', true);
-      spinner.addClass('is-active');
+    if (result && typeof result.then === "function") {
+      button.attr("disabled", true);
+      spinner.addClass("is-active");
       result.done(function (resultData) {
         const canClose = !!(resultData && resultData.closeOnStatus200);
-        if ( canClose ) {
+        if (canClose) {
           shouldCloseAfterSuccess = true;
-          setStatus('success', reacg_escape_html(reacg.content_generated_successfully));
+          setStatus(
+            "success",
+            reacg_escape_html(reacg.content_generated_successfully),
+          );
           reacg_reload_preview();
           window.setTimeout(function () {
             closeModal();
           }, 3000);
           return;
         }
-        const firstResponse = resultData && resultData.responses && resultData.responses.length
-          ? resultData.responses[0].response
-          : null;
-        const responseErrorMessage = readErrorMessageFromResponse(firstResponse, errorText);
-        setStatus('error', responseErrorMessage);
+        const firstResponse =
+          resultData && resultData.responses && resultData.responses.length
+            ? resultData.responses[0].response
+            : null;
+        const responseErrorMessage = readErrorMessageFromResponse(
+          firstResponse,
+          errorText,
+        );
+        setStatus("error", responseErrorMessage);
       });
       result.fail(function (errorData) {
-        const firstError = errorData && errorData.errors && errorData.errors.length ? errorData.errors[0] : null;
+        const firstError =
+          errorData && errorData.errors && errorData.errors.length
+            ? errorData.errors[0]
+            : null;
         const xhr = firstError && firstError.xhr ? firstError.xhr : null;
-        let message = readErrorMessageFromResponse(xhr || firstError, errorText);
+        let message = readErrorMessageFromResponse(
+          xhr || firstError,
+          errorText,
+        );
 
-        const successCount = errorData && errorData.responses && errorData.responses.length
-          ? errorData.responses.length
-          : 0;
-        const hasUpgradeLink = String(message || '').indexOf('reacg-upgrade-link') !== -1;
-        if ( hasUpgradeLink && successCount > 0 ) {
-          message = 'Generated content for ' + successCount + ' image' + (successCount === 1 ? '' : 's') + '. ' + message;
+        const successCount =
+          errorData && errorData.responses && errorData.responses.length
+            ? errorData.responses.length
+            : 0;
+        const hasUpgradeLink =
+          String(message || "").indexOf("reacg-upgrade-link") !== -1;
+        if (hasUpgradeLink && successCount > 0) {
+          message =
+            "Generated content for " +
+            successCount +
+            " image" +
+            (successCount === 1 ? "" : "s") +
+            ". " +
+            message;
         }
 
-        setStatus('error', message);
+        setStatus("error", message);
       });
       result.always(function () {
-        progressNote.addClass('hidden').text('');
-        spinner.removeClass('is-active');
-        button.removeAttr('disabled');
+        progressNote.addClass("hidden").text("");
+        spinner.removeClass("is-active");
+        button.removeAttr("disabled");
       });
       return;
     }
@@ -1693,38 +2169,56 @@ function reacg_open_ai_generate_content_modal(images, options) {
 }
 
 function reacg_modal(field) {
-  return jQuery('' +
-    '<div class="reacg-modal" style="display:none;">' +
+  return jQuery(
+    "" +
+      '<div class="reacg-modal" style="display:none;">' +
       '<div class="reacg-modal-wrapper">' +
-        '<div class="reacg-modal-content">' +
-          '<div class="reacg-modal__header">' +
-            '<h1>' + field.title + '</h1>' +
-            '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
-          '</div>' +
-          '<div class="reacg-modal__body">' +
-            '<div class="reacg-modal__layout-content">' +
-              '<div><p class="reacg-modal-note">' + reacg_info_icon() + field.notice + '</p></div>' +
-              '<div>' +
-                '<label for="reacg-modal-notes">' + reacg.ai_popup_additional_notes_label + ':</label>' +
-                '<textarea class="reacg-modal-notes" id="reacg-modal-notes" rows="2" placeholder="' + reacg.ai_popup_additional_notes_placeholder + '"></textarea>' +
-              '</div>' +
-              '<div>' +
-                '<label for="reacg-modal-generated-text">' + field.label + ':</label>' +
-                '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
-              '</div>' +
-              '<p class="reacg-modal-error-note hidden"></p>' +
-            '</div>' +
-          '</div>' +
-          '<div class="reacg-modal__footer">' +
-            '<div class="reacg-modal-buttons-wrapper">' +
-              '<span class="spinner"></span>' +
-              '<button class="reacg-modal-button-generate button button-primary button-large">' + reacg_ai_icon() + reacg.generate + '</button>' +
-              '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">' + reacg.proceed + '</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>');
+      '<div class="reacg-modal-content">' +
+      '<div class="reacg-modal__header">' +
+      "<h1>" +
+      field.title +
+      "</h1>" +
+      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+      "</div>" +
+      '<div class="reacg-modal__body">' +
+      '<div class="reacg-modal__layout-content">' +
+      '<div><p class="reacg-modal-note">' +
+      reacg_info_icon() +
+      field.notice +
+      "</p></div>" +
+      "<div>" +
+      '<label for="reacg-modal-notes">' +
+      reacg.ai_popup_additional_notes_label +
+      ":</label>" +
+      '<textarea class="reacg-modal-notes" id="reacg-modal-notes" rows="2" placeholder="' +
+      reacg.ai_popup_additional_notes_placeholder +
+      '"></textarea>' +
+      "</div>" +
+      "<div>" +
+      '<label for="reacg-modal-generated-text">' +
+      field.label +
+      ":</label>" +
+      '<textarea class="reacg-modal-generated-text" id="reacg-modal-reacg-modal-generated-text" rows="5" disabled="disabled"></textarea>' +
+      "</div>" +
+      '<p class="reacg-modal-error-note hidden"></p>' +
+      "</div>" +
+      "</div>" +
+      '<div class="reacg-modal__footer">' +
+      '<div class="reacg-modal-buttons-wrapper">' +
+      '<span class="spinner"></span>' +
+      '<button class="reacg-modal-button-generate button button-primary button-large">' +
+      reacg_ai_icon() +
+      reacg.generate +
+      "</button>" +
+      '<button class="reacg-modal-button-proceed button button-secondary button-large" disabled="disabled">' +
+      reacg.proceed +
+      "</button>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "</div>",
+  );
 }
 
 /**
@@ -1734,23 +2228,34 @@ function reacg_modal(field) {
  * @param field
  */
 function reacg_add_ai_button(that, field) {
-  if ( !that.find('[data-setting="' + field.name + '"] .reacg-ai-button').length ) {
+  if (
+    !that.find('[data-setting="' + field.name + '"] .reacg-ai-button').length
+  ) {
     /* Create an AI button.*/
     const button = reacg_ai_button();
     const spinner = '<span class="spinner reacg-float-none"></span>';
     const url_cont = that.find('[data-setting="url"]');
-    that.find('[data-setting="' + field.name + '"] label').after(button, spinner);
-    const spinnerCont = that.find('[data-setting="' + field.name + '"] .spinner');
+    that
+      .find('[data-setting="' + field.name + '"] label')
+      .after(button, spinner);
+    const spinnerCont = that.find(
+      '[data-setting="' + field.name + '"] .spinner',
+    );
 
     /* Show tooltip for the first field.*/
-    if ( field.name === "title" ) {
-      if ( !localStorage.getItem("reacg-highlight-ai-alt-generation") ) {
-        reacg_show_tooltip(jQuery(".media-frame-content"), '[data-setting="' + field.name + '"] .reacg-ai-button', jQuery(".media-frame-content").find(".media-sidebar"), reacg.ai_highlight);
+    if (field.name === "title") {
+      if (!localStorage.getItem("reacg-highlight-ai-alt-generation")) {
+        reacg_show_tooltip(
+          jQuery(".media-frame-content"),
+          '[data-setting="' + field.name + '"] .reacg-ai-button',
+          jQuery(".media-frame-content").find(".media-sidebar"),
+          reacg.ai_highlight,
+        );
         localStorage.setItem("reacg-highlight-ai-alt-generation", true);
       }
     }
 
-    button.on('click', function() {
+    button.on("click", function () {
       spinnerCont.addClass("is-active");
 
       jQuery.ajax({
@@ -1758,7 +2263,7 @@ function reacg_add_ai_button(that, field) {
         url: reacg.core_rest_url_v2 + "ai",
         contentType: "application/json",
         data: {
-          "action": "check",
+          action: "check",
         },
         complete: function (response) {
           if (response.status === 200) {
@@ -1766,18 +2271,25 @@ function reacg_add_ai_button(that, field) {
             const targetDoc = reacg_get_top_document();
             const targetWin = targetDoc.defaultView || window;
             const targetBody = (targetWin.jQuery || jQuery)(targetDoc.body);
-            if (!targetBody.find(".reacg-modal:not(.reacg-attachment-modal)").length) {
+            if (
+              !targetBody.find(".reacg-modal:not(.reacg-attachment-modal)")
+                .length
+            ) {
               const modal = reacg_modal(field);
               targetBody.append(modal);
-              const modalSpinnerCont = modal.find(".reacg-modal-buttons-wrapper .spinner");
+              const modalSpinnerCont = modal.find(
+                ".reacg-modal-buttons-wrapper .spinner",
+              );
               const generatedText = modal.find(".reacg-modal-generated-text");
               const generateButton = modal.find(".reacg-modal-button-generate");
               const proceedButton = modal.find(".reacg-modal-button-proceed");
               const errorNoteCont = modal.find(".reacg-modal-error-note");
-              modal.find(".reacg-modal-close, .reacg-modal").on('click', function () {
-                modal.remove();
-              });
-              modal.on('click', function () {
+              modal
+                .find(".reacg-modal-close, .reacg-modal")
+                .on("click", function () {
+                  modal.remove();
+                });
+              modal.on("click", function () {
                 modal.remove();
               });
               modal.find(".reacg-modal-wrapper").on("click", function (e) {
@@ -1796,68 +2308,114 @@ function reacg_add_ai_button(that, field) {
                   url: reacg.core_rest_url_v2 + "ai",
                   contentType: "application/json",
                   data: {
-                    "image_url": url_cont.find("input").val(),
-                    "notes": modal.find(".reacg-modal-notes").val(),
-                    "website_language": reacg.website_language || '',
-                    "user_language": reacg.user_language || document.documentElement.lang || '',
-                    "action": field.action,
+                    image_url: url_cont.find("input").val(),
+                    notes: modal.find(".reacg-modal-notes").val(),
+                    website_language: reacg.website_language || "",
+                    user_language:
+                      reacg.user_language ||
+                      document.documentElement.lang ||
+                      "",
+                    action: field.action,
                   },
                   complete: function (response) {
                     modalSpinnerCont.removeClass("is-active");
                     generatedText.removeAttr("disabled");
                     generateButton.removeAttr("disabled");
-                    if (response.status === 200 && response.success && response.responseJSON) {
-                      generatedText.removeAttr("disabled").val(response.responseJSON);
+                    if (
+                      response.status === 200 &&
+                      response.success &&
+                      response.responseJSON
+                    ) {
+                      generatedText
+                        .removeAttr("disabled")
+                        .val(response.responseJSON);
                       proceedButton.removeAttr("disabled");
                       generateButton.html(reacg_ai_icon() + reacg.regenerate);
-                    }
-                    else {
-                      const errorMessage = response && response.responseJSON && response.responseJSON.errors
-                        ? response.responseJSON.errors.message
-                        : '';
-                      const hasUpgradeLink = String(errorMessage || '').indexOf('reacg-upgrade-link') !== -1;
+                    } else {
+                      const errorMessage =
+                        response &&
+                        response.responseJSON &&
+                        response.responseJSON.errors
+                          ? response.responseJSON.errors.message
+                          : "";
+                      const hasUpgradeLink =
+                        String(errorMessage || "").indexOf(
+                          "reacg-upgrade-link",
+                        ) !== -1;
 
-                      errorNoteCont.removeClass("hidden").html(errorMessage || '');
-                      if ( hasUpgradeLink ) {
-                        errorNoteCont.find('.reacg-upgrade-link').off('click').on('click', function (event) {
-                          event.preventDefault();
-                          reacg_open_free_trial_offer_dialog({utm_medium: 'ai_generate'});
-                        });
+                      errorNoteCont
+                        .removeClass("hidden")
+                        .html(errorMessage || "");
+                      if (hasUpgradeLink) {
+                        errorNoteCont
+                          .find(".reacg-upgrade-link")
+                          .off("click")
+                          .on("click", function (event) {
+                            event.preventDefault();
+                            reacg_open_free_trial_offer_dialog({
+                              utm_medium: "ai_generate",
+                            });
+                          });
                       }
 
-                      const wrapper = modal.find('.reacg-modal-wrapper').first();
-                      if ( wrapper.length && errorNoteCont.length ) {
+                      const wrapper = modal
+                        .find(".reacg-modal-wrapper")
+                        .first();
+                      if (wrapper.length && errorNoteCont.length) {
                         const wrapperNode = wrapper.get(0);
                         const wrapperTop = wrapper.offset().top;
                         const errorTop = errorNoteCont.offset().top;
-                        const targetScrollTop = wrapper.scrollTop() + (errorTop - wrapperTop) - 24;
+                        const targetScrollTop =
+                          wrapper.scrollTop() + (errorTop - wrapperTop) - 24;
 
-                        if ( wrapperNode && typeof wrapperNode.scrollTo === 'function' ) {
+                        if (
+                          wrapperNode &&
+                          typeof wrapperNode.scrollTo === "function"
+                        ) {
                           wrapperNode.scrollTo({
                             top: Math.max(0, targetScrollTop),
-                            behavior: 'smooth',
+                            behavior: "smooth",
                           });
+                        } else {
+                          wrapper
+                            .stop(true)
+                            .animate(
+                              { scrollTop: Math.max(0, targetScrollTop) },
+                              250,
+                            );
                         }
-                        else {
-                          wrapper.stop(true).animate({ scrollTop: Math.max(0, targetScrollTop) }, 250);
-                        }
-                      }
-                      else if ( errorNoteCont.length && errorNoteCont.get(0) && typeof errorNoteCont.get(0).scrollIntoView === 'function' ) {
-                        errorNoteCont.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      } else if (
+                        errorNoteCont.length &&
+                        errorNoteCont.get(0) &&
+                        typeof errorNoteCont.get(0).scrollIntoView ===
+                          "function"
+                      ) {
+                        errorNoteCont
+                          .get(0)
+                          .scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                          });
                       }
                     }
-                  }
+                  },
                 });
               });
               proceedButton.on("click", function () {
-                jQuery(that).find('[data-setting="' + field.name + '"]').find('textarea, input').first().val(generatedText.val());
+                jQuery(that)
+                  .find('[data-setting="' + field.name + '"]')
+                  .find("textarea, input")
+                  .first()
+                  .val(generatedText.val());
                 modal.remove();
               });
             }
-            jQuery(".reacg-modal:not(.reacg-attachment-modal)").css("display", "flex").show();
+            jQuery(".reacg-modal:not(.reacg-attachment-modal)")
+              .css("display", "flex")
+              .show();
           }
           spinnerCont.removeClass("is-active");
-        }
+        },
       });
     });
   }
@@ -1867,13 +2425,16 @@ function reacg_add_ai_button(that, field) {
  * Add AI buttons to the specified fields.
  */
 function reacg_add_ai_button_to_uploader() {
-  wp.media.view.Attachment.Details.prototype.render = _.wrap(wp.media.view.Attachment.Details.prototype.render, function(render) {
-    render.apply(this, _.rest(arguments));
+  wp.media.view.Attachment.Details.prototype.render = _.wrap(
+    wp.media.view.Attachment.Details.prototype.render,
+    function (render) {
+      render.apply(this, _.rest(arguments));
 
-    reacg_add_ai_button_to(this.$el);
+      reacg_add_ai_button_to(this.$el);
 
-    return this;
-  });
+      return this;
+    },
+  );
 }
 
 function reacg_add_ai_button_to(el) {
@@ -1905,29 +2466,35 @@ function reacg_add_ai_button_to(el) {
       title: reacg.ai_popup_caption_heading,
       notice: reacg.ai_popup_caption_notice,
       label: reacg.ai_popup_caption_field_label,
-    }
-  }
+    },
+  };
 
-  for ( let i in add_button_to ) {
+  for (let i in add_button_to) {
     reacg_add_ai_button(el, add_button_to[i]);
   }
 }
 
 function reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text) {
-  const el = typeof selectorOrEl === 'string' ? parent.find(selectorOrEl) : selectorOrEl;
-  if ( !el.length ) {
+  const el =
+    typeof selectorOrEl === "string" ? parent.find(selectorOrEl) : selectorOrEl;
+  if (!el.length) {
     /* Retry if element is not yet in DOM.*/
-    setTimeout(() => reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text), 200);
+    setTimeout(
+      () =>
+        reacg_show_tooltip(parent, selectorOrEl, containerToBeScrolled, text),
+      200,
+    );
 
     return;
   }
 
-  if ( !containerToBeScrolled.length ) {
+  if (!containerToBeScrolled.length) {
     return;
   }
   const containerTop = containerToBeScrolled.offset().top;
   const targetTop = el.offset().top;
-  const scrollPosition = containerToBeScrolled.scrollTop() + (targetTop - containerTop);
+  const scrollPosition =
+    containerToBeScrolled.scrollTop() + (targetTop - containerTop);
   containerToBeScrolled.animate({ scrollTop: scrollPosition }, 300, () => {
     /* After scroll completes, show tooltip.*/
     reacg_tooltip(el, text);
@@ -1941,15 +2508,19 @@ function reacg_tooltip(element, text) {
   /* Remove existing tooltip if any.*/
   jQuery(".reacg-tooltip").remove();
 
-  const tooltip = jQuery('<div role="tooltip" class="reacg-tooltip">' +
-    '<div>' +
-    '<div class="reacg-tooltip-wrapper">' +
-    '<span class="reacg-tooltip-icon-wrapper">' + reacg_tooltip_icon() + '</span>' +
-    text +
-    '</div>' +
-    '<span class="reacg-tooltip-arrow" data-popper-placement="left"></span>' +
-    '</div>' +
-    '</div>');
+  const tooltip = jQuery(
+    '<div role="tooltip" class="reacg-tooltip">' +
+      "<div>" +
+      '<div class="reacg-tooltip-wrapper">' +
+      '<span class="reacg-tooltip-icon-wrapper">' +
+      reacg_tooltip_icon() +
+      "</span>" +
+      text +
+      "</div>" +
+      '<span class="reacg-tooltip-arrow" data-popper-placement="left"></span>' +
+      "</div>" +
+      "</div>",
+  );
 
   const targetDoc = reacg_get_top_document();
   const targetWin = targetDoc.defaultView || window;
@@ -1961,19 +2532,24 @@ function reacg_tooltip(element, text) {
 
   tooltip.css({
     left: offset.left - tooltip.outerWidth(),
-    top: offset.top - tooltipHeight / 2 + elementHeight / 2
+    top: offset.top - tooltipHeight / 2 + elementHeight / 2,
   });
 
   const removeTooltip = () => {
     jQuery(".reacg-tooltip").remove();
     jQuery("*").off("scroll.reacgTooltip");
-    jQuery(window).off("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip");
+    jQuery(window).off(
+      "click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip",
+    );
   };
 
   setTimeout(() => {
     /* Remove on ANY scroll (including divs).*/
     jQuery("*").on("scroll.reacgTooltip", removeTooltip);
     /* Also remove on common user interactions.*/
-    jQuery(window).on("click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip", removeTooltip);
+    jQuery(window).on(
+      "click.reacgTooltip keydown.reacgTooltip resize.reacgTooltip",
+      removeTooltip,
+    );
   }, 200); /* Small delay to ensure tooltip is in DOM.*/
 }

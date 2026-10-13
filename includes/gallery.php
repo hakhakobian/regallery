@@ -224,6 +224,14 @@ class REACG_Gallery {
       'helps' => __('Auto-generated from image metadata on upload. You can edit this text if needed.', 'regallery'),
     ];
 
+    $form_fields['crop_position'] = [
+      'label' => __('Crop position', 'regallery'),
+      'input' => 'select',
+      'value' => $this->get_crop_position($post->ID),
+      'options' => $this->get_crop_position_options(),
+      'helps' => __('Controls which part of the image is retained when it is cropped to fit a gallery item.', 'regallery'),
+    ];
+
     return $form_fields;
   }
 
@@ -241,6 +249,9 @@ class REACG_Gallery {
     }
     if (isset($attachment['exif'])) {
       update_post_meta($post['ID'], 'exif', sanitize_textarea_field($attachment['exif']));
+    }
+    if ( isset($attachment['crop_position']) ) {
+      update_post_meta($post['ID'], 'crop_position', $this->sanitize_crop_position($attachment['crop_position']));
     }
 
     return $post;
@@ -268,6 +279,7 @@ class REACG_Gallery {
     }
 
     $response['exif'] = html_entity_decode($exif);
+    $response['crop_position'] = $this->get_crop_position($attachment->ID);
 
     return $response;
   }
@@ -1699,6 +1711,7 @@ class REACG_Gallery {
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the post featured image alt as image alt.
       $data['alt'] = html_entity_decode($this->get_the_alt($post_thumbnail_id));
+      $data['crop_position'] = $this->get_crop_position($post_thumbnail_id);
 
       return $data;
     }
@@ -1734,6 +1747,9 @@ class REACG_Gallery {
       $data['title'] = html_entity_decode(get_the_title($id));
       // Get the video cover image alt as video alt.
       $data['alt'] = html_entity_decode($this->get_the_alt($thumbnail_id));
+      // The crop position belongs to the video, while its thumbnail remains
+      // independently editable as a media image.
+      $data['crop_position'] = $this->get_crop_position($id);
     }
     else {
       $data = $this->get_image_urls($id);
@@ -1746,9 +1762,50 @@ class REACG_Gallery {
       $data['type'] = "image";
       $data['alt'] = html_entity_decode($this->get_the_alt($id));
       $data['title'] = html_entity_decode(get_the_title($id));
+      $data['crop_position'] = $this->get_crop_position($id);
     }
 
     return $data;
+  }
+
+  /**
+   * Return valid crop positions as CSS object-position values.
+   *
+   * @return array
+   */
+  private function get_crop_position_options() {
+    return [
+      'left top' => __('Left top', 'regallery'),
+      'center top' => __('Center top', 'regallery'),
+      'right top' => __('Right top', 'regallery'),
+      'left center' => __('Left center', 'regallery'),
+      'center center' => __('Center center', 'regallery'),
+      'right center' => __('Right center', 'regallery'),
+      'left bottom' => __('Left bottom', 'regallery'),
+      'center bottom' => __('Center bottom', 'regallery'),
+      'right bottom' => __('Right bottom', 'regallery'),
+    ];
+  }
+
+  /**
+   * Validate a stored crop position, defaulting old images to the current behavior.
+   *
+   * @param mixed $position Crop position.
+   * @return string
+   */
+  private function sanitize_crop_position($position) {
+    $position = sanitize_text_field((string) $position);
+    return array_key_exists($position, $this->get_crop_position_options()) ? $position : 'center center';
+  }
+
+  /**
+   * Get an attachment's crop position.
+   *
+   * @param int $attachment_id Attachment ID.
+   * @return string
+   */
+  private function get_crop_position($attachment_id) {
+    return $this->sanitize_crop_position(get_post_meta((int) $attachment_id, 'crop_position', TRUE));
   }
 
   /**

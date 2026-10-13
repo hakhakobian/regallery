@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.15
+Stable tag: 1.20.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,17 +29,17 @@ Improve SEO, increase user engagement, and bring your website to life with Re Ga
 
 With Re Gallery, managing your WordPress photo gallery just got easier.
 Our built-in AI tools automatically generate:
-* Image Titles
-* Alt Text
-* Captions
-* Descriptions
+*  **Image Titles**
+*  **Alt Text**
+*  **Captions**
+*  **Descriptions**
 
 Perfect for photographers, bloggers, WooCommerce stores, and anyone using WordPress, these features improve SEO and accessibility without any extra effort.
 
 Unlike many AI tools, Re Gallery works immediately:
-* No account.
-* No external registration.
-* Works directly inside WordPress.
+*  **No account.**
+*  **No external registration.**
+*  **Works directly inside WordPress.**
 
 Just upload your images and let Re Gallery do the work.
 
@@ -212,10 +212,14 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.15: Grid galleries can preserve original image heights with configurable vertical alignment. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.16: Per-media crop-position picker with nine focal-point positions in the image and video edit modal. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.16 =
+= Updated: 10.10.2026 =
+* **Added:** Per-media crop-position picker with nine focal-point positions in the image and video edit modal.
+
 = 1.20.15 =
 = Updated: 17.09.2026 =
 * **Added:** Auto-height and vertical alignment settings for Grid layout.

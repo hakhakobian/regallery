@@ -479,6 +479,15 @@ to avoid a bug connected with preview.
       background-color: #fff !important;
       outline: 4px solid transparent !important;
     }
+    button {
+      margin-bottom: 7px;
+    }
+    label span {
+      font-weight: normal;
+    }
+    input[type="radio"] {
+      margin-top: 0;
+    }
 
     p {
       margin: 0;
@@ -649,6 +658,86 @@ to avoid a bug connected with preview.
   .reacg-attachment-modal__details p {
     margin: 0 0 8px 0;
   }
+  .reacg-crop-position-picker {
+    margin: 0;
+  }
+  .reacg-crop-position-picker__label-row {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+  }
+  .reacg-crop-position-picker__help {
+    background: none;
+    border: 0;
+    color: #50575e;
+    cursor: help;
+    font-size: 16px;
+    height: 18px;
+    padding: 0;
+    position: relative;
+    width: 18px;
+  }
+  .reacg-crop-position-picker__help::after {
+    background: #2c3338;
+    border-radius: 3px;
+    color: #fff;
+    content: attr(data-tooltip);
+    display: none;
+    font: 12px/1.4 sans-serif;
+    left: 24px;
+    padding: 8px 10px;
+    position: absolute;
+    text-align: left;
+    top: -5px;
+    width: 230px;
+    z-index: 10;
+  }
+  .reacg-crop-position-picker__help:hover::after,
+  .reacg-crop-position-picker__help:focus-visible::after {
+    display: block;
+  }
+  .reacg-crop-position-picker__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 28px);
+    gap: 3px;
+  }
+  .reacg-crop-position-picker__option {
+    display: block;
+    height: 28px;
+    position: relative;
+    margin: 0;
+  }
+  .reacg-crop-position-picker__option input {
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+  }
+  .reacg-crop-position-picker__option > span[aria-hidden="true"] {
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+    width: 100%;
+  }
+  .reacg-crop-position-picker__option input:checked + span {
+    background: #2271b1;
+    border-color: #135e96;
+  }
+  .reacg-crop-position-picker__option input:focus-visible + span {
+    outline: 2px solid #2271b1;
+    outline-offset: 2px;
+  }
+  .reacg-crop-position-picker__option:hover > span[aria-hidden="true"] {
+    border-color: #2271b1;
+  }
 }
 
 @media (max-width: 900px) {
@@ -698,7 +787,6 @@ to avoid a bug connected with preview.
     display: flex;
     align-items: center;
   }
-
   .reacg-tooltip-arrow[data-popper-placement*="left"] {
     right: 0;
     width: 15px;
@@ -799,8 +887,7 @@ to avoid a bug connected with preview.
 #gallery-custom-css h2.hndle {
   justify-content: normal;
 }
-
-label[for="gallery-custom-css-hide"] svg {
+main label[for="gallery-custom-css-hide"] svg {
   display: none;
 }
 
