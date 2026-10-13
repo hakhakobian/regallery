@@ -68,6 +68,7 @@ final class REACG {
     $this->plugin_dir = WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__));
 
     require_once $this->plugin_dir . '/framework/REACGLibrary.php';
+    require_once $this->plugin_dir . '/builders/class-builders-loader.php';
 
     $this->abspath = REACGLibrary::get_abspath();
     $this->plugin_url = plugins_url(plugin_basename(dirname(__FILE__)));
@@ -120,14 +121,8 @@ final class REACG {
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
 
-    // Enqueue block editor assets for Gutenberg.
-    add_action('enqueue_block_editor_assets', array($this, 'enqueue_block_editor_assets'));
-    add_action('enqueue_block_assets', array($this, 'enqueue_block_assets'));
-
-    // Register widget for Elementor.
-    add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
-    // Fires after elementor editor styles are enqueued.
-    add_action('elementor/editor/after_enqueue_styles', array($this, 'enqueue_elementor_styles'), 11);
+    // Initialize shared builder integrations.
+    REACG_Builders_Loader::init();
 
     // Register Divi module.
     add_action( 'divi_extensions_init', array($this, 'initialize_divi_extension') );
@@ -136,17 +131,12 @@ final class REACG {
     // Register WP Bakery widget.
     add_action( 'vc_before_init', array($this, 'register_wpbakery_widget') );
 
-    // Register Beaver Builder module.
-    add_action( 'init', array($this, 'register_buiver_builder_widget') );
-
-    // Register Bricks Builder element.
-    add_action( 'init', array($this, 'register_bricks_builder_element'), 11);
-
     // Actions on the plugin activate/deactivate.
     register_activation_hook(__FILE__, array($this, 'global_activate'));
     add_action('wpmu_new_blog', array($this, 'new_blog_added'), 10, 6);
     register_deactivation_hook( __FILE__, array($this, 'global_deactivate'));
 
+    add_action('init', array($this, 'load_string'), 8);
     add_action('admin_init', array($this, 'do_activation_redirect'));
 
     add_filter('body_class', [$this, 'add_body_class']);
@@ -186,27 +176,12 @@ final class REACG {
   }
 
   /**
-   * Register widget for Elementor.
+   * Load translated strings.
    */
-  public function register_elementor_widget() {
-    if ( defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base') ) {
-      require_once ($this->plugin_dir . '/builders/elementor/elementor.php');
-      if ( \Elementor\Plugin::instance()->preview->is_preview_mode() ) {
-        // Enqueue scripts only in preview mode.
-        REACGLibrary::enqueue_scripts();
-      }
-      \Elementor\Plugin::instance()->widgets_manager->register( new REACG_Elementor() );
-    }
+  public function load_string() {
+    load_plugin_textdomain( 'regallery', false, plugin_basename(dirname(__FILE__)) . '/languages' );
   }
 
-  /**
-   * Enqueue Elementor widget styles.
-   *
-   * @return void
-   */
-  public function enqueue_elementor_styles() {
-    wp_enqueue_style($this->prefix . '_elementor', $this->plugin_url . '/builders/elementor/styles/elementor.css', [], $this->version);
-  }
 
   public function initialize_divi_extension() {
     // Check for Divi 5 support first.
@@ -214,7 +189,7 @@ final class REACG {
     // so rely on the version constant here and let the module self-guard later.
     if ( defined( 'ET_CORE_VERSION' ) ) {
       $divi_version = (int) explode('.', ET_CORE_VERSION)[0];
-
+      
       // Load appropriate extension based on Divi version
       if ( $divi_version >= 5 ) {
         // $this->divi5_loaded = TRUE;
@@ -261,20 +236,6 @@ final class REACG {
     require_once ($this->plugin_dir . '/builders/wpbakery/wpbakery.php');
 
     new REACG_WPBakery($this);
-  }
-
-  public function register_buiver_builder_widget() {
-    if ( class_exists( 'FLBuilder' ) ) {
-      require_once $this->plugin_dir . '/builders/beaverbuilder/beaverbuilder.php';
-    }
-  }
-
-  public function register_bricks_builder_element($elements_manager) {
-    if ( !class_exists('\Bricks\Elements') ) {
-      return;
-    }
-
-    \Bricks\Elements::register_element( $this->plugin_dir . '/builders/bricks/bricks.php' );
   }
 
   /**
@@ -330,7 +291,7 @@ final class REACG {
   /**
    * Register general scripts/styles.
    */
-  private function register_general_scripts() {
+  public function register_general_scripts() {
     $required_scripts = [];
     $required_styles = [];
 
@@ -389,16 +350,23 @@ final class REACG {
    * Register admin pages scripts/styles.
    */
   public function register_admin_scripts() {
+    $this->register_general_scripts();
+
     $required_scripts = array(
       'jquery',
       'jquery-ui-sortable',
     );
     $required_styles = array(
-      'wp-admin', // admin styles
       'buttons', // buttons styles
       'media-views', // media uploader styles
-      'wp-auth-check', // check all
     );
+    // The full wp-admin stylesheet (forms, common, ...) only belongs to admin
+    // screens. Frontend page builders (Bricks, Beaver Builder) load these
+    // assets in their own UI document, where wp-admin CSS restyles the builder.
+    if ( is_admin() ) {
+      array_unshift( $required_styles, 'wp-admin' );
+      $required_styles[] = 'wp-auth-check';
+    }
 
     wp_register_style($this->prefix . '_select2', $this->plugin_url . '/assets/css/select2.min.css', [], '4.0.3');
     wp_register_style($this->prefix . '_posts', $this->plugin_url . '/assets/css/posts.css', [$this->prefix . '_select2'], $this->version);
@@ -479,9 +447,7 @@ final class REACG {
       'core_rest_url_v3' => $this->core_rest_url_v3,
     ));
 
-    // Register general styles/scripts.
-    $this->register_general_scripts();
-
+    // Enqueue common assets.
     $this->enqueue_common_assets();
   }
 
@@ -501,73 +467,6 @@ final class REACG {
     if ( isset($_GET['bricks']) && $_GET['bricks'] === 'run' ) {
       wp_enqueue_style($this->prefix . '_bricks', $this->plugin_url . '/builders/bricks/bricks.css', [], '1.0');
     }
-  }
-
-  /**
-   * Enqueue scripts/styles for Gutenberg.
-   *
-   * @return void
-   */
-  public function enqueue_block_assets() {
-    // Always load inside editor iframe (Need to correctly enqueue frontend scripts/styles in iframe for changing between Tablet/Mobile views.)
-    // Frontend: load ONLY if block exists․
-    if ( is_admin() || ( function_exists( 'has_block' ) && has_block( 'reacg/gallery' ) ) ) {
-      $this->register_frontend_scripts();
-      REACGLibrary::enqueue_scripts();
-    }
-    // Canvas-only editor styles must also load inside the iframe (WP 7.1+).
-    // Sidebar styles stay on enqueue_block_editor_assets.
-    if ( is_admin() ) {
-      wp_enqueue_style(
-        $this->prefix . '_gutenberg_canvas',
-        $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css',
-        array( $this->prefix . '_general' ),
-        $this->version
-      );
-    }
-  }
-
-  /**
-   * Enqueue scripts/styles for Gutenberg.
-   *
-   * @return void
-   */
-  public function enqueue_block_editor_assets() {
-    $required_scripts = [
-      $this->prefix . '_thumbnails',
-      'wp-blocks',
-      'wp-element',
-      'wp-block-editor',
-      'wp-components',
-      $this->prefix . '_admin'
-    ];
-    $required_styles = [
-      $this->prefix . '_general',
-      'wp-edit-blocks',
-      $this->prefix . '_admin'
-    ];
-
-    wp_enqueue_script($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/scripts/gutenberg.js', $required_scripts, $this->version, TRUE);
-    wp_localize_script($this->prefix . '_gutenberg', 'reacg_gutenberg', array(
-      'title' => $this->nicename,
-      'description' => __("Display images with various visual effects in responsive gallery.", "regallery"),
-      'setup_wizard_description' => __("Create new gallery or select the existing one.", "regallery"),
-      'gallery_images_section_title' => __("Media", "regallery"),
-      'create_button' => __("Create", "regallery"),
-      'gallery_title_placeholder' => __("Enter gallery title", "regallery"),
-      'plugin_url' => $this->plugin_url,
-      'plugin_version' => $this->version,
-      'icon' => $this->plugin_url . '/assets/images/icon.svg',
-      'data' => REACGLibrary::get_shortcodes($this, TRUE),
-      'ajax_url' => wp_nonce_url(admin_url('admin-ajax.php'), $this->nonce, $this->nonce),
-    ));
-    $gallery_ids = REACGLibrary::get_galleries();
-    $data = [];
-    foreach ( $gallery_ids as $galleryId ) {
-      $data[$galleryId] = REACGLibrary::get_data($galleryId);
-    }
-    wp_localize_script(REACG_PREFIX . '_gutenberg', 'reacg_data', $data);
-    wp_enqueue_style($this->prefix . '_gutenberg', $this->plugin_url . '/builders/gutenberg/styles/gutenberg.css', $required_styles, $this->version);
   }
 
   /**

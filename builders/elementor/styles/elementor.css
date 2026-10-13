@@ -1,3 +1,19 @@
+/* Elementor Widget & Control Styles */
+
 .reacg-elementor-icon:before {
   content: url("../../../assets/images/icon.svg");
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+
+/* Disable lightbox popup & force cursor in Elementor Editor Mode */
+.elementor-editor-active .react-lightbox__background,
+.elementor-editor-active .reacg-lightbox,
+body.elementor-editor-active .react-lightbox__background,
+body.elementor-editor-active .reacg-lightbox {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

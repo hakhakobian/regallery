@@ -1,4 +1,13 @@
 <?php
+/**
+ * ReGallery Divi 4 module.
+ *
+ * The Visual Builder renders the module through the component registered in
+ * scripts/builder-bundle.min.js; this class provides the field definition and
+ * the frontend render. The gallery is picked in the floating ReGallery panel,
+ * which the custom `reacg_gallery_picker` field opens from the settings modal.
+ */
+
 defined('ABSPATH') || die('Access Denied');
 
 class REACG_DiviModule extends ET_Builder_Module {
@@ -35,34 +44,19 @@ class REACG_DiviModule extends ET_Builder_Module {
   public function get_fields() {
     return array(
       'post_id' => array(
-        'label'           => ' ',
-        'type'            => 'select',
+        'label'           => esc_html__( 'Gallery', 'regallery' ),
+        // Custom field type registered by the builder bundle (API.registerModalFields).
+        'type'            => 'reacg_gallery_picker',
         'option_category' => 'basic_option',
-        'options'         => REACGLibrary::get_shortcodes(FALSE, TRUE, FALSE),
-        'default'         => 0,
+        'default'         => '0',
         'tab_slug'        => 'general',
         'toggle_slug'     => 'main_content',
-        /* translators: 1: opening anchor tag, 2: closing anchor tag */
-        'description'     => sprintf(__('Add/edit galleries %1$shere%2$s.', 'regallery'), '<a style="text-decoration: underline;" target="_blank" href="' . add_query_arg(array( 'post_type' => REACG_CUSTOM_POST_TYPE ), admin_url('edit.php')) . '">', '</a>'),
-      ),
-      'enable_options' => array(
-        'label'           => esc_html__( 'Enable options section', 'regallery' ),
-        'type'            => 'yes_no_button',
-        'option_category' => 'basic_option',
-        'options'         => array(
-          'off' => esc_html__( 'No', 'regallery' ),
-          'on'  => esc_html__( 'Yes', 'regallery' ),
-        ),
-        'default'         => 'off',
-        'tab_slug'        => 'general',
-        'toggle_slug'     => 'main_content',
-        'description'     => esc_html__( 'The options will be visible only in editor mode.', 'regallery' ),
       ),
     );
   }
 
   /**
-   * Render module output.
+   * Render module output (frontend).
    *
    * @param $attrs
    * @param $content
@@ -71,9 +65,9 @@ class REACG_DiviModule extends ET_Builder_Module {
    * @return bool|string|null
    */
   public function render( $attrs, $content, $render_slug ) {
-    $post_id = intval($this->props["post_id"]);
+    $post_id = intval( $this->props['post_id'] );
 
-    return REACGLibrary::get_rest_routs($post_id);
+    return REACGLibrary::render_gallery( $post_id );
   }
 }
 

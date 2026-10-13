@@ -122,16 +122,18 @@ class REACGLibrary {
 
     $data    = REACGLibrary::get_data( $gallery_id );
     $root_id = self::get_root_element_id( $gallery_id, $instance_id );
+    $instance_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', (string) $instance_id );
     ob_start();
     ?>
     <script>if (typeof reacg_data === "undefined") { var reacg_data = {}; } reacg_data[<?php echo (int) $gallery_id; ?>] = <?php echo wp_json_encode( $data );  ?>;</script>
     <div id="<?php echo esc_attr( $root_id ); ?>"
          class="reacg-wrapper reacg-gallery reacg-preview"
-         data-options-section="<?php echo esc_attr( (int) ( $enable_options || is_admin() ) ); ?>"
+         data-options-section="<?php echo esc_attr( (int) $enable_options ); ?>"
          data-options-container="<?php echo esc_attr( '#reacg_settings' ); ?>"
          data-plugin-version="<?php echo esc_attr( REACG_VERSION ); ?>"
          data-gallery-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'gallery_timestamp', TRUE ) ); ?>"
          data-options-timestamp="<?php echo esc_attr( get_post_meta( $gallery_id, 'options_timestamp', TRUE ) ); ?>"
+         data-widget-id="<?php echo esc_attr( $instance_id ); ?>"
          data-gallery-id="<?php echo esc_attr( (int) $gallery_id ); ?>"></div><?php
     return ob_get_clean();
   }
@@ -144,6 +146,47 @@ class REACGLibrary {
    *
    * @return string
    */
+  /**
+   * Whether a gallery can be rendered: an existing, non-trashed gallery post,
+   * or the dynamic "All images" gallery (-1).
+   *
+   * @param int|string $gallery_id
+   *
+   * @return bool
+   */
+  public static function gallery_exists( $gallery_id ) {
+    $gallery_id = (int) $gallery_id;
+    if ( -1 === $gallery_id ) {
+      return TRUE;
+    }
+    if ( $gallery_id <= 0 ) {
+      return FALSE;
+    }
+    $post = get_post( $gallery_id );
+
+    return $post instanceof WP_Post
+      && REACG_CUSTOM_POST_TYPE === $post->post_type
+      && in_array( $post->post_status, [ 'publish', 'private', 'draft', 'pending', 'future' ], TRUE );
+  }
+
+  /**
+   * Frontend / builder output for a gallery reference: nothing when the
+   * gallery no longer exists (deleted galleries must not leave broken
+   * instances on the pages that embed them).
+   *
+   * @param int|string $gallery_id
+   * @param string     $instance_id
+   *
+   * @return string
+   */
+  public static function render_gallery( $gallery_id, $instance_id = '' ) {
+    if ( ! self::gallery_exists( $gallery_id ) ) {
+      return '';
+    }
+
+    return self::get_rest_routs( $gallery_id, FALSE, $instance_id );
+  }
+
   public static function get_root_element_id( $gallery_id, $instance_id = '' ) {
     if ( '' !== $instance_id && null !== $instance_id ) {
       $safe_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', (string) $instance_id );

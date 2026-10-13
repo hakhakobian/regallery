@@ -1,0 +1,73 @@
+/* ReGallery field inside the Divi settings modal (Divi 4 and Divi 5, top window). */
+.reacg-divi-field {
+  padding: 4px 0 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #4c5866;
+}
+
+.reacg-divi-field__title {
+  margin: 0 0 10px;
+}
+
+.reacg-divi-field__title strong {
+  color: #2b3a48;
+  font-weight: 600;
+}
+
+.reacg-divi-field__open {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: var(--reacg-primary-color, #2271b1) !important;
+  border: 1px solid var(--reacg-primary-color, #2271b1) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  padding: 10px 14px !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.reacg-divi-field__open:hover,
+.reacg-divi-field__open:focus {
+  background: var(--reacg-primary-color-darker, #135e96) !important;
+  border-color: var(--reacg-primary-color-darker, #135e96) !important;
+  color: #fff !important;
+}
+
+.reacg-divi-field__open svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.reacg-divi-field__desc {
+  margin: 12px 0 0;
+  color: #6b7a8c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.reacg-divi-field__desc a {
+  color: var(--reacg-primary-color, #2271b1);
+  text-decoration: underline;
+}
+
+/* Divi 4 renders the module settings label column; hide the empty label of our field. */
+.et-fb-modal .et-fb-form__group--reacg_gallery_picker .et-fb-form__label:empty {
+  display: none;
+}
+
+/* Divi 4: the native module settings modal is only a vehicle for the panel
+   when a module is inserted or clicked in the canvas; keep it invisible while
+   the field closes it. */
+body.reacg-divi-suppress-modal .et-fb-modal__module-settings,
+.et-fb-modal__module-settings:has(.reacg-divi-field--autoclose) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

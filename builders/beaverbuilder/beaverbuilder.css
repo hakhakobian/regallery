@@ -1,9 +1,27 @@
-.dashicons-reacg-bb-icon:before {
+.dashicons-reacg-bb-icon:before,
+.reacg-bb-icon:before,
+.fl-module-icon.reacg-bb-icon:before {
   content: "";
-  display: block;
+  display: inline-block;
   width: 20px;
   height: 20px;
   background-image: url("../../assets/images/icon.svg");
   background-size: contain;
   background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+/* Hide raw gallery_id input row in Beaver Builder settings panel */
+#fl-field-gallery_id,
+tr.fl-builder-field-gallery_id,
+.fl-builder-module-settings tr[data-field="gallery_id"],
+.fl-builder-settings-section tr#fl-field-gallery_id {
+  display: none !important;
+}
+
+/* Beaver Builder settings modal description */
+.fl-builder-module-settings #fl-field-manage_galleries_desc td,
+.fl-builder-module-settings .fl-builder-field-manage_galleries_desc {
+  padding: 10px 0;
+  line-height: 1.5;
 }

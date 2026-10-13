@@ -1,10 +1,24 @@
+/**
+ * ReGallery Divi 5 module (Visual Builder, app window).
+ *
+ * Registers the module with Divi's module library. The settings field and the
+ * canvas open the shared ReacgBuilderModal that lives in the top window; the
+ * chosen gallery is written to the module attributes through Divi's edit-post
+ * store, which re-renders the canvas preview.
+ */
 (function () {
+  if (!window.divi || !window.divi.moduleLibrary || !window.divi.module || !window.vendor || !window.vendor.wp) {
+    return;
+  }
+
+  const MODULE_NAME = 'regallery/divi-gallery-selector';
+
   const metadata = {
-    name: 'regallery/divi-gallery-selector',
+    name: MODULE_NAME,
     d4Shortcode: 'reacg_module',
     title: 'Re Gallery',
     titles: 'Galleries',
-    moduleIcon: 'regallery/divi-gallery-selector',
+    moduleIcon: MODULE_NAME,
     category: 'module',
     attributes: {
       module: {
@@ -28,291 +42,221 @@
         },
       },
       galleryId: { type: 'string', default: '0' },
+      // Kept for layouts saved by older versions; the floating panel owns the options now.
       enableOptions: { type: 'string', default: 'off' },
     },
     customCssFields: {},
     settings: { design: 'auto', advanced: 'auto' },
   };
 
-  const { useEffect, useLayoutEffect, useState, useRef } = window.vendor.wp.element;
-  const { ModuleContainer, FieldContainer, GroupContainer, StyleContainer } = window.divi.module;
-  const { CssStyle } = window.divi.module;
+  const React = window.React;
+  const { useEffect, useRef, useState } = window.vendor.wp.element;
+  const { ModuleContainer, FieldContainer, GroupContainer, StyleContainer, CssStyle } = window.divi.module;
   const registerModule = window.divi.moduleLibrary.registerModule;
   const getAttrByMode = window.divi.moduleUtils.getAttrByMode;
-  const { Select, ToggleContainer } = window.divi.fieldLibrary;
-  const diviData =
-    window.ReacgDiviData ||
-    window.RegalleryDiviData ||
-    window.RegalleryDivi ||
-    window.regalleryDiviData ||
-    {};
+  const diviData = window.RegalleryDiviData || window.ReacgDiviData || {};
 
-  function getSettings() {
-    const galleries = diviData.galleries || diviData.galleryOptions || {};
+  const PANEL_CLOSE_DELAY = 250;
 
-    return {
-      galleries: Object.fromEntries(
-        Object.entries(galleries).map(function (entry) {
-          const id = entry[0];
-          const label = entry[1];
+  /* ---------------------------------------------------------------- */
+  /* Helpers                                                            */
+  /* ---------------------------------------------------------------- */
 
-          return [
-            id,
-            typeof label === 'string'
-              ? { label: label }
-              : label && typeof label === 'object' && label.label
-                ? label
-                : { label: String(label || '') },
-          ];
-        })
-      ),
-      settingsGroup: {
-        label: (diviData.settingsGroup && diviData.settingsGroup.label) || 'Gallery Settings',
-      },
-      plugin_url: diviData.plugin_url || '',
-      galleryId: {
-        placeholder: (diviData.galleryId && diviData.galleryId.placeholder) || 'Select gallery',
-        label: (diviData.galleryId && diviData.galleryId.label) || 'Select Gallery',
-      },
-      enableOptions: {
-        label: (diviData.enableOptions && diviData.enableOptions.label) || 'Enable options section',
-      },
-      ajax_url: diviData.ajax_url || diviData.ajaxUrl || '',
-      nonce: diviData.nonce || '',
-      loading_text: diviData.loading_text || 'Loading gallery preview...',
-      empty_text: diviData.empty_text || 'Select a gallery to preview it.',
-      error_text: diviData.error_text || 'Unable to load gallery preview. Please try again.',
-    };
+  function text(key, fallback) {
+    return diviData[key] ? String(diviData[key]) : fallback;
   }
 
-  function sanitizeModuleId(moduleId) {
-    return String(moduleId || '').replace(/[^a-zA-Z0-9_-]/g, '');
-  }
-
-  function getRootId(moduleId, serverRootId) {
-    if (serverRootId) {
-      return serverRootId;
+  function getTopWindow() {
+    try {
+      return window.top || window;
+    } catch (error) {
+      return window;
     }
-
-    return 'reacg-root' + sanitizeModuleId(moduleId);
   }
 
-  function createMountController() {
-    return {
-      active: true,
-      timeouts: [],
-      lastTriggerByRootId: {},
-    };
+  function getPanel() {
+    const topWin = getTopWindow();
+    return topWin.ReacgBuilderModal || window.ReacgBuilderModal || null;
   }
 
-  function deactivateMountController(controller) {
-    if (!controller) {
+  function parseGalleryId(value) {
+    const id = parseInt(value, 10);
+    return isNaN(id) ? 0 : id;
+  }
+
+  function galleryExists(galleryId) {
+    if (galleryId === -1) {
+      return true;
+    }
+    const galleries = diviData.galleries || {};
+    return Object.prototype.hasOwnProperty.call(galleries, String(galleryId));
+  }
+
+  /**
+   * Gallery id of the module; a deleted gallery counts as none.
+   */
+  function getGalleryId(attrs) {
+    const galleryId = parseGalleryId(getAttrByMode(attrs && attrs.galleryId));
+    return galleryId > 0 && !galleryExists(galleryId) ? 0 : galleryId;
+  }
+
+  function getGalleryTitle(galleryId) {
+    const galleries = diviData.galleries || {};
+    const title = galleries[String(galleryId)];
+    return title ? String(title) : '';
+  }
+
+  function sanitizeId(value) {
+    return String(value || '').replace(/[^a-zA-Z0-9_-]/g, '');
+  }
+
+  /**
+   * Persist the gallery id on the module. The edit component re-renders and
+   * reloads the preview on attribute change.
+   */
+  function setModuleGalleryId(moduleId, galleryId) {
+    window.divi.data.dispatch('divi/edit-post').editModuleAttribute({
+      id: moduleId,
+      attrName: 'galleryId',
+      value: { desktop: { value: String(parseGalleryId(galleryId)) } },
+    });
+  }
+
+  function openPanel(moduleId, galleryId) {
+    const panel = getPanel();
+    if (!panel) {
+      console.error('ReacgBuilderModal is not loaded in the Divi top window.');
       return;
     }
-
-    controller.active = false;
-
-    controller.timeouts.forEach(function (timeoutId) {
-      window.clearTimeout(timeoutId);
+    panel.open({
+      galleryId: parseGalleryId(galleryId),
+      widgetId: String(moduleId),
+      onSave: function (savedGalleryId) {
+        setModuleGalleryId(moduleId, savedGalleryId);
+      },
     });
-
-    controller.timeouts.length = 0;
   }
 
-  function scheduleMountRetry(controller, callback, delay) {
-    if (!controller.active) {
-      return;
+  function closePanelFor(moduleId) {
+    const panel = getPanel();
+    if (panel && panel.isOpen && !panel.isEmbedded && panel.currentWidgetId === String(moduleId)) {
+      panel.close();
     }
-
-    const timeoutId = window.setTimeout(callback, delay);
-
-    controller.timeouts.push(timeoutId);
   }
 
-  function getDocumentContexts() {
-    const documents = [];
-    const windows = [window];
-
-    try {
-      if (window.parent && window.parent !== window) {
-        windows.push(window.parent);
-      }
-    } catch (error) {
-      // Cross-origin parent; ignore.
+  /**
+   * Mount a freshly rendered gallery root with the bundle loaded in this window.
+   */
+  function mountGalleryRoot(root) {
+    if (!root || root.childElementCount > 0) {
+      return true;
     }
-
-    try {
-      if (window.top && window.top !== window) {
-        windows.push(window.top);
-      }
-    } catch (error) {
-      // Cross-origin top; ignore.
+    if (typeof window.reacg_mount_gallery === 'function') {
+      window.reacg_mount_gallery(root);
+      return true;
     }
-
-    windows.forEach(function (win) {
-      try {
-        if (win && win.document && documents.indexOf(win.document) === -1) {
-          documents.push(win.document);
-        }
-      } catch (error) {
-        // Ignore inaccessible documents.
-      }
-    });
-
-    return documents;
-  }
-
-  function findElementById(elementId) {
-    const documents = getDocumentContexts();
-
-    for (let index = 0; index < documents.length; index++) {
-      const element = documents[index].getElementById(elementId);
-
-      if (element) {
-        return element;
-      }
-    }
-
-    return null;
-  }
-
-  function findLoadAppButton(root) {
-    const documents = root && root.ownerDocument ? [root.ownerDocument] : [];
-
-    getDocumentContexts().forEach(function (doc) {
-      if (documents.indexOf(doc) === -1) {
-        documents.push(doc);
-      }
-    });
-
-    for (let index = 0; index < documents.length; index++) {
-      const loadApp = documents[index].getElementById('reacg-loadApp');
-
-      if (loadApp) {
-        return loadApp;
-      }
-    }
-
-    return null;
-  }
-
-  function triggerLoadAppButton(loadApp, rootId) {
-    loadApp.setAttribute('data-id', rootId);
-
-    try {
-      if (typeof loadApp.onclick === 'function') {
-        loadApp.onclick.call(loadApp);
-        return true;
-      }
-    } catch (error) {
-      // Ignore onclick errors.
-    }
-
-    try {
+    const loadApp = document.getElementById('reacg-loadApp');
+    if (loadApp) {
+      loadApp.setAttribute('data-id', root.id);
       loadApp.click();
       return true;
-    } catch (error) {
-      // Ignore click errors.
     }
+    return false;
+  }
 
-    const view =
-      loadApp.ownerDocument && loadApp.ownerDocument.defaultView
-        ? loadApp.ownerDocument.defaultView
-        : window;
+  /* ---------------------------------------------------------------- */
+  /* Settings field (rendered in the top window by Divi)                */
+  /* ---------------------------------------------------------------- */
 
-    loadApp.dispatchEvent(
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: view,
-      })
+  const mountedFields = {};
+
+  function GalleryPickerField(props) {
+    const moduleId = props.moduleId;
+    const galleryId = parseGalleryId(props.value);
+    const galleryIdRef = useRef(galleryId);
+    galleryIdRef.current = galleryId;
+
+    // The settings modal opened for this module: show the panel with it, and
+    // hide the panel again when the modal closes. Tab switches re-mount the
+    // field, so the close is deferred and cancelled by a re-mount.
+    useEffect(
+      function () {
+        mountedFields[moduleId] = true;
+        openPanel(moduleId, galleryIdRef.current);
+        return function () {
+          delete mountedFields[moduleId];
+          window.setTimeout(function () {
+            if (!mountedFields[moduleId]) {
+              closePanelFor(moduleId);
+            }
+          }, PANEL_CLOSE_DELAY);
+        };
+      },
+      [moduleId],
     );
 
-    return true;
-  }
+    const title = galleryId ? getGalleryTitle(galleryId) || '#' + galleryId : text('noGallery', 'No gallery selected');
 
-  function mountGalleryElement(root) {
-    if (!root || !root.id) {
-      return false;
-    }
-
-    const loadApp = findLoadAppButton(root);
-
-    if (!loadApp) {
-      return false;
-    }
-
-    return triggerLoadAppButton(loadApp, root.id);
-  }
-
-  function hasMountedGalleryContent(root) {
-    return !!(
-      root &&
-      (root.childElementCount > 0 || String(root.textContent || '').trim() !== '')
+    return React.createElement(
+      'div',
+      { className: 'reacg-divi-field' },
+      React.createElement(
+        'div',
+        { className: 'reacg-divi-field__title' },
+        text('selectedGallery', 'Selected gallery:') + ' ',
+        React.createElement('strong', null, title),
+      ),
+      React.createElement(
+        'button',
+        {
+          type: 'button',
+          className: 'reacg-divi-field__open',
+          onClick: function (event) {
+            event.preventDefault();
+            openPanel(moduleId, galleryIdRef.current);
+          },
+        },
+        React.createElement(
+          'svg',
+          { 'aria-hidden': 'true', viewBox: '0 0 20 20', focusable: 'false' },
+          React.createElement('path', {
+            d: 'M16 4h1.96c.57 0 1.04.47 1.04 1.04v12.92c0 .57-.47 1.04-1.04 1.04H5.04C4.47 19 4 18.53 4 17.96V16H2.04C1.47 16 1 15.53 1 14.96V2.04C1 1.47 1.47 1 2.04 1h12.92c.57 0 1.04.47 1.04 1.04V4zM6 6v11h11V6H6zm1 9l2.5-3 1.5 2 2.5-4L15 15H7zM3 3v11h1V5.04C4 4.47 4.47 4 5.04 4H14V3H3z',
+          }),
+        ),
+        text('selectOrCreate', 'Select or Create Gallery'),
+      ),
+      React.createElement('p', {
+        className: 'reacg-divi-field__desc',
+        dangerouslySetInnerHTML: { __html: text('fieldDescription', '') },
+      }),
     );
   }
 
-  function shouldTriggerMount(controller, rootId) {
-    const now = Date.now();
-    const lastTrigger = controller.lastTriggerByRootId[rootId] || 0;
+  function SettingsComponent(props) {
+    const { attrs } = props;
 
-    if (now - lastTrigger < 400) {
-      return false;
-    }
-
-    controller.lastTriggerByRootId[rootId] = now;
-    return true;
+    return React.createElement(
+      GroupContainer,
+      {
+        attrs: attrs,
+        id: 'reacgGallerySettings',
+        title: text('settingsGroup', 'Gallery'),
+      },
+      React.createElement(
+        FieldContainer,
+        {
+          attrs: attrs,
+          attrName: 'galleryId',
+          label: text('fieldLabel', 'Gallery'),
+        },
+        React.createElement(GalleryPickerField, null),
+      ),
+    );
   }
 
-  function mountGalleryPreview(rootId, expectedGalleryId, controller, attempt, onSuccess) {
-    if (!controller.active) {
-      return;
-    }
-
-    const currentAttempt = attempt || 0;
-    const maxAttempts = 80;
-    const root = findElementById(rootId);
-
-    if (root) {
-      if (String(root.getAttribute('data-gallery-id')) !== String(expectedGalleryId)) {
-        if (currentAttempt < maxAttempts) {
-          scheduleMountRetry(controller, function () {
-            mountGalleryPreview(rootId, expectedGalleryId, controller, currentAttempt + 1, onSuccess);
-          }, currentAttempt < 15 ? 100 : 150);
-        }
-
-        return;
-      }
-
-      if (hasMountedGalleryContent(root)) {
-        if (typeof onSuccess === 'function') {
-          onSuccess();
-        }
-
-        return;
-      }
-
-      if (shouldTriggerMount(controller, rootId)) {
-        mountGalleryElement(root);
-      }
-    }
-
-    if (currentAttempt >= maxAttempts) {
-      return;
-    }
-
-    scheduleMountRetry(controller, function () {
-      mountGalleryPreview(rootId, expectedGalleryId, controller, currentAttempt + 1, onSuccess);
-    }, currentAttempt < 20 ? 100 : 250);
-  }
-
-  function scheduleGalleryPreviewMount(rootId, expectedGalleryId, controller, onSuccess) {
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () {
-        mountGalleryPreview(rootId, expectedGalleryId, controller, 0, onSuccess);
-      });
-    });
-  }
+  /* ---------------------------------------------------------------- */
+  /* Canvas (edit) component                                            */
+  /* ---------------------------------------------------------------- */
 
   function StylesComponent(props) {
     const { attrs, elements, orderClass, mode, state, noStyleTag } = props;
@@ -326,181 +270,169 @@
         attr: attrs.css || {},
         orderClass: orderClass,
         cssFields: [],
-      })
+      }),
+    );
+  }
+
+  function Placeholder(props) {
+    return React.createElement(
+      'div',
+      { className: 'reacg-builder-placeholder', 'data-widget-id': props.moduleId },
+      React.createElement(
+        'div',
+        { className: 'reacg-builder-placeholder-icon' },
+        React.createElement('img', { src: (diviData.plugin_url || '') + '/assets/images/icon.svg', alt: text('brand', 'Re Gallery') }),
+      ),
+      React.createElement('div', { className: 'reacg-builder-placeholder-title' }, text('brand', 'Re Gallery')),
+      React.createElement(
+        'p',
+        { className: 'reacg-builder-placeholder-desc' },
+        text('placeholderDesc', 'No gallery selected yet. Select an existing gallery or create a new one.'),
+      ),
+      React.createElement(
+        'button',
+        {
+          type: 'button',
+          className: 'reacg-builder-open-modal-btn button button-primary',
+          onClick: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openPanel(props.moduleId, 0);
+          },
+        },
+        React.createElement(
+          'svg',
+          { className: 'reacg-builder-open-modal-btn__icon', 'aria-hidden': 'true', viewBox: '0 0 20 20', focusable: 'false' },
+          React.createElement('path', {
+            d: 'M16 4h1.96c.57 0 1.04.47 1.04 1.04v12.92c0 .57-.47 1.04-1.04 1.04H5.04C4.47 19 4 18.53 4 17.96V16H2.04C1.47 16 1 15.53 1 14.96V2.04C1 1.47 1.47 1 2.04 1h12.92c.57 0 1.04.47 1.04 1.04V4zM6 6v11h11V6H6zm1 9l2.5-3 1.5 2 2.5-4L15 15H7zM3 3v11h1V5.04C4 4.47 4.47 4 5.04 4H14V3H3z',
+          }),
+        ),
+        text('selectOrCreate', 'Select or Create Gallery'),
+      ),
     );
   }
 
   function EditComponent(props) {
     const { attrs, elements, id, name } = props;
-    const settings = getSettings();
-    const galleryId = getAttrByMode(attrs.galleryId);
-    const enableOptions = getAttrByMode(attrs.enableOptions);
-    const stableRootId = getRootId(id, '');
-    const previewState = useState({
-      loading: false,
-      error: false,
-      rootId: stableRootId,
-      galleryId: '',
-      galleryTimestamp: '',
-      optionsTimestamp: '',
-      pluginVersion: '',
-    });
+    const galleryId = getGalleryId(attrs);
+    const rootId = 'reacg-root' + sanitizeId(id);
+    const previewState = useState({ status: 'idle', galleryId: 0, galleryTimestamp: '', optionsTimestamp: '', pluginVersion: '' });
     const preview = previewState[0];
     const setPreview = previewState[1];
-    const mountControllerRef = useRef(null);
-    const lastMountedRef = useRef('');
 
-    useEffect(function () {
-      if (!galleryId || galleryId === '0') {
-        deactivateMountController(mountControllerRef.current);
-        mountControllerRef.current = null;
-        lastMountedRef.current = '';
-        setPreview({
-          loading: false,
-          error: false,
-          rootId: stableRootId,
-          galleryId: '',
-          galleryTimestamp: '',
-          optionsTimestamp: '',
-          pluginVersion: '',
+    // Load the gallery data for the canvas preview whenever the gallery changes.
+    useEffect(
+      function () {
+        if (!galleryId) {
+          setPreview({ status: 'idle', galleryId: 0, galleryTimestamp: '', optionsTimestamp: '', pluginVersion: '' });
+          return undefined;
+        }
+
+        const controller = new AbortController();
+        const body = new URLSearchParams();
+        body.append('action', 'reacg_divi_preview');
+        body.append('nonce', diviData.nonce || '');
+        body.append('gallery_id', String(galleryId));
+        body.append('module_id', String(id || ''));
+
+        setPreview(function (current) {
+          return Object.assign({}, current, { status: 'loading' });
         });
-        return;
-      }
 
-      if (!settings.ajax_url || !settings.nonce) {
-        setPreview({
-          loading: false,
-          error: true,
-          rootId: stableRootId,
-          galleryId: String(galleryId),
-          galleryTimestamp: '',
-          optionsTimestamp: '',
-          pluginVersion: '',
-        });
-        return;
-      }
-
-      deactivateMountController(mountControllerRef.current);
-      mountControllerRef.current = null;
-      lastMountedRef.current = '';
-
-      const controller = new AbortController();
-      const formData = new FormData();
-
-      formData.append('nonce', settings.nonce);
-      formData.append('action', 'reacg_divi_preview');
-      formData.append('gallery_id', String(galleryId));
-      formData.append('module_id', String(id || ''));
-      formData.append('enable_options', String(enableOptions));
-
-      setPreview(function (currentPreview) {
-        return {
-          loading: true,
-          error: false,
-          rootId: stableRootId,
-          galleryId: currentPreview.galleryId || '',
-          galleryTimestamp: currentPreview.galleryTimestamp || '',
-          optionsTimestamp: currentPreview.optionsTimestamp || '',
-          pluginVersion: currentPreview.pluginVersion || '',
-        };
-      });
-
-      fetch(settings.ajax_url, {
-        method: 'POST',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Cache-Control': 'no-cache',
-        },
-        body: new URLSearchParams(formData),
-        signal: controller.signal,
-      })
-        .then(function (response) {
-          return response.json();
+        fetch(diviData.ajax_url || '', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-cache',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body,
+          signal: controller.signal,
         })
-        .then(function (response) {
-          if (response && response.success && response.data) {
-            try {
-              window.reacg_data = window.reacg_data || {};
-              window.reacg_data[String(response.data.galleryId || galleryId)] = response.data.galleryData;
-            } catch (error) {
-              // Ignore preview data assignment errors.
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (response) {
+            if (!response || !response.success || !response.data) {
+              throw new Error('preview failed');
             }
-
-            const rootId = getRootId(id, response.data.rootId);
-            const now = String(Date.now());
-
+            window.reacg_data = window.reacg_data || {};
+            window.reacg_data[String(galleryId)] = response.data.galleryData;
             setPreview({
-              loading: false,
-              error: false,
-              rootId: rootId,
-              galleryId: String(response.data.galleryId || galleryId),
-              galleryTimestamp: String(response.data.galleryTimestamp || now),
-              optionsTimestamp: String(response.data.optionsTimestamp || now),
+              status: 'ready',
+              galleryId: galleryId,
+              galleryTimestamp: String(response.data.galleryTimestamp || Date.now()),
+              optionsTimestamp: String(response.data.optionsTimestamp || Date.now()),
               pluginVersion: String(response.data.pluginVersion || ''),
             });
+          })
+          .catch(function () {
+            if (!controller.signal.aborted) {
+              setPreview({ status: 'error', galleryId: galleryId, galleryTimestamp: '', optionsTimestamp: '', pluginVersion: '' });
+            }
+          });
+
+        return function () {
+          controller.abort();
+        };
+      },
+      [galleryId, id],
+    );
+
+    // Mount the root once the preview markup for the current gallery is in the DOM.
+    useEffect(
+      function () {
+        if (preview.status !== 'ready' || !preview.galleryId) {
+          return undefined;
+        }
+        let attempts = 0;
+        let timer = null;
+        const tryMount = function () {
+          const root = document.getElementById(rootId);
+          const ready = root && String(root.getAttribute('data-gallery-id')) === String(preview.galleryId);
+          if (ready && mountGalleryRoot(root)) {
             return;
           }
-
-          setPreview({
-            loading: false,
-            error: true,
-            rootId: stableRootId,
-            galleryId: String(galleryId),
-            galleryTimestamp: '',
-            optionsTimestamp: '',
-            pluginVersion: '',
-          });
-        })
-        .catch(function () {
-          if (!controller.signal.aborted) {
-            setPreview({
-              loading: false,
-              error: true,
-              rootId: stableRootId,
-              galleryId: String(galleryId),
-              galleryTimestamp: '',
-              optionsTimestamp: '',
-              pluginVersion: '',
-            });
+          attempts += 1;
+          if (attempts < 60) {
+            timer = window.setTimeout(tryMount, attempts < 10 ? 100 : 250);
           }
-        });
+        };
+        tryMount();
+        return function () {
+          if (timer) {
+            window.clearTimeout(timer);
+          }
+        };
+      },
+      [preview.status, preview.galleryId, rootId],
+    );
 
-      return function () {
-        controller.abort();
-      };
-    }, [galleryId, enableOptions, id]);
-
-    useLayoutEffect(function () {
-      if (preview.loading || preview.error || !preview.rootId || !preview.galleryId) {
-        return;
-      }
-
-      const mountKey =
-        preview.rootId + ':' + preview.galleryId + ':' + String(enableOptions);
-
-      if (lastMountedRef.current === mountKey) {
-        return;
-      }
-
-      deactivateMountController(mountControllerRef.current);
-
-      const controller = createMountController();
-
-      mountControllerRef.current = controller;
-      scheduleGalleryPreviewMount(preview.rootId, preview.galleryId, controller, function () {
-        lastMountedRef.current = mountKey;
+    let inner;
+    if (!galleryId) {
+      inner = React.createElement(Placeholder, { moduleId: id });
+    } else if (preview.status === 'error') {
+      inner = React.createElement('div', { className: 'reacg-divi-error' }, text('errorText', 'Unable to load gallery preview. Please try again.'));
+    } else if (preview.status !== 'ready' || preview.galleryId !== galleryId) {
+      inner = React.createElement('div', { className: 'reacg-divi-loading' }, text('loadingText', 'Loading gallery preview...'));
+    } else {
+      inner = React.createElement('div', {
+        key: rootId + ':' + preview.galleryId,
+        id: rootId,
+        className: 'reacg-wrapper reacg-gallery reacg-preview',
+        'data-options-section': 0,
+        'data-options-container': '#reacg_settings',
+        'data-plugin-version': preview.pluginVersion,
+        'data-gallery-timestamp': preview.galleryTimestamp,
+        'data-options-timestamp': preview.optionsTimestamp,
+        'data-widget-id': sanitizeId(id),
+        'data-gallery-id': preview.galleryId,
+        // Clicking the preview opens the panel instead of the gallery's own handlers.
+        onClickCapture: function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          openPanel(id, galleryId);
+        },
       });
-
-      return function () {
-        deactivateMountController(controller);
-
-        if (mountControllerRef.current === controller) {
-          mountControllerRef.current = null;
-        }
-      };
-    }, [preview.loading, preview.error, preview.rootId, preview.galleryId, enableOptions]);
+    }
 
     return React.createElement(
       ModuleContainer,
@@ -512,75 +444,13 @@
         moduleClassName: 'reacg_divi_gallery',
         stylesComponent: StylesComponent,
       },
-      React.createElement(
-        'div',
-        { className: 'et_pb_module_inner' },
-        !galleryId || galleryId === '0'
-          ? React.createElement('div', { className: 'reacg-divi-empty' }, settings.empty_text)
-          : React.createElement(
-              'div',
-              { className: 'reacg-divi-preview-wrap' },
-              preview.loading
-                ? React.createElement('div', { className: 'reacg-divi-loading' }, settings.loading_text)
-                : null,
-              preview.error
-                ? React.createElement('div', { className: 'reacg-divi-error' }, settings.error_text)
-                : null,
-              React.createElement('div', {
-                key:
-                  (preview.rootId || stableRootId) +
-                  ':' +
-                  (preview.galleryId || '') +
-                  ':' +
-                  String(enableOptions),
-                id: preview.rootId || stableRootId,
-                className: 'reacg-wrapper reacg-gallery reacg-preview',
-                'data-options-section': enableOptions === 'on' ? 1 : 0,
-                'data-options-container': '#reacg_settings',
-                'data-plugin-version': preview.pluginVersion,
-                'data-gallery-timestamp': preview.galleryTimestamp,
-                'data-options-timestamp': preview.optionsTimestamp,
-                'data-gallery-id': preview.galleryId,
-              })
-            )
-      )
+      React.createElement('div', { className: 'et_pb_module_inner' }, inner),
     );
   }
 
-  function SettingsComponent(props) {
-    const { attrs } = props;
-    const settings = getSettings();
-
-    return React.createElement(
-      GroupContainer,
-      {
-        attrs: attrs,
-        id: 'reacgGallerySettings',
-        title: settings.settingsGroup.label,
-      },
-      React.createElement(
-        FieldContainer,
-        {
-          attrs: attrs,
-          attrName: 'galleryId',
-          label: settings.galleryId.label,
-        },
-        React.createElement(Select, {
-          options: settings.galleries,
-          emptyLabel: settings.galleryId.placeholder,
-        })
-      ),
-      React.createElement(
-        FieldContainer,
-        {
-          attrs: attrs,
-          attrName: 'enableOptions',
-          label: settings.enableOptions.label,
-        },
-        React.createElement(ToggleContainer, { attrName: 'enableOptions' })
-      )
-    );
-  }
+  /* ---------------------------------------------------------------- */
+  /* Registration                                                       */
+  /* ---------------------------------------------------------------- */
 
   const moduleDefinition = {
     metadata: metadata,
@@ -593,18 +463,14 @@
     },
   };
 
-  window.vendor.wp.hooks.addAction(
-    'divi.moduleLibrary.registerModuleLibraryStore.after',
-    'regallery',
-    function () {
-      registerModule(moduleDefinition.metadata, moduleDefinition);
-    }
-  );
+  window.vendor.wp.hooks.addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'regallery', function () {
+    registerModule(moduleDefinition.metadata, moduleDefinition);
+  });
 
   window.vendor.wp.hooks.addFilter('divi.iconLibrary.icon.map', 'regallery', function (icons) {
     return Object.assign({}, icons, {
-      'regallery/divi-gallery-selector': {
-        name: 'regallery/divi-gallery-selector',
+      [MODULE_NAME]: {
+        name: MODULE_NAME,
         viewBox: '0 0 26 28',
         component: function () {
           return React.createElement(
@@ -616,7 +482,7 @@
               y: '0',
               width: '26',
               height: '28',
-            })
+            }),
           );
         },
       },

@@ -1,5 +1,6 @@
 body {
-  --reacg-primary-color: var(--wp-admin-theme-color, #155C92);
+  --reacg-primary-color: var(--wp-admin-theme-color, #155c92);
+  --reacg-primary-color-darker: var(--wp-admin-theme-color-darker-10, #006ba1);
 }
 
 .editor-styles-wrapper .reacg-wrapper img,
@@ -20,7 +21,8 @@ body {
 }
 
 .editor-styles-wrapper .reacg-wrapper .reacg-settings input,
-.reacg-wrapper .reacg-settings input {
+.reacg-wrapper .reacg-settings input,
+.reacg-wrapper .reacg-settings input:focus {
   border: none;
   line-height: 1;
   margin: 0;
@@ -28,22 +30,25 @@ body {
   box-shadow: none;
   outline: none;
 }
+
 .reacg-settings {
   .Mui-checked + .MuiSwitch-track,
   .MuiTabs-indicator {
-    background-color: var(--reacg-primary-color, #155C92) !important;
+    background-color: var(--reacg-primary-color, #155c92) !important;
   }
+
   .Mui-checked,
   .MuiSlider-marked,
-  .Mui-focused  {
-    color: var(--reacg-primary-color, #155C92);
+  .Mui-focused {
+    color: var(--reacg-primary-color, #155c92);
   }
+
   .MuiInput-underline.Mui-focused:after {
-    border-bottom-color: var(--reacg-primary-color, #155C92);
+    border-bottom-color: var(--reacg-primary-color, #155c92);
   }
 }
 
-.editor-styles-wrapper .MuiSwitch-switchBase input[type=checkbox] {
+.editor-styles-wrapper .MuiSwitch-switchBase input[type="checkbox"] {
   position: absolute !important;
 }
 
@@ -59,14 +64,13 @@ body {
 /* For Elementor and Divi builder. */
 .elementor-widget-container .button-primary,
 .reacg_module .button-primary {
-  background: var(--reacg-primary-color, #155C92);
-  border-color: var(--reacg-primary-color, #155C92);
+  background: var(--reacg-primary-color, #155c92);
+  border-color: var(--reacg-primary-color, #155c92);
   color: #fff;
   text-decoration: none;
   text-shadow: none;
   border-radius: 3px;
 }
-
 
 .elementor-widget-container .button-primary:hover,
 .reacg_module .button-primary:hover {
@@ -79,8 +83,8 @@ body {
 .elementor-widget-container .button-secondary,
 .reacg_module .button-secondary {
   background: #f6f7f7;
-  border-color: var(--reacg-primary-color, #155C92);
-  color: var(--reacg-primary-color, #155C92);
+  border-color: var(--reacg-primary-color, #155c92);
+  color: var(--reacg-primary-color, #155c92);
   text-decoration: none;
   text-shadow: none;
   border-radius: 3px;
@@ -93,10 +97,12 @@ body {
   color: #0a4b78;
   border-radius: 3px;
 }
+
 /* Remove unnecessary empty are from the bottom when there is no data to show.*/
 .reacg-elementor-icon.elementor-widget-empty-icon {
   display: none !important;
 }
+
 /* Remove empty widget background if the gallery options are hidden.*/
 .elementor-widget-reacg-elementor.elementor-widget-empty {
   background-color: transparent !important;
