@@ -121,6 +121,15 @@ final class REACG {
     add_action('wp_enqueue_scripts', array($this, 'register_frontend_scripts'));
     add_action('admin_enqueue_scripts', array($this, 'register_admin_scripts'));
 
+    // Keep the main React bundle out of the caching/optimization plugins' minified copies.
+    // The bundle holds the hashed chunk names, so a stale copy requests chunks that no longer exist.
+    add_filter('script_loader_tag', array($this, 'script_loader_tag'), 10, 2);
+    add_filter('rocket_exclude_js', array($this, 'exclude_bundle_from_optimizers'));
+    add_filter('litespeed_optimize_js_excludes', array($this, 'exclude_bundle_from_optimizers'));
+    add_filter('autoptimize_filter_js_exclude', array($this, 'exclude_bundle_from_optimizers'));
+    // Purge the caching plugins once after the plugin is updated.
+    add_action('admin_init', array($this, 'maybe_purge_caches_on_update'));
+
     // Initialize shared builder integrations.
     REACG_Builders_Loader::init();
 
@@ -344,6 +353,106 @@ final class REACG {
         'no_data' => __('There is not data.', 'regallery'),
       ],
     ) );
+  }
+
+  /**
+   * Add data attributes to the main bundle so that caching/optimization plugins leave it untouched.
+   *
+   * data-no-optimize: LiteSpeed Cache, Flying Press, Perfmatters.
+   * data-no-minify:   WP Rocket.
+   * data-noptimize:   Autoptimize.
+   *
+   * @param string $tag
+   * @param string $handle
+   *
+   * @return string
+   */
+  public function script_loader_tag( $tag, $handle ) {
+    if ( $handle === $this->prefix . '_thumbnails' && strpos($tag, 'data-no-minify') === FALSE ) {
+      $tag = preg_replace('/<script\b/', '<script data-no-optimize="1" data-no-minify="1" data-noptimize="1"', $tag, 1);
+    }
+
+    return $tag;
+  }
+
+  /**
+   * Exclude the main bundle from the JS minification/combination of the optimization plugins.
+   *
+   * @param array $excluded
+   *
+   * @return array
+   */
+  public function exclude_bundle_from_optimizers( $excluded ) {
+    $path = rtrim((string) wp_parse_url($this->plugin_url, PHP_URL_PATH), '/') . '/assets/js/wp-gallery.js';
+    // Autoptimize passes a comma-separated string, the others pass an array.
+    if ( is_string($excluded) ) {
+      return strpos($excluded, $path) === FALSE ? trim($excluded . ',' . $path, ',') : $excluded;
+    }
+    if ( !is_array($excluded) ) {
+      $excluded = [];
+    }
+    $excluded[] = $path;
+
+    return array_values(array_unique($excluded));
+  }
+
+  /**
+   * Purge the known caching plugins once after the plugin version changes,
+   * so that the already generated minified copies of the main bundle are regenerated.
+   *
+   * @return void
+   */
+  public function maybe_purge_caches_on_update() {
+    if ( wp_doing_ajax() || get_option('reacg_version') === $this->version ) {
+      return;
+    }
+    update_option('reacg_version', $this->version);
+    $this->purge_caches();
+  }
+
+  /**
+   * Purge page and minified assets caches of the popular caching plugins.
+   *
+   * @return void
+   */
+  public function purge_caches() {
+    // WP Rocket.
+    if ( function_exists('rocket_clean_minify') ) {
+      rocket_clean_minify();
+    }
+    if ( function_exists('rocket_clean_domain') ) {
+      rocket_clean_domain();
+    }
+    // LiteSpeed Cache.
+    do_action('litespeed_purge_all');
+    // Autoptimize.
+    if ( class_exists('autoptimizeCache') && method_exists('autoptimizeCache', 'clearall') ) {
+      autoptimizeCache::clearall();
+    }
+    // W3 Total Cache.
+    if ( function_exists('w3tc_flush_all') ) {
+      w3tc_flush_all();
+    }
+    // WP Super Cache.
+    if ( function_exists('wp_cache_clear_cache') ) {
+      wp_cache_clear_cache();
+    }
+    // WP Fastest Cache.
+    if ( isset($GLOBALS['wp_fastest_cache']) && method_exists($GLOBALS['wp_fastest_cache'], 'deleteCache') ) {
+      $GLOBALS['wp_fastest_cache']->deleteCache(TRUE);
+    }
+    // SiteGround Optimizer.
+    if ( function_exists('sg_cachepress_purge_cache') ) {
+      sg_cachepress_purge_cache();
+    }
+    // Breeze.
+    do_action('breeze_clear_all_cache');
+    // Flying Press.
+    if ( class_exists('FlyingPress\\Purge') && method_exists('FlyingPress\\Purge', 'purge_everything') ) {
+      \FlyingPress\Purge::purge_everything();
+    }
+    // Hummingbird.
+    do_action('wphb_clear_page_cache');
   }
 
   /**
