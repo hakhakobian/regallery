@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.17
+Stable tag: 1.20.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Photo gallery plugin that writes your image SEO with a built-in AI. Create respo
 Re Gallery is a fast, SEO-friendly WordPress photo gallery plugin with a built-in AI that automatically generates image titles, descriptions, alt text, and captions — for free.
 
 Create stunning, responsive image galleries using 11 gallery layouts like Mosaic, Masonry, Grid, Slider, Carousel, and more with drag-and-drop simplicity, and no coding required.
-Unlock 55+ pre-built templates with Re Gallery PRO.
+Unlock 70+ pre-built templates with Re Gallery PRO.
 
 [Gallery Live Demo](https://regallery.team/?utm_source=wordpress&utm_medium=details&utm_campaign=gallery_live_demo#gallery_layouts) | [Pre-Designed Templates Demo](https://regallery.team/core/demo/?utm_source=wordpress&utm_medium=details&utm_campaign=templates_demo)
 
@@ -54,7 +54,7 @@ https://www.youtube.com/watch?v=hPJzRNCz8VQ
 *   🤖 **AI-Powered Image SEO:** Automatically generate SEO-ready image titles, alt text, captions, and descriptions directly inside WordPress. No external AI account or registration required.
 *   ⚡ **Fast, Lightweight & Mobile-Friendly:** Built for speed with minimal dependencies, lazy loading, and responsive layouts that help improve Core Web Vitals and user experience.
 *   🎨 **Beautiful Galleries in Minutes:** Create professional image galleries using 11 responsive layouts with drag-and-drop simplicity and live preview—no coding required.
-*   📈 **Better SEO, AccessibilitySave time & User Engagement:** Improve search visibility while keeping visitors engaged with modern galleries, lightbox viewing, optimized metadata, and fast-loading images.
+*   📈 **Better SEO, Accessibility & User Engagement:** Improve search visibility while keeping visitors engaged with modern galleries, lightbox viewing, optimized metadata, and fast-loading images.
 *   🧩 **Works with Your Favorite Tools:** Fully compatible with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, WPBakery, and WooCommerce.
 *   💙 **Easy to Use & Continuously Improved:** Designed with a native WordPress interface, backed by responsive support and regular feature updates based on community feedback.
 
@@ -78,7 +78,7 @@ Enjoy a smarter, more dynamic, and user-friendly photo gallery management experi
 *   **Builder Integration:** Works seamlessly with Gutenberg, Elementor, Divi, Bricks, Beaver Builder, and WPBakery.
 *   **Dynamic Galleries:** Automatically generate galleries from your latest posts or WooCommerce products that update as your content grows.
 *   **Advanced Gallery Customization:** Easily adjust spacing, padding, border radius, image size, titles, pagination, hover effects, and click actions without writing CSS.
-*   **Upgrade to PRO:** Unlock 55+ professionally designed templates, AI automation, watermark protection, WooCommerce enhancements, Custom CSS, White Label, and priority support.
+*   **Upgrade to PRO:** Unlock 70+ professionally designed templates, AI automation, watermark protection, WooCommerce enhancements, Custom CSS, White Label, and priority support.
 
 == Popular Re Gallery Tutorials ==
 
@@ -128,7 +128,7 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 == Screenshots ==
 
 1. Build Beautiful WordPress Photo Galleries
-2. Choose from 11 Gallery Layouts and 55+ Templates
+2. Choose from 11 Gallery Layouts and 70+ Templates
 3. Generate AI Titles, Alt Text, Captions and Descriptions
 4. Customize Every Gallery with Live Preview
 5. Create Galleries from Your WordPress Media Library
@@ -142,7 +142,7 @@ This repository contains the unpacked JavaScript portion of the plugin. You can 
 13. Elegant Coverflow Gallery Layout
 14. Creative Cards Gallery Layout
 15. Modern Cube Gallery Layout
-16. Choose from 55+ Professionally Designed Templates
+16. Choose from 70+ Professionally Designed Templates
 17. Fully Responsive on Desktop, Tablet and Mobile
 
 
@@ -193,7 +193,7 @@ Yes — Re Gallery includes a built-in migration tool that imports existing gall
 Yes, Re Gallery allows you to display both videos and photos together in one gallery. You can easily combine images and videos to create dynamic, engaging responsive photo galleries. Plus, it integrates smoothly with WordPress posts and pages, letting you showcase mixed media galleries dynamically across your site.
 
 = Is there a free trial of Re Gallery PRO? =
-Yes. Every new installation includes a free 7-day trial of Re Gallery PRO, giving you access to premium features such as 55+ gallery templates, AI-powered image SEO, WooCommerce integration, watermark protection, and more. No credit card or payment information is required to start the trial.
+Yes. Every new installation includes a free 7-day trial of Re Gallery PRO, giving you access to premium features such as 70+ gallery templates, AI-powered image SEO, WooCommerce integration, watermark protection, and more. No credit card or payment information is required to start the trial.
 
 = What happens to my galleries when my Re Gallery plugin plan expires? =
 If your Re Gallery plugin plan expires, your galleries will continue to function normally on your WordPress site. You simply lose access to PRO features, future updates, and premium support until you renew your license.
@@ -214,10 +214,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.17: Unified floating gallery panel across Gutenberg, Elementor, Divi 4/5, Bricks, Beaver Builder and WPBakery with live preview and auto-save. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.18: Fixed issue with caching plugins. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.18 =
+= Updated: 20.10.2026 =
+* **Added:** Sale Badges, Listings, Menu Board, New Arrivals, Logo Marquee, Timeline, Testimonial Cards, Vacation Reveal, Corner Reveal, Feature Cards, Film Strip, Glass Cards, and Mirror Flow templates.
+* **Fixed:** Gallery not loading when a caching plugin (WP Rocket, LiteSpeed Cache, Autoptimize and others) served an outdated minified copy of the gallery script after a plugin update.
+
 = 1.20.17 =
 = Updated: 14.10.2026 =
 * **Added:** Unified floating gallery panel for page builders (Gutenberg, Elementor, Divi 4, Divi 5, Bricks, Beaver Builder, WPBakery): select or create a gallery, manage media and edit all settings in one place while the canvas preview updates live.
@@ -501,7 +506,6 @@ Customize your website easily! Just upload images with the standard WordPress me
 * **Improved:** Updated plugin branding to be consistent across the plugin header, and description.
 * **Improved:** Sanitization and validation of inputs.
 * **Improved:** Translators' comments for strings with placeholders to improve localization quality.
-* **Fixed:** Keyword repetition and overly generic wording in plugin descriptions.
 * **Fixed:** Removed external emoji image dependency to comply with WordPress.org asset guidelines.
 * **Fixed:** Corrected redirect handling using recommended safe redirect functions.
 * **Fixed:** Resolved timezone-related date handling warning.
