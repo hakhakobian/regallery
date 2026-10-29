@@ -92,9 +92,7 @@ jQuery(document).ready(function () {
   }
 
   /* Save options on saving the gallery.*/
-  jQuery("#publish").on("click", function () {
-    jQuery(".save-settings-button").trigger("click");
-  });
+  reacg_bind_gallery_save_options();
   /* Bind an event to the add image button.*/
   jQuery(document).on("click", ".reacg_item_new", function (event) {
     reacg_media_uploader(event, this);
@@ -364,6 +362,240 @@ function reacg_track_unsaved_changes() {
       });
     }
   }
+}
+
+/**
+ * Save React gallery options before submitting the gallery post form.
+ */
+function reacg_bind_gallery_save_options() {
+  const postForm = document.getElementById("post");
+  if (!postForm || jQuery("#post_type").val() !== "reacg") {
+    return;
+  }
+
+  const galleryId =
+    jQuery("#post_ID").val() ||
+    jQuery(".reacg-gallery[data-options-section='1']").attr("data-gallery-id") ||
+    jQuery(".reacg_items").data("post-id");
+
+  if (!galleryId) {
+    return;
+  }
+
+  let optionsLoaded = false;
+  let isSavingOptions = false;
+  let allowFormSubmit = false;
+  let isSubmittingAfterOptionsSave = false;
+  let resetSubmittingTimer = null;
+
+  window.reacg_global = window.reacg_global || {};
+  const prevOnOptionsChange = window.reacg_global.onOptionsChange;
+  window.reacg_global.onOptionsChange = function (options, context) {
+    if (typeof prevOnOptionsChange === "function") {
+      try {
+        prevOnOptionsChange(options, context);
+      } catch (e) {}
+    }
+    if (context && String(context.galleryId) === String(galleryId)) {
+      optionsLoaded = true;
+    }
+  };
+
+  window.addEventListener(
+    "beforeunload",
+    function (e) {
+      if (!isSubmittingAfterOptionsSave) {
+        return;
+      }
+      const api = getSettingsApi();
+      if (!api || typeof api.hasChanges !== "function" || !api.hasChanges()) {
+        e.stopImmediatePropagation();
+      }
+    },
+    true,
+  );
+
+  function getSettingsApi() {
+    return (
+      (window.reacg_global &&
+        window.reacg_global.settings_api &&
+        window.reacg_global.settings_api[String(galleryId)]) ||
+      null
+    );
+  }
+
+  function isOptionsReady(api) {
+    if (optionsLoaded) {
+      return true;
+    }
+    if (!api || typeof api.getOptions !== "function") {
+      return false;
+    }
+    const currentOptions = api.getOptions();
+    return Boolean(
+      currentOptions &&
+        Object.prototype.hasOwnProperty.call(currentOptions, "template_id"),
+    );
+  }
+
+  function needsOptionsSave() {
+    const api = getSettingsApi();
+    if (!api || typeof api.save !== "function") {
+      return false;
+    }
+    if (typeof api.hasChanges === "function" && api.hasChanges()) {
+      return true;
+    }
+    return (
+      jQuery("#original_post_status").val() === "auto-draft" &&
+      isOptionsReady(api)
+    );
+  }
+
+  function isButtonDisabled(button) {
+    return Boolean(
+      button &&
+        (button.disabled ||
+          button.classList.contains("disabled") ||
+          button.classList.contains("button-disabled") ||
+          button.classList.contains("button-primary-disabled")),
+    );
+  }
+
+  function setButtonLoading(button, loading) {
+    const isDraftSave = button && button.id === "save-post";
+    const spinner = isDraftSave
+      ? jQuery("#save-action .spinner, #minor-publishing-actions .spinner").first()
+      : jQuery("#publishing-action .spinner");
+    const targetButton =
+      button && (button.id === "publish" || button.id === "save-post")
+        ? jQuery(button)
+        : jQuery("#publishing-action #publish");
+
+    spinner.toggleClass("is-active", loading);
+    targetButton.toggleClass("disabled", loading);
+  }
+
+  function submitPostForm(submitter) {
+    isSubmittingAfterOptionsSave = true;
+    if (resetSubmittingTimer) {
+      clearTimeout(resetSubmittingTimer);
+    }
+    resetSubmittingTimer = setTimeout(function () {
+      isSubmittingAfterOptionsSave = false;
+    }, 2000);
+
+    allowFormSubmit = true;
+    try {
+      if (submitter && typeof submitter.click === "function") {
+        submitter.click();
+      } else if (typeof postForm.requestSubmit === "function") {
+        postForm.requestSubmit();
+      } else {
+        postForm.submit();
+      }
+    } finally {
+      allowFormSubmit = false;
+    }
+  }
+
+  function saveOptionsThenSubmit(submitter) {
+    isSavingOptions = true;
+    setButtonLoading(submitter, true);
+
+    /* Wait a tick so any focused React input blur update commits first.*/
+    setTimeout(function () {
+      const api = getSettingsApi();
+      const savePromise =
+        api && typeof api.save === "function"
+          ? Promise.resolve(api.save({ silent: true }))
+          : Promise.resolve(true);
+
+      savePromise
+        .then(function (ok) {
+          if (!ok) {
+            isSavingOptions = false;
+            setButtonLoading(submitter, false);
+            return;
+          }
+
+          /* Allow React to commit hasChanges=false and clean up its beforeunload listener.*/
+          setTimeout(function () {
+            isSavingOptions = false;
+            setButtonLoading(submitter, false);
+            submitPostForm(submitter);
+          }, 50);
+        })
+        .catch(function () {
+          isSavingOptions = false;
+          setButtonLoading(submitter, false);
+        });
+    }, 0);
+  }
+
+  postForm.addEventListener(
+    "click",
+    function (e) {
+      const button =
+        e.target && typeof e.target.closest === "function"
+          ? e.target.closest("#publish, #save-post")
+          : null;
+      if (!button || allowFormSubmit) {
+        return;
+      }
+      if (isSavingOptions) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return;
+      }
+      if (isButtonDisabled(button) || !needsOptionsSave()) {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      saveOptionsThenSubmit(button);
+    },
+    true,
+  );
+
+  postForm.addEventListener(
+    "submit",
+    function (e) {
+      if (allowFormSubmit || jQuery("#wp-preview").val() === "dopreview") {
+        return;
+      }
+      if (isSavingOptions) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return;
+      }
+      if (!needsOptionsSave()) {
+        return;
+      }
+
+      const submitter =
+        e.submitter ||
+        document.getElementById("publish") ||
+        document.getElementById("save-post");
+      if (
+        isButtonDisabled(submitter) ||
+        isButtonDisabled(document.getElementById("publish"))
+      ) {
+        e.preventDefault();
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      saveOptionsThenSubmit(submitter);
+    },
+    true,
+  );
 }
 
 /**
