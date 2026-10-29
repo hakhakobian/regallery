@@ -48,7 +48,7 @@ jQuery(document).ready(function () {
     spinner.addClass("is-active");
 
     const button = jQuery(this);
-    button.attr("disabled", "desabled");
+    button.attr("disabled", "disabled");
 
     jQuery.ajax({
       type: "POST",
@@ -883,7 +883,9 @@ function reacg_get_preview_documents() {
     const diviFrame =
       document.querySelector("#et-fb-app-frame, #et-vb-app-frame") ||
       (window.top && window.top.document
-        ? window.top.document.querySelector("#et-fb-app-frame, #et-vb-app-frame")
+        ? window.top.document.querySelector(
+            "#et-fb-app-frame, #et-vb-app-frame",
+          )
         : null);
     if (diviFrame && diviFrame.contentDocument) {
       add(diviFrame.contentDocument);
@@ -2412,12 +2414,10 @@ function reacg_add_ai_button(that, field) {
                         typeof errorNoteCont.get(0).scrollIntoView ===
                           "function"
                       ) {
-                        errorNoteCont
-                          .get(0)
-                          .scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                          });
+                        errorNoteCont.get(0).scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
                       }
                     }
                   },

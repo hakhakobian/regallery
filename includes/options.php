@@ -620,6 +620,7 @@ class REACG_Options {
       'thumbnailGap' => 5, #number
       'backgroundColor' => 'rgba(0, 0, 0, 0.2)', #string;
       'textPosition' => 'bottom', #string top | bottom | above | below
+      'isTextFullWidth' => TRUE, #boolean
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#FFFFFF', #string
       'textBackground' => '', #string
@@ -717,6 +718,7 @@ class REACG_Options {
     $boolean = [
       'showLightbox',
       'canFullscreen',
+      'isTextFullWidth',
       'isFullscreen',
       'areControlButtonsShown',
       'isInfinite',
