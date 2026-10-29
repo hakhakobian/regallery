@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.18
+Stable tag: 1.20.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,10 +214,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.18: Fixed issue with caching plugins. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.19: Lightbox title and description improvements. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.19 =
+= Updated: 30.10.2026 =
+* **Added:** Full-width option for the Lightbox text container to stretch across the full lightbox width or match the current image width.
+* **Improved:** Title, caption, and description layout and positioning in Lightbox.
+* **Fixed:** Custom CSS rules not applying to Lightbox elements.
+* **Fixed:** Unsaved changes alert appearing when updating a gallery from the edit page after modifying gallery settings.
+
 = 1.20.18 =
 = Updated: 20.10.2026 =
 * **Added:** Sale Badges, Listings, Menu Board, New Arrivals, Logo Marquee, Timeline, Testimonial Cards, Vacation Reveal, Corner Reveal, Feature Cards, Film Strip, Glass Cards, and Mirror Flow templates.
