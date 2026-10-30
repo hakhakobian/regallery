@@ -110,6 +110,22 @@ class REACG_Gallery {
       ) );
     } );
 
+    // Register a route to import template images into a gallery.
+    add_action( 'rest_api_init', function () {
+      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<gallery_id>\d+)/import-images', array(
+        'methods' => WP_REST_Server::CREATABLE,
+        'callback' => [ $this, 'import_template_images' ],
+        'args' => array(
+          'gallery_id' => array(
+            'validate_callback' => function($param, $request, $key) {
+              return is_numeric( $param ) && intval( $param ) > 0;
+            }
+          ),
+        ),
+        'permission_callback' => [ $this, 'import_images_permission' ],
+      ) );
+    } );
+
     add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_upload_prefilter' ] );
   }
 
@@ -344,6 +360,133 @@ class REACG_Gallery {
     }
 
     return current_user_can( 'edit_posts' );
+  }
+
+  /**
+   * Permission check for importing template media into a gallery.
+   *
+   * @param WP_REST_Request $request
+   *
+   * @return bool
+   */
+  public function import_images_permission( WP_REST_Request $request ) {
+    return $this->privileged_permission( $request ) && current_user_can( 'upload_files' );
+  }
+
+  /**
+   * Import template media items into a client gallery.
+   *
+   * @param WP_REST_Request $request
+   *
+   * @return WP_REST_Response|WP_Error
+   */
+  public function import_template_images( WP_REST_Request $request ) {
+    $gallery_id = intval( $request->get_param( 'gallery_id' ) );
+    $gallery_post = get_post( $gallery_id );
+    if ( !$gallery_post || $gallery_post->post_type !== REACG_CUSTOM_POST_TYPE ) {
+      return new WP_Error( 'invalid_gallery', __( 'Invalid gallery.', 'regallery' ), array( 'status' => 404 ) );
+    }
+
+    $body = $request->get_json_params();
+    $template_id = isset( $body['template_id'] ) ? intval( $body['template_id'] ) : intval( $request->get_param( 'template_id' ) );
+    if ( $template_id <= 0 ) {
+      return new WP_Error( 'invalid_template', __( 'Invalid template ID.', 'regallery' ), array( 'status' => 400 ) );
+    }
+
+    if ( function_exists( 'set_time_limit' ) ) {
+      // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Importing multiple media files can exceed default execution limits.
+      @set_time_limit( 300 );
+    }
+
+    $images = $this->fetch_core_template_images( $template_id, $request );
+    if ( is_wp_error( $images ) ) {
+      return $images;
+    }
+
+    if ( empty( $images ) ) {
+      return new WP_REST_Response( [
+        'images_ids' => [],
+        'count' => 0,
+      ], 200 );
+    }
+
+    $imported_ids = [];
+    foreach ( $images as $item ) {
+      if ( !is_array( $item ) || empty( $item['url'] ) ) {
+        continue;
+      }
+
+      $attachment_id = REACGLibrary::import_media_item( $item );
+      if ( !is_wp_error( $attachment_id ) && intval( $attachment_id ) > 0 ) {
+        $imported_ids[] = (int) $attachment_id;
+      }
+    }
+
+    if ( empty( $imported_ids ) ) {
+      return new WP_Error( 'import_failed', __( 'Failed to import template images.', 'regallery' ), array( 'status' => 502 ) );
+    }
+
+    update_post_meta( $gallery_id, 'images_ids', wp_json_encode( $imported_ids ) );
+    update_post_meta( $gallery_id, 'images_count', count( $imported_ids ) );
+    update_post_meta( $gallery_id, 'additional_data', '' );
+    update_post_meta( $gallery_id, 'gallery_timestamp', (string) time() );
+
+    return new WP_REST_Response( [
+      'images_ids' => $imported_ids,
+      'count' => count( $imported_ids ),
+    ], 200 );
+  }
+
+  /**
+   * Fetch template media items from the core server, forwarding the client's Origin/Referer headers.
+   *
+   * @param int             $template_id
+   * @param WP_REST_Request $request
+   *
+   * @return array|WP_Error
+   */
+  private function fetch_core_template_images( $template_id, WP_REST_Request $request ) {
+    $core_base = !empty( $this->obj->core_rest_url_v2 )
+      ? $this->obj->core_rest_url_v2
+      : 'https://regallery.team/core/wp-json/reacgcore/v2/';
+    $core_url = add_query_arg(
+      [ 'version' => $this->obj->version ],
+      rtrim( $core_base, '/' ) . '/template/' . intval( $template_id ) . '/images'
+    );
+
+    $admin_url = admin_url();
+    $parsed_admin = wp_parse_url( $admin_url );
+    $fallback_origin = !empty( $parsed_admin['scheme'] ) && !empty( $parsed_admin['host'] )
+      ? $parsed_admin['scheme'] . '://' . $parsed_admin['host'] . ( !empty( $parsed_admin['port'] ) ? ':' . $parsed_admin['port'] : '' )
+      : rtrim( home_url(), '/' );
+
+    $origin = $request->get_header( 'origin' );
+    $referer = $request->get_header( 'referer' );
+
+    $response = wp_remote_get( $core_url, [
+      'timeout' => 30,
+      'headers' => [
+        'Origin' => !empty( $origin ) ? $origin : $fallback_origin,
+        'Referer' => !empty( $referer ) ? $referer : $admin_url,
+      ],
+    ] );
+
+    if ( is_wp_error( $response ) ) {
+      return new WP_Error( 'core_request_failed', $response->get_error_message(), array( 'status' => 502 ) );
+    }
+
+    $status_code = (int) wp_remote_retrieve_response_code( $response );
+    if ( $status_code === 204 ) {
+      return new WP_Error( 'no_permission', __( 'You have no permission to use this template.', 'regallery' ), array( 'status' => 403 ) );
+    }
+
+    if ( $status_code !== 200 ) {
+      return new WP_Error( 'core_request_failed', __( 'Failed to fetch template images.', 'regallery' ), array( 'status' => 502 ) );
+    }
+
+    $decoded = json_decode( wp_remote_retrieve_body( $response ), true );
+
+    return is_array( $decoded ) ? $decoded : [];
   }
 
   /**
@@ -1774,17 +1917,7 @@ class REACG_Gallery {
    * @return array
    */
   private function get_crop_position_options() {
-    return [
-      'left top' => __('Left top', 'regallery'),
-      'center top' => __('Center top', 'regallery'),
-      'right top' => __('Right top', 'regallery'),
-      'left center' => __('Left center', 'regallery'),
-      'center center' => __('Center center', 'regallery'),
-      'right center' => __('Right center', 'regallery'),
-      'left bottom' => __('Left bottom', 'regallery'),
-      'center bottom' => __('Center bottom', 'regallery'),
-      'right bottom' => __('Right bottom', 'regallery'),
-    ];
+    return REACGLibrary::get_crop_position_options();
   }
 
   /**
@@ -1794,8 +1927,7 @@ class REACG_Gallery {
    * @return string
    */
   private function sanitize_crop_position($position) {
-    $position = sanitize_text_field((string) $position);
-    return array_key_exists($position, $this->get_crop_position_options()) ? $position : 'center center';
+    return REACGLibrary::sanitize_crop_position($position);
   }
 
   /**

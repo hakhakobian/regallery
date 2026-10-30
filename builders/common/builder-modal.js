@@ -356,6 +356,19 @@
           self.handleCreateGallery();
         }
       });
+
+      window.addEventListener("reacg:images-updated", function (e) {
+        if (
+          self.isOpen &&
+          e &&
+          e.detail &&
+          String(e.detail.galleryId) === String(self.currentGalleryId)
+        ) {
+          self._lastLoadedImagesGalleryId = null;
+          self.loadImages(self.currentGalleryId);
+          self.updateSaveStatus("saved");
+        }
+      });
     },
 
     /**

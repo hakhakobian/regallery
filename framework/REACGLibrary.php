@@ -360,4 +360,200 @@ class REACGLibrary {
 
     return true;
   }
+
+  /**
+   * Return valid crop positions as CSS object-position values.
+   *
+   * @return array
+   */
+  public static function get_crop_position_options() {
+    return [
+      'left top' => __('Left top', 'regallery'),
+      'center top' => __('Center top', 'regallery'),
+      'right top' => __('Right top', 'regallery'),
+      'left center' => __('Left center', 'regallery'),
+      'center center' => __('Center center', 'regallery'),
+      'right center' => __('Right center', 'regallery'),
+      'left bottom' => __('Left bottom', 'regallery'),
+      'center bottom' => __('Center bottom', 'regallery'),
+      'right bottom' => __('Right bottom', 'regallery'),
+    ];
+  }
+
+  /**
+   * Validate a stored crop position, defaulting old images to center.
+   *
+   * @param mixed $position Crop position.
+   * @return string
+   */
+  public static function sanitize_crop_position( $position ) {
+    $position = sanitize_text_field( (string) $position );
+    return array_key_exists( $position, self::get_crop_position_options() ) ? $position : 'center center';
+  }
+
+  /**
+   * Import or reuse a remote media item (image or video + cover thumbnail) into the WordPress Media Library.
+   *
+   * @param array $item Media item descriptor containing `url` and optional metadata.
+   *
+   * @return int|WP_Error Attachment ID on success, WP_Error on failure.
+   */
+  public static function import_media_item( $item ) {
+    if ( !is_array( $item ) || empty( $item['url'] ) ) {
+      return new WP_Error( 'invalid_media_item', __( 'Invalid media item.', 'regallery' ) );
+    }
+
+    $abspath = self::get_abspath();
+    require_once $abspath . 'wp-admin/includes/image.php';
+    require_once $abspath . 'wp-admin/includes/file.php';
+    require_once $abspath . 'wp-admin/includes/media.php';
+
+    $raw_url = str_replace( ' ', '%20', trim( (string) $item['url'] ) );
+    $url = esc_url_raw( $raw_url );
+    $scheme = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
+    if ( empty( $url ) || !in_array( $scheme, [ 'http', 'https' ], true ) ) {
+      return new WP_Error( 'invalid_media_url', __( 'Invalid media URL.', 'regallery' ) );
+    }
+
+    $is_video = isset( $item['type'] ) && $item['type'] === 'video';
+    $existing_id = self::find_existing_media_attachment( $url );
+    if ( $existing_id > 0 ) {
+      if ( $is_video && !empty( $item['thumbnail'] ) && is_array( $item['thumbnail'] ) && !empty( $item['thumbnail']['url'] ) ) {
+        $existing_meta = wp_get_attachment_metadata( $existing_id );
+        $existing_thumb_id = is_array( $existing_meta ) && !empty( $existing_meta['thumbnail_id'] ) ? (int) $existing_meta['thumbnail_id'] : 0;
+        if ( $existing_thumb_id <= 0 || !get_post( $existing_thumb_id ) ) {
+          $thumb_id = self::import_media_item( array_merge( $item['thumbnail'], [ 'type' => 'image' ] ) );
+          if ( !is_wp_error( $thumb_id ) && intval( $thumb_id ) > 0 ) {
+            if ( !is_array( $existing_meta ) ) {
+              $existing_meta = [];
+            }
+            $existing_meta['thumbnail_id'] = (int) $thumb_id;
+            wp_update_attachment_metadata( $existing_id, $existing_meta );
+          }
+        }
+      }
+      return $existing_id;
+    }
+
+    $response = wp_remote_get( $url, [ 'timeout' => 30 ] );
+    if ( is_wp_error( $response ) ) {
+      return $response;
+    }
+
+    $status_code = wp_remote_retrieve_response_code( $response );
+    if ( $status_code !== 200 ) {
+      return new WP_Error( 'upload_failed', "The file doesn't exist. HTTP Status Code: " . $status_code );
+    }
+
+    $contents = wp_remote_retrieve_body( $response );
+    if ( $contents === '' ) {
+      return new WP_Error( 'upload_failed', __( 'Downloaded file is empty.', 'regallery' ) );
+    }
+
+    $url_path = (string) wp_parse_url( $url, PHP_URL_PATH );
+    $filename = sanitize_file_name( wp_basename( rawurldecode( $url_path ) ) );
+    if ( empty( $filename ) ) {
+      return new WP_Error( 'upload_failed', __( 'Invalid file name.', 'regallery' ) );
+    }
+
+    $checked_type = wp_check_filetype( $filename, null );
+    $mime_type = !empty( $checked_type['type'] ) ? $checked_type['type'] : '';
+    if ( strpos( $mime_type, 'image/' ) !== 0 && strpos( $mime_type, 'video/' ) !== 0 ) {
+      return new WP_Error( 'invalid_file_type', __( 'Unsupported media file type.', 'regallery' ) );
+    }
+
+    $upload = wp_upload_bits( $filename, null, $contents );
+    if ( !empty( $upload['error'] ) ) {
+      return new WP_Error( 'upload_failed', $upload['error'] );
+    }
+
+    $file = $upload['file'];
+    $guid = $upload['url'];
+    $file_type = wp_check_filetype( wp_basename( $file ), null );
+    $name = pathinfo( $filename, PATHINFO_FILENAME );
+
+    $meta_input = [
+      '_reacg_template_source_url' => $url,
+    ];
+    if ( !empty( $item['alt'] ) ) {
+      $meta_input['_wp_attachment_image_alt'] = sanitize_text_field( (string) $item['alt'] );
+    }
+    if ( !empty( $item['action_url'] ) ) {
+      $meta_input['action_url'] = sanitize_url( (string) $item['action_url'] );
+    }
+    if ( !empty( $item['exif'] ) ) {
+      $meta_input['exif'] = sanitize_textarea_field( (string) $item['exif'] );
+    }
+    if ( !empty( $item['crop_position'] ) ) {
+      $meta_input['crop_position'] = self::sanitize_crop_position( $item['crop_position'] );
+    }
+
+    $attachment_args = [
+      'ID' => 0,
+      'guid' => $guid,
+      'post_title' => isset( $item['title'] ) && $item['title'] !== '' ? sanitize_text_field( (string) $item['title'] ) : sanitize_text_field( $name ),
+      'post_excerpt' => isset( $item['caption'] ) ? sanitize_textarea_field( (string) $item['caption'] ) : '',
+      'post_content' => isset( $item['description'] ) ? sanitize_textarea_field( (string) $item['description'] ) : '',
+      'post_date' => '',
+      'post_mime_type' => !empty( $file_type['type'] ) ? $file_type['type'] : $mime_type,
+      'meta_input' => $meta_input,
+    ];
+
+    $attachment_id = wp_insert_attachment( $attachment_args, $file, 0, true );
+    if ( is_wp_error( $attachment_id ) ) {
+      return $attachment_id;
+    }
+
+    $attachment_meta = wp_generate_attachment_metadata( $attachment_id, $file );
+    if ( !is_array( $attachment_meta ) ) {
+      $attachment_meta = [];
+    }
+
+    if ( ( $is_video || strpos( $mime_type, 'video/' ) === 0 ) && !empty( $item['thumbnail'] ) && is_array( $item['thumbnail'] ) && !empty( $item['thumbnail']['url'] ) ) {
+      $thumb_id = self::import_media_item( array_merge( $item['thumbnail'], [ 'type' => 'image' ] ) );
+      if ( !is_wp_error( $thumb_id ) && intval( $thumb_id ) > 0 ) {
+        $attachment_meta['thumbnail_id'] = (int) $thumb_id;
+      }
+    }
+
+    wp_update_attachment_metadata( $attachment_id, $attachment_meta );
+
+    // Preserve explicit EXIF text if raw image EXIF overwrote it during metadata generation.
+    if ( !empty( $item['exif'] ) ) {
+      update_post_meta( $attachment_id, 'exif', sanitize_textarea_field( (string) $item['exif'] ) );
+    }
+
+    return (int) $attachment_id;
+  }
+
+  /**
+   * Find an already imported attachment matching the source URL.
+   *
+   * @param string $url
+   *
+   * @return int
+   */
+  public static function find_existing_media_attachment( $url ) {
+    $existing = get_posts( [
+      'post_type' => 'attachment',
+      'post_status' => 'inherit',
+      'posts_per_page' => 1,
+      'fields' => 'ids',
+      'no_found_rows' => true,
+      // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Used during admin media import to avoid duplicate uploads.
+      'meta_key' => '_reacg_template_source_url',
+      // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Used during admin media import to avoid duplicate uploads.
+      'meta_value' => $url,
+    ] );
+
+    if ( !empty( $existing[0] ) ) {
+      $attachment_id = (int) $existing[0];
+      $attached_file = get_attached_file( $attachment_id );
+      if ( $attached_file && file_exists( $attached_file ) ) {
+        return $attachment_id;
+      }
+    }
+
+    return 0;
+  }
 }

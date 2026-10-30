@@ -346,10 +346,16 @@ function reacg_track_unsaved_changes() {
     const hiddenInput = document.getElementById("images_ids");
 
     if (hiddenInput) {
-      /* Monitor changes.*/
-      hiddenInput.addEventListener("added-images", function () {
-        isEmpty = true;
-      });
+      /* Monitor changes (capture phase on document survives .reacg_items replacement).*/
+      document.addEventListener(
+        "added-images",
+        function (e) {
+          if (e.target && e.target.id === "images_ids") {
+            isEmpty = true;
+          }
+        },
+        true,
+      );
       /* Trigger warning if changes are unsaved.*/
       window.onbeforeunload = function () {
         if (isEmpty) {
@@ -1231,6 +1237,88 @@ function reacg_reload_preview() {
     });
   }
 }
+
+/**
+ * Refresh the gallery Media metabox and live preview after external media import.
+ *
+ * @param {number|string} galleryId
+ * @param {Array<number|string>} [imagesIds]
+ */
+function reacg_refresh_gallery_images(galleryId, imagesIds) {
+  const metaboxItems = jQuery("#gallery-images .reacg_items").filter(function () {
+    return String(jQuery(this).data("post-id")) === String(galleryId);
+  });
+
+  if (metaboxItems.length) {
+    if (Array.isArray(imagesIds)) {
+      const hiddenImagesInput = metaboxItems.find(".images_ids");
+      hiddenImagesInput.val(JSON.stringify(imagesIds));
+      metaboxItems.find(".additional_data").val("");
+      if (hiddenImagesInput[0]) {
+        hiddenImagesInput[0].dispatchEvent(new Event("added-images"));
+      }
+    }
+
+    const ajaxUrl =
+      metaboxItems.data("ajax-url") ||
+      (typeof reacg !== "undefined" && reacg.ajax_url ? reacg.ajax_url : "");
+
+    if (ajaxUrl) {
+      const separator = ajaxUrl.indexOf("?") === -1 ? "?" : "&";
+      reacg_toggle_loading();
+      fetch(
+        ajaxUrl +
+          separator +
+          "action=reacg_get_images&id=" +
+          encodeURIComponent(galleryId),
+        { credentials: "same-origin" },
+      )
+        .then(function (res) {
+          return res.text();
+        })
+        .then(function (body) {
+          let html = body;
+          try {
+            const parsed = JSON.parse(body);
+            if (typeof parsed === "string") {
+              html = parsed;
+            }
+          } catch (e) {}
+
+          if (html) {
+            const inside = metaboxItems.closest(".inside");
+            metaboxItems.replaceWith(html);
+            const scope = inside.length ? inside[0] : document;
+            reacg_make_items_sortable(scope);
+            jQuery(scope)
+              .find(".reacg_item_image img")
+              .each(function () {
+                reacg_update_item_image_fit(this);
+              });
+          }
+        })
+        .catch(function (error) {
+          console.error("Failed to refresh gallery media items:", error);
+        })
+        .finally(function () {
+          reacg_toggle_loading();
+        });
+    }
+
+    if (jQuery("#original_post_status").val() === "auto-draft") {
+      window.dispatchEvent(new Event("highlight-template-select"));
+    }
+  }
+
+  reacg_reload_preview();
+}
+
+window.reacg_refresh_gallery_images = reacg_refresh_gallery_images;
+window.addEventListener("reacg:images-updated", function (e) {
+  if (e && e.detail && e.detail.galleryId) {
+    reacg_refresh_gallery_images(e.detail.galleryId, e.detail.imagesIds);
+  }
+});
 
 /**
  * Save the thumbnail for the given item.

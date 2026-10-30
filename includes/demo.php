@@ -343,71 +343,9 @@ class REACG_Demo {
    *
    * @return array|int|WP_Error
    */
-  private function import_attachment(  $item  ) {
-    // Include the php to use wp_generate_attachment_metadata().
-    require_once ABSPATH . 'wp-admin/includes/image.php';
+  private function import_attachment( $item ) {
+    $item['url'] = $this->item_url . $item['name'];
 
-    $item_url = $this->item_url . $item['name'];
-    $response = wp_remote_get( $item_url );
-    if ( is_wp_error( $response ) ) {
-      return $response;
-    }
-    $status_code = wp_remote_retrieve_response_code( $response );
-    if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
-      return new WP_Error('upload_failed', "The file doesn't exist. HTTP Status Code: " . $status_code);
-    }
-    $contents = wp_remote_retrieve_body( $response );
-    $name = pathinfo($item_url, PATHINFO_FILENAME);
-
-    // Upload the file.
-    $upload = wp_upload_bits( basename( $item_url ), null, $contents );
-
-    if ( array_key_exists( 'error', $upload ) && false !== $upload['error'] ) {
-      return new WP_Error('upload_failed', $upload['error']);
-    }
-
-    $guid = $upload['url'];
-    $file = $upload['file'];
-    $file_type = wp_check_filetype( basename( $file ), null );
-    $attachment_args = [
-      'ID'             => 0,
-      'guid'           => $guid,
-      'post_title'     => !empty($item['title']) ? $item['title'] : $name,
-      'post_excerpt'   => !empty($item['caption']) ? $item['caption'] : '',
-      'post_content'   => !empty($item['description']) ? $item['description'] : '',
-      'post_date'      => '',
-      'post_mime_type' => $file_type['type'],
-    ];
-
-    $attachment_args['meta_input'] = array();
-    if ( !empty( $item['alt'] ) ) {
-      $attachment_args['meta_input']['_wp_attachment_image_alt'] = $item['alt'];
-    }
-    if ( !empty( $item['action_url'] ) ) {
-      $attachment_args['meta_input']['action_url'] = $item['action_url'];
-    }
-    if ( !empty( $item['exif'] ) ) {
-      $attachment_args['meta_input']['exif'] = $item['exif'];
-    }
-
-    // Insert the uploaded file into the WordPress Media Library.
-    $attachment_id = wp_insert_attachment(
-      $attachment_args,
-      $file,
-      0,
-      true
-    );
-
-    if ( is_wp_error( $attachment_id ) ) {
-      return $attachment_id;
-    }
-
-    // Generate all necessary image sizes and metadata for the uploaded file.
-    $attachment_meta = wp_generate_attachment_metadata( $attachment_id, $file );
-
-    // Updates the attachment metadata in the DB.
-    wp_update_attachment_metadata( $attachment_id, $attachment_meta );
-
-    return $attachment_id;
+    return REACGLibrary::import_media_item( $item );
   }
 }
