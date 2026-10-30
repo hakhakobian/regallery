@@ -556,4 +556,53 @@ class REACGLibrary {
 
     return 0;
   }
+
+  /**
+   * Check if current environment is WordPress Playground.
+   *
+   * @param string $plugin_url
+   *
+   * @return bool
+   */
+  public static function is_playground( $plugin_url = '' ) {
+    if ( defined( 'REACG_PLAYGROUND' ) && REACG_PLAYGROUND ) {
+      return true;
+    }
+
+    if ( ( defined( 'WP_PLAYGROUND' ) && WP_PLAYGROUND ) || ( defined( 'WORDPRESS_PLAYGROUND' ) && WORDPRESS_PLAYGROUND ) ) {
+      return true;
+    }
+
+    if ( isset( $_SERVER['SERVER_SOFTWARE'] ) && strpos( (string) $_SERVER['SERVER_SOFTWARE'], 'PHP.wasm' ) !== false ) {
+      return true;
+    }
+
+    if ( !empty( $plugin_url ) && (
+      strpos( (string) $plugin_url, 'playground.wordpress.net' ) !== false
+      || strpos( (string) $plugin_url, 'wpsandbox.wordpress.net' ) !== false
+      || strpos( (string) $plugin_url, 'wp-playground.network' ) !== false
+    ) ) {
+      return true;
+    }
+
+    $host = isset( $_SERVER['HTTP_HOST'] ) ? (string) $_SERVER['HTTP_HOST'] : ( isset( $_SERVER['SERVER_NAME'] ) ? (string) $_SERVER['SERVER_NAME'] : '' );
+    if ( !empty( $host ) && (
+      strpos( $host, 'playground.wordpress.net' ) !== false
+      || strpos( $host, 'wpsandbox.wordpress.net' ) !== false
+      || strpos( $host, 'wp-playground.network' ) !== false
+    ) ) {
+      return true;
+    }
+
+    $referer = isset( $_SERVER['HTTP_REFERER'] ) ? (string) $_SERVER['HTTP_REFERER'] : '';
+    if ( !empty( $referer ) && (
+      strpos( $referer, 'playground.wordpress.net' ) !== false
+      || strpos( $referer, 'wpsandbox.wordpress.net' ) !== false
+      || strpos( $referer, 'wp-playground.network' ) !== false
+    ) ) {
+      return true;
+    }
+
+    return false;
+  }
 }

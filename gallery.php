@@ -102,7 +102,7 @@ final class REACG {
     define('REACG_WP_PLUGIN_URL', $this->wp_plugin_url );
     define('REACG_WP_PLUGIN_SUPPORT_URL', $this->wp_plugin_url . '/#new-topic-0' );
     define('REACG_WP_PLUGIN_REVIEW_URL', $this->wp_plugin_url . '/reviews#new-post' );
-    define('REACG_PLAYGROUND', strpos($this->plugin_url, 'playground.wordpress.net') !== FALSE );
+    define('REACG_PLAYGROUND', REACGLibrary::is_playground( $this->plugin_url ) );
     define('REACG_FREE_TRIAL_DAYS', 7);
   }
 
@@ -632,6 +632,10 @@ final class REACG {
       // Set installation time.
       REACGLibrary::installed_time();
 
+      if ( REACGLibrary::is_playground( $this->plugin_url ) ) {
+        update_option( 'reacg_optin_shown', true );
+      }
+
       // Add default options.
       require_once REACG()->plugin_dir . "/includes/options.php";
       new REACG_Options(TRUE);
@@ -649,6 +653,7 @@ final class REACG {
       // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       if ( !isset( $_GET['activate-multi'] ) ) {
         if ( REACG_PLAYGROUND ) {
+          update_option( 'reacg_optin_shown', true );
           $demo = $this->demo(TRUE);
           $link = $demo->import_data(FALSE);
           if ( !empty($link) ) {
