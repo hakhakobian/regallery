@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "reacg/gallery",
+  "title": "Re Gallery",
+  "category": "media",
+  "icon": "format-gallery",
+  "description": "Display images with various visual effects in responsive gallery.",
+  "keywords": [
+    "gallery",
+    "photo gallery",
+    "image gallery",
+    "re gallery",
+    "media"
+  ],
+  "textdomain": "regallery",
+  "supports": {
+    "customClassName": false
+  },
+  "attributes": {
+    "shortcode": {
+      "type": "string",
+      "default": ""
+    },
+    "shortcode_id": {
+      "type": "integer",
+      "default": 0
+    },
+    "isExample": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
+
