@@ -14,6 +14,7 @@ class REACG_Gallery {
     $this->register_post_type();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_head', [ $this, 'modify_external_submenu_url']);
+    add_action('admin_head', [ $this, 'add_help_tabs']);
     add_action('admin_footer', [ $this, 'opt_in' ]);
 
     add_action( 'wp_dashboard_setup', [ $this, 'register_dashboard_widgets' ] );
@@ -1544,6 +1545,134 @@ class REACG_Gallery {
   }
 
   /**
+   * Get available builders for gallery publishing.
+   *
+   * @return array
+   */
+  public function get_available_builders() {
+    $available_builders = [];
+    if ( function_exists( 'register_block_type' ) ) {
+      $available_builders['gutenberg'] = [
+        'title' => __( 'Gutenberg Block', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=6AVPJ2fjaYs',
+      ];
+    }
+    if ( class_exists( '\Elementor\Plugin' ) ) {
+      $available_builders['elementor'] = [
+        'title' => __( 'Elementor Widget', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
+      ];
+    }
+    if ( class_exists( 'ET_Builder_Module' ) ) {
+      $available_builders['divi'] = [
+        'title' => __( 'Divi Builder Module', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
+      ];
+    }
+    if ( function_exists( 'vc_map' ) ) {
+      $available_builders['wpbakery'] = [
+        'title' => __( 'WPBakery Builder Element', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
+      ];
+    }
+    if ( class_exists( 'FLBuilder' ) ) {
+      $available_builders['beaverbuilder'] = [
+        'title' => __( 'Beaver Builder Module', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=A5U2ghLKYNg',
+      ];
+    }
+    if ( class_exists( '\Bricks\Elements' ) ) {
+      $available_builders['bricks'] = [
+        'title' => __( 'Bricks Builder Element', 'regallery' ),
+        'video' => 'https://www.youtube.com/watch?v=aiYdYAn1D_8',
+      ];
+    }
+
+    return $available_builders;
+  }
+
+  /**
+   * Add contextual help tabs to the gallery edit screen.
+   *
+   * @return void
+   */
+  public function add_help_tabs() {
+    $screen = get_current_screen();
+    if ( ! $screen || $screen->id !== 'reacg' ) {
+      return;
+    }
+
+    $post_id = 0;
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only access to post ID for contextual help shortcode display.
+    if ( isset( $_GET['post'] ) ) {
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only access to post ID for contextual help shortcode display.
+      $post_id = (int) $_GET['post'];
+    } elseif ( isset( $GLOBALS['post']->ID ) ) {
+      $post_id = (int) $GLOBALS['post']->ID;
+    }
+    $shortcode = $post_id > 0 ? REACGLibrary::get_shortcode( $this->obj, $post_id ) : '[REACG id="..."]';
+
+    // 1. Overview Tab
+    $overview_content = '<p>' . esc_html__( 'Re Gallery is a fast, responsive, and SEO-friendly photo gallery plugin with built-in AI tools.', 'regallery' ) . '</p>' .
+      '<p>' . esc_html__( 'From this screen, you can manage gallery media, configure layout and design settings, and generate image SEO metadata in minutes.', 'regallery' ) . '</p>' .
+      '<ul>' .
+        '<li><strong>' . esc_html__( 'Media:', 'regallery' ) . '</strong> ' . esc_html__( 'Upload images, upload video, or add products, pages, posts. Drag and drop items to reorder them, edit titles, captions, and alt texts, or use the built-in AI generator.', 'regallery' ) . '</li>' .
+        '<li><strong>' . esc_html__( 'Settings & Templates:', 'regallery' ) . '</strong> ' . esc_html__( 'Choose from 11 gallery layouts (Mosaic, Masonry, Grid, Carousel, Slider, and more) or pick a pre-made design from the Template Library. The live preview updates as you adjust settings.', 'regallery' ) . '</li>' .
+        '<li><strong>' . esc_html__( 'Publishing:', 'regallery' ) . '</strong> ' . esc_html__( 'Once saved, easily embed your gallery into any page or post using your preferred page builder or the gallery shortcode.', 'regallery' ) . '</li>' .
+      '</ul>';
+
+    $screen->add_help_tab( [
+      'id'      => 'reacg_help_overview',
+      'title'   => esc_html__( 'Overview', 'regallery' ),
+      'content' => $overview_content,
+    ] );
+
+    // 2. Publishing Tab
+    $available_builders = $this->get_available_builders();
+    $publishing_content = '<p>' . esc_html__( 'You can display your gallery on any page or post using one of the following methods:', 'regallery' ) . '</p>';
+
+    if ( ! empty( $available_builders ) ) {
+      $publishing_content .= '<h3>' . esc_html__( 'Page Builders & Block Editor', 'regallery' ) . '</h3>';
+      $publishing_content .= '<ul>';
+      foreach ( $available_builders as $builder ) {
+        $publishing_content .= '<li>';
+        if ( ! empty( $builder['video'] ) ) {
+          $publishing_content .= '<a href="' . esc_url( $builder['video'] ) . '" target="_blank" title="' . esc_attr__( 'How to', 'regallery' ) . '">';
+        }
+        $publishing_content .= '<strong>' . esc_html( $builder['title'] ) . '</strong>';
+        if ( ! empty( $builder['video'] ) ) {
+          $publishing_content .= ' (' . esc_html__( 'Watch video tutorial', 'regallery' ) . ')</a>';
+        }
+        $publishing_content .= '</li>';
+      }
+      $publishing_content .= '</ul>';
+      $publishing_content .= '<p>' . esc_html__( 'Or just paste the shortcode into any builder widget:', 'regallery' ) . '</p>';
+    } else {
+      $publishing_content .= '<p>' . esc_html__( 'Paste the shortcode into a post or page to show the gallery:', 'regallery' ) . '</p>';
+    }
+
+    $publishing_content .= '<p><code style="font-size: 14px; padding: 4px 8px;">' . esc_html( $shortcode ) . '</code></p>';
+    $publishing_content .= '<p>' . esc_html__( 'For theme template files, use the PHP code:', 'regallery' ) . '</p>';
+    $publishing_content .= '<p><code>&lt;?php echo do_shortcode( \'' . esc_html( $shortcode ) . '\' ); ?&gt;</code></p>';
+
+    $screen->add_help_tab( [
+      'id'      => 'reacg_help_publishing',
+      'title'   => esc_html__( 'Publishing', 'regallery' ),
+      'content' => $publishing_content,
+    ] );
+
+    // 3. Right Sidebar Links
+    $help_sidebar = '<p><strong>' . esc_html__( 'For more information:', 'regallery' ) . '</strong></p>' .
+      '<p><a href="https://regallery.team/core/blog/" target="_blank">' . esc_html__( 'Documentation', 'regallery' ) . '</a></p>' .
+      '<p><a href="https://www.youtube.com/@ReGalleryteam" target="_blank">' . esc_html__( 'Video Tutorials', 'regallery' ) . '</a></p>' .
+      '<p><a href="https://regallery.team/core/demo/" target="_blank">' . esc_html__( 'Pre-Designed Templates', 'regallery' ) . '</a></p>' .
+      '<p><a href="https://wordpress.org/support/plugin/regallery/" target="_blank">' . esc_html__( 'WordPress Support Forum', 'regallery' ) . '</a></p>' .
+      '<p><a href="https://wordpress.org/support/plugin/regallery/reviews/#new-post" target="_blank">' . esc_html__( 'Leave a Review', 'regallery' ) . '</a></p>';
+
+    $screen->set_help_sidebar( $help_sidebar );
+  }
+
+  /**
    * Display the available publishing methods.
    *
    * @param $post
@@ -1551,43 +1680,7 @@ class REACG_Gallery {
    * @return void
    */
   public function meta_box_help( $post ) {
-    $available_builders = [];
-    if ( function_exists( 'register_block_type' ) ) {
-      $available_builders['gutenberg'] = [
-        'title' => __('Gutenberg Block', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=6AVPJ2fjaYs',
-      ];
-    }
-    if ( class_exists( '\Elementor\Plugin' ) ) {
-      $available_builders['elementor'] = [
-        'title' => __('Elementor Widget', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=GedxyRxQ02A',
-      ];
-    }
-    if ( class_exists( 'ET_Builder_Module' ) ) {
-      $available_builders['divi'] = [
-        'title' => __('Divi Builder Module', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=Z69eZOoWJi0',
-      ];
-    }
-    if ( function_exists( 'vc_map' ) ) {
-      $available_builders['wpbakery'] = [
-        'title' => __('WPBakery Builder Element', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=FClpKpREzPQ',
-      ];
-    }
-    if ( class_exists( 'FLBuilder' ) ) {
-      $available_builders['beaverbuilder'] = [
-        'title' => __('Beaver Builder Module', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=A5U2ghLKYNg',
-      ];
-    }
-    if ( class_exists( '\Bricks\Elements' ) ) {
-      $available_builders['bricks'] = [
-        'title' => __('Bricks Builder Element', 'regallery'),
-        'video' => 'https://www.youtube.com/watch?v=aiYdYAn1D_8',
-      ];
-    }
+    $available_builders = $this->get_available_builders();
     if ( !empty($available_builders) ) {
       ?>
     <p>
