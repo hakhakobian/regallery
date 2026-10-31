@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.19
+Stable tag: 1.20.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,10 +214,16 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.19: Lightbox title and description improvements. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.20: Import templates with sample images. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.20 =
+= Updated: 31.10.2026 =
+* **Added:** Option to import template designs together with sample media images.
+* **Added:** Block Directory support.
+* **Improved:** WordPress Playground detection.
+
 = 1.20.19 =
 = Updated: 30.10.2026 =
 * **Added:** Full-width option for the Lightbox text container to stretch across the full lightbox width or match the current image width.
