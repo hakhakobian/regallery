@@ -5,13 +5,20 @@ jQuery(document).ready(function () {
 
   jQuery(".reacg-rating span").on("mouseenter", function () {
     const index = jQuery(this).index();
-    jQuery(this).parent().find("span").each(function (i) {
-      jQuery(this).toggleClass("dashicons-star-filled", i <= index)
-                  .toggleClass("dashicons-star-empty", i > index);
-    });
+    jQuery(this)
+      .parent()
+      .find("span")
+      .each(function (i) {
+        jQuery(this)
+          .toggleClass("dashicons-star-filled", i <= index)
+          .toggleClass("dashicons-star-empty", i > index);
+      });
   });
   jQuery(".reacg-rating").on("mouseleave", function () {
-    jQuery(this).find("span").removeClass("dashicons-star-empty").addClass("dashicons-star-filled");
+    jQuery(this)
+      .find("span")
+      .addClass("dashicons-star-empty")
+      .removeClass("dashicons-star-filled");
   });
 
   reacg_bind_deactivation_modal_events();
@@ -23,7 +30,7 @@ function reacg_bind_deactivation_modal_events() {
     return;
   }
 
-  jQuery(document).on("click", "a[id^='deactivate-regallery']", function (e){
+  jQuery(document).on("click", "a[id^='deactivate-regallery']", function (e) {
     modal.show();
     modal.find(".reacg-skip").attr("href", jQuery(this).attr("href"));
 
@@ -45,9 +52,9 @@ function reacg_bind_deactivation_modal_events() {
         modal.hide();
 
         window.location.href = modal.find(".reacg-skip").attr("href");
-      }
+      },
     });
-  }
+  };
 
   reacg_bind_form_events(modal, submitAction);
 }

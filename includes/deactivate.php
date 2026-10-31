@@ -106,7 +106,7 @@ class REACG_Deactivate {
       $meta_fields[] = "<a href='" . esc_url(REACG_WP_PLUGIN_SUPPORT_URL) . "' target='_blank'>" . esc_html__('Ask a question', 'regallery') . "</a>";
 
       $rating = "<a class='reacg-rating' href='" . esc_url(REACG_WP_PLUGIN_REVIEW_URL) . "' target='_blank' title='" . esc_html__('Rate', 'regallery') . "'>";
-      $rating .= str_repeat("<span class='dashicons dashicons-star-filled'></span>", 5);
+      $rating .= str_repeat("<span class='dashicons dashicons-star-empty'></span>", 5);
       $rating .= "</a>";
       $meta_fields[] = $rating;
     }
