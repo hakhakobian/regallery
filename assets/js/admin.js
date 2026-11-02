@@ -381,7 +381,9 @@ function reacg_bind_gallery_save_options() {
 
   const galleryId =
     jQuery("#post_ID").val() ||
-    jQuery(".reacg-gallery[data-options-section='1']").attr("data-gallery-id") ||
+    jQuery(".reacg-gallery[data-options-section='1']").attr(
+      "data-gallery-id",
+    ) ||
     jQuery(".reacg_items").data("post-id");
 
   if (!galleryId) {
@@ -440,7 +442,7 @@ function reacg_bind_gallery_save_options() {
     const currentOptions = api.getOptions();
     return Boolean(
       currentOptions &&
-        Object.prototype.hasOwnProperty.call(currentOptions, "template_id"),
+      Object.prototype.hasOwnProperty.call(currentOptions, "template_id"),
     );
   }
 
@@ -461,17 +463,19 @@ function reacg_bind_gallery_save_options() {
   function isButtonDisabled(button) {
     return Boolean(
       button &&
-        (button.disabled ||
-          button.classList.contains("disabled") ||
-          button.classList.contains("button-disabled") ||
-          button.classList.contains("button-primary-disabled")),
+      (button.disabled ||
+        button.classList.contains("disabled") ||
+        button.classList.contains("button-disabled") ||
+        button.classList.contains("button-primary-disabled")),
     );
   }
 
   function setButtonLoading(button, loading) {
     const isDraftSave = button && button.id === "save-post";
     const spinner = isDraftSave
-      ? jQuery("#save-action .spinner, #minor-publishing-actions .spinner").first()
+      ? jQuery(
+          "#save-action .spinner, #minor-publishing-actions .spinner",
+        ).first()
       : jQuery("#publishing-action .spinner");
     const targetButton =
       button && (button.id === "publish" || button.id === "save-post")
@@ -1245,9 +1249,11 @@ function reacg_reload_preview() {
  * @param {Array<number|string>} [imagesIds]
  */
 function reacg_refresh_gallery_images(galleryId, imagesIds) {
-  const metaboxItems = jQuery("#gallery-images .reacg_items").filter(function () {
-    return String(jQuery(this).data("post-id")) === String(galleryId);
-  });
+  const metaboxItems = jQuery("#gallery-images .reacg_items").filter(
+    function () {
+      return String(jQuery(this).data("post-id")) === String(galleryId);
+    },
+  );
 
   if (metaboxItems.length) {
     if (Array.isArray(imagesIds)) {
@@ -1595,6 +1601,10 @@ function reacg_attachment_edit_modal(attachment, item) {
         reacg_get_attachment_field_value(attachment, "action_url"),
       ) +
       '" placeholder="https://example.com" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="categories"><label for="reacg-attachment-categories">' +
+      reacg_escape_html(reacg.attachment_categories || "Categories") +
+      '</label><select id="reacg-attachment-categories" class="reacg_searchable_select reacg-attachment-categories" multiple="multiple" style="width: 100%;">' +
+      "</select></div>" +
       '<div class="reacg-attachment-modal__field" data-setting="exif"><label for="reacg-attachment-exif">' +
       reacg_escape_html(reacg.attachment_metadata_exif) +
       '</label><textarea id="reacg-attachment-exif" rows="5">' +
@@ -1644,7 +1654,8 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
   const modal = reacg_attachment_edit_modal(attachment, item);
   const targetDoc = reacg_get_top_document();
   const targetWin = targetDoc.defaultView || window;
-  (targetWin.jQuery || jQuery)(targetDoc.body).append(modal);
+  const $ = targetWin.jQuery || jQuery;
+  $(targetDoc.body).append(modal);
   modal.css("display", "flex").show();
   modal
     .find(
@@ -1655,6 +1666,52 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
     )
     .prop("checked", true);
   reacg_add_ai_button_to(modal.find(".reacg-modal__layout-content"));
+
+  const categoriesSelect = modal.find("#reacg-attachment-categories");
+  const rawAssigned = attachment.get("categories") || [];
+  const assignedIds = [];
+
+  rawAssigned.forEach(function (cat) {
+    if (!cat) return;
+    const catId =
+      typeof cat === "object" ? String(cat.id || cat.name) : String(cat);
+    const catName = typeof cat === "object" ? cat.name : String(cat);
+    assignedIds.push(catId);
+    categoriesSelect.append(new Option(catName, catId, true, true));
+  });
+
+  if ($.fn.select2) {
+    $(categoriesSelect).select2({
+      tags: true,
+      placeholder:
+        reacg.attachment_categories_placeholder ||
+        "Search or add categories...",
+      dropdownParent: modal,
+      dropdownCssClass: "reacg-select2-dropdown",
+    });
+  }
+
+  jQuery.ajax({
+    url: reacg.ajax_url,
+    type: "POST",
+    data: {
+      action: "reacg_get_categories",
+      [reacg.nonce]: reacg.nonce,
+    },
+    success: function (res) {
+      if (res.success && Array.isArray(res.data)) {
+        res.data.forEach(function (cat) {
+          const catId = String(cat.id);
+          if (!categoriesSelect.find('option[value="' + catId + '"]').length) {
+            categoriesSelect.append(new Option(cat.name, catId, false, false));
+          }
+        });
+        if ($.fn.select2) {
+          $(categoriesSelect).trigger("change");
+        }
+      }
+    },
+  });
 
   const closeModal = function () {
     modal.remove();
@@ -1670,108 +1727,125 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
     e.stopPropagation();
   });
 
-  modal.find(".reacg-modal-button-save").on("click", function () {
-    const saveButton = jQuery(this);
-    const spinner = saveButton
-      .closest(".reacg-modal-buttons-wrapper")
-      .find("> .spinner")
-      .first();
-    const errorNoteCont = modal.find(".reacg-modal-error-note");
-    const attachmentId = attachment.get("id");
-    const coreChanges = {
-      title: modal.find("#reacg-attachment-title").val(),
-      caption: modal.find("#reacg-attachment-caption").val(),
-      alt: modal.find("#reacg-attachment-alt").val(),
-      description: modal.find("#reacg-attachment-description").val(),
-    };
-    const compatChanges = {
-      attachments: {},
-    };
-    compatChanges.attachments[attachmentId] = {
-      action_url: modal.find("#reacg-attachment-action-url").val(),
-      exif: modal.find("#reacg-attachment-exif").val(),
-      crop_position: modal
-        .find('input[name="reacg-attachment-crop-position"]:checked')
-        .val(),
-    };
+  modal
+    .find(".reacg-modal-button-save")
+    .on("click", function () {
+      const saveButton = jQuery(this);
+      const spinner = saveButton
+        .closest(".reacg-modal-buttons-wrapper")
+        .find("> .spinner")
+        .first();
+      const errorNoteCont = modal.find(".reacg-modal-error-note");
+      const attachmentId = attachment.get("id");
+      const coreChanges = {
+        title: modal.find("#reacg-attachment-title").val(),
+        caption: modal.find("#reacg-attachment-caption").val(),
+        alt: modal.find("#reacg-attachment-alt").val(),
+        description: modal.find("#reacg-attachment-description").val(),
+      };
+      const currentCategoryVals = categoriesSelect.val() || [];
+      const normInitialCats = assignedIds.slice().sort().join(",");
+      const normCurrentCats = currentCategoryVals.slice().sort().join(",");
+      const hasCategoryChanges = normInitialCats !== normCurrentCats;
 
-    const normalizeValue = function (value) {
-      return value == null ? "" : String(value);
-    };
-    const hasCoreChanges =
-      normalizeValue(coreChanges.title) !==
-        normalizeValue(reacg_get_attachment_field_value(attachment, "title")) ||
-      normalizeValue(coreChanges.caption) !==
+      const compatChanges = {
+        attachments: {},
+      };
+      compatChanges.attachments[attachmentId] = {
+        action_url: modal.find("#reacg-attachment-action-url").val(),
+        exif: modal.find("#reacg-attachment-exif").val(),
+        crop_position: modal
+          .find('input[name="reacg-attachment-crop-position"]:checked')
+          .val(),
+        regallery_categories: currentCategoryVals,
+      };
+
+      const normalizeValue = function (value) {
+        return value == null ? "" : String(value);
+      };
+      const hasCoreChanges =
+        normalizeValue(coreChanges.title) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "title"),
+          ) ||
+        normalizeValue(coreChanges.caption) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "caption"),
+          ) ||
+        normalizeValue(coreChanges.alt) !==
+          normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
+        normalizeValue(coreChanges.description) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "description"),
+          );
+      const hasCompatChanges =
+        hasCategoryChanges ||
+        normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "action_url"),
+          ) ||
+        normalizeValue(compatChanges.attachments[attachmentId].exif) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "exif"),
+          ) ||
         normalizeValue(
-          reacg_get_attachment_field_value(attachment, "caption"),
-        ) ||
-      normalizeValue(coreChanges.alt) !==
-        normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
-      normalizeValue(coreChanges.description) !==
-        normalizeValue(
-          reacg_get_attachment_field_value(attachment, "description"),
-        );
-    const hasCompatChanges =
-      normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
-        normalizeValue(
-          reacg_get_attachment_field_value(attachment, "action_url"),
-        ) ||
-      normalizeValue(compatChanges.attachments[attachmentId].exif) !==
-        normalizeValue(reacg_get_attachment_field_value(attachment, "exif")) ||
-      normalizeValue(compatChanges.attachments[attachmentId].crop_position) !==
-        normalizeValue(
-          reacg_get_attachment_field_value(attachment, "crop_position") ||
-            "center center",
-        );
+          compatChanges.attachments[attachmentId].crop_position,
+        ) !==
+          normalizeValue(
+            reacg_get_attachment_field_value(attachment, "crop_position") ||
+              "center center",
+          );
 
-    if (!hasCoreChanges && !hasCompatChanges) {
-      closeModal();
-      button.removeAttr("disabled");
-      return;
-    }
-
-    errorNoteCont.addClass("hidden").empty();
-    saveButton.attr("disabled", true);
-    spinner.addClass("is-active");
-
-    const saveRequests = [];
-    if (hasCoreChanges) {
-      saveRequests.push(attachment.save(coreChanges));
-    }
-    if (hasCompatChanges) {
-      saveRequests.push(attachment.saveCompat(compatChanges));
-    }
-
-    const saveRequest =
-      saveRequests.length === 1
-        ? saveRequests[0]
-        : jQuery.when.apply(jQuery, saveRequests);
-
-    saveRequest
-      .done(function () {
-        if (item && item.length) {
-          const newTitle = modal.find("#reacg-attachment-title").val();
-          item.find(".reacg_item_image").attr("title", newTitle);
-        }
-        reacg_reload_preview();
+      if (!hasCoreChanges && !hasCompatChanges) {
         closeModal();
-      })
-      .fail(function (response) {
-        const message =
-          response &&
-          response.responseJSON &&
-          response.responseJSON.data &&
-          response.responseJSON.data.message
-            ? response.responseJSON.data.message
-            : reacg.save_failed;
-        errorNoteCont.removeClass("hidden").html(message);
-      })
-      .always(function () {
-        spinner.removeClass("is-active");
-        saveButton.removeAttr("disabled");
         button.removeAttr("disabled");
-      });
-  });
+        return;
+      }
+
+      errorNoteCont.addClass("hidden").empty();
+      saveButton.attr("disabled", true);
+      spinner.addClass("is-active");
+
+      const saveRequests = [];
+      if (hasCoreChanges) {
+        saveRequests.push(attachment.save(coreChanges));
+      }
+      if (hasCompatChanges) {
+        saveRequests.push(attachment.saveCompat(compatChanges));
+      }
+
+      const saveRequest =
+        saveRequests.length === 1
+          ? saveRequests[0]
+          : jQuery.when.apply(jQuery, saveRequests);
+
+      saveRequest
+        .done(function () {
+          if (item && item.length) {
+            const newTitle = modal.find("#reacg-attachment-title").val();
+            item.find(".reacg_item_image").attr("title", newTitle);
+          }
+          attachment.fetch().always(function () {
+            reacg_reload_preview();
+            closeModal();
+          });
+        })
+        .fail(function (response) {
+          const message =
+            response &&
+            response.responseJSON &&
+            response.responseJSON.data &&
+            response.responseJSON.data.message
+              ? response.responseJSON.data.message
+              : reacg.save_failed;
+          errorNoteCont.removeClass("hidden").html(message);
+        })
+        .always(function () {
+          spinner.removeClass("is-active");
+          saveButton.removeAttr("disabled");
+          button.removeAttr("disabled");
+        });
+    });
 
   return modal;
 }

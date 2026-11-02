@@ -12,10 +12,15 @@ class REACG_Gallery {
       return;
     }
     $this->register_post_type();
+    $this->register_taxonomy();
     add_action('admin_menu', [ $this, 'add_submenu' ]);
     add_action('admin_head', [ $this, 'modify_external_submenu_url']);
     add_action('admin_head', [ $this, 'add_help_tabs']);
     add_action('admin_footer', [ $this, 'opt_in' ]);
+
+    add_filter('parent_file', [ $this, 'set_taxonomy_parent_menu' ]);
+    add_filter('submenu_file', [ $this, 'set_taxonomy_submenu' ], 10, 2);
+    add_filter('rest_exposed_cors_headers', [ $this, 'add_exposed_rest_headers' ]);
 
     add_action( 'wp_dashboard_setup', [ $this, 'register_dashboard_widgets' ] );
 
@@ -37,6 +42,8 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_save_thumbnail', [ $this, 'save_thumbnail' ]);
     add_action('wp_ajax_reacg_delete_thumbnail', [ $this, 'delete_thumbnail' ]);
     add_action('wp_ajax_reacg_auto_upload_video_cover', [ $this, 'upload_video_cover' ]);
+    add_action('wp_ajax_reacg_get_categories', [ $this, 'ajax_get_categories' ]);
+    add_action('wp_ajax_reacg_create_category', [ $this, 'ajax_create_category' ]);
 
     add_filter('wp_generate_attachment_metadata', [ $this, 'generate_attachment_metadata' ], 10, 2);
     // Add custom field to the media uploader.
@@ -55,6 +62,19 @@ class REACG_Gallery {
       register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>-?\d+)/images', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => [ $this, 'get_images_rout'],
+        'args' => array(
+          'id' => array(
+            'validate_callback' => function($param, $request, $key) {
+              return is_numeric( $param );
+            }
+          ),
+        ),
+        'permission_callback' => '__return_true',
+      ) );
+
+      register_rest_route( $this->obj->prefix . '/v1', '/gallery/(?P<id>-?\d+)/categories', array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [ $this, 'get_categories_rout'],
         'args' => array(
           'id' => array(
             'validate_callback' => function($param, $request, $key) {
@@ -227,6 +247,14 @@ class REACG_Gallery {
       'value' => get_post_meta($post->ID, 'action_url', TRUE),
     ];
 
+    $terms = wp_get_object_terms($post->ID, REACG_CATEGORY_TAXONOMY, ['fields' => 'names']);
+    $form_fields['regallery_categories'] = [
+      'label' => __('Gallery Categories', 'regallery'),
+      'input' => 'text',
+      'value' => !is_wp_error($terms) && !empty($terms) ? implode(', ', $terms) : '',
+      'helps' => __('Comma-separated category names for gallery filtering.', 'regallery'),
+    ];
+
     $exif = get_post_meta($post->ID, 'exif', TRUE);
     if ( empty($exif) ) {
       $metadata = wp_get_attachment_metadata($post->ID);
@@ -271,6 +299,53 @@ class REACG_Gallery {
       update_post_meta($post['ID'], 'crop_position', $this->sanitize_crop_position($attachment['crop_position']));
     }
 
+    $raw_categories = NULL;
+    if ( isset($attachment['regallery_categories']) ) {
+      $raw_categories = $attachment['regallery_categories'];
+    } elseif ( isset($attachment['categories']) ) {
+      $raw_categories = $attachment['categories'];
+    }
+
+    if ( $raw_categories !== NULL ) {
+      if ( is_string($raw_categories) ) {
+        $decoded = json_decode($raw_categories, true);
+        $raw_categories = is_array($decoded) ? $decoded : array_filter(array_map('trim', explode(',', $raw_categories)));
+      }
+      if ( is_array($raw_categories) ) {
+        $term_ids = [];
+        foreach ( $raw_categories as $cat_item ) {
+          if ( is_numeric($cat_item) ) {
+            $term_ids[] = (int) $cat_item;
+          } elseif ( is_array($cat_item) && !empty($cat_item['id']) ) {
+            $term_ids[] = (int) $cat_item['id'];
+          } elseif ( is_array($cat_item) && !empty($cat_item['name']) ) {
+            $cat_name = sanitize_text_field($cat_item['name']);
+            $existing = term_exists($cat_name, REACG_CATEGORY_TAXONOMY);
+            if ( $existing ) {
+              $term_ids[] = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
+            } else {
+              $created = wp_insert_term($cat_name, REACG_CATEGORY_TAXONOMY);
+              if ( !is_wp_error($created) ) {
+                $term_ids[] = (int) $created['term_id'];
+              }
+            }
+          } elseif ( is_string($cat_item) && !empty($cat_item) ) {
+            $cat_name = sanitize_text_field($cat_item);
+            $existing = term_exists($cat_name, REACG_CATEGORY_TAXONOMY);
+            if ( $existing ) {
+              $term_ids[] = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
+            } else {
+              $created = wp_insert_term($cat_name, REACG_CATEGORY_TAXONOMY);
+              if ( !is_wp_error($created) ) {
+                $term_ids[] = (int) $created['term_id'];
+              }
+            }
+          }
+        }
+        wp_set_object_terms((int) $post['ID'], array_values(array_unique($term_ids)), REACG_CATEGORY_TAXONOMY);
+      }
+    }
+
     return $post;
   }
 
@@ -297,6 +372,7 @@ class REACG_Gallery {
 
     $response['exif'] = html_entity_decode($exif);
     $response['crop_position'] = $this->get_crop_position($attachment->ID);
+    $response['categories'] = $this->get_item_categories($attachment->ID, 'image');
 
     return $response;
   }
@@ -308,11 +384,59 @@ class REACG_Gallery {
    */
   public function add_submenu() {
     // add_submenu_page('edit.php?post_type=reacg', __('Talk to a Gallery Expert', 'regallery'), __('Talk to a Gallery Expert', 'regallery'), 'manage_options', 'reacg-book-a-call');
+    add_submenu_page(
+      'edit.php?post_type=' . REACG_CUSTOM_POST_TYPE,
+      __('Categories', 'regallery'),
+      __('Categories', 'regallery'),
+      'manage_categories',
+      'edit-tags.php?taxonomy=' . REACG_CATEGORY_TAXONOMY . '&post_type=attachment'
+    );
     add_submenu_page('edit.php?post_type=reacg', __('Support', 'regallery'), __('Support', 'regallery'), 'manage_options', 'reacg-support');
     add_submenu_page('edit.php?post_type=reacg', __('About Us', 'regallery'), __('About Us', 'regallery'), 'manage_options', 'reacg-external-link');
     if ( !REACG_PLAYGROUND ) {
       add_submenu_page('edit.php?post_type=reacg', REACG_BUY_NOW_TEXT, REACG_BUY_NOW_TEXT, 'manage_options', 'reacg-upgrade');
     }
+  }
+
+  /**
+   * Keep Regallery menu active when viewing categories taxonomy screen.
+   *
+   * @param string $parent_file
+   * @return string
+   */
+  public function set_taxonomy_parent_menu( $parent_file ) {
+    global $current_screen;
+    if ( !empty($current_screen) && $current_screen->taxonomy === REACG_CATEGORY_TAXONOMY ) {
+      return 'edit.php?post_type=' . REACG_CUSTOM_POST_TYPE;
+    }
+    return $parent_file;
+  }
+
+  /**
+   * Keep Categories submenu active when viewing categories taxonomy screen.
+   *
+   * @param string $submenu_file
+   * @param string $parent_file
+   * @return string
+   */
+  public function set_taxonomy_submenu( $submenu_file, $parent_file ) {
+    global $current_screen;
+    if ( !empty($current_screen) && $current_screen->taxonomy === REACG_CATEGORY_TAXONOMY ) {
+      return 'edit-tags.php?taxonomy=' . REACG_CATEGORY_TAXONOMY . '&post_type=attachment';
+    }
+    return $submenu_file;
+  }
+
+  /**
+   * Expose custom headers for the REST API.
+   *
+   * @param array $headers
+   * @return array
+   */
+  public function add_exposed_rest_headers( $headers ) {
+    $headers[] = 'X-Images-Count';
+    $headers[] = 'X-Images-Categories';
+    return array_values(array_unique($headers));
   }
 
   /**
@@ -716,6 +840,9 @@ class REACG_Gallery {
     $data = $this->get_images(REACGLibrary::get_gallery_id($request, 'id'));
     $response = new WP_REST_Response($data['images'], 200);
     $response->header('X-Images-Count', $data['count']);
+    if ( !empty($data['categories']) ) {
+      $response->header('X-Images-Categories', rawurlencode(wp_json_encode($data['categories'])));
+    }
 
     return $response;
   }
@@ -833,6 +960,26 @@ class REACG_Gallery {
         update_post_meta($gallery_id, 'images_ids', json_encode(array_values($images_ids_arr)));
       }
 
+      // Collect all categories and counts across the entire gallery before filtering.
+      $gallery_categories = [];
+      foreach ( $data as $item ) {
+        if ( !empty($item['categories']) && is_array($item['categories']) ) {
+          foreach ( $item['categories'] as $cat ) {
+            $slug = !empty($cat['slug']) ? $cat['slug'] : sanitize_title($cat['name']);
+            if ( !isset($gallery_categories[$slug]) ) {
+              $gallery_categories[$slug] = [
+                'id'    => $cat['id'],
+                'name'  => $cat['name'],
+                'slug'  => $slug,
+                'count' => 0,
+              ];
+            }
+            $gallery_categories[$slug]['count']++;
+          }
+        }
+      }
+      $categories_summary = array_values($gallery_categories);
+
       // Filter the data by title, description, alt and caption.
       // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
       $filter = !empty($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
@@ -860,6 +1007,23 @@ class REACG_Gallery {
             }
           }
 
+          return false;
+        }));
+      }
+
+      // Filter the data by category.
+      // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not required.
+      $category_filter = !empty($_GET['category']) ? sanitize_text_field(wp_unslash($_GET['category'])) : '';
+      if ( $category_filter && $category_filter !== 'all' ) {
+        $data = array_values(array_filter($data, function ($item) use ($category_filter) {
+          if ( empty($item['categories']) || !is_array($item['categories']) ) {
+            return false;
+          }
+          foreach ( $item['categories'] as $cat ) {
+            if ( (string) $cat['id'] === $category_filter || $cat['slug'] === $category_filter || strcasecmp($cat['name'], $category_filter) === 0 ) {
+              return true;
+            }
+          }
           return false;
         }));
       }
@@ -911,7 +1075,7 @@ class REACG_Gallery {
       }
     }
 
-    return ['images' => $data, 'count' => $all_images_count];
+    return ['images' => $data, 'count' => $all_images_count, 'categories' => isset($categories_summary) ? $categories_summary : []];
   }
 
   /**
@@ -1410,6 +1574,170 @@ class REACG_Gallery {
     );
     register_post_type( REACG_CUSTOM_POST_TYPE, $args );
     add_action( 'add_meta_boxes_reacg', [ $this, 'add_meta_boxes' ], 1 );
+  }
+
+  /**
+   * Register custom taxonomy for gallery categories on attachments.
+   *
+   * @return void
+   */
+  private function register_taxonomy() {
+    $labels = array(
+      'name'                       => _x('Categories', 'taxonomy general name', 'regallery'),
+      'singular_name'              => _x('Category', 'taxonomy singular name', 'regallery'),
+      'search_items'               => __('Search Categories', 'regallery'),
+      'all_items'                  => __('All Categories', 'regallery'),
+      'parent_item'                => __('Parent Category', 'regallery'),
+      'parent_item_colon'          => __('Parent Category:', 'regallery'),
+      'edit_item'                  => __('Edit Category', 'regallery'),
+      'update_item'                => __('Update Category', 'regallery'),
+      'add_new_item'               => __('Add New Category', 'regallery'),
+      'new_item_name'              => __('New Category Name', 'regallery'),
+      'menu_name'                  => __('Categories', 'regallery'),
+      'not_found'                  => __('No categories found.', 'regallery'),
+      'back_to_items'              => __('← Back to Categories', 'regallery'),
+    );
+
+    $args = array(
+      'hierarchical'          => TRUE,
+      'labels'                => $labels,
+      'show_ui'               => TRUE,
+      'show_in_menu'          => FALSE,
+      'show_admin_column'     => TRUE,
+      'query_var'             => TRUE,
+      'rewrite'               => array('slug' => 'gallery-category'),
+      'show_in_rest'          => TRUE,
+      'rest_base'             => 'regallery_category',
+      'update_count_callback' => '_update_generic_term_count',
+    );
+
+    register_taxonomy(REACG_CATEGORY_TAXONOMY, array('attachment'), $args);
+  }
+
+  /**
+   * Get categories for a gallery item (attachment or post).
+   *
+   * @param int|string $id Object ID.
+   * @param string $type Item type (image, video, or post type).
+   * @return array Array of categories with id, name, and slug.
+   */
+  public function get_item_categories($id, $type = 'image') {
+    $categories = [];
+    $id = (int) $id;
+    if ( $id <= 0 ) {
+      return $categories;
+    }
+
+    if ( $type === 'image' || $type === 'video' ) {
+      $terms = wp_get_object_terms($id, REACG_CATEGORY_TAXONOMY, ['fields' => 'all']);
+    } elseif ( $type === 'product' && taxonomy_exists('product_cat') ) {
+      $terms = wp_get_object_terms($id, 'product_cat', ['fields' => 'all']);
+    } else {
+      $taxonomy = 'category';
+      if ( !taxonomy_exists($taxonomy) ) {
+        $taxonomies = get_object_taxonomies($type);
+        $taxonomy = !empty($taxonomies) ? $taxonomies[0] : '';
+      }
+      $terms = !empty($taxonomy) ? wp_get_object_terms($id, $taxonomy, ['fields' => 'all']) : [];
+    }
+
+    if ( !is_wp_error($terms) && !empty($terms) ) {
+      foreach ( $terms as $term ) {
+        $categories[] = [
+          'id'    => (int) $term->term_id,
+          'name'  => html_entity_decode($term->name, ENT_QUOTES, 'UTF-8'),
+          'slug'  => $term->slug,
+          'count' => (int) $term->count,
+        ];
+      }
+    }
+
+    return $categories;
+  }
+
+  /**
+   * AJAX handler to get all available categories.
+   */
+  public function ajax_get_categories() {
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_send_json_error(['message' => __('Invalid nonce', 'regallery')], 403);
+    }
+    if ( !current_user_can('edit_posts') ) {
+      wp_send_json_error(['message' => __('Permission denied', 'regallery')], 403);
+    }
+
+    $terms = get_terms([
+      'taxonomy'   => REACG_CATEGORY_TAXONOMY,
+      'hide_empty' => false,
+    ]);
+
+    $categories = [];
+    if ( !is_wp_error($terms) && !empty($terms) ) {
+      foreach ( $terms as $term ) {
+        $categories[] = [
+          'id'    => (int) $term->term_id,
+          'name'  => html_entity_decode($term->name, ENT_QUOTES, 'UTF-8'),
+          'slug'  => $term->slug,
+          'count' => (int) $term->count,
+        ];
+      }
+    }
+
+    wp_send_json_success($categories);
+  }
+
+  /**
+   * AJAX handler to create a new category.
+   */
+  public function ajax_create_category() {
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_send_json_error(['message' => __('Invalid nonce', 'regallery')], 403);
+    }
+    if ( !current_user_can('manage_categories') && !current_user_can('edit_posts') ) {
+      wp_send_json_error(['message' => __('Permission denied', 'regallery')], 403);
+    }
+
+    $name = !empty($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
+    if ( empty($name) ) {
+      wp_send_json_error(['message' => __('Category name cannot be empty', 'regallery')], 400);
+    }
+
+    $existing = term_exists($name, REACG_CATEGORY_TAXONOMY);
+    if ( $existing ) {
+      $term_id = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
+      $term = get_term($term_id, REACG_CATEGORY_TAXONOMY);
+      wp_send_json_success([
+        'id'    => (int) $term->term_id,
+        'name'  => html_entity_decode($term->name, ENT_QUOTES, 'UTF-8'),
+        'slug'  => $term->slug,
+        'count' => (int) $term->count,
+      ]);
+    }
+
+    $result = wp_insert_term($name, REACG_CATEGORY_TAXONOMY);
+    if ( is_wp_error($result) ) {
+      wp_send_json_error(['message' => $result->get_error_message()], 400);
+    }
+
+    $term = get_term((int) $result['term_id'], REACG_CATEGORY_TAXONOMY);
+    wp_send_json_success([
+      'id'    => (int) $term->term_id,
+      'name'  => html_entity_decode($term->name, ENT_QUOTES, 'UTF-8'),
+      'slug'  => $term->slug,
+      'count' => (int) $term->count,
+    ]);
+  }
+
+  /**
+   * REST callback to get categories for a gallery.
+   *
+   * @param WP_REST_Request $request
+   * @return WP_REST_Response
+   */
+  public function get_categories_rout( WP_REST_Request $request ) {
+    $gallery_id = REACGLibrary::get_gallery_id($request, 'id');
+    $data = $this->get_images($gallery_id);
+    return new WP_REST_Response(isset($data['categories']) ? $data['categories'] : [], 200);
   }
 
   /**
@@ -1948,6 +2276,7 @@ class REACG_Gallery {
       // Get the post featured image alt as image alt.
       $data['alt'] = html_entity_decode($this->get_the_alt($post_thumbnail_id));
       $data['crop_position'] = $this->get_crop_position($post_thumbnail_id);
+      $data['categories'] = $this->get_item_categories($id, $matches[1]);
 
       return $data;
     }
@@ -2000,6 +2329,8 @@ class REACG_Gallery {
       $data['title'] = html_entity_decode(get_the_title($id));
       $data['crop_position'] = $this->get_crop_position($id);
     }
+
+    $data['categories'] = $this->get_item_categories($id, $data['type']);
 
     return $data;
   }

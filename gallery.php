@@ -86,6 +86,7 @@ final class REACG {
     $plugin_assets_base_url = preg_replace('/[?#].*$/', '', $plugin_assets_base_url);
     define('REACG_PLUGIN_ASSETS_URL', rtrim($plugin_assets_base_url, '/') . '/assets/js/' );
     define('REACG_CUSTOM_POST_TYPE', 'reacg' );
+    define('REACG_CATEGORY_TAXONOMY', 'regallery_category' );
     define('REACG_PREFIX', $this->prefix );
     define('REACG_NICENAME', $this->nicename );
     define('REACG_AUTHOR', $this->author );
@@ -350,6 +351,7 @@ final class REACG {
         'load_more' => __('Load more', 'regallery'),
         'view_more' => __('View more', 'regallery'),
         'search' => __('Search', 'regallery'),
+        'all' => __('All', 'regallery'),
         'no_data' => __('There is not data.', 'regallery'),
       ],
     ) );
@@ -501,6 +503,8 @@ final class REACG {
       'attachment_caption' => __('Caption', 'regallery'),
       'attachment_alt_text' => __('Alt text', 'regallery'),
       'attachment_description' => __('Description', 'regallery'),
+      'attachment_categories' => __('Categories', 'regallery'),
+      'attachment_categories_placeholder' => __('Search or add categories...', 'regallery'),
       'attachment_action_url' => __('Action URL', 'regallery'),
       'attachment_metadata_exif' => __('Metadata (EXIF)', 'regallery'),
       'attachment_crop_position' => __('Crop position', 'regallery'),

@@ -218,6 +218,7 @@ class REACGLibrary {
       'images' => $gallery_data['images'],
       'options' => $gallery_options,
       'imagesCount' => $gallery_data['count'],
+      'categories' => isset($gallery_data['categories']) ? $gallery_data['categories'] : [],
     ];
   }
 

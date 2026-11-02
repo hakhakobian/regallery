@@ -593,6 +593,19 @@ class REACG_Options {
       'enableSearch' => FALSE, #boolean
       'searchPlaceholderText' => '', #string
       'enableRightClickProtection' => FALSE,  #boolean
+      'enableFiltering' => FALSE, #boolean
+      'filterType' => 'auto', #string auto | buttons | dropdown
+      'filterShowAll' => TRUE, #boolean
+      'filterAllText' => '', #string
+      'filterShowCount' => TRUE, #boolean
+      'filterAlignment' => 'left', #string left | center | right | space-between
+      'filterActiveColor' => '#2563eb', #string
+      'filterActiveTextColor' => '#ffffff', #string
+      'filterInactiveColor' => '#f3f4f6', #string
+      'filterInactiveTextColor' => '#374151', #string
+      'filterBorderRadius' => 4, #number
+      'filterFontSize' => 14, #number
+      'showFrontendSorting' => FALSE, #boolean
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
@@ -711,6 +724,8 @@ class REACG_Options {
       'buttonBorderSize',
       'buttonBorderRadius',
       'animationSpeed',
+      'filterBorderRadius',
+      'filterFontSize',
     ];
     $negative_number = [
       'spaceBetween',
@@ -751,6 +766,10 @@ class REACG_Options {
       'equalHeight',
       'equalWidth',
       'pauseOnHover',
+      'enableFiltering',
+      'filterShowAll',
+      'filterShowCount',
+      'showFrontendSorting',
     ];
     $float = [
       'scale',
@@ -856,6 +875,14 @@ class REACG_Options {
       'orderBy' => [
         'allowed' => [ 'default', 'title', 'caption', 'description', 'date' ],
         'default' => 'default',
+      ],
+      'filterType' => [
+        'allowed' => [ 'auto', 'buttons', 'dropdown' ],
+        'default' => 'auto',
+      ],
+      'filterAlignment' => [
+        'allowed' => [ 'left', 'center', 'right', 'space-between' ],
+        'default' => 'left',
       ],
       'orderDirection' => [
         'allowed' => [ 'asc', 'desc' ],
