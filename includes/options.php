@@ -599,10 +599,10 @@ class REACG_Options {
       'filterAllText' => '', #string
       'filterShowCount' => TRUE, #boolean
       'filterAlignment' => 'left', #string left | center | right | space-between
-      'filterActiveColor' => '#2563eb', #string
-      'filterActiveTextColor' => '#ffffff', #string
-      'filterInactiveColor' => '#f3f4f6', #string
-      'filterInactiveTextColor' => '#374151', #string
+      'filterActiveColor' => '#FFFFFF', #string
+      'filterActiveTextColor' => '#000000de', #string
+      'filterInactiveColor' => '#D7D7D7', #string
+      'filterInactiveTextColor' => '#000000de', #string
       'filterBorderRadius' => 4, #number
       'filterFontSize' => 14, #number
       'showFrontendSorting' => FALSE, #boolean
