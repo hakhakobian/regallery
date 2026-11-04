@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.20
+Stable tag: 1.20.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,10 +214,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.20: Import templates with sample images. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.21: Added category filtering and sorting. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.21 =
+= Updated: 05.11.2026 =
+* **Added:** Category filtering and sorting with customizable display styles.
+* **Added:** Gallery Category taxonomy to categorize media items (images, videos, posts, WooCommerce products) directly from the edit modal and media uploader.
+* **Added:** Loaded Effect option to animate images and videos when they finish loading.
+* **Added:** Contextual Help tabs (Overview, Publishing guide, and helpful links) to the gallery edit screen in WordPress admin.
+
 = 1.20.20 =
 = Updated: 31.10.2026 =
 * **Added:** Option to import template designs together with sample media images.
