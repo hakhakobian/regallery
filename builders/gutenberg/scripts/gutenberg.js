@@ -269,8 +269,8 @@
 
   blocks.registerBlockType("reacg/gallery", {
     apiVersion: 3,
-    title: reacg_gutenberg.title,
-    description: reacg_gutenberg.description,
+    title: "Re Gallery",
+    description: reacg_gutenberg.description || "Display images with various visual effects in responsive gallery.",
     icon: el("img", { width: 24, height: 24, src: reacg_gutenberg.icon }),
     category: "common",
     supports: { customClassName: false },
