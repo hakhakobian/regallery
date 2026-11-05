@@ -122,7 +122,89 @@ jQuery(document).ready(function () {
     reacg_set_image_ids(galleryItemsContainer, images_ids);
     /* Save images on delete.*/
     reacg_save_images(galleryItemsContainer);
+    reacg_update_bulk_toolbar(galleryItemsContainer);
   });
+
+  /* Item selection events */
+  jQuery(document).on("click mousedown", ".reacg-item-select", function (e) {
+    e.stopPropagation();
+  });
+
+  jQuery(document).on("change", ".reacg-item-checkbox", function (e) {
+    e.stopPropagation();
+    const item = jQuery(this).closest(".reacg_item");
+    if (this.checked) {
+      item.addClass("reacg-item--selected");
+    } else {
+      item.removeClass("reacg-item--selected");
+    }
+    reacg_update_bulk_toolbar(item.closest(".reacg_items, #gallery-images, #reacg-gallery-images, .inside"));
+  });
+
+  /* Select all checkbox event */
+  jQuery(document).on("change", ".reacg-select-all-checkbox", function () {
+    const isChecked = this.checked;
+    const container = jQuery(this).closest("#gallery-images, #reacg-gallery-images, .inside, body");
+    const items = container.find(".reacg_items .reacg_item:not(.reacg_item_new):not(.reacg-template)");
+    items.each(function () {
+      const item = jQuery(this);
+      if (reacg_is_bulk_selectable_item(item)) {
+        item.find(".reacg-item-checkbox").prop("checked", isChecked);
+        if (isChecked) {
+          item.addClass("reacg-item--selected");
+        } else {
+          item.removeClass("reacg-item--selected");
+        }
+      }
+    });
+    reacg_update_bulk_toolbar(container);
+  });
+
+  /* Bulk Edit button event */
+  jQuery(document).on("click", ".reacg-bulk-edit-btn", function (e) {
+    e.preventDefault();
+    const btn = jQuery(this);
+    if (btn.attr("disabled")) return;
+
+    const root = btn.closest("#gallery-images, #reacg-gallery-images, .inside, body");
+    const selectedItems = root
+      .find(".reacg_items .reacg_item.reacg-item--selected:not(.reacg_item_new):not(.reacg-template)")
+      .filter(function () {
+        return reacg_is_bulk_selectable_item(this);
+      });
+    if (!selectedItems.length) return;
+
+    btn.attr("disabled", true);
+    const imageIds = [];
+    selectedItems.each(function () {
+      const id = jQuery(this).data("id");
+      if (id) {
+        imageIds.push(id);
+      }
+    });
+
+    if (!imageIds.length) {
+      btn.removeAttr("disabled");
+      return;
+    }
+
+    const attachments = [];
+    const fetchPromises = [];
+    imageIds.forEach(function (id) {
+      const att = wp.media.attachment(id);
+      attachments.push(att);
+      if (typeof att.fetch === "function") {
+        fetchPromises.push(att.fetch());
+      }
+    });
+
+    jQuery.when.apply(jQuery, fetchPromises).always(function () {
+      btn.removeAttr("disabled");
+      reacg_open_bulk_attachment_edit_modal(btn, attachments, selectedItems, root.find(".reacg_items"));
+    });
+  });
+
+  reacg_update_bulk_toolbar();
 
   /* Bind an edit event to the every image item.*/
   jQuery(document).on("click", ".reacg_item .reacg-edit", function (e) {
@@ -813,6 +895,7 @@ function reacg_media_uploader(e, that) {
             .addClass("dashicons dashicons-controls-play");
         } else if (reacg.allowed_post_types.hasOwnProperty(type)) {
           /* Any of the allowed post types.*/
+          clone.find(".reacg-item-select").addClass("reacg-hidden");
           if (String(image_id).includes("dynamic")) {
             thumbnail_url = "";
             galleryItemsContainer
@@ -866,6 +949,7 @@ function reacg_media_uploader(e, that) {
 
     /* Save the images.*/
     reacg_save_images(galleryItemsContainer);
+    reacg_update_bulk_toolbar(galleryItemsContainer);
 
     if (coverPromises.length) {
       Promise.all(coverPromises).then(function (results) {
@@ -1757,7 +1841,9 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
         crop_position: modal
           .find('input[name="reacg-attachment-crop-position"]:checked')
           .val(),
-        regallery_categories: currentCategoryVals,
+        regallery_categories: currentCategoryVals.length
+          ? currentCategoryVals
+          : "",
       };
 
       const normalizeValue = function (value) {
@@ -1860,6 +1946,1403 @@ function reacg_ai_button() {
   );
 }
 
+function reacg_is_bulk_selectable_item(item) {
+  const $item = jQuery(item);
+  const type = String($item.data("type") || "");
+  const id = String($item.data("id") || "");
+  if (
+    type.includes("dynamic") ||
+    id.includes("dynamic") ||
+    (reacg.allowed_post_types && reacg.allowed_post_types.hasOwnProperty(type))
+  ) {
+    return false;
+  }
+  return !$item.find(".reacg-item-select").hasClass("reacg-hidden");
+}
+
+function reacg_update_bulk_toolbar(container) {
+  const root =
+    container && container.length
+      ? jQuery(container).closest(
+          "#gallery-images, #reacg-gallery-images, .inside, body",
+        )
+      : jQuery(document);
+  const items = root
+    .find(".reacg_items .reacg_item:not(.reacg_item_new):not(.reacg-template)")
+    .filter(function () {
+      return reacg_is_bulk_selectable_item(this);
+    });
+  const selected = items.filter(".reacg-item--selected");
+  const toolbar = root.find(".reacg-media-toolbar");
+  const selectAll = toolbar.find(".reacg-select-all-checkbox");
+  const countBadge = toolbar.find(".reacg-selected-count");
+  const bulkBtn = toolbar.find(".reacg-bulk-edit-btn");
+
+  selectAll.prop("disabled", items.length === 0);
+
+  if (selected.length > 0) {
+    bulkBtn.removeAttr("disabled");
+    const countTemplate = reacg.selected_items || "%s items selected";
+    const countText = countTemplate.replace("%s", selected.length);
+    countBadge
+      .attr("title", countText)
+      .empty()
+      .append(
+        jQuery('<span class="reacg-selected-count__full"></span>').text(
+          countText,
+        ),
+        jQuery('<span class="reacg-selected-count__short"></span>').text(
+          selected.length,
+        ),
+      )
+      .show();
+  } else {
+    bulkBtn.attr("disabled", "disabled");
+    countBadge.hide();
+  }
+
+  if (items.length > 0 && selected.length === items.length) {
+    selectAll.prop("checked", true).prop("indeterminate", false);
+  } else if (selected.length > 0) {
+    selectAll.prop("checked", false).prop("indeterminate", true);
+  } else {
+    selectAll.prop("checked", false).prop("indeterminate", false);
+  }
+}
+
+function reacg_run_bulk_generate_in_chunks(
+  imagesData,
+  state,
+  chunkSize,
+  onProgress,
+) {
+  const images = imagesData && typeof imagesData === "object" ? imagesData : {};
+  const imageEntries = Object.entries(images);
+  const deferred = jQuery.Deferred();
+  const responses = [];
+  const errors = [];
+  const notifyProgress =
+    typeof onProgress === "function" ? onProgress : function () {};
+
+  const readPayloadCode = function (payload) {
+    const source = payload || {};
+
+    if (source.responseJSON) {
+      if (source.responseJSON.code) {
+        return String(source.responseJSON.code);
+      }
+      if (source.responseJSON.data && source.responseJSON.data.code) {
+        return String(source.responseJSON.data.code);
+      }
+      if (
+        source.responseJSON.error_data &&
+        typeof source.responseJSON.error_data === "object"
+      ) {
+        const errorDataKeys = Object.keys(source.responseJSON.error_data);
+        if (errorDataKeys.length) {
+          return String(errorDataKeys[0]);
+        }
+      }
+      if (
+        source.responseJSON.errors &&
+        typeof source.responseJSON.errors === "object"
+      ) {
+        const errorKeys = Object.keys(source.responseJSON.errors);
+        if (errorKeys.length) {
+          return String(errorKeys[0]);
+        }
+      }
+    }
+
+    if (source.responseText && typeof source.responseText === "string") {
+      try {
+        const parsed = JSON.parse(source.responseText);
+        if (parsed && parsed.code) {
+          return String(parsed.code);
+        }
+        if (parsed && parsed.data && parsed.data.code) {
+          return String(parsed.data.code);
+        }
+        if (
+          parsed &&
+          parsed.error_data &&
+          typeof parsed.error_data === "object"
+        ) {
+          const errorDataKeys = Object.keys(parsed.error_data);
+          if (errorDataKeys.length) {
+            return String(errorDataKeys[0]);
+          }
+        }
+        if (parsed && parsed.errors && typeof parsed.errors === "object") {
+          const errorKeys = Object.keys(parsed.errors);
+          if (errorKeys.length) {
+            return String(errorKeys[0]);
+          }
+        }
+      } catch (ignored) {}
+    }
+
+    return "";
+  };
+
+  const isNothingToGeneratePayload = function (payload) {
+    return readPayloadCode(payload) === "nothing_to_generate";
+  };
+
+  if (!imageEntries.length) {
+    notifyProgress(0, 0);
+    deferred.resolve({
+      responses: [],
+      errors: [],
+      images: images,
+      closeOnStatus200: false,
+    });
+    return deferred.promise();
+  }
+
+  notifyProgress(0, imageEntries.length);
+
+  const normalizeGeneratedResponse = function (response) {
+    let responseObject = response;
+    if (typeof responseObject === "string") {
+      try {
+        responseObject = JSON.parse(responseObject);
+      } catch (e) {
+        responseObject = {};
+      }
+    }
+
+    if (responseObject && responseObject.responseJSON) {
+      responseObject = responseObject.responseJSON;
+    }
+
+    const source =
+      responseObject && typeof responseObject === "object"
+        ? responseObject.data && typeof responseObject.data === "object"
+          ? responseObject.data
+          : responseObject
+        : {};
+
+    const normalized = {};
+    ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+      if (Object.prototype.hasOwnProperty.call(source, fieldName)) {
+        normalized[fieldName] =
+          source[fieldName] == null ? "" : String(source[fieldName]);
+      }
+    });
+
+    return normalized;
+  };
+
+  const applyGeneratedDataToImage = function (
+    imageId,
+    imageData,
+    generatedFields,
+  ) {
+    const baseImage =
+      imageData && typeof imageData === "object" ? imageData : {};
+    const nextImage = jQuery.extend({}, baseImage);
+    let changed = false;
+
+    ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+      if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
+        return;
+      }
+
+      nextImage[fieldName] = generatedFields[fieldName];
+      changed = true;
+    });
+
+    if (changed) {
+      images[imageId] = nextImage;
+    }
+
+    return nextImage;
+  };
+
+  const saveGeneratedDataToAttachment = function (
+    imageId,
+    previousImageData,
+    generatedFields,
+  ) {
+    const deferredSave = jQuery.Deferred();
+    const normalizedImageId = parseInt(imageId, 10);
+    const saveData = {};
+    const normalizeValue = function (value) {
+      return value == null ? "" : String(value);
+    };
+
+    ["title", "alt", "caption", "description"].forEach(function (fieldName) {
+      if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
+        return;
+      }
+
+      const previousValue = normalizeValue(
+        previousImageData && previousImageData[fieldName],
+      );
+      const nextValue = normalizeValue(generatedFields[fieldName]);
+      if (previousValue !== nextValue) {
+        saveData[fieldName] = nextValue;
+      }
+    });
+
+    if (!Object.keys(saveData).length) {
+      deferredSave.resolve();
+      return deferredSave.promise();
+    }
+
+    if (!normalizedImageId) {
+      deferredSave.resolve();
+      return deferredSave.promise();
+    }
+
+    if (!wp || !wp.media || typeof wp.media.attachment !== "function") {
+      deferredSave.resolve();
+      return deferredSave.promise();
+    }
+
+    const attachment = wp.media.attachment(normalizedImageId);
+    if (!attachment || typeof attachment.save !== "function") {
+      deferredSave.resolve();
+      return deferredSave.promise();
+    }
+
+    const persist = function () {
+      attachment
+        .save(saveData)
+        .done(function (response) {
+          deferredSave.resolve(response);
+        })
+        .fail(function (xhr) {
+          deferredSave.reject(xhr);
+        });
+    };
+
+    if (typeof attachment.fetch === "function") {
+      attachment
+        .fetch()
+        .done(function () {
+          persist();
+        })
+        .fail(function (xhr) {
+          deferredSave.reject(xhr);
+        });
+    } else {
+      persist();
+    }
+
+    return deferredSave.promise();
+  };
+
+  const runChunk = function (index) {
+    if (index >= imageEntries.length) {
+      notifyProgress(imageEntries.length, imageEntries.length);
+      if (errors.length) {
+        deferred.reject({
+          responses: responses,
+          errors: errors,
+          images: images,
+        });
+        return;
+      }
+
+      const successCount = responses.filter(function (entry) {
+        return parseInt(entry.statusCode, 10) === 200;
+      }).length;
+      const closeOnStatus200 = successCount > 0;
+      deferred.resolve({
+        responses: responses,
+        errors: [],
+        images: images,
+        closeOnStatus200: closeOnStatus200,
+        successCount: successCount,
+      });
+      return;
+    }
+
+    const imageEntry = imageEntries[index];
+    const imageId = imageEntry[0];
+    const imageData = imageEntry[1];
+    const singleImageData =
+      imageData && typeof imageData === "object" ? imageData : {};
+
+    notifyProgress(index + 1, imageEntries.length);
+
+    jQuery
+      .ajax({
+        type: "GET",
+        url: reacg.core_rest_url_v2 + "ai",
+        contentType: "application/json",
+        data: {
+          image_id: imageId,
+          image_url: singleImageData.url || "",
+          title: singleImageData.title || "",
+          alt: singleImageData.alt || "",
+          caption: singleImageData.caption || "",
+          description: singleImageData.description || "",
+          website_language: reacg.website_language || "",
+          user_language:
+            reacg.user_language || document.documentElement.lang || "",
+          fields: JSON.stringify(state.fields),
+          overwrite_mode: state.overwriteMode,
+          action: "get_content",
+        },
+      })
+      .done(function (response, textStatus, xhr) {
+        const statusCode =
+          xhr && typeof xhr.status !== "undefined"
+            ? parseInt(xhr.status, 10)
+            : 0;
+        const previousImageData = jQuery.extend({}, singleImageData);
+        const generatedFields = normalizeGeneratedResponse(response);
+        const updatedImageData = applyGeneratedDataToImage(
+          imageId,
+          singleImageData,
+          generatedFields,
+        );
+
+        saveGeneratedDataToAttachment(
+          imageId,
+          previousImageData,
+          generatedFields,
+        )
+          .done(function (saveResponse) {
+            responses.push({
+              index: index,
+              imageId: imageId,
+              statusCode: statusCode,
+              response: response,
+              saveResponse: saveResponse,
+              generated: generatedFields,
+              image: updatedImageData,
+            });
+          })
+          .fail(function (xhr) {
+            errors.push({
+              index: index,
+              imageId: imageId,
+              stage: "save",
+              xhr: xhr,
+            });
+          })
+          .always(function () {
+            if (errors.length) {
+              deferred.reject({
+                responses: responses,
+                errors: errors,
+                images: images,
+              });
+              return;
+            }
+
+            runChunk(index + 1);
+          });
+      })
+      .fail(function (xhr) {
+        if (isNothingToGeneratePayload(xhr)) {
+          responses.push({
+            index: index,
+            imageId: imageId,
+            statusCode:
+              xhr && typeof xhr.status !== "undefined"
+                ? parseInt(xhr.status, 10)
+                : 400,
+            response: xhr,
+            skipped: true,
+            image: singleImageData,
+          });
+          runChunk(index + 1);
+          return;
+        }
+
+        errors.push({
+          index: index,
+          imageId: imageId,
+          stage: "generate",
+          xhr: xhr,
+        });
+        deferred.reject({
+          responses: responses,
+          errors: errors,
+          images: images,
+        });
+      });
+  };
+
+  runChunk(0);
+
+  return deferred.promise();
+}
+
+function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
+  const count = attachments.length;
+  let thumbnailsHtml = "";
+  attachments.forEach(function (att) {
+    const sizes = att.get("sizes");
+    const attachmentUrl = reacg_get_attachment_field_value(att, "url");
+    const previewSize =
+      sizes && sizes.thumbnail
+        ? sizes.thumbnail
+        : sizes && sizes.full
+          ? sizes.full
+          : null;
+    const previewUrl =
+      previewSize && previewSize.url
+        ? previewSize.url
+        : attachmentUrl || reacg.no_image;
+    const isVideo = reacg_get_attachment_field_value(att, "type") === "video";
+    const title = reacg_get_attachment_field_value(att, "title") || "";
+
+    thumbnailsHtml +=
+      '<div class="reacg-bulk-thumb-item" title="' +
+      reacg_escape_html(title) +
+      '">';
+    if (isVideo && attachmentUrl) {
+      thumbnailsHtml +=
+        '<video src="' + reacg_escape_html(attachmentUrl) + '"></video>';
+    } else {
+      thumbnailsHtml +=
+        '<img src="' + reacg_escape_html(previewUrl) + '" alt="" />';
+    }
+    thumbnailsHtml += "</div>";
+  });
+
+  const selectedCountText = reacg.selected_items
+    ? reacg.selected_items.replace("%s", count)
+    : count + " items selected";
+
+  return jQuery(
+    "" +
+      '<div class="reacg-modal reacg-attachment-modal reacg-bulk-attachment-modal" style="display:none;">' +
+      '<div class="reacg-modal-wrapper">' +
+      '<div class="reacg-modal-content">' +
+      '<div class="reacg-modal__header">' +
+      "<h1>" +
+      reacg_escape_html(reacg.bulk_edit || "Bulk Edit") +
+      " (" +
+      count +
+      ")</h1>" +
+      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
+      "</div>" +
+      '<div class="reacg-modal__body">' +
+      '<div class="reacg-modal__layout">' +
+      // LEFT COLUMN
+      '<div class="reacg-modal__layout-content">' +
+      '<div class="reacg-bulk-edit-thumbnails">' +
+      thumbnailsHtml +
+      "</div>" +
+      '<div class="reacg-attachment-modal__details">' +
+      "<p><strong>" +
+      reacg_escape_html(selectedCountText) +
+      "</strong></p>" +
+      "</div>" +
+      reacg_crop_position_picker() +
+      "</div>" +
+      // RIGHT COLUMN
+      '<div class="reacg-modal__layout-content">' +
+      // Fields
+      '<div class="reacg-attachment-modal__field" data-setting="title">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-title",
+        reacg.attachment_title,
+      ) +
+      '<input type="text" id="reacg-attachment-title" class="reacg-attachment-modal__input" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="caption">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-caption",
+        reacg.attachment_caption,
+      ) +
+      '<textarea id="reacg-attachment-caption" rows="3"></textarea></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="alt">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-alt",
+        reacg.attachment_alt_text,
+      ) +
+      '<input type="text" id="reacg-attachment-alt" class="reacg-attachment-modal__input" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="description">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-description",
+        reacg.attachment_description,
+      ) +
+      '<textarea id="reacg-attachment-description" rows="4"></textarea></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="action_url">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-action-url",
+        reacg.attachment_action_url,
+      ) +
+      '<input type="url" id="reacg-attachment-action-url" class="reacg-attachment-modal__input" /></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="categories">' +
+      '<div class="reacg-bulk-field-header">' +
+      '<div class="reacg-bulk-field-header__left">' +
+      '<label for="reacg-attachment-categories">' +
+      reacg_escape_html(reacg.attachment_categories || "Categories") +
+      "</label>" +
+      "</div>" +
+      '<div class="reacg-bulk-field-header__right">' +
+      '<div class="reacg-bulk-cat-modes" role="tablist">' +
+      '<button type="button" class="reacg-bulk-cat-mode is-active" data-mode="add">' +
+      reacg_escape_html(reacg.categories_mode_add || "Add") +
+      "</button>" +
+      '<button type="button" class="reacg-bulk-cat-mode" data-mode="replace">' +
+      reacg_escape_html(reacg.categories_mode_replace || "Replace") +
+      "</button>" +
+      '<button type="button" class="reacg-bulk-cat-mode" data-mode="remove">' +
+      reacg_escape_html(reacg.categories_mode_remove || "Remove") +
+      "</button>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      '<select id="reacg-attachment-categories" class="reacg_searchable_select reacg-attachment-categories" multiple="multiple" style="width: 100%;"></select></div>' +
+      '<div class="reacg-attachment-modal__field" data-setting="exif">' +
+      reacg_bulk_field_header_html(
+        "reacg-attachment-exif",
+        reacg.attachment_metadata_exif,
+      ) +
+      '<textarea id="reacg-attachment-exif" rows="5"></textarea></div>' +
+      "</div>" +
+      "</div>" +
+      '<div><p class="reacg-modal-error-note hidden"></p></div>' +
+      "</div>" +
+      '<div class="reacg-modal__footer"><div class="reacg-modal-buttons-wrapper">' +
+      '<span class="reacg-bulk-progress-text hidden"></span>' +
+      '<span class="spinner"></span>' +
+      '<button class="reacg-modal-button-save button button-primary button-large">' +
+      reacg_escape_html(reacg.update) +
+      "</button></div></div>" +
+      "</div>" +
+      "</div>" +
+      "</div>",
+  );
+}
+
+function reacg_bulk_field_header_html(inputId, labelText) {
+  return (
+    '<div class="reacg-bulk-field-header">' +
+    '<div class="reacg-bulk-field-header__left">' +
+    '<label for="' +
+    reacg_escape_html(inputId) +
+    '">' +
+    reacg_escape_html(labelText) +
+    "</label>" +
+    "</div>" +
+    '<div class="reacg-bulk-field-header__right">' +
+    '<label class="reacg-bulk-only-empty-label hidden">' +
+    '<input type="checkbox" class="reacg-bulk-only-empty-checkbox" />' +
+    "<span>" +
+    reacg_escape_html(reacg.only_empty_fields || "Only empty fields") +
+    "</span>" +
+    "</label>" +
+    '<button type="button" class="reacg-bulk-field-clear hidden">' +
+    reacg_escape_html(reacg.clear_field || "Clear") +
+    "</button>" +
+    "</div>" +
+    "</div>"
+  );
+}
+
+function reacg_analyze_bulk_field(attachments, fieldName) {
+  const values = attachments.map(function (att) {
+    const raw = reacg_get_attachment_field_value(att, fieldName);
+    return raw == null ? "" : String(raw).trim();
+  });
+  const nonEmptyCount = values.filter(function (v) {
+    return v !== "";
+  }).length;
+  const allEmpty = nonEmptyCount === 0;
+  const allSame =
+    values.length > 0 &&
+    values.every(function (v) {
+      return v === values[0];
+    });
+  const sharedValue = allSame ? values[0] : "";
+  const hasMixed = !allSame;
+
+  return {
+    values: values,
+    nonEmptyCount: nonEmptyCount,
+    allEmpty: allEmpty,
+    allSame: allSame,
+    sharedValue: sharedValue,
+    hasMixed: hasMixed,
+  };
+}
+
+function reacg_get_attachment_categories(att) {
+  const raw =
+    (att && typeof att.get === "function" ? att.get("categories") : null) || [];
+  const list = [];
+  if (Array.isArray(raw)) {
+    raw.forEach(function (cat) {
+      if (!cat) return;
+      const id =
+        typeof cat === "object"
+          ? String(cat.id || cat.name || "")
+          : String(cat);
+      const name =
+        typeof cat === "object"
+          ? String(cat.name || cat.id || "")
+          : String(cat);
+      if (id) {
+        list.push({ id: id, name: name });
+      }
+    });
+  }
+  return list;
+}
+
+function reacg_analyze_bulk_categories(attachments) {
+  const countsById = {};
+  const namesById = {};
+  const total = attachments.length;
+
+  attachments.forEach(function (att) {
+    const seenOnAtt = {};
+    reacg_get_attachment_categories(att).forEach(function (cat) {
+      if (seenOnAtt[cat.id]) return;
+      seenOnAtt[cat.id] = true;
+      countsById[cat.id] = (countsById[cat.id] || 0) + 1;
+      namesById[cat.id] = cat.name;
+    });
+  });
+
+  const anyIds = Object.keys(countsById);
+  const sharedIds = anyIds.filter(function (id) {
+    return total > 0 && countsById[id] === total;
+  });
+
+  return {
+    countsById: countsById,
+    namesById: namesById,
+    anyIds: anyIds,
+    sharedIds: sharedIds,
+    hasMixed: anyIds.length !== sharedIds.length,
+  };
+}
+
+function reacg_sync_bulk_text_fields(modal, attachments) {
+  const textFields = [
+    { name: "title", selector: "#reacg-attachment-title" },
+    { name: "caption", selector: "#reacg-attachment-caption" },
+    { name: "alt", selector: "#reacg-attachment-alt" },
+    { name: "description", selector: "#reacg-attachment-description" },
+    { name: "action_url", selector: "#reacg-attachment-action-url" },
+    { name: "exif", selector: "#reacg-attachment-exif" },
+  ];
+
+  textFields.forEach(function (fieldCfg) {
+    const fieldWrap = modal.find('[data-setting="' + fieldCfg.name + '"]');
+    const input = fieldWrap.find(fieldCfg.selector);
+    const clearBtn = fieldWrap.find(".reacg-bulk-field-clear");
+    const onlyEmptyLabel = fieldWrap.find(".reacg-bulk-only-empty-label");
+    const onlyEmptyCheckbox = fieldWrap.find(".reacg-bulk-only-empty-checkbox");
+    if (!fieldWrap.length || !input.length) return;
+
+    const state = reacg_analyze_bulk_field(attachments, fieldCfg.name);
+    const defaultPlaceholder = state.hasMixed
+      ? reacg.bulk_multiple_values || "— Multiple Values —"
+      : fieldCfg.name === "action_url"
+        ? "https://example.com"
+        : reacg.bulk_empty || "— Empty —";
+
+    fieldWrap.data("bulkFieldState", state);
+    fieldWrap.data("defaultPlaceholder", defaultPlaceholder);
+    fieldWrap.attr("data-bulk-clear", "0");
+
+    onlyEmptyCheckbox.prop("checked", false);
+    onlyEmptyLabel.addClass("hidden");
+
+    input
+      .prop("disabled", false)
+      .removeClass("reacg-bulk-input--cleared")
+      .attr("placeholder", defaultPlaceholder)
+      .val(state.allSame ? state.sharedValue : "");
+
+    clearBtn
+      .removeClass("is-undo")
+      .text(reacg.clear_field || "Clear")
+      .toggleClass("hidden", state.nonEmptyCount === 0);
+
+    input.off("input.reacgBulkField").on("input.reacgBulkField", function () {
+      const currentState = fieldWrap.data("bulkFieldState") || {};
+      const isCleared = fieldWrap.attr("data-bulk-clear") === "1";
+      const hasTyped = String(input.val() || "").trim() !== "";
+      const showOnlyEmpty =
+        !isCleared &&
+        currentState.hasMixed &&
+        currentState.nonEmptyCount > 0 &&
+        hasTyped;
+      onlyEmptyLabel.toggleClass("hidden", !showOnlyEmpty);
+    });
+
+    clearBtn.off("click.reacgBulkField").on("click.reacgBulkField", function (e) {
+      e.preventDefault();
+      const isCurrentlyCleared = fieldWrap.attr("data-bulk-clear") === "1";
+      const currentState = fieldWrap.data("bulkFieldState") || {};
+      const defPh = fieldWrap.data("defaultPlaceholder") || "";
+
+      if (!isCurrentlyCleared) {
+        fieldWrap.attr("data-bulk-clear", "1");
+        input
+          .val("")
+          .prop("disabled", true)
+          .addClass("reacg-bulk-input--cleared")
+          .attr(
+            "placeholder",
+            reacg.bulk_will_be_cleared || "— Will be cleared —",
+          );
+        clearBtn.addClass("is-undo").text(reacg.undo || "Undo");
+        onlyEmptyLabel.addClass("hidden");
+      } else {
+        fieldWrap.attr("data-bulk-clear", "0");
+        input
+          .prop("disabled", false)
+          .removeClass("reacg-bulk-input--cleared")
+          .attr("placeholder", defPh)
+          .val(currentState.allSame ? currentState.sharedValue : "");
+        clearBtn.removeClass("is-undo").text(reacg.clear_field || "Clear");
+      }
+    });
+  });
+}
+
+function reacg_resolve_bulk_categories(rawSelected) {
+  const deferred = jQuery.Deferred();
+  const list = Array.isArray(rawSelected) ? rawSelected : [];
+  if (!list.length) {
+    deferred.resolve([]);
+    return deferred.promise();
+  }
+
+  const resolvedIds = [];
+  const createQueue = [];
+
+  list.forEach(function (val) {
+    const strVal = String(val || "").trim();
+    if (!strVal) return;
+    if (/^\d+$/.test(strVal)) {
+      resolvedIds.push(strVal);
+    } else {
+      createQueue.push(strVal);
+    }
+  });
+
+  if (!createQueue.length) {
+    deferred.resolve(resolvedIds);
+    return deferred.promise();
+  }
+
+  let idx = 0;
+  const processNext = function () {
+    if (idx >= createQueue.length) {
+      deferred.resolve(resolvedIds);
+      return;
+    }
+    const name = createQueue[idx++];
+    jQuery
+      .ajax({
+        url: reacg.ajax_url,
+        type: "POST",
+        data: {
+          action: "reacg_create_category",
+          [reacg.nonce]: reacg.nonce,
+          name: name,
+        },
+      })
+      .done(function (res) {
+        if (res && res.success && res.data && res.data.id) {
+          resolvedIds.push(String(res.data.id));
+        } else {
+          resolvedIds.push(name);
+        }
+      })
+      .fail(function () {
+        resolvedIds.push(name);
+      })
+      .always(processNext);
+  };
+
+  processNext();
+  return deferred.promise();
+}
+
+function reacg_save_bulk_attachment_changes(
+  modal,
+  attachments,
+  selectedItems,
+  cropPositionChanged,
+) {
+  const fieldDefs = [
+    { name: "title", selector: "#reacg-attachment-title", isCore: true },
+    { name: "caption", selector: "#reacg-attachment-caption", isCore: true },
+    { name: "alt", selector: "#reacg-attachment-alt", isCore: true },
+    {
+      name: "description",
+      selector: "#reacg-attachment-description",
+      isCore: true,
+    },
+    {
+      name: "action_url",
+      selector: "#reacg-attachment-action-url",
+      isCore: false,
+    },
+    { name: "exif", selector: "#reacg-attachment-exif", isCore: false },
+  ];
+
+  const fieldOperations = {};
+  let hasFieldOperation = false;
+
+  fieldDefs.forEach(function (def) {
+    const fieldWrap = modal.find('[data-setting="' + def.name + '"]');
+    const input = fieldWrap.find(def.selector);
+    const state = fieldWrap.data("bulkFieldState") || {};
+    const isCleared = fieldWrap.attr("data-bulk-clear") === "1";
+    const onlyEmpty = fieldWrap
+      .find(".reacg-bulk-only-empty-checkbox")
+      .is(":checked");
+    const rawVal = input.val() == null ? "" : String(input.val()).trim();
+
+    let op = { action: "none", value: "", isCore: def.isCore };
+    if (isCleared) {
+      op = { action: "clear", value: "", isCore: def.isCore };
+      hasFieldOperation = true;
+    } else if (state.allSame && state.nonEmptyCount > 0) {
+      if (rawVal !== state.sharedValue) {
+        op = { action: "replace", value: rawVal, isCore: def.isCore };
+        hasFieldOperation = true;
+      }
+    } else if (rawVal !== "") {
+      op = {
+        action: onlyEmpty ? "only_empty" : "replace",
+        value: rawVal,
+        isCore: def.isCore,
+      };
+      hasFieldOperation = true;
+    }
+
+    fieldOperations[def.name] = op;
+  });
+
+  const categoriesSelect = modal.find("#reacg-attachment-categories");
+  const rawCategories = categoriesSelect.val() || [];
+  const catState = modal.data("bulkCatState") || {
+    mode: "add",
+    replaceTouched: false,
+  };
+  const catMode = catState.mode || "add";
+  const hasCategoryOperation =
+    (catMode === "add" && rawCategories.length > 0) ||
+    (catMode === "remove" && rawCategories.length > 0) ||
+    (catMode === "replace" && catState.replaceTouched);
+
+  const newCropPosition = modal
+    .find('input[name="reacg-attachment-crop-position"]:checked')
+    .val();
+  const hasCropOperation = Boolean(cropPositionChanged && newCropPosition);
+
+  if (!hasFieldOperation && !hasCategoryOperation && !hasCropOperation) {
+    modal.remove();
+    return;
+  }
+
+  const spinner = modal.find(".reacg-modal__footer .spinner");
+  const progressText = modal.find(".reacg-bulk-progress-text");
+  const saveBtn = modal.find(".reacg-modal-button-save");
+  const errorNote = modal.find(".reacg-modal-error-note");
+
+  errorNote.addClass("hidden").empty();
+  spinner.addClass("is-active");
+  saveBtn.attr("disabled", true);
+  progressText
+    .removeClass("hidden")
+    .text(reacg.updating_items || "Updating items...");
+
+  const categoryResolvePromise =
+    hasCategoryOperation && (catMode === "add" || catMode === "replace")
+      ? reacg_resolve_bulk_categories(rawCategories)
+      : jQuery.Deferred().resolve(rawCategories).promise();
+
+  categoryResolvePromise.then(function (resolvedCategoryIds) {
+    const savePromises = [];
+    const titleUpdatedAttachments = [];
+
+    attachments.forEach(function (att) {
+      const attId = att.get("id");
+      const coreChanges = {};
+      const compatChanges = { attachments: {} };
+      compatChanges.attachments[attId] = {};
+
+      let hasCore = false;
+      let hasCompat = false;
+
+      fieldDefs.forEach(function (def) {
+        const op = fieldOperations[def.name];
+        if (!op || op.action === "none") return;
+
+        const currentVal = String(
+          reacg_get_attachment_field_value(att, def.name) || "",
+        ).trim();
+        let shouldApply = false;
+        let targetVal = op.value;
+
+        if (op.action === "clear") {
+          shouldApply = currentVal !== "";
+          targetVal = "";
+        } else if (op.action === "only_empty") {
+          shouldApply = currentVal === "";
+        } else if (op.action === "replace") {
+          shouldApply = currentVal !== targetVal;
+        }
+
+        if (shouldApply) {
+          if (def.isCore) {
+            coreChanges[def.name] = targetVal;
+            hasCore = true;
+            if (def.name === "title") {
+              titleUpdatedAttachments.push(att);
+            }
+          } else {
+            compatChanges.attachments[attId][def.name] = targetVal;
+            hasCompat = true;
+          }
+        }
+      });
+
+      if (hasCropOperation) {
+        const currentCrop =
+          reacg_get_attachment_field_value(att, "crop_position") ||
+          "center center";
+        if (currentCrop !== newCropPosition) {
+          compatChanges.attachments[attId].crop_position = newCropPosition;
+          hasCompat = true;
+        }
+      }
+
+      if (hasCategoryOperation) {
+        const existingIds = reacg_get_attachment_categories(att).map(
+          function (c) {
+            return String(c.id);
+          },
+        );
+        let nextIds = existingIds.slice();
+
+        if (catMode === "add") {
+          const merged = existingIds.slice();
+          resolvedCategoryIds.forEach(function (id) {
+            const sId = String(id);
+            if (merged.indexOf(sId) === -1) {
+              merged.push(sId);
+            }
+          });
+          nextIds = merged;
+        } else if (catMode === "replace") {
+          nextIds = resolvedCategoryIds.map(String);
+        } else if (catMode === "remove") {
+          const removeSet = {};
+          resolvedCategoryIds.forEach(function (id) {
+            removeSet[String(id)] = true;
+          });
+          nextIds = existingIds.filter(function (id) {
+            return !removeSet[String(id)];
+          });
+        }
+
+        const normExisting = existingIds.slice().sort().join(",");
+        const normNext = nextIds.slice().sort().join(",");
+        if (normExisting !== normNext) {
+          compatChanges.attachments[attId].regallery_categories = nextIds.length
+            ? nextIds
+            : "";
+          hasCompat = true;
+        }
+      }
+
+      if (hasCore) {
+        savePromises.push(att.save(coreChanges));
+      }
+      if (hasCompat) {
+        savePromises.push(att.saveCompat(compatChanges));
+      }
+    });
+
+    if (!savePromises.length) {
+      spinner.removeClass("is-active");
+      saveBtn.removeAttr("disabled");
+      progressText.addClass("hidden");
+      modal.remove();
+      return;
+    }
+
+    jQuery.when
+      .apply(jQuery, savePromises)
+      .done(function () {
+        const refetches = attachments.map(function (att) {
+          return att.fetch();
+        });
+        jQuery.when.apply(jQuery, refetches).always(function () {
+          if (titleUpdatedAttachments.length) {
+            attachments.forEach(function (att) {
+              const attId = att.get("id");
+              const updatedTitle = reacg_get_attachment_field_value(
+                att,
+                "title",
+              );
+              selectedItems
+                .filter('[data-id="' + attId + '"]')
+                .find(".reacg_item_image")
+                .attr("title", updatedTitle);
+            });
+          }
+          reacg_reload_preview();
+          modal.remove();
+        });
+      })
+      .fail(function (err) {
+        const message =
+          err &&
+          err.responseJSON &&
+          err.responseJSON.data &&
+          err.responseJSON.data.message
+            ? err.responseJSON.data.message
+            : reacg.save_failed || "Unable to save image data.";
+        errorNote.removeClass("hidden").html(message);
+      })
+      .always(function () {
+        spinner.removeClass("is-active");
+        saveBtn.removeAttr("disabled");
+        progressText.addClass("hidden");
+      });
+  });
+}
+
+function reacg_add_bulk_ai_buttons_to(
+  container,
+  attachments,
+  selectedItems,
+  modal,
+) {
+  const fields = [
+    { name: "title", label: reacg.attachment_title },
+    { name: "caption", label: reacg.attachment_caption },
+    { name: "alt", label: reacg.attachment_alt_text },
+    { name: "description", label: reacg.attachment_description },
+  ];
+
+  fields.forEach(function (field) {
+    const fieldWrap = container.find('[data-setting="' + field.name + '"]');
+    if (!fieldWrap.length || fieldWrap.find(".reacg-ai-button").length) return;
+
+    const button = reacg_ai_button();
+    const spinner = '<span class="spinner reacg-float-none"></span>';
+    fieldWrap.find("label").first().after(button, spinner);
+
+    button.on("click", function (e) {
+      e.preventDefault();
+      const spinnerCont = fieldWrap.find(".spinner");
+      spinnerCont.addClass("is-active");
+      button.attr("disabled", true);
+
+      jQuery.ajax({
+        type: "GET",
+        url: reacg.core_rest_url_v2 + "ai",
+        contentType: "application/json",
+        data: { action: "check" },
+        complete: function (res) {
+          spinnerCont.removeClass("is-active");
+          button.removeAttr("disabled");
+          if (res.status === 200) {
+            const imagesData = {};
+            attachments.forEach(function (att) {
+              const id = String(att.get("id"));
+              const sizes = att.get("sizes");
+              const attachmentUrl = reacg_get_attachment_field_value(
+                att,
+                "url",
+              );
+              const previewSize =
+                sizes && sizes.thumbnail
+                  ? sizes.thumbnail
+                  : sizes && sizes.full
+                    ? sizes.full
+                    : null;
+              const previewUrl =
+                previewSize && previewSize.url
+                  ? previewSize.url
+                  : attachmentUrl || "";
+
+              imagesData[id] = {
+                url: previewUrl,
+                title: reacg_get_attachment_field_value(att, "title") || "",
+                caption:
+                  reacg_get_attachment_field_value(att, "caption") || "",
+                alt: reacg_get_attachment_field_value(att, "alt") || "",
+                description:
+                  reacg_get_attachment_field_value(att, "description") || "",
+              };
+            });
+
+            reacg_open_ai_generate_content_modal(imagesData, {
+              targetField: field.name,
+              onSuccess: function () {
+                const refetches = attachments.map(function (att) {
+                  return att.fetch();
+                });
+                jQuery.when.apply(jQuery, refetches).always(function () {
+                  if (field.name === "title") {
+                    attachments.forEach(function (att) {
+                      const attId = att.get("id");
+                      const newTitle = reacg_get_attachment_field_value(
+                        att,
+                        "title",
+                      );
+                      selectedItems
+                        .filter('[data-id="' + attId + '"]')
+                        .find(".reacg_item_image")
+                        .attr("title", newTitle);
+                    });
+                  }
+                  reacg_sync_bulk_text_fields(modal, attachments);
+                  reacg_reload_preview();
+                });
+              },
+            });
+          } else {
+            const errMsg =
+              res && res.responseJSON && res.responseJSON.errors
+                ? res.responseJSON.errors.message
+                : "AI generation is not available.";
+            const errorNote = modal.find(".reacg-modal-error-note");
+            errorNote.removeClass("hidden").html(errMsg);
+            if (String(errMsg).indexOf("reacg-upgrade-link") !== -1) {
+              errorNote
+                .find(".reacg-upgrade-link")
+                .off("click")
+                .on("click", function (ev) {
+                  ev.preventDefault();
+                  reacg_open_free_trial_offer_dialog({
+                    utm_medium: "ai_generate",
+                  });
+                });
+            }
+          }
+        },
+      });
+    });
+  });
+}
+
+function reacg_open_bulk_attachment_edit_modal(
+  button,
+  attachments,
+  selectedItems,
+  galleryItemsContainer,
+) {
+  const targetDoc = reacg_get_top_document();
+  const targetWin = targetDoc.defaultView || window;
+  const $ = targetWin.jQuery || jQuery;
+
+  const modal = reacg_bulk_attachment_edit_modal(attachments, selectedItems);
+  $(targetDoc.body).append(modal);
+  modal.css("display", "flex").show();
+
+  reacg_sync_bulk_text_fields(modal, attachments);
+
+  const cropPositions = attachments.map(function (att) {
+    return (
+      reacg_get_attachment_field_value(att, "crop_position") || "center center"
+    );
+  });
+  const allSameCrop =
+    cropPositions.length > 0 &&
+    cropPositions.every(function (pos) {
+      return pos === cropPositions[0];
+    });
+  if (allSameCrop) {
+    modal
+      .find(
+        'input[name="reacg-attachment-crop-position"][value="' +
+          cropPositions[0] +
+          '"]',
+      )
+      .prop("checked", true);
+  }
+
+  let cropPositionChanged = false;
+  modal
+    .find('input[name="reacg-attachment-crop-position"]')
+    .on("change", function () {
+      cropPositionChanged = true;
+    });
+
+  reacg_add_bulk_ai_buttons_to(
+    modal.find(".reacg-modal__layout-content").eq(1),
+    attachments,
+    selectedItems,
+    modal,
+  );
+
+  const categoriesSelect = modal.find("#reacg-attachment-categories");
+  const catAnalysis = reacg_analyze_bulk_categories(attachments);
+  const allCategoriesMap = jQuery.extend({}, catAnalysis.namesById);
+  const catState = {
+    mode: "add",
+    replaceTouched: false,
+    selections: {
+      add: [],
+      replace: catAnalysis.sharedIds.slice(),
+      remove: [],
+    },
+  };
+  modal.data("bulkCatState", catState);
+
+  if (catAnalysis.anyIds.length === 0) {
+    modal
+      .find('.reacg-bulk-cat-mode[data-mode="remove"]')
+      .prop("disabled", true);
+  }
+
+  let isRenderingCatSelect = false;
+  const renderCategoriesSelectForMode = function (mode) {
+    isRenderingCatSelect = true;
+    const selectedVals = (catState.selections[mode] || []).map(String);
+    const selectedSet = {};
+    selectedVals.forEach(function (v) {
+      selectedSet[v] = true;
+    });
+
+    if ($.fn.select2 && $(categoriesSelect).hasClass("select2-hidden-accessible")) {
+      $(categoriesSelect).select2("destroy");
+    }
+
+    categoriesSelect.empty();
+
+    const optionIds =
+      mode === "remove"
+        ? catAnalysis.anyIds.slice()
+        : Object.keys(allCategoriesMap);
+
+    optionIds.forEach(function (id) {
+      const strId = String(id);
+      const name = allCategoriesMap[strId] || strId;
+      const isSelected = Boolean(selectedSet[strId]);
+      categoriesSelect.append(new Option(name, strId, isSelected, isSelected));
+    });
+
+    if (mode !== "remove") {
+      selectedVals.forEach(function (val) {
+        if (!categoriesSelect.find('option[value="' + val + '"]').length) {
+          categoriesSelect.append(new Option(val, val, true, true));
+        }
+      });
+    }
+
+    let placeholder =
+      reacg.attachment_categories_placeholder || "Search or add categories...";
+    if (mode === "remove") {
+      placeholder =
+        reacg.bulk_categories_remove_placeholder ||
+        "Select categories to remove...";
+    } else if (
+      mode === "replace" &&
+      catAnalysis.hasMixed &&
+      selectedVals.length === 0
+    ) {
+      placeholder = reacg.bulk_multiple_values || "— Multiple Values —";
+    }
+
+    if ($.fn.select2) {
+      $(categoriesSelect).select2({
+        tags: mode !== "remove",
+        placeholder: placeholder,
+        dropdownParent: modal,
+        dropdownCssClass: "reacg-select2-dropdown",
+      });
+    }
+    isRenderingCatSelect = false;
+  };
+
+  renderCategoriesSelectForMode("add");
+
+  $(categoriesSelect).on("change.reacgBulkCats", function () {
+    if (isRenderingCatSelect) return;
+    const vals = $(categoriesSelect).val() || [];
+    catState.selections[catState.mode] = vals;
+    vals.forEach(function (v) {
+      const strV = String(v);
+      if (!allCategoriesMap[strV]) {
+        const optText = categoriesSelect
+          .find('option[value="' + strV + '"]')
+          .text();
+        allCategoriesMap[strV] = optText || strV;
+      }
+    });
+    if (catState.mode === "replace") {
+      catState.replaceTouched = true;
+    }
+  });
+
+  modal.find(".reacg-bulk-cat-mode").on("click", function (e) {
+    e.preventDefault();
+    const btn = jQuery(this);
+    if (btn.prop("disabled")) return;
+    const newMode = String(btn.data("mode") || "add");
+    if (newMode === catState.mode) return;
+
+    catState.selections[catState.mode] = $(categoriesSelect).val() || [];
+    catState.mode = newMode;
+    if (newMode === "replace") {
+      catState.replaceTouched = true;
+    }
+
+    modal.find(".reacg-bulk-cat-mode").removeClass("is-active");
+    btn.addClass("is-active");
+    renderCategoriesSelectForMode(newMode);
+  });
+
+  jQuery.ajax({
+    url: reacg.ajax_url,
+    type: "POST",
+    data: {
+      action: "reacg_get_categories",
+      [reacg.nonce]: reacg.nonce,
+    },
+    success: function (res) {
+      if (res.success && Array.isArray(res.data)) {
+        res.data.forEach(function (cat) {
+          const catId = String(cat.id);
+          allCategoriesMap[catId] = cat.name;
+        });
+        catState.selections[catState.mode] = $(categoriesSelect).val() || [];
+        renderCategoriesSelectForMode(catState.mode);
+      }
+    },
+  });
+
+  const closeModal = function () {
+    modal.remove();
+  };
+
+  modal.find(".reacg-modal-close").on("click", closeModal);
+  modal.on("click", function (e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+  modal.find(".reacg-modal-wrapper").on("click", function (e) {
+    e.stopPropagation();
+  });
+
+  modal.find(".reacg-modal-button-save").on("click", function () {
+    reacg_save_bulk_attachment_changes(
+      modal,
+      attachments,
+      selectedItems,
+      cropPositionChanged,
+    );
+  });
+
+  return modal;
+}
+
 function reacg_open_ai_generate_content_modal(images, options) {
   const imagesData = images && typeof images === "object" ? images : {};
   const chunkObject = function (source, size) {
@@ -1874,367 +3357,19 @@ function reacg_open_ai_generate_content_modal(images, options) {
   };
 
   const runBulkGenerateInChunks = function (state, chunkSize, onProgress) {
-    const imageEntries = Object.entries(imagesData);
-    const deferred = jQuery.Deferred();
-    const responses = [];
-    const errors = [];
-    const notifyProgress =
-      typeof onProgress === "function" ? onProgress : function () {};
-
-    const readPayloadCode = function (payload) {
-      const source = payload || {};
-
-      if (source.responseJSON) {
-        if (source.responseJSON.code) {
-          return String(source.responseJSON.code);
-        }
-        if (source.responseJSON.data && source.responseJSON.data.code) {
-          return String(source.responseJSON.data.code);
-        }
-        if (
-          source.responseJSON.error_data &&
-          typeof source.responseJSON.error_data === "object"
-        ) {
-          const errorDataKeys = Object.keys(source.responseJSON.error_data);
-          if (errorDataKeys.length) {
-            return String(errorDataKeys[0]);
-          }
-        }
-        if (
-          source.responseJSON.errors &&
-          typeof source.responseJSON.errors === "object"
-        ) {
-          const errorKeys = Object.keys(source.responseJSON.errors);
-          if (errorKeys.length) {
-            return String(errorKeys[0]);
-          }
-        }
-      }
-
-      if (source.responseText && typeof source.responseText === "string") {
-        try {
-          const parsed = JSON.parse(source.responseText);
-          if (parsed && parsed.code) {
-            return String(parsed.code);
-          }
-          if (parsed && parsed.data && parsed.data.code) {
-            return String(parsed.data.code);
-          }
-          if (
-            parsed &&
-            parsed.error_data &&
-            typeof parsed.error_data === "object"
-          ) {
-            const errorDataKeys = Object.keys(parsed.error_data);
-            if (errorDataKeys.length) {
-              return String(errorDataKeys[0]);
-            }
-          }
-          if (parsed && parsed.errors && typeof parsed.errors === "object") {
-            const errorKeys = Object.keys(parsed.errors);
-            if (errorKeys.length) {
-              return String(errorKeys[0]);
-            }
-          }
-        } catch (ignored) {}
-      }
-
-      return "";
-    };
-
-    const isNothingToGeneratePayload = function (payload) {
-      return readPayloadCode(payload) === "nothing_to_generate";
-    };
-
-    if (!imageEntries.length) {
-      notifyProgress(0, 0);
-      deferred.resolve({
-        responses: [],
-        errors: [],
-        images: imagesData,
-        closeOnStatus200: false,
-      });
-      return deferred.promise();
-    }
-
-    notifyProgress(0, imageEntries.length);
-
-    const normalizeGeneratedResponse = function (response) {
-      let responseObject = response;
-      if (typeof responseObject === "string") {
-        try {
-          responseObject = JSON.parse(responseObject);
-        } catch (e) {
-          responseObject = {};
-        }
-      }
-
-      if (responseObject && responseObject.responseJSON) {
-        responseObject = responseObject.responseJSON;
-      }
-
-      const source =
-        responseObject && typeof responseObject === "object"
-          ? responseObject.data && typeof responseObject.data === "object"
-            ? responseObject.data
-            : responseObject
-          : {};
-
-      const normalized = {};
-      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
-        if (Object.prototype.hasOwnProperty.call(source, fieldName)) {
-          normalized[fieldName] =
-            source[fieldName] == null ? "" : String(source[fieldName]);
-        }
-      });
-
-      return normalized;
-    };
-
-    const applyGeneratedDataToImage = function (
-      imageId,
-      imageData,
-      generatedFields,
-    ) {
-      const baseImage =
-        imageData && typeof imageData === "object" ? imageData : {};
-      const nextImage = jQuery.extend({}, baseImage);
-      let changed = false;
-
-      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
-        if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
-          return;
-        }
-
-        nextImage[fieldName] = generatedFields[fieldName];
-        changed = true;
-      });
-
-      if (changed) {
-        imagesData[imageId] = nextImage;
-      }
-
-      return nextImage;
-    };
-
-    const saveGeneratedDataToAttachment = function (
-      imageId,
-      previousImageData,
-      generatedFields,
-    ) {
-      const deferredSave = jQuery.Deferred();
-      const normalizedImageId = parseInt(imageId, 10);
-      const saveData = {};
-      const normalizeValue = function (value) {
-        return value == null ? "" : String(value);
-      };
-
-      ["title", "alt", "caption", "description"].forEach(function (fieldName) {
-        if (!Object.prototype.hasOwnProperty.call(generatedFields, fieldName)) {
-          return;
-        }
-
-        const previousValue = normalizeValue(
-          previousImageData && previousImageData[fieldName],
-        );
-        const nextValue = normalizeValue(generatedFields[fieldName]);
-        if (previousValue !== nextValue) {
-          saveData[fieldName] = nextValue;
-        }
-      });
-
-      if (!Object.keys(saveData).length) {
-        deferredSave.resolve();
-        return deferredSave.promise();
-      }
-
-      if (!normalizedImageId) {
-        deferredSave.resolve();
-        return deferredSave.promise();
-      }
-
-      if (!wp || !wp.media || typeof wp.media.attachment !== "function") {
-        deferredSave.resolve();
-        return deferredSave.promise();
-      }
-
-      const attachment = wp.media.attachment(normalizedImageId);
-      if (!attachment || typeof attachment.save !== "function") {
-        deferredSave.resolve();
-        return deferredSave.promise();
-      }
-
-      const persist = function () {
-        attachment
-          .save(saveData)
-          .done(function (response) {
-            deferredSave.resolve(response);
-          })
-          .fail(function (xhr) {
-            deferredSave.reject(xhr);
-          });
-      };
-
-      if (typeof attachment.fetch === "function") {
-        attachment
-          .fetch()
-          .done(function () {
-            persist();
-          })
-          .fail(function (xhr) {
-            deferredSave.reject(xhr);
-          });
-      } else {
-        persist();
-      }
-
-      return deferredSave.promise();
-    };
-
-    const runChunk = function (index) {
-      if (index >= imageEntries.length) {
-        notifyProgress(imageEntries.length, imageEntries.length);
-        if (errors.length) {
-          deferred.reject({
-            responses: responses,
-            errors: errors,
-            images: imagesData,
-          });
-          return;
-        }
-
-        const successCount = responses.filter(function (entry) {
-          return parseInt(entry.statusCode, 10) === 200;
-        }).length;
-        const closeOnStatus200 = successCount > 0;
-        deferred.resolve({
-          responses: responses,
-          errors: [],
-          images: imagesData,
-          closeOnStatus200: closeOnStatus200,
-          successCount: successCount,
-        });
-        return;
-      }
-
-      const imageEntry = imageEntries[index];
-      const imageId = imageEntry[0];
-      const imageData = imageEntry[1];
-      const singleImageData =
-        imageData && typeof imageData === "object" ? imageData : {};
-
-      notifyProgress(index + 1, imageEntries.length);
-
-      jQuery
-        .ajax({
-          type: "GET",
-          url: reacg.core_rest_url_v2 + "ai",
-          contentType: "application/json",
-          data: {
-            image_id: imageId,
-            image_url: singleImageData.url || "",
-            title: singleImageData.title || "",
-            alt: singleImageData.alt || "",
-            caption: singleImageData.caption || "",
-            description: singleImageData.description || "",
-            website_language: reacg.website_language || "",
-            user_language:
-              reacg.user_language || document.documentElement.lang || "",
-            fields: JSON.stringify(state.fields),
-            overwrite_mode: state.overwriteMode,
-            action: "get_content",
-          },
-        })
-        .done(function (response, textStatus, xhr) {
-          const statusCode =
-            xhr && typeof xhr.status !== "undefined"
-              ? parseInt(xhr.status, 10)
-              : 0;
-          const previousImageData = jQuery.extend({}, singleImageData);
-          const generatedFields = normalizeGeneratedResponse(response);
-          const updatedImageData = applyGeneratedDataToImage(
-            imageId,
-            singleImageData,
-            generatedFields,
-          );
-
-          saveGeneratedDataToAttachment(
-            imageId,
-            previousImageData,
-            generatedFields,
-          )
-            .done(function (saveResponse) {
-              responses.push({
-                index: index,
-                imageId: imageId,
-                statusCode: statusCode,
-                response: response,
-                saveResponse: saveResponse,
-                generated: generatedFields,
-                image: updatedImageData,
-              });
-            })
-            .fail(function (xhr) {
-              errors.push({
-                index: index,
-                imageId: imageId,
-                stage: "save",
-                xhr: xhr,
-              });
-            })
-            .always(function () {
-              if (errors.length) {
-                deferred.reject({
-                  responses: responses,
-                  errors: errors,
-                  images: imagesData,
-                });
-                return;
-              }
-
-              runChunk(index + 1);
-            });
-        })
-        .fail(function (xhr) {
-          if (isNothingToGeneratePayload(xhr)) {
-            responses.push({
-              index: index,
-              imageId: imageId,
-              statusCode:
-                xhr && typeof xhr.status !== "undefined"
-                  ? parseInt(xhr.status, 10)
-                  : 400,
-              response: xhr,
-              skipped: true,
-              image: singleImageData,
-            });
-            runChunk(index + 1);
-            return;
-          }
-
-          errors.push({
-            index: index,
-            imageId: imageId,
-            stage: "generate",
-            xhr: xhr,
-          });
-          deferred.reject({
-            responses: responses,
-            errors: errors,
-            images: imagesData,
-          });
-        });
-    };
-
-    runChunk(0);
-
-    return deferred.promise();
+    return reacg_run_bulk_generate_in_chunks(
+      imagesData,
+      state,
+      chunkSize,
+      onProgress,
+    );
   };
 
   const settings = jQuery.extend(
     true,
     {
       chunkSize: 5,
+      targetField: null,
       fields: {
         title: true,
         alt: false,
@@ -2243,6 +3378,8 @@ function reacg_open_ai_generate_content_modal(images, options) {
       },
       overwriteMode: "empty",
       onGenerate: null,
+      onSuccess: null,
+      onClose: null,
     },
     options || {},
   );
@@ -2253,24 +3390,9 @@ function reacg_open_ai_generate_content_modal(images, options) {
   const selectedOverwrite =
     settings.overwriteMode === "replace" ? "replace" : "empty";
 
-  const modal = jQuery(
-    "" +
-      '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
-      '<div class="reacg-modal-wrapper">' +
-      '<div class="reacg-modal-content">' +
-      '<div class="reacg-modal__header">' +
-      "<h1>" +
-      reacg_escape_html(reacg.ai_generate_content) +
-      "</h1>" +
-      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
-      "</div>" +
-      '<div class="reacg-modal__body">' +
-      '<div class="reacg-modal__layout-content">' +
-      '<div><p class="reacg-modal-note">' +
-      reacg_info_icon() +
-      reacg_escape_html(reacg.content_generated_based_on_image) +
-      "</p></div>" +
-      "<h3>" +
+  const fieldsSectionHtml = settings.targetField
+    ? ""
+    : "<h3>" +
       reacg_escape_html(reacg.choose_what_to_generate) +
       "</h3>" +
       '<div class="reacg-ai-generate-modal__fields">' +
@@ -2294,7 +3416,26 @@ function reacg_open_ai_generate_content_modal(images, options) {
       ' /><span class="reacg-ai-generate-modal__field-name">' +
       reacg_escape_html(reacg.attachment_description) +
       "</span></label>" +
+      "</div>";
+
+  const modal = jQuery(
+    "" +
+      '<div class="reacg-modal reacg-ai-generate-modal" style="display:none;">' +
+      '<div class="reacg-modal-wrapper">' +
+      '<div class="reacg-modal-content">' +
+      '<div class="reacg-modal__header">' +
+      "<h1>" +
+      reacg_escape_html(reacg.ai_generate_content) +
+      "</h1>" +
+      '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
       "</div>" +
+      '<div class="reacg-modal__body">' +
+      '<div class="reacg-modal__layout-content">' +
+      '<div><p class="reacg-modal-note">' +
+      reacg_info_icon() +
+      reacg_escape_html(reacg.content_generated_based_on_image) +
+      "</p></div>" +
+      fieldsSectionHtml +
       "<h3>" +
       reacg_escape_html(reacg.overwrite_existing) +
       "</h3>" +
@@ -2329,19 +3470,26 @@ function reacg_open_ai_generate_content_modal(images, options) {
   );
 
   const getState = function () {
+    const fields = settings.targetField
+      ? { [settings.targetField]: true }
+      : {
+          title: modal.find('input[name="title"]').is(":checked"),
+          alt: modal.find('input[name="alt"]').is(":checked"),
+          caption: modal.find('input[name="caption"]').is(":checked"),
+          description: modal.find('input[name="description"]').is(":checked"),
+        };
+
     return {
-      fields: {
-        title: modal.find('input[name="title"]').is(":checked"),
-        alt: modal.find('input[name="alt"]').is(":checked"),
-        caption: modal.find('input[name="caption"]').is(":checked"),
-        description: modal.find('input[name="description"]').is(":checked"),
-      },
+      fields: fields,
       overwriteMode:
         modal.find('input[name="reacg-overwrite"]:checked').val() || "empty",
     };
   };
 
   const closeModal = function () {
+    if (typeof settings.onClose === "function") {
+      settings.onClose();
+    }
     modal.remove();
   };
 
@@ -2529,6 +3677,9 @@ function reacg_open_ai_generate_content_modal(images, options) {
             "success",
             reacg_escape_html(reacg.content_generated_successfully),
           );
+          if (typeof settings.onSuccess === "function") {
+            settings.onSuccess(resultData);
+          }
           reacg_reload_preview();
           window.setTimeout(function () {
             closeModal();

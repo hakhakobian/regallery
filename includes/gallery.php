@@ -2463,7 +2463,22 @@ class REACG_Gallery {
     if ( $valid_ajax_call ) {
       ob_start();
     }
-    ?><div class="reacg_items"
+    ?><div class="reacg-media-toolbar">
+      <div class="reacg-media-toolbar__left">
+        <label class="reacg-select-all-label" title="<?php esc_attr_e('Select all', 'regallery'); ?>">
+          <input type="checkbox" class="reacg-select-all-checkbox" />
+          <span class="reacg-select-all-text"><?php esc_html_e('Select all', 'regallery'); ?></span>
+        </label>
+        <span class="reacg-selected-count" style="display:none;"></span>
+      </div>
+      <div class="reacg-media-toolbar__right">
+        <button type="button" class="button reacg-bulk-edit-btn" disabled="disabled">
+          <span class="dashicons dashicons-edit"></span>
+          <span><?php esc_html_e('Bulk Edit', 'regallery'); ?></span>
+        </button>
+      </div>
+    </div>
+    <div class="reacg_items"
          data-post-id="<?php echo esc_attr($post_id); ?>"
          data-edit-count="<?php echo esc_attr($edit_count); ?>"
          data-ajax-url="<?php echo esc_url(wp_nonce_url(admin_url('admin-ajax.php'), REACG_NONCE, REACG_NONCE)); ?>">
@@ -2515,6 +2530,7 @@ class REACG_Gallery {
     $edit_btn = ""; // Available for images and dynamic posts.
     $thumbnail_edit_btn = "reacg-hidden"; // Available for videos.
     $cover_icon = "reacg-hidden"; // Available for all types except for images.
+    $select_class = ""; // Available for images and videos.
 
     if ( $data['type'] === "video" ) {
       $thumbnail_edit_btn = "";
@@ -2522,6 +2538,7 @@ class REACG_Gallery {
     }
     elseif ( array_key_exists($data['type'], REACG_ALLOWED_POST_TYPES) ) {
       $cover_icon = "dashicons " . REACG_ALLOWED_POST_TYPES[$data['type']]['class'];
+      $select_class = "reacg-hidden";
       if ( strpos($data['type'], 'dynamic') === FALSE ) {
         $edit_btn = "reacg-hidden";
       }
@@ -2530,6 +2547,9 @@ class REACG_Gallery {
     ?><div data-id="<?php echo esc_attr($data['id']); ?>"
            data-type="<?php echo esc_attr($data['type']); ?>"
            class="reacg_item <?php echo esc_attr($template ? "reacg-template reacg-hidden" : "reacg-sortable"); ?>">
+    <div class="reacg-item-select <?php echo esc_attr($select_class); ?>">
+      <input type="checkbox" class="reacg-item-checkbox" />
+    </div>
     <div class="reacg_item_image"
          title="<?php echo esc_attr($data['title']); ?>">
       <?php if ( !empty($data['url']) ) : ?>

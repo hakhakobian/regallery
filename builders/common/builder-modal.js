@@ -565,6 +565,9 @@
               window.reacg_update_item_image_fit(this);
             });
           }
+          if (typeof window.reacg_update_bulk_toolbar === "function") {
+            window.reacg_update_bulk_toolbar($container);
+          }
           self._lastLoadedImagesGalleryId = galleryId;
         })
         .catch(function (err) {

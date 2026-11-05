@@ -362,10 +362,243 @@ li.MuiMenuItem-root:focus-visible {
     margin: 0 10px 10px;
   }
 
+  .reacg-media-toolbar {
+    display: flex;
+    flex-wrap: nowrap !important;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #f6f6fb;
+    border: 1px solid #eceaf8;
+    border-radius: 6px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    min-height: 40px;
+    box-sizing: border-box;
+    container-type: inline-size;
+  }
+
+  .reacg-media-toolbar__left {
+    display: flex;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .reacg-media-toolbar__left > *,
+  .reacg-media-toolbar__right .reacg-bulk-edit-btn {
+    white-space: nowrap;
+  }
+
+  .reacg-media-toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-left: 0;
+  }
+
+  .reacg-media-toolbar .reacg-select-all-label {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    margin: 0 !important;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    user-select: none;
+  }
+
+  .reacg-media-toolbar .reacg-selected-count {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--reacg-primary-color, #155c92);
+    background: color-mix(
+      in srgb,
+      var(--reacg-primary-color, #155c92) 10%,
+      #ffffff
+    );
+    border: 1px solid
+      color-mix(in srgb, var(--reacg-primary-color, #155c92) 22%, #ffffff);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+  }
+
+  .reacg-media-toolbar .reacg-selected-count .reacg-selected-count__full {
+    display: none !important;
+  }
+
+  .reacg-media-toolbar .reacg-selected-count .reacg-selected-count__short {
+    display: inline !important;
+  }
+
+  .reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    position: relative !important;
+    display: inline-block !important;
+    box-sizing: border-box !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #8c8f94 !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    float: none !important;
+    clear: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    visibility: visible !important;
+    cursor: pointer !important;
+    vertical-align: middle !important;
+    transition:
+      background-color 0.1s ease,
+      border-color 0.1s ease;
+  }
+
+  .reacg_items input[type="checkbox"].reacg-item-checkbox {
+    border-color: rgba(0, 0, 0, 0.35) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox::after,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox::before,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox::before {
+    content: "" !important;
+    position: absolute !important;
+    display: none !important;
+    box-sizing: border-box !important;
+    left: 5px !important;
+    top: 2px !important;
+    width: 6px !important;
+    height: 10px !important;
+    margin: 0 !important;
+    border: solid #ffffff !important;
+    border-width: 0 2px 2px 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    transform: rotate(45deg) !important;
+  }
+
+  .reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox:checked,
+  .reacg-media-toolbar
+    input[type="checkbox"].reacg-select-all-checkbox:indeterminate,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox:checked {
+    background: var(--reacg-primary-color, #155c92) !important;
+    background-color: var(--reacg-primary-color, #155c92) !important;
+    background-image: none !important;
+    border-color: var(--reacg-primary-color, #155c92) !important;
+  }
+
+  .reacg-media-toolbar
+    input[type="checkbox"].reacg-select-all-checkbox:checked::before,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox:checked::before {
+    display: block !important;
+  }
+
+  .reacg-media-toolbar
+    input[type="checkbox"].reacg-select-all-checkbox:indeterminate::before {
+    display: block !important;
+    left: 4px !important;
+    top: 7px !important;
+    width: 8px !important;
+    height: 0 !important;
+    border-width: 0 0 2px 0 !important;
+    transform: none !important;
+  }
+
+  .reacg-media-toolbar
+    input[type="checkbox"].reacg-select-all-checkbox:focus-visible,
+  .reacg_items input[type="checkbox"].reacg-item-checkbox:focus-visible {
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px var(--reacg-primary-color, #155c92) !important;
+  }
+
+  .reacg-media-toolbar .reacg-bulk-edit-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    background: var(--reacg-primary-color, #155c92) !important;
+    background-color: var(--reacg-primary-color, #155c92) !important;
+    border: 1px solid var(--reacg-primary-color, #155c92) !important;
+    color: #ffffff !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 0 12px !important;
+    min-height: 32px !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    text-decoration: none !important;
+  }
+
+  .reacg-media-toolbar
+    .reacg-bulk-edit-btn:hover:not(:disabled):not([disabled]),
+  .reacg-media-toolbar
+    .reacg-bulk-edit-btn:focus:not(:disabled):not([disabled]) {
+    background: var(--reacg-primary-color-darker, #006ba1) !important;
+    background-color: var(--reacg-primary-color-darker, #006ba1) !important;
+    border-color: var(--reacg-primary-color-darker, #006ba1) !important;
+    color: #ffffff !important;
+  }
+
+  .reacg-media-toolbar .reacg-bulk-edit-btn:disabled,
+  .reacg-media-toolbar .reacg-bulk-edit-btn[disabled] {
+    background: #f6f7f7 !important;
+    background-color: #f6f7f7 !important;
+    border-color: #dcdcde !important;
+    color: #a7aaad !important;
+    cursor: not-allowed !important;
+    opacity: 1 !important;
+  }
+
+  .reacg-media-toolbar .reacg-bulk-edit-btn .dashicons,
+  .reacg-media-toolbar .reacg-bulk-edit-btn .dashicons::before {
+    color: inherit !important;
+  }
+
+  .reacg-media-toolbar .reacg-bulk-edit-btn .dashicons {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    vertical-align: middle;
+  }
+
   .reacg_items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
     gap: 4px;
+    padding: 2px;
+    box-sizing: border-box;
   }
 
   .reacg_item {
@@ -373,6 +606,22 @@ li.MuiMenuItem-root:focus-visible {
     height: auto;
     aspect-ratio: 1 / 1;
     margin: 0;
+  }
+
+  .reacg_item.reacg-item--selected {
+    border-color: var(--reacg-primary-color, #155c92) !important;
+    outline: none !important;
+  }
+
+  .reacg_item.reacg-item--selected::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--reacg-primary-color, #155c92);
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 5;
+    box-sizing: border-box;
   }
 
   .reacg_item_new .reacg_item_image {

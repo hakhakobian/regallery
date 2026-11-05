@@ -2,25 +2,346 @@
   box-sizing: border-box;
 }
 
+/* Media toolbar & bulk actions */
+.reacg-media-toolbar {
+  display: flex;
+  flex-wrap: nowrap !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f6f6fb;
+  border: 1px solid #eceaf8;
+  border-radius: 6px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  min-height: 42px;
+  box-sizing: border-box;
+  container-type: inline-size;
+}
+
+.reacg-media-toolbar__left {
+  display: flex;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.reacg-media-toolbar__left > *,
+.reacg-media-toolbar__right .reacg-bulk-edit-btn {
+  white-space: nowrap;
+}
+
+.reacg-media-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+.reacg-media-toolbar .reacg-selected-count .reacg-selected-count__short {
+  display: none !important;
+}
+
+/* Compact toolbar for narrow containers (e.g. builder sidebars). */
+@container (max-width: 380px) {
+  .reacg-media-toolbar .reacg-selected-count .reacg-selected-count__full {
+    display: none !important;
+  }
+
+  .reacg-media-toolbar .reacg-selected-count .reacg-selected-count__short {
+    display: inline !important;
+  }
+
+  .reacg-media-toolbar__left {
+    gap: 8px;
+  }
+
+  .reacg-media-toolbar .reacg-select-all-label {
+    gap: 6px;
+  }
+
+  .reacg-media-toolbar .reacg-selected-count {
+    padding: 2px 8px;
+  }
+
+  .reacg-media-toolbar .reacg-bulk-edit-btn {
+    padding: 0 12px !important;
+  }
+}
+
+@container (max-width: 235px) {
+  .reacg-media-toolbar .reacg-select-all-text {
+    display: none !important;
+  }
+}
+
+.reacg-select-all-label {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d2327;
+  user-select: none;
+}
+
+/* Custom checkbox, so builders (Elementor, Divi, ...) can't recolor it. */
+.reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox,
+.reacg_items input[type="checkbox"].reacg-item-checkbox {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  position: relative !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid #8c8f94 !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  float: none !important;
+  clear: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  transition:
+    background-color 0.1s ease,
+    border-color 0.1s ease;
+}
+
+.reacg_items input[type="checkbox"].reacg-item-checkbox {
+  border-color: rgba(0, 0, 0, 0.35) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+.reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox::after,
+.reacg_items input[type="checkbox"].reacg-item-checkbox::after {
+  display: none !important;
+  content: none !important;
+}
+
+.reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox::before,
+.reacg_items input[type="checkbox"].reacg-item-checkbox::before {
+  content: "" !important;
+  position: absolute !important;
+  display: none !important;
+  box-sizing: border-box !important;
+  left: 5px !important;
+  top: 2px !important;
+  width: 6px !important;
+  height: 10px !important;
+  margin: 0 !important;
+  border: solid #ffffff !important;
+  border-width: 0 2px 2px 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: rotate(45deg) !important;
+}
+
+.reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox:checked,
+.reacg-media-toolbar
+  input[type="checkbox"].reacg-select-all-checkbox:indeterminate,
+.reacg_items input[type="checkbox"].reacg-item-checkbox:checked {
+  background: var(--reacg-primary-color, #155c92) !important;
+  background-color: var(--reacg-primary-color, #155c92) !important;
+  background-image: none !important;
+  border-color: var(--reacg-primary-color, #155c92) !important;
+}
+
+.reacg-media-toolbar
+  input[type="checkbox"].reacg-select-all-checkbox:checked::before,
+.reacg_items input[type="checkbox"].reacg-item-checkbox:checked::before {
+  display: block !important;
+}
+
+/* Indeterminate state: horizontal dash. */
+.reacg-media-toolbar
+  input[type="checkbox"].reacg-select-all-checkbox:indeterminate::before {
+  display: block !important;
+  left: 4px !important;
+  top: 7px !important;
+  width: 8px !important;
+  height: 0 !important;
+  border-width: 0 0 2px 0 !important;
+  transform: none !important;
+}
+
+.reacg-media-toolbar
+  input[type="checkbox"].reacg-select-all-checkbox:focus-visible,
+.reacg_items input[type="checkbox"].reacg-item-checkbox:focus-visible {
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--reacg-primary-color, #155c92) !important;
+}
+
+.reacg-media-toolbar input[type="checkbox"].reacg-select-all-checkbox:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
+.reacg-selected-count {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--reacg-primary-color, #155c92);
+  background: color-mix(
+    in srgb,
+    var(--reacg-primary-color, #155c92) 10%,
+    #ffffff
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--reacg-primary-color, #155c92) 22%, #ffffff);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.reacg-media-toolbar .reacg-bulk-edit-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: var(--reacg-primary-color, #155c92) !important;
+  background-color: var(--reacg-primary-color, #155c92) !important;
+  border: 1px solid var(--reacg-primary-color, #155c92) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 0 14px !important;
+  min-height: 32px !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out !important;
+  text-decoration: none !important;
+}
+
+.reacg-media-toolbar .reacg-bulk-edit-btn:hover:not(:disabled):not([disabled]),
+.reacg-media-toolbar .reacg-bulk-edit-btn:focus:not(:disabled):not([disabled]) {
+  background: var(--reacg-primary-color-darker, #006ba1) !important;
+  background-color: var(--reacg-primary-color-darker, #006ba1) !important;
+  border-color: var(--reacg-primary-color-darker, #006ba1) !important;
+  color: #ffffff !important;
+}
+
+.reacg-media-toolbar .reacg-bulk-edit-btn:disabled,
+.reacg-media-toolbar .reacg-bulk-edit-btn[disabled] {
+  background: #f6f7f7 !important;
+  background-color: #f6f7f7 !important;
+  border-color: #dcdcde !important;
+  color: #a7aaad !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}
+
+.reacg-media-toolbar .reacg-bulk-edit-btn .dashicons,
+.reacg-media-toolbar .reacg-bulk-edit-btn .dashicons::before {
+  color: inherit !important;
+}
+
+.reacg-media-toolbar .reacg-bulk-edit-btn .dashicons {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  vertical-align: middle;
+}
+
 .reacg_items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 6px;
   max-height: 315px;
-  overflow: auto;
-  line-height: 0;
-  margin: -2px;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin-top: 8px;
+  /* Room for the item shadow and selection border so they aren't clipped. */
+  padding: 2px;
+  line-height: normal;
+  box-sizing: border-box;
 }
 
 .reacg_item {
   border: 1px solid rgba(0, 0, 0, 0.12);
-  display: inline-block;
-  height: 100px;
-  width: 100px;
-  margin: 2px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  margin: 0;
   padding: 0;
   border-radius: 6px;
   overflow: hidden;
   filter: drop-shadow(1px 1px 3px rgba(26, 45, 89, 0.18));
   background-color: #ffffff;
+  position: relative;
+}
+
+.ui-sortable-placeholder.reacg_item {
+  visibility: visible !important;
+  border: 2px dashed var(--reacg-primary-color, #155c92) !important;
+  background: color-mix(
+    in srgb,
+    var(--reacg-primary-color, #155c92) 10%,
+    #ffffff
+  ) !important;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.reacg-item-select {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 10;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.reacg_item:hover .reacg-item-select,
+.reacg_item.reacg-item--selected .reacg-item-select {
+  opacity: 1;
+}
+
+.reacg_item.reacg-item--selected {
+  border-color: var(--reacg-primary-color, #155c92) !important;
+  outline: none !important;
+}
+
+/* Draw the selection ring above the image so it's never covered or clipped. */
+.reacg_item.reacg-item--selected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--reacg-primary-color, #155c92);
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 5;
+  box-sizing: border-box;
 }
 
 .reacg_item a,
@@ -35,11 +356,11 @@
   -webkit-mask-image: url(../images/add_new_image.svg);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  -webkit-mask-size: 90px;
+  -webkit-mask-size: 90%;
   mask-image: url(../images/add_new_image.svg);
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: 90px;
+  mask-size: 90%;
 }
 
 .reacg_item_image {
@@ -318,11 +639,13 @@ to avoid a bug connected with preview.
 
   .reacg-modal-wrapper {
     background-color: #fff;
-    border-radius: 6px;
+    border-radius: 8px;
     position: relative;
-    max-height: calc(100% - 64px);
+    max-height: calc(100vh - 64px);
     width: 600px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .reacg-modal-close {
@@ -334,13 +657,16 @@ to avoid a bug connected with preview.
     width: 24px;
     height: 24px;
     box-sizing: content-box;
+    z-index: 3;
   }
 
   .reacg-modal-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: start;
+    height: 100%;
+    max-height: calc(100vh - 64px);
+    width: 100%;
+    overflow: hidden;
 
     h1 {
       font-size: 20px;
@@ -586,21 +912,24 @@ to avoid a bug connected with preview.
   }
 
   .reacg-modal__header {
-    position: sticky;
-    top: 0;
-    z-index: 2;
+    flex-shrink: 0;
     background: #fff;
-    padding: 24px 30px 20px 30px;
+    padding: 20px 30px 18px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #e2e4e7;
     box-sizing: border-box;
+    width: 100%;
   }
 
   .reacg-modal__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
     padding: 24px 30px;
     box-sizing: border-box;
+    width: 100%;
   }
 
   .reacg-modal__layout {
@@ -631,13 +960,12 @@ to avoid a bug connected with preview.
   }
 
   .reacg-modal__footer {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
+    flex-shrink: 0;
     background: #fff;
-    padding: 20px 30px 24px 30px;
+    padding: 16px 30px 20px 30px;
     border-top: 1px solid #e2e4e7;
     box-sizing: border-box;
+    width: 100%;
   }
 }
 
@@ -665,7 +993,8 @@ to avoid a bug connected with preview.
     display: block !important;
   }
 
-  .select2-container--default.select2-container--focus .select2-selection--multiple {
+  .select2-container--default.select2-container--focus
+    .select2-selection--multiple {
     border-color: var(--reacg-primary-color, #2271b1) !important;
     box-shadow: 0 0 0 1px var(--reacg-primary-color, #2271b1) !important;
     outline: none !important;
@@ -706,7 +1035,9 @@ to avoid a bug connected with preview.
     appearance: none !important;
   }
 
-  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
     background-color: #f0f0f1 !important;
     border: 1px solid #8c8f94 !important;
     border-radius: 3px !important;
@@ -721,7 +1052,9 @@ to avoid a bug connected with preview.
     cursor: default !important;
   }
 
-  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove {
     color: #646970 !important;
     border-right: 1px solid #c3c4c7 !important;
     border-top: none !important;
@@ -739,7 +1072,9 @@ to avoid a bug connected with preview.
     cursor: pointer !important;
   }
 
-  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+  .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove:hover {
     color: #d63638 !important;
     background-color: #f6f7f7 !important;
   }
@@ -785,7 +1120,9 @@ to avoid a bug connected with preview.
     cursor: pointer !important;
     margin: 0 !important;
     box-sizing: border-box !important;
-    transition: background-color 0.1s ease, color 0.1s ease;
+    transition:
+      background-color 0.1s ease,
+      color 0.1s ease;
   }
 
   .select2-results__option[aria-selected="true"],
@@ -899,16 +1236,210 @@ to avoid a bug connected with preview.
     width: 100%;
   }
   .reacg-crop-position-picker__option input:checked + span {
-    background: #2271b1;
-    border-color: #135e96;
+    background: var(--reacg-primary-color, #155c92);
+    border-color: var(--reacg-primary-color-darker, #006ba1);
   }
   .reacg-crop-position-picker__option input:focus-visible + span {
-    outline: 2px solid #2271b1;
+    outline: 2px solid var(--reacg-primary-color, #155c92);
     outline-offset: 2px;
   }
   .reacg-crop-position-picker__option:hover > span[aria-hidden="true"] {
-    border-color: #2271b1;
+    border-color: var(--reacg-primary-color, #155c92);
   }
+}
+
+/* Bulk Edit Modal extensions */
+.reacg-modal.reacg-attachment-modal.reacg-bulk-attachment-modal {
+  .reacg-bulk-edit-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+    gap: 8px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    margin-bottom: 12px;
+  }
+
+  .reacg-bulk-thumb-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .reacg-bulk-thumb-item img,
+  .reacg-bulk-thumb-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .reacg-bulk-progress-text {
+    font-size: 13px;
+    color: #50575e;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  .reacg-bulk-field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+
+  .reacg-bulk-field-header__left {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: auto !important;
+  }
+
+  .reacg-bulk-field-header__left label {
+    margin-bottom: 0 !important;
+  }
+
+  .reacg-bulk-field-header__left .reacg-ai-button {
+    margin: 0 !important;
+  }
+
+  .reacg-bulk-field-header__left .spinner.reacg-float-none {
+    margin: 0 !important;
+  }
+
+  .reacg-bulk-field-header__right {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: auto !important;
+    margin-left: auto;
+  }
+
+  .reacg-bulk-only-empty-label {
+    display: inline-flex !important;
+    align-items: center;
+    margin: 0 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #50575e !important;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .reacg-bulk-only-empty-label.hidden {
+    display: none !important;
+  }
+
+  .reacg-bulk-only-empty-label span {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .reacg-bulk-field-clear {
+    background: transparent !important;
+    border: none !important;
+    padding: 2px 8px !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #646970 !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    line-height: 1.4 !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transition:
+      background-color 0.12s ease,
+      color 0.12s ease;
+  }
+
+  .reacg-bulk-field-clear:hover {
+    color: #b32d2e !important;
+    background: rgba(179, 45, 46, 0.08) !important;
+  }
+
+  .reacg-bulk-field-clear.is-undo {
+    color: var(--reacg-primary-color, #155c92) !important;
+    background: color-mix(
+      in srgb,
+      var(--reacg-primary-color, #155c92) 10%,
+      #ffffff
+    ) !important;
+  }
+
+  .reacg-bulk-field-clear.is-undo:hover {
+    color: var(--reacg-primary-color-darker, #006ba1) !important;
+    background: color-mix(
+      in srgb,
+      var(--reacg-primary-color, #155c92) 16%,
+      #ffffff
+    ) !important;
+  }
+
+  .reacg-bulk-field-clear.hidden {
+    display: none !important;
+  }
+
+  .reacg-bulk-input--cleared::placeholder {
+    color: #b32d2e !important;
+    font-style: italic;
+  }
+
+  .reacg-bulk-cat-modes {
+    display: inline-flex !important;
+    align-items: center;
+    width: auto !important;
+    background: #f0f0f1;
+    padding: 2px;
+    border-radius: 6px;
+    gap: 2px;
+  }
+
+  .reacg-bulk-cat-mode {
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 3px 10px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    color: #50575e !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    transition:
+      background-color 0.12s ease,
+      color 0.12s ease,
+      box-shadow 0.12s ease;
+  }
+
+  .reacg-bulk-cat-mode:hover:not(.is-active):not(:disabled) {
+    color: #1d2327 !important;
+  }
+
+  .reacg-bulk-cat-mode.is-active {
+    background: #ffffff !important;
+    color: var(--reacg-primary-color, #155c92) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .reacg-bulk-cat-mode:disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+.reacg-modal.reacg-ai-generate-modal {
+  z-index: 10000005;
 }
 
 /* Top-level Select2 dropdown styles (matches Exclude Posts) */
@@ -934,7 +1465,9 @@ to avoid a bug connected with preview.
   cursor: pointer !important;
   margin: 0 !important;
   box-sizing: border-box !important;
-  transition: background-color 0.1s ease, color 0.1s ease;
+  transition:
+    background-color 0.1s ease,
+    color 0.1s ease;
 }
 
 .reacg-select2-dropdown .select2-results__option[aria-selected="true"],
@@ -1150,6 +1683,14 @@ main label[for="gallery-custom-css-hide"] svg {
     align-items: center;
     gap: 8px;
     font-size: 16px;
+  }
+
+  .reacg-ai-generate-modal__overwrite label input[type="radio"] {
+    margin: 0;
+  }
+
+  .reacg-modal-button-generate {
+    margin-right: 0;
   }
 
   .reacg-ai-generate-modal__progress {
