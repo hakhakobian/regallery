@@ -930,6 +930,24 @@ li.MuiMenuItem-root:focus-visible {
     display: none !important;
     content: none !important;
   }
+
+  .reacg-crop-position-picker__label-row label {
+    margin-bottom: 0 !important;
+  }
+
+  .reacg-convert-delete-original {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    line-height: 1.4 !important;
+  }
+}
+
+.reacg-alert-dialog.MuiDialog-root {
+  z-index: 10000010 !important;
 }
 
 .reacg-modal.reacg-ai-generate-modal {

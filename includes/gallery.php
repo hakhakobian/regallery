@@ -44,6 +44,7 @@ class REACG_Gallery {
     add_action('wp_ajax_reacg_auto_upload_video_cover', [ $this, 'upload_video_cover' ]);
     add_action('wp_ajax_reacg_get_categories', [ $this, 'ajax_get_categories' ]);
     add_action('wp_ajax_reacg_create_category', [ $this, 'ajax_create_category' ]);
+    add_action('wp_ajax_reacg_convert_image', [ $this, 'ajax_convert_image' ]);
 
     add_filter('wp_generate_attachment_metadata', [ $this, 'generate_attachment_metadata' ], 10, 2);
     // Add custom field to the media uploader.
@@ -1418,6 +1419,217 @@ class REACG_Gallery {
     wp_send_json_success([
       'thumbnail_id' => (int) $attachment_id,
       'thumbnail_url' => $thumbnail_url,
+    ]);
+  }
+
+  /**
+   * AJAX handler to convert an image attachment and its generated sizes to WebP or AVIF.
+   *
+   * @return void
+   */
+  public function ajax_convert_image() {
+    if ( !REACGLibrary::verify_nonce() ) {
+      wp_send_json_error([ 'message' => __('Invalid nonce.', 'regallery') ], 403);
+    }
+
+    $attachment_id = isset($_POST['attachment_id']) ? (int) $_POST['attachment_id'] : 0;
+    if ( $attachment_id <= 0 || get_post_type($attachment_id) !== 'attachment' || !wp_attachment_is_image($attachment_id) ) {
+      wp_send_json_error([ 'message' => __('Invalid image attachment.', 'regallery') ], 400);
+    }
+
+    if ( !current_user_can('edit_post', $attachment_id) || !current_user_can('upload_files') ) {
+      wp_send_json_error([ 'message' => __('You are not allowed to edit this image.', 'regallery') ], 403);
+    }
+
+    $target_format = isset($_POST['target_format']) ? strtolower(sanitize_text_field(wp_unslash($_POST['target_format']))) : '';
+    $allowed_formats = [
+      'webp' => 'image/webp',
+      'avif' => 'image/avif',
+    ];
+
+    if ( !isset($allowed_formats[$target_format]) ) {
+      wp_send_json_error([ 'message' => __('Invalid target image format.', 'regallery') ], 400);
+    }
+
+    $target_mime = $allowed_formats[$target_format];
+    if ( !function_exists('wp_image_editor_supports') || !wp_image_editor_supports([ 'mime_type' => $target_mime ]) ) {
+      wp_send_json_error([ 'message' => __('The selected image format is not supported by your server.', 'regallery') ], 400);
+    }
+
+    $delete_original = !empty($_POST['delete_original']) && $_POST['delete_original'] !== 'false' && $_POST['delete_original'] !== '0';
+
+    $current_file = get_attached_file($attachment_id, TRUE);
+    if ( empty($current_file) || !file_exists($current_file) ) {
+      wp_send_json_error([ 'message' => __('Image file does not exist on the server.', 'regallery') ], 404);
+    }
+
+    $old_metadata = wp_get_attachment_metadata($attachment_id);
+    $current_mime = strtolower((string) get_post_mime_type($attachment_id));
+    $current_ext  = strtolower((string) pathinfo($current_file, PATHINFO_EXTENSION));
+    $old_filesize = !empty($old_metadata['filesize']) ? (int) $old_metadata['filesize'] : (int) filesize($current_file);
+
+    if ( $current_mime === $target_mime || $current_ext === $target_format ) {
+      $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+      if ( empty($thumbnail_url) ) {
+        $thumbnail_url = wp_get_attachment_url($attachment_id);
+      }
+
+      wp_send_json_success([
+        'skipped'               => TRUE,
+        'attachment_id'         => $attachment_id,
+        'filename'              => wp_basename($current_file),
+        'url'                   => wp_get_attachment_url($attachment_id),
+        'thumbnail_url'         => $thumbnail_url,
+        'mime'                  => $target_mime,
+        'format'                => strtoupper($target_format),
+        'filesize'              => $old_filesize,
+        'filesizeHumanReadable' => size_format($old_filesize),
+        'old_filesize'          => $old_filesize,
+        'old_filesizeHumanReadable' => size_format($old_filesize),
+        /* translators: %s: image format name (e.g. WEBP, AVIF) */
+        'message'               => sprintf(__('Already in %s format.', 'regallery'), strtoupper($target_format)),
+      ]);
+    }
+
+    // Preserve readable EXIF text before converting in case the new format strips raw EXIF headers.
+    $existing_exif = get_post_meta($attachment_id, 'exif', TRUE);
+    if ( empty($existing_exif) && is_array($old_metadata) && !empty($old_metadata['image_meta']) ) {
+      $generated_exif = $this->get_exif($old_metadata['image_meta']);
+      if ( !empty($generated_exif) ) {
+        update_post_meta($attachment_id, 'exif', sanitize_textarea_field($generated_exif));
+        $existing_exif = $generated_exif;
+      }
+    }
+
+    // Collect old format files on disk in case the user opted to delete them.
+    $upload_dir = dirname($current_file);
+    $old_files  = [ $current_file ];
+    if ( is_array($old_metadata) ) {
+      if ( !empty($old_metadata['original_image']) ) {
+        $old_files[] = path_join($upload_dir, wp_basename($old_metadata['original_image']));
+      }
+      if ( !empty($old_metadata['sizes']) && is_array($old_metadata['sizes']) ) {
+        foreach ( $old_metadata['sizes'] as $size_data ) {
+          if ( !empty($size_data['file']) ) {
+            $old_files[] = path_join($upload_dir, wp_basename($size_data['file']));
+          }
+        }
+      }
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $editor = wp_get_image_editor($current_file);
+    if ( is_wp_error($editor) ) {
+      wp_send_json_error([ 'message' => $editor->get_error_message() ], 500);
+    }
+
+    $editor->set_quality(82);
+
+    $base_name = pathinfo($current_file, PATHINFO_FILENAME);
+    $base_name = preg_replace('/-scaled$/', '', $base_name);
+    $target_filename = wp_unique_filename($upload_dir, $base_name . '.' . $target_format);
+    $target_file = path_join($upload_dir, $target_filename);
+
+    $saved = $editor->save($target_file, $target_mime);
+    if ( is_wp_error($saved) || empty($saved['path']) || !file_exists($saved['path']) ) {
+      $err_msg = is_wp_error($saved) ? $saved->get_error_message() : __('Failed to convert image.', 'regallery');
+      wp_send_json_error([ 'message' => $err_msg ], 500);
+    }
+
+    $new_file = $saved['path'];
+
+    // Ensure all intermediate sub-sizes generated by WordPress also use the target format.
+    $output_format_filter = function ( $formats ) use ( $target_mime ) {
+      if ( !is_array($formats) ) {
+        $formats = [];
+      }
+      $formats['image/jpeg'] = $target_mime;
+      $formats['image/png']  = $target_mime;
+      $formats['image/gif']  = $target_mime;
+      $formats['image/webp'] = $target_mime;
+      $formats['image/avif'] = $target_mime;
+      return $formats;
+    };
+
+    add_filter('image_editor_output_format', $output_format_filter, 999);
+    update_attached_file($attachment_id, $new_file);
+    wp_update_post([
+      'ID'             => $attachment_id,
+      'post_mime_type' => $target_mime,
+    ]);
+    $new_metadata = wp_generate_attachment_metadata($attachment_id, $new_file);
+    remove_filter('image_editor_output_format', $output_format_filter, 999);
+
+    if ( !is_array($new_metadata) ) {
+      $new_metadata = [];
+    }
+    if ( is_array($old_metadata) && empty($new_metadata['image_meta']) && !empty($old_metadata['image_meta']) ) {
+      $new_metadata['image_meta'] = $old_metadata['image_meta'];
+    }
+
+    $final_attached_file = get_attached_file($attachment_id, TRUE);
+    if ( empty($final_attached_file) || !file_exists($final_attached_file) ) {
+      $final_attached_file = $new_file;
+    }
+
+    $new_filesize = file_exists($final_attached_file) ? (int) filesize($final_attached_file) : 0;
+    if ( $new_filesize > 0 ) {
+      $new_metadata['filesize'] = $new_filesize;
+    }
+
+    wp_update_attachment_metadata($attachment_id, $new_metadata);
+
+    if ( !empty($existing_exif) ) {
+      update_post_meta($attachment_id, 'exif', sanitize_textarea_field($existing_exif));
+    }
+
+    if ( $delete_original ) {
+      $protected_files = [
+        wp_normalize_path($new_file),
+        wp_normalize_path($final_attached_file),
+      ];
+      if ( !empty($new_metadata['original_image']) ) {
+        $protected_files[] = wp_normalize_path(path_join($upload_dir, wp_basename($new_metadata['original_image'])));
+      }
+      if ( !empty($new_metadata['sizes']) && is_array($new_metadata['sizes']) ) {
+        foreach ( $new_metadata['sizes'] as $size_data ) {
+          if ( !empty($size_data['file']) ) {
+            $protected_files[] = wp_normalize_path(path_join($upload_dir, wp_basename($size_data['file'])));
+          }
+        }
+      }
+      $protected_files = array_unique($protected_files);
+
+      foreach ( array_unique($old_files) as $old_path ) {
+        $norm_old = wp_normalize_path($old_path);
+        if ( !in_array($norm_old, $protected_files, TRUE) && file_exists($old_path) ) {
+          wp_delete_file($old_path);
+        }
+      }
+    }
+
+    clean_post_cache($attachment_id);
+
+    $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+    if ( empty($thumbnail_url) ) {
+      $thumbnail_url = wp_get_attachment_url($attachment_id);
+    }
+
+    wp_send_json_success([
+      'skipped'                   => FALSE,
+      'attachment_id'             => $attachment_id,
+      'filename'                  => wp_basename($final_attached_file),
+      'url'                       => wp_get_attachment_url($attachment_id),
+      'thumbnail_url'             => $thumbnail_url,
+      'mime'                      => $target_mime,
+      'format'                    => strtoupper($target_format),
+      'filesize'                  => $new_filesize,
+      'filesizeHumanReadable'     => size_format($new_filesize),
+      'old_filesize'              => $old_filesize,
+      'old_filesizeHumanReadable' => $old_filesize > 0 ? size_format($old_filesize) : '',
+      /* translators: %s: image format name (e.g. WEBP, AVIF) */
+      'message'                   => sprintf(__('Converted to %s.', 'regallery'), strtoupper($target_format)),
     ]);
   }
 

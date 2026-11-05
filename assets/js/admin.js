@@ -359,7 +359,29 @@ function reacg_update_item_image_fit(image) {
   }
 }
 
+function reacg_is_user_pro() {
+  try {
+    return Boolean(JSON.parse(localStorage.getItem("reacg-pro")));
+  } catch (e) {
+    return false;
+  }
+}
+
+window.addEventListener("reacg:pro-activated", function () {
+  localStorage.setItem("reacg-pro", true);
+  jQuery(".reacg-pro-badge").addClass("hidden");
+  jQuery(".reacg-image-converter").each(function () {
+    const wrap = jQuery(this);
+    reacg_update_converter_disabled_notice(
+      wrap,
+      wrap.data("currentFormat") || "",
+    );
+  });
+});
+
 function reacg_isPro(isPro) {
+  localStorage.setItem("reacg-pro", isPro);
+  jQuery(".reacg-pro-badge").toggleClass("hidden", Boolean(isPro));
   if (isPro) {
     jQuery("#reacg-metabox-widget-why-upgrade").remove();
     jQuery("#gallery-custom-css").find(".postbox-header h2 svg").remove();
@@ -374,7 +396,6 @@ function reacg_isPro(isPro) {
       reacg_open_free_trial_offer_dialog({ utm_medium: "custom_css" });
     }
   });
-  localStorage.setItem("reacg-pro", isPro);
 }
 
 /**
@@ -1476,6 +1497,10 @@ function reacg_info_icon() {
   return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,21a9,9,0,1,1,9-9A9.011,9.011,0,0,1,12,21Z"/><path d="M11.545,9.545h-.3A1.577,1.577,0,0,0,9.64,10.938,1.5,1.5,0,0,0,11,12.532v4.65a1.5,1.5,0,0,0,3,0V12A2.455,2.455,0,0,0,11.545,9.545Z"/><path d="M11.83,8.466A1.716,1.716,0,1,0,10.114,6.75,1.715,1.715,0,0,0,11.83,8.466Z"/></svg>';
 }
 
+function reacg_pro_icon() {
+  return '<svg width="38px" height="22px" viewBox="0 0 153 88" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 C0.96301025 -0.00571014 1.92602051 -0.01142029 2.91821289 -0.01730347 C3.9681694 -0.01842133 5.01812592 -0.01953918 6.09989929 -0.02069092 C7.7664003 -0.02813828 7.7664003 -0.02813828 9.46656799 -0.03573608 C13.14472573 -0.05035013 16.82284033 -0.05715834 20.50102234 -0.06268311 C23.05686443 -0.068435 25.61270652 -0.07419273 28.16854858 -0.07995605 C32.84420199 -0.0891209 37.51984246 -0.0954222 42.19550258 -0.09845281 C49.06655064 -0.10293151 55.93739957 -0.12047407 62.8083871 -0.1494534 C68.76923192 -0.17371706 74.7300274 -0.18139917 80.69092369 -0.18312836 C83.22224703 -0.1861544 85.75356953 -0.19418128 88.28486061 -0.20731354 C91.82752669 -0.2243814 95.3697087 -0.22249169 98.91239929 -0.21600342 C99.95628311 -0.2252182 101.00016693 -0.23443298 102.07568359 -0.243927 C110.4889872 -0.19569598 116.51764793 1.76531262 123.20024109 7.14044189 C127.39491321 12.62404291 129.29930016 17.23715251 129.37724304 24.14923096 C129.3964959 25.641633 129.3964959 25.641633 129.4161377 27.16418457 C129.42352463 28.23400574 129.43091156 29.3038269 129.43852234 30.40606689 C129.44659409 31.51343201 129.45466583 32.62079712 129.46298218 33.76171875 C129.47680719 36.1052291 129.48753642 38.44875945 129.4954071 40.79229736 C129.51260968 44.36316393 129.55651041 47.93310206 129.60063171 51.50372314 C129.61076011 53.78366427 129.61927575 56.06361325 129.62602234 58.34356689 C129.64353043 59.40529114 129.66103851 60.46701538 129.67907715 61.56091309 C129.6558828 69.54887152 128.06137832 74.82754616 122.82524109 80.89044189 C117.11483975 85.78507161 112.88955662 88.25419529 105.4072113 88.28088379 C104.44564621 88.28659393 103.48408112 88.29230408 102.49337769 88.29818726 C100.92079948 88.29986404 100.92079948 88.29986404 99.31645203 88.30157471 C97.65236046 88.30902206 97.65236046 88.30902206 95.95465088 88.31661987 C92.28129965 88.3312351 88.60799162 88.33804267 84.93461609 88.34356689 C82.38116962 88.34931911 79.82772317 88.35507684 77.27427673 88.36083984 C72.60229181 88.37000522 67.93031984 88.3763061 63.2583282 88.3793366 C56.39578004 88.3838132 49.53343147 88.40134549 42.67094398 88.43033719 C36.71544198 88.45461814 30.75998931 88.46228383 24.80443573 88.46401215 C22.27672998 88.46703607 19.74902502 88.4750558 17.22135162 88.48819733 C13.68128424 88.5052877 10.1417004 88.50336987 6.60160828 88.49688721 C5.56131973 88.50610199 4.52103119 88.51531677 3.44921875 88.52481079 C-4.73695785 88.47794814 -11.77427292 87.16592789 -17.79975891 81.14044189 C-21.52396907 75.92865771 -23.90495514 71.66698684 -23.97676086 65.15338135 C-23.9895961 64.13835037 -24.00243134 63.1233194 -24.01565552 62.07752991 C-24.02304245 60.98067368 -24.03042938 59.88381744 -24.03804016 58.75372314 C-24.04611191 57.62274704 -24.05418365 56.49177094 -24.0625 55.32652283 C-24.07633902 52.9299574 -24.08706199 50.53337227 -24.09492493 48.13677979 C-24.11210985 44.48462157 -24.15599599 40.83337509 -24.20014954 37.18145752 C-24.21027911 34.85138604 -24.21879438 32.52130688 -24.22554016 30.19122314 C-24.24304825 29.10448807 -24.26055634 28.01775299 -24.27859497 26.89808655 C-24.25568463 18.82587802 -22.7173398 13.51869344 -17.42475891 7.39044189 C-11.71116305 2.49307401 -7.48604418 0.02666017 0 0 Z " fill="#F5F2FF" transform="translate(23.799758911132813,-0.14044189453125)"></path><path d="M0 0 C3.68615206 2.21937072 5.74805019 4.36011501 7.5 8.375 C8.64966184 15.32771681 7.54721796 21.07085687 4.1328125 27.20703125 C0.8573381 31.55604631 -3.42862989 33.6845433 -8.5 35.375 C-16.14747114 35.94883622 -22.09789337 36.04342219 -28.1875 30.96875 C-31.52710966 27.69098496 -32.91012473 25.15387749 -33.0625 20.4375 C-32.55128788 13.25877663 -31.01166737 8.42930882 -25.625 3.5 C-18.45536973 -2.54498238 -8.6526023 -3.8961061 0 0 Z " fill="#896CFF" transform="translate(125.5,27.625)"></path><path d="M0 0 C3.70818297 -0.08756305 7.41609763 -0.14058015 11.125 -0.1875 C12.17171875 -0.21263672 13.2184375 -0.23777344 14.296875 -0.26367188 C19.96055425 -0.31744098 24.12542151 -0.25792535 29 3 C30 4 30 4 30.3125 7.75 C30.27178656 10.99544251 30.01242062 11.9795947 28.25 14.875 C26.20332225 16.80797343 24.60156414 17.97795695 22 19 C23.32 19.99 24.64 20.98 26 22 C25.47694567 26.40860079 24.87251184 30.63744078 24 35 C19.71 35 15.42 35 11 35 C12 26.42857143 12 26.42857143 13 23 C11.02 23 9.04 23 7 23 C6.79503906 23.69867188 6.59007813 24.39734375 6.37890625 25.1171875 C6.10949219 26.02726562 5.84007813 26.93734375 5.5625 27.875 C5.29566406 28.77992187 5.02882813 29.68484375 4.75390625 30.6171875 C4 33 4 33 3 35 C-0.96 35 -4.92 35 -9 35 C-8.27347664 28.63170882 -6.70010013 22.56410745 -5.0625 16.375 C-4.79759766 15.35148437 -4.53269531 14.32796875 -4.25976562 13.2734375 C-3.06413217 8.71638295 -1.82098461 4.35293175 0 0 Z " fill="#896BFF" transform="translate(62,27)"></path><path d="M0 0 C3.3956697 -0.08745946 6.79104773 -0.14054444 10.1875 -0.1875 C11.14720703 -0.21263672 12.10691406 -0.23777344 13.09570312 -0.26367188 C21.84048429 -0.35444815 21.84048429 -0.35444815 26 3 C26.598125 3.391875 27.19625 3.78375 27.8125 4.1875 C29.83132873 7.26887017 29.57723999 10.50338535 29 14 C26.80597572 18.75371928 24.02862635 21.18964541 19.37109375 23.3203125 C14.91354324 24.59809469 10.60216322 24.23010816 6 24 C5.34 27.63 4.68 31.26 4 35 C-0.29 35 -4.58 35 -9 35 C-8.29824602 30.78947612 -7.51539199 26.92246822 -6.40625 22.83203125 C-6.09816406 21.69185547 -5.79007813 20.55167969 -5.47265625 19.37695312 C-5.15167969 18.20068359 -4.83070312 17.02441406 -4.5 15.8125 C-4.17902344 14.62462891 -3.85804687 13.43675781 -3.52734375 12.21289062 C-1.15788849 3.47366546 -1.15788849 3.47366546 0 0 Z " fill="#8A6CFF" transform="translate(27,27)"></path><path d="M0 0 C2.875 0.75 2.875 0.75 3.875 1.75 C3.82165817 7.84430385 2.38984116 13.23669438 -0.125 18.75 C-3.125 20.75 -3.125 20.75 -5.75 20.4375 C-8.125 19.75 -8.125 19.75 -9.125 18.75 C-9.82749396 11.57645595 -8.88015315 6.81713084 -4.8125 0.8125 C-3.125 -0.25 -3.125 -0.25 0 0 Z " fill="#F0EBFF" transform="translate(116.125,34.25)"></path><path d="M0 0 C1.98 0 3.96 0 6 0 C6.125 2.375 6.125 2.375 6 5 C4 7 4 7 0.875 7.125 C-0.548125 7.063125 -0.548125 7.063125 -2 7 C-1.125 2.25 -1.125 2.25 0 0 Z " fill="#EFEAFF" transform="translate(73,35)"></path><path d="M0 0 C1.65 0.33 3.3 0.66 5 1 C4.67 2.98 4.34 4.96 4 7 C2.02 7.33 0.04 7.66 -2 8 C-1.34 5.36 -0.68 2.72 0 0 Z " fill="#EFEAFF" transform="translate(38,35)"></path></svg>';
+}
+
 function reacg_escape_html(value) {
   const stringValue = value == null ? "" : String(value);
   const htmlEntityMap = {
@@ -1570,6 +1595,693 @@ function reacg_crop_position_picker() {
   );
 }
 
+function reacg_is_image_attachment(attachment) {
+  if (!attachment || typeof attachment.get !== "function") {
+    return false;
+  }
+  const attachmentType = String(
+    reacg_get_attachment_field_value(attachment, "type") || "",
+  ).toLowerCase();
+  const mimeType = String(
+    reacg_get_attachment_field_value(attachment, "mime") || "",
+  ).toLowerCase();
+  if (attachmentType === "video" || mimeType.indexOf("video/") === 0) {
+    return false;
+  }
+  return attachmentType === "image" || mimeType.indexOf("image/") === 0;
+}
+
+function reacg_get_attachment_format(attachment) {
+  if (!attachment || typeof attachment.get !== "function") {
+    return "";
+  }
+  const mimeType = String(
+    reacg_get_attachment_field_value(attachment, "mime") || "",
+  ).toLowerCase();
+  if (mimeType.indexOf("image/") === 0) {
+    const sub = mimeType.slice(6).toLowerCase();
+    return sub === "jpeg" ? "jpg" : sub;
+  }
+  const filename = String(
+    reacg_get_attachment_field_value(attachment, "filename") ||
+      reacg_get_attachment_field_value(attachment, "url") ||
+      "",
+  );
+  const match = filename.split("?")[0].match(/\.([a-z0-9]+)$/i);
+  if (match && match[1]) {
+    const ext = match[1].toLowerCase();
+    return ext === "jpeg" ? "jpg" : ext;
+  }
+  return "";
+}
+
+function reacg_get_convertible_formats() {
+  const configured =
+    reacg &&
+    reacg.convertible_formats &&
+    typeof reacg.convertible_formats === "object"
+      ? reacg.convertible_formats
+      : null;
+
+  return {
+    webp: {
+      label:
+        (configured && configured.webp && configured.webp.label) || "WebP",
+      mime:
+        (configured && configured.webp && configured.webp.mime) || "image/webp",
+      supported:
+        configured &&
+        configured.webp &&
+        typeof configured.webp.supported !== "undefined"
+          ? Boolean(configured.webp.supported)
+          : true,
+      reason:
+        (configured && configured.webp && configured.webp.reason) ||
+        "WebP conversion is disabled because your server's PHP image editor (Imagick or GD) does not have WebP support enabled.",
+      how_to_enable:
+        (configured && configured.webp && configured.webp.how_to_enable) ||
+        'Enable the PHP "imagick" extension or compile the "gd" extension with WebP support in your php.ini / hosting control panel.',
+    },
+    avif: {
+      label:
+        (configured && configured.avif && configured.avif.label) || "AVIF",
+      mime:
+        (configured && configured.avif && configured.avif.mime) || "image/avif",
+      supported:
+        configured &&
+        configured.avif &&
+        typeof configured.avif.supported !== "undefined"
+          ? Boolean(configured.avif.supported)
+          : true,
+      reason:
+        (configured && configured.avif && configured.avif.reason) ||
+        "AVIF conversion is disabled because your server's PHP image editor (Imagick or GD) does not have AVIF support enabled.",
+      how_to_enable:
+        (configured && configured.avif && configured.avif.how_to_enable) ||
+        'Enable the PHP "imagick" extension (with libavif) or PHP 8.1+ "gd" extension with AVIF support in your php.ini / hosting control panel.',
+    },
+  };
+}
+
+function reacg_image_converter_picker() {
+  const label = reacg.convert_format_label || "Convert format";
+  const description =
+    reacg.convert_format_description ||
+    "Convert image and its generated sizes to a modern, lighter format.";
+  const buttonText = reacg.convert_button || "Convert";
+  const deleteOriginalText =
+    reacg.delete_original_files || "Delete old format files";
+  const isPro = reacg_is_user_pro();
+
+  return (
+    '<div class="reacg-attachment-modal__field reacg-image-converter" data-setting="convert_format">' +
+    '<div class="reacg-crop-position-picker__label-row">' +
+    '<label for="reacg-convert-format-select">' +
+    reacg_escape_html(label) +
+    "</label>" +
+    '<button type="button" class="reacg-crop-position-picker__help dashicons dashicons-info-outline" aria-label="' +
+    reacg_escape_html(description) +
+    '" data-tooltip="' +
+    reacg_escape_html(description) +
+    '"><span class="screen-reader-text">' +
+    reacg_escape_html(description) +
+    "</span></button>" +
+    '<span class="reacg-pro-badge' +
+    (isPro ? " hidden" : "") +
+    '">' +
+    reacg_pro_icon() +
+    "</span></div>" +
+    '<div class="reacg-image-converter__controls">' +
+    '<select id="reacg-convert-format-select" class="reacg-convert-format-select"></select>' +
+    '<button type="button" class="button button-secondary reacg-convert-format-btn">' +
+    reacg_escape_html(buttonText) +
+    "</button>" +
+    '<span class="spinner reacg-convert-spinner reacg-float-none"></span>' +
+    "</div>" +
+    '<label class="reacg-convert-delete-original">' +
+    '<input type="checkbox" class="reacg-convert-delete-original-checkbox" />' +
+    "<span>" +
+    reacg_escape_html(deleteOriginalText) +
+    "</span>" +
+    "</label>" +
+    '<div class="reacg-convert-disabled-reason hidden" role="note"></div>' +
+    '<p class="reacg-convert-status hidden"></p>' +
+    "</div>"
+  );
+}
+
+function reacg_update_converter_disabled_notice(converterWrap, currentFormat) {
+  if (!converterWrap || !converterWrap.length) {
+    return;
+  }
+  const select = converterWrap.find(".reacg-convert-format-select");
+  const convertBtn = converterWrap.find(".reacg-convert-format-btn");
+  const deleteCheckbox = converterWrap.find(
+    ".reacg-convert-delete-original-checkbox",
+  );
+  const deleteLabel = converterWrap.find(".reacg-convert-delete-original");
+  const reasonEl = converterWrap.find(".reacg-convert-disabled-reason");
+
+  const selectedKey = String(select.val() || "").toLowerCase();
+  const formats = reacg_get_convertible_formats();
+  const info = formats[selectedKey];
+  const isCurrent = Boolean(currentFormat && currentFormat === selectedKey);
+  const isSupported = Boolean(info && info.supported);
+  const canConvert = Boolean(selectedKey && info && isSupported && !isCurrent);
+  const isPro = reacg_is_user_pro();
+
+  if (isPro) {
+    convertBtn
+      .prop("disabled", !canConvert)
+      .toggleClass("disabled", !canConvert)
+      .attr("aria-disabled", !canConvert ? "true" : "false");
+  } else {
+    convertBtn
+      .prop("disabled", false)
+      .toggleClass("disabled", !canConvert)
+      .attr("aria-disabled", !canConvert ? "true" : "false");
+  }
+  deleteCheckbox.prop("disabled", !canConvert);
+  deleteLabel.toggleClass("is-disabled", !canConvert);
+
+  if (!reasonEl.length) {
+    return;
+  }
+
+  reasonEl
+    .empty()
+    .removeClass(
+      "reacg-convert-disabled-reason--warning reacg-convert-disabled-reason--info",
+    );
+
+  if (info && !isSupported) {
+    const howToLabel = reacg.how_to_enable_label || "How to enable:";
+    const reasonParagraph = jQuery(
+      '<p class="reacg-convert-disabled-reason__text"></p>',
+    ).text(info.reason);
+    reasonEl.append(reasonParagraph);
+
+    if (info.how_to_enable) {
+      const howToParagraph = jQuery(
+        '<p class="reacg-convert-disabled-reason__howto"></p>',
+      );
+      howToParagraph.append(
+        jQuery("<strong></strong>").text(howToLabel + " "),
+      );
+      howToParagraph.append(document.createTextNode(info.how_to_enable));
+      reasonEl.append(howToParagraph);
+    }
+
+    reasonEl
+      .addClass("reacg-convert-disabled-reason--warning")
+      .removeClass("hidden");
+  } else if (info && isCurrent) {
+    const alreadyMsg = (
+      reacg.already_in_format || "Already in %s format."
+    ).replace("%s", info.label || selectedKey.toUpperCase());
+    reasonEl
+      .append(
+        jQuery('<p class="reacg-convert-disabled-reason__text"></p>').text(
+          alreadyMsg,
+        ),
+      )
+      .addClass("reacg-convert-disabled-reason--info")
+      .removeClass("hidden");
+  } else {
+    reasonEl.addClass("hidden");
+  }
+}
+
+function reacg_sync_converter_select(converterWrap, currentFormat) {
+  if (!converterWrap || !converterWrap.length) {
+    return;
+  }
+  converterWrap.data("currentFormat", currentFormat || "");
+
+  const select = converterWrap.find(".reacg-convert-format-select");
+  const formats = reacg_get_convertible_formats();
+  const formatKeys = ["webp", "avif"];
+  const currentSuffix = reacg.current_format_suffix || "current";
+
+  const previousVal = select.val();
+  select.empty();
+
+  let firstSelectable = "";
+  formatKeys.forEach(function (key) {
+    const info = formats[key];
+    if (!info) return;
+    const isCurrent = Boolean(currentFormat && currentFormat === key);
+    const isSupported = Boolean(info.supported);
+    let text = info.label;
+    if (isCurrent) {
+      text += " (" + currentSuffix + ")";
+    }
+
+    const opt = jQuery("<option></option>")
+      .attr("value", key)
+      .attr("data-supported", isSupported ? "1" : "0")
+      .attr("data-current", isCurrent ? "1" : "0")
+      .text(text);
+    if (!isCurrent && isSupported && !firstSelectable) {
+      firstSelectable = key;
+    }
+    select.append(opt);
+  });
+
+  const prevInfo = previousVal ? formats[previousVal] : null;
+  const prevSelectable = Boolean(
+    prevInfo && prevInfo.supported && previousVal !== currentFormat,
+  );
+
+  if (previousVal && (prevSelectable || !firstSelectable)) {
+    select.val(previousVal);
+  } else if (firstSelectable) {
+    select.val(firstSelectable);
+  } else {
+    select.val(formatKeys[0]);
+  }
+
+  select.prop("disabled", false);
+  reacg_update_converter_disabled_notice(converterWrap, currentFormat);
+}
+
+function reacg_format_bytes(bytes) {
+  const num = Number(bytes) || 0;
+  if (num <= 0) return "0 B";
+  if (num < 1024) return num + " B";
+  if (num < 1024 * 1024) return Math.round(num / 1024) + " KB";
+  return (num / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function reacg_build_conversion_size_note(oldBytes, newBytes, oldHuman, newHuman) {
+  const oldSize = Number(oldBytes) || 0;
+  const newSize = Number(newBytes) || 0;
+  if (oldSize <= 0 || newSize <= 0) {
+    return "";
+  }
+  const fromLabel = oldHuman || reacg_format_bytes(oldSize);
+  const toLabel = newHuman || reacg_format_bytes(newSize);
+  const diffPct = Math.round(((newSize - oldSize) / oldSize) * 100);
+  const pctStr =
+    diffPct < 0 ? ", " + diffPct + "%" : diffPct > 0 ? ", +" + diffPct + "%" : "";
+  return " (" + fromLabel + " → " + toLabel + pctStr + ")";
+}
+
+function reacg_bind_single_image_converter(modal, attachment, item) {
+  const converterWrap = modal.find(".reacg-image-converter");
+  if (!converterWrap.length) {
+    return;
+  }
+
+  const select = converterWrap.find(".reacg-convert-format-select");
+  const convertBtn = converterWrap.find(".reacg-convert-format-btn");
+  const deleteCheckbox = converterWrap.find(
+    ".reacg-convert-delete-original-checkbox",
+  );
+  const spinner = converterWrap.find(".reacg-convert-spinner");
+  const statusEl = converterWrap.find(".reacg-convert-status");
+
+  reacg_sync_converter_select(
+    converterWrap,
+    reacg_get_attachment_format(attachment),
+  );
+
+  select.on("change", function () {
+    reacg_update_converter_disabled_notice(
+      converterWrap,
+      converterWrap.data("currentFormat") || "",
+    );
+  });
+
+  converterWrap.find(".reacg-pro-badge").on("click", function (e) {
+    e.preventDefault();
+    if (typeof reacg_open_free_trial_offer_dialog === "function") {
+      reacg_open_free_trial_offer_dialog({ utm_medium: "convert_image" });
+    }
+  });
+
+  convertBtn.on("click", function (e) {
+    e.preventDefault();
+    if (!reacg_is_user_pro()) {
+      if (typeof reacg_open_free_trial_offer_dialog === "function") {
+        reacg_open_free_trial_offer_dialog({ utm_medium: "convert_image" });
+      }
+      return;
+    }
+    if (convertBtn.prop("disabled") || convertBtn.hasClass("disabled")) {
+      return;
+    }
+
+    const targetFormat = String(select.val() || "").toLowerCase();
+    if (!targetFormat) {
+      return;
+    }
+
+    const deleteOriginal = deleteCheckbox.is(":checked") ? 1 : 0;
+
+    statusEl
+      .addClass("hidden")
+      .removeClass(
+        "reacg-convert-status--success reacg-convert-status--error",
+      )
+      .empty();
+    convertBtn.prop("disabled", true);
+    select.prop("disabled", true);
+    deleteCheckbox.prop("disabled", true);
+    spinner.addClass("is-active");
+
+    jQuery
+      .ajax({
+        url: reacg.ajax_url,
+        type: "POST",
+        data: {
+          action: "reacg_convert_image",
+          [reacg.nonce]: reacg.nonce,
+          attachment_id: attachment.get("id"),
+          target_format: targetFormat,
+          delete_original: deleteOriginal,
+        },
+      })
+      .done(function (res) {
+        if (!res || !res.success || !res.data) {
+          const errMsg =
+            res && res.data && res.data.message
+              ? res.data.message
+              : reacg.convert_failed || "Failed to convert image.";
+          statusEl
+            .removeClass("hidden")
+            .addClass("reacg-convert-status--error")
+            .text(errMsg);
+          reacg_sync_converter_select(
+            converterWrap,
+            reacg_get_attachment_format(attachment),
+          );
+          return;
+        }
+
+        const data = res.data;
+        if (data.filename) {
+          modal
+            .find(".reacg-attachment-modal__filename-val")
+            .text(data.filename);
+        }
+        if (data.filesizeHumanReadable) {
+          modal
+            .find(".reacg-attachment-modal__filesize-val")
+            .text(data.filesizeHumanReadable);
+        }
+        const previewSrc = data.thumbnail_url || data.url;
+        if (previewSrc) {
+          modal
+            .find(".reacg-attachment-modal__preview img")
+            .attr("src", previewSrc);
+          if (item && item.length) {
+            item
+              .find(".reacg_item_image img")
+              .attr("src", previewSrc)
+              .each(function () {
+                reacg_update_item_image_fit(this);
+              });
+          }
+        }
+        if (data.url) {
+          modal.find("#reacg-attachment-url").val(data.url);
+        }
+
+        const baseMsg =
+          data.message ||
+          (reacg.converted_successfully || "Converted to %s.").replace(
+            "%s",
+            String(data.format || targetFormat).toUpperCase(),
+          );
+        const sizeNote = data.skipped
+          ? ""
+          : reacg_build_conversion_size_note(
+              data.old_filesize,
+              data.filesize,
+              data.old_filesizeHumanReadable,
+              data.filesizeHumanReadable,
+            );
+
+        statusEl
+          .removeClass("hidden")
+          .addClass("reacg-convert-status--success")
+          .text(baseMsg + sizeNote);
+
+        attachment.fetch().always(function () {
+          reacg_sync_converter_select(converterWrap, targetFormat);
+          reacg_reload_preview();
+        });
+      })
+      .fail(function (xhr) {
+        const errMsg =
+          xhr &&
+          xhr.responseJSON &&
+          xhr.responseJSON.data &&
+          xhr.responseJSON.data.message
+            ? xhr.responseJSON.data.message
+            : reacg.convert_failed || "Failed to convert image.";
+        statusEl
+          .removeClass("hidden")
+          .addClass("reacg-convert-status--error")
+          .text(errMsg);
+        reacg_sync_converter_select(
+          converterWrap,
+          reacg_get_attachment_format(attachment),
+        );
+      })
+      .always(function () {
+        spinner.removeClass("is-active");
+      });
+  });
+}
+
+function reacg_get_bulk_shared_image_format(attachments) {
+  const imageAtts = (attachments || []).filter(reacg_is_image_attachment);
+  if (!imageAtts.length) {
+    return "";
+  }
+  const formats = imageAtts.map(reacg_get_attachment_format);
+  const first = formats[0];
+  if (
+    first &&
+    formats.every(function (fmt) {
+      return fmt === first;
+    })
+  ) {
+    return first;
+  }
+  return "";
+}
+
+function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
+  const converterWrap = modal.find(".reacg-image-converter");
+  if (!converterWrap.length) {
+    return;
+  }
+
+  const select = converterWrap.find(".reacg-convert-format-select");
+  const convertBtn = converterWrap.find(".reacg-convert-format-btn");
+  const deleteCheckbox = converterWrap.find(
+    ".reacg-convert-delete-original-checkbox",
+  );
+  const spinner = converterWrap.find(".reacg-convert-spinner");
+  const statusEl = converterWrap.find(".reacg-convert-status");
+  const saveBtn = modal.find(".reacg-modal-button-save");
+
+  reacg_sync_converter_select(
+    converterWrap,
+    reacg_get_bulk_shared_image_format(attachments),
+  );
+
+  select.on("change", function () {
+    reacg_update_converter_disabled_notice(
+      converterWrap,
+      converterWrap.data("currentFormat") || "",
+    );
+  });
+
+  converterWrap.find(".reacg-pro-badge").on("click", function (e) {
+    e.preventDefault();
+    if (typeof reacg_open_free_trial_offer_dialog === "function") {
+      reacg_open_free_trial_offer_dialog({ utm_medium: "convert_image" });
+    }
+  });
+
+  convertBtn.on("click", function (e) {
+    e.preventDefault();
+    if (!reacg_is_user_pro()) {
+      if (typeof reacg_open_free_trial_offer_dialog === "function") {
+        reacg_open_free_trial_offer_dialog({ utm_medium: "convert_image" });
+      }
+      return;
+    }
+    if (convertBtn.prop("disabled") || convertBtn.hasClass("disabled")) {
+      return;
+    }
+
+    const targetFormat = String(select.val() || "").toLowerCase();
+    if (!targetFormat) {
+      return;
+    }
+
+    const imageAttachments = (attachments || []).filter(
+      reacg_is_image_attachment,
+    );
+    const toConvert = imageAttachments.filter(function (att) {
+      return reacg_get_attachment_format(att) !== targetFormat;
+    });
+
+    if (!toConvert.length) {
+      const alreadyMsg = (
+        reacg.bulk_all_already_in_format ||
+        "All selected images are already in %s format."
+      ).replace("%s", targetFormat.toUpperCase());
+      statusEl
+        .removeClass("hidden reacg-convert-status--error")
+        .addClass("reacg-convert-status--success")
+        .text(alreadyMsg);
+      reacg_sync_converter_select(converterWrap, targetFormat);
+      return;
+    }
+
+    const deleteOriginal = deleteCheckbox.is(":checked") ? 1 : 0;
+    const total = toConvert.length;
+    let index = 0;
+    let convertedCount = 0;
+    let totalOldBytes = 0;
+    let totalNewBytes = 0;
+    let firstError = "";
+
+    convertBtn.prop("disabled", true);
+    select.prop("disabled", true);
+    deleteCheckbox.prop("disabled", true);
+    saveBtn.attr("disabled", true);
+    spinner.addClass("is-active");
+
+    statusEl
+      .removeClass(
+        "hidden reacg-convert-status--success reacg-convert-status--error",
+      )
+      .text(
+        (reacg.converting || "Converting...") + " 1/" + total,
+      );
+
+    const processNext = function () {
+      if (index >= total) {
+        const refetches = toConvert.map(function (att) {
+          return att.fetch();
+        });
+
+        jQuery.when.apply(jQuery, refetches).always(function () {
+          spinner.removeClass("is-active");
+          saveBtn.removeAttr("disabled");
+
+          reacg_sync_converter_select(
+            converterWrap,
+            reacg_get_bulk_shared_image_format(attachments),
+          );
+
+          if (convertedCount > 0) {
+            reacg_reload_preview();
+            const summaryTemplate =
+              reacg.bulk_converted_summary ||
+              "Converted %1$s of %2$s images to %3$s.";
+            const summaryText = summaryTemplate
+              .replace("%1$s", String(convertedCount))
+              .replace("%2$s", String(total))
+              .replace("%3$s", targetFormat.toUpperCase());
+            const sizeNote = reacg_build_conversion_size_note(
+              totalOldBytes,
+              totalNewBytes,
+              "",
+              "",
+            );
+            statusEl
+              .removeClass("hidden reacg-convert-status--error")
+              .addClass("reacg-convert-status--success")
+              .text(summaryText + sizeNote);
+          } else {
+            statusEl
+              .removeClass("hidden reacg-convert-status--success")
+              .addClass("reacg-convert-status--error")
+              .text(
+                firstError ||
+                  reacg.convert_failed ||
+                  "Failed to convert image.",
+              );
+          }
+        });
+        return;
+      }
+
+      const currentAtt = toConvert[index];
+      const attId = currentAtt.get("id");
+      statusEl.text(
+        (reacg.converting || "Converting...") +
+          " " +
+          (index + 1) +
+          "/" +
+          total,
+      );
+      index++;
+
+      jQuery
+        .ajax({
+          url: reacg.ajax_url,
+          type: "POST",
+          data: {
+            action: "reacg_convert_image",
+            [reacg.nonce]: reacg.nonce,
+            attachment_id: attId,
+            target_format: targetFormat,
+            delete_original: deleteOriginal,
+          },
+        })
+        .done(function (res) {
+          if (res && res.success && res.data) {
+            convertedCount++;
+            const data = res.data;
+            totalOldBytes += Number(data.old_filesize) || 0;
+            totalNewBytes += Number(data.filesize) || 0;
+
+            const previewSrc = data.thumbnail_url || data.url;
+            if (previewSrc) {
+              modal
+                .find('.reacg-bulk-thumb-item[data-id="' + attId + '"] img')
+                .attr("src", previewSrc);
+              if (selectedItems && selectedItems.length) {
+                selectedItems
+                  .filter('[data-id="' + attId + '"]')
+                  .find(".reacg_item_image img")
+                  .attr("src", previewSrc)
+                  .each(function () {
+                    reacg_update_item_image_fit(this);
+                  });
+              }
+            }
+          } else if (!firstError && res && res.data && res.data.message) {
+            firstError = res.data.message;
+          }
+        })
+        .fail(function (xhr) {
+          if (
+            !firstError &&
+            xhr &&
+            xhr.responseJSON &&
+            xhr.responseJSON.data &&
+            xhr.responseJSON.data.message
+          ) {
+            firstError = xhr.responseJSON.data.message;
+          }
+        })
+        .always(processNext);
+    };
+
+    processNext();
+  });
+}
+
 function reacg_attachment_edit_modal(attachment, item) {
   const sizes = attachment.get("sizes");
   const attachmentType = reacg_get_attachment_field_value(attachment, "type");
@@ -1625,11 +2337,11 @@ function reacg_attachment_edit_modal(attachment, item) {
       "</div>" +
       '<div class="reacg-attachment-modal__details">' +
       (filename
-        ? "<p><strong>" +
+        ? '<p class="reacg-attachment-modal__filename"><strong>' +
           reacg_escape_html(reacg.attachment_filename) +
-          ":</strong> " +
+          ':</strong> <span class="reacg-attachment-modal__filename-val">' +
           reacg_escape_html(filename) +
-          "</p>"
+          "</span></p>"
         : "") +
       (dimensions
         ? "<p><strong>" +
@@ -1639,11 +2351,11 @@ function reacg_attachment_edit_modal(attachment, item) {
           "px</p>"
         : "") +
       (fileSize
-        ? "<p><strong>" +
+        ? '<p class="reacg-attachment-modal__filesize"><strong>' +
           reacg_escape_html(reacg.attachment_file_size) +
-          ":</strong> " +
+          ':</strong> <span class="reacg-attachment-modal__filesize-val">' +
           reacg_escape_html(fileSize) +
-          "</p>"
+          "</span></p>"
         : "") +
       '<p class="reacg-attachment-modal__edit-link"><a href="' +
       reacg_escape_html(editLink) +
@@ -1652,6 +2364,7 @@ function reacg_attachment_edit_modal(attachment, item) {
       "</a></p>" +
       "</div>" +
       reacg_crop_position_picker() +
+      (!isVideo ? reacg_image_converter_picker() : "") +
       "</div>" +
       '<div class="reacg-modal__layout-content">' +
       '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' +
@@ -1749,6 +2462,7 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
         '"]',
     )
     .prop("checked", true);
+  reacg_bind_single_image_converter(modal, attachment, item);
   reacg_add_ai_button_to(modal.find(".reacg-modal__layout-content"));
 
   const categoriesSelect = modal.find("#reacg-attachment-categories");
@@ -2376,6 +3090,7 @@ function reacg_run_bulk_generate_in_chunks(
 
 function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
   const count = attachments.length;
+  const hasConvertibleImages = attachments.some(reacg_is_image_attachment);
   let thumbnailsHtml = "";
   attachments.forEach(function (att) {
     const sizes = att.get("sizes");
@@ -2394,7 +3109,9 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
     const title = reacg_get_attachment_field_value(att, "title") || "";
 
     thumbnailsHtml +=
-      '<div class="reacg-bulk-thumb-item" title="' +
+      '<div class="reacg-bulk-thumb-item" data-id="' +
+      reacg_escape_html(att.get("id")) +
+      '" title="' +
       reacg_escape_html(title) +
       '">';
     if (isVideo && attachmentUrl) {
@@ -2437,6 +3154,7 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
       "</strong></p>" +
       "</div>" +
       reacg_crop_position_picker() +
+      (hasConvertibleImages ? reacg_image_converter_picker() : "") +
       "</div>" +
       // RIGHT COLUMN
       '<div class="reacg-modal__layout-content">' +
@@ -3172,6 +3890,8 @@ function reacg_open_bulk_attachment_edit_modal(
     .on("change", function () {
       cropPositionChanged = true;
     });
+
+  reacg_bind_bulk_image_converter(modal, attachments, selectedItems);
 
   reacg_add_bulk_ai_buttons_to(
     modal.find(".reacg-modal__layout-content").eq(1),

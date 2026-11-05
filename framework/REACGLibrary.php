@@ -606,4 +606,76 @@ class REACGLibrary {
 
     return false;
   }
+
+  /**
+   * Return convertible image formats and whether the server's image editor supports them,
+   * including diagnostic reason and instructions when a format is unsupported.
+   *
+   * @return array
+   */
+  public static function get_convertible_formats() {
+    $supports_webp = function_exists( 'wp_image_editor_supports' ) && wp_image_editor_supports( [ 'mime_type' => 'image/webp' ] );
+    $supports_avif = function_exists( 'wp_image_editor_supports' ) && wp_image_editor_supports( [ 'mime_type' => 'image/avif' ] );
+
+    $has_imagick = extension_loaded( 'imagick' ) && class_exists( 'Imagick' );
+    $imagick_formats = [];
+    if ( $has_imagick ) {
+      try {
+        $imagick_formats = array_map( 'strtoupper', (array) Imagick::queryFormats() );
+      } catch ( Exception $e ) {
+        $imagick_formats = [];
+      }
+    }
+    $has_gd = extension_loaded( 'gd' ) && function_exists( 'gd_info' );
+
+    $webp_reason = '';
+    $webp_how_to = '';
+    if ( !$supports_webp ) {
+      if ( !$has_imagick && !$has_gd ) {
+        $webp_reason = __( 'WebP conversion is disabled because neither the PHP Imagick nor GD extension is installed on your server.', 'regallery' );
+        $webp_how_to = __( 'Enable the "imagick" or "gd" PHP extension (with WebP support) in your php.ini file or hosting control panel.', 'regallery' );
+      } elseif ( $has_imagick && !in_array( 'WEBP', $imagick_formats, true ) ) {
+        $webp_reason = __( 'WebP conversion is disabled because your server’s ImageMagick and GD libraries were compiled without WebP support.', 'regallery' );
+        $webp_how_to = __( 'Ask your hosting provider or server administrator to enable libwebp support in ImageMagick or PHP GD.', 'regallery' );
+      } else {
+        $webp_reason = __( 'WebP conversion is disabled because your PHP GD extension was compiled without WebP support and the Imagick extension is not enabled.', 'regallery' );
+        $webp_how_to = __( 'Enable the PHP "imagick" extension, or enable WebP support (--with-webp) for the "gd" extension in your php.ini / hosting control panel.', 'regallery' );
+      }
+    }
+
+    $avif_reason = '';
+    $avif_how_to = '';
+    if ( !$supports_avif ) {
+      if ( !$has_imagick && !$has_gd ) {
+        $avif_reason = __( 'AVIF conversion is disabled because neither the PHP Imagick nor GD extension is installed on your server.', 'regallery' );
+        $avif_how_to = __( 'Enable the "imagick" or "gd" PHP extension (with AVIF support) in your php.ini file or hosting control panel.', 'regallery' );
+      } elseif ( version_compare( PHP_VERSION, '8.1.0', '<' ) && !$has_imagick ) {
+        $avif_reason = __( 'AVIF conversion is disabled because PHP GD requires PHP 8.1+ for AVIF support and the Imagick extension is not enabled.', 'regallery' );
+        $avif_how_to = __( 'Upgrade to PHP 8.1+ with GD AVIF support, or enable the PHP "imagick" extension compiled with libavif/libheif.', 'regallery' );
+      } elseif ( $has_imagick && !in_array( 'AVIF', $imagick_formats, true ) ) {
+        $avif_reason = __( 'AVIF conversion is disabled because your server’s ImageMagick and GD libraries were compiled without AVIF support.', 'regallery' );
+        $avif_how_to = __( 'Ask your hosting provider or server administrator to enable libavif/libheif in ImageMagick or AVIF support (--with-avif) in PHP GD.', 'regallery' );
+      } else {
+        $avif_reason = __( 'AVIF conversion is disabled because your PHP GD extension was compiled without AVIF support and the Imagick extension is not enabled.', 'regallery' );
+        $avif_how_to = __( 'Enable the PHP "imagick" extension (with libavif), or enable AVIF support (--with-avif) for PHP "gd" in your php.ini / hosting control panel.', 'regallery' );
+      }
+    }
+
+    return [
+      'webp' => [
+        'label'         => 'WebP',
+        'mime'          => 'image/webp',
+        'supported'     => (bool) $supports_webp,
+        'reason'        => $webp_reason,
+        'how_to_enable' => $webp_how_to,
+      ],
+      'avif' => [
+        'label'         => 'AVIF',
+        'mime'          => 'image/avif',
+        'supported'     => (bool) $supports_avif,
+        'reason'        => $avif_reason,
+        'how_to_enable' => $avif_how_to,
+      ],
+    ];
+  }
 }
