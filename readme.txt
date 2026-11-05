@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.21
+Stable tag: 1.20.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,10 +214,15 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.21: Added category filtering and sorting. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.22: Fixed item titles and captions display issue. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
+= 1.20.22 =
+= Updated: 05.11.2026 =
+* **Improved:** Gutenberg block and Block Directory metadata registration.
+* **Fixed:** Gallery item titles and captions not displaying due to image stacking context conflict.
+
 = 1.20.21 =
 = Updated: 05.11.2026 =
 * **Added:** Category filtering and sorting with customizable display styles.
