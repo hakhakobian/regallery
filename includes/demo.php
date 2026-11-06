@@ -58,7 +58,7 @@ class REACG_Demo {
           'hoverEffect' => 'zoom-in', #string zoom-out | zoom-in | slide | rotate | blur | scale | sepia | overlay | overlay-icon-zoom | overlay-icon-cart | overlay-icon-plus | overlay-icon-fullscreen | flash | shine | circle | none
           'showTitle' => TRUE, #boolean
           'titleVisibility' => 'onHover', #string alwaysShown | onHover
-          'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
+          'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif | category
           'titlePosition' => 'center', #string bottom | top | center | above | below
           'titleAlignment' => 'center', #string left | center | right
           'titleColor' => '#3b3b3b', #string
@@ -72,7 +72,7 @@ class REACG_Demo {
           'showCaption' => TRUE, #boolean
           'captionVisibility' => 'onHover', #string alwaysShown | onHover
           'captionPosition' => 'center', #string bottom | top | center
-          'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
+          'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif | category
           'captionFontSize' => 13, #number
           'captionFontColor' => 'grey', #string
         ],
@@ -133,15 +133,15 @@ class REACG_Demo {
           'textBackground' => '', #string
           'invertTextColor' => FALSE, #boolean
           'showTitle' => TRUE, #bool
-          'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif
+          'titleSource' => 'title', #string title | caption | alt | price | description | author | date_created | exif | category
           'titleFontSize' => 1.6, #float
           'titleAlignment' => 'left', #string
           'showDescription' => TRUE, #bool
-          'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif
+          'descriptionSource' => 'description', #string title | caption | alt | price | description | author | date_created | exif | category
           'descriptionFontSize' => 1.3, #float
           'descriptionMaxRowsCount' => 1, #number
           'showCaption' => FALSE, #boolean
-          'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif
+          'captionSource' => 'caption', #string title | caption | alt | price | description | author | date_created | exif | category
           'captionFontSize' => 1.5, #float
           'captionFontColor' => '#CCCCCC', #string
         ],

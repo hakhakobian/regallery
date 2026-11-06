@@ -998,7 +998,8 @@ class REACG_Gallery {
             (!empty($item['title']) ? $item['title'] : '') . ' ' .
             (!empty($item['description']) ? $item['description'] : '') . ' ' .
             (!empty($item['alt']) ? $item['alt'] : '') . ' ' .
-            (!empty($item['caption']) ? $item['caption'] : '')
+            (!empty($item['caption']) ? $item['caption'] : '') . ' ' .
+            (!empty($item['category']) ? $item['category'] : '')
           );
 
           // ANY keyword can match.
@@ -2489,6 +2490,7 @@ class REACG_Gallery {
       $data['alt'] = html_entity_decode($this->get_the_alt($post_thumbnail_id));
       $data['crop_position'] = $this->get_crop_position($post_thumbnail_id);
       $data['categories'] = $this->get_item_categories($id, $matches[1]);
+      $data['category'] = !empty($data['categories']) ? implode(', ', array_column($data['categories'], 'name')) : '';
 
       return $data;
     }
@@ -2543,6 +2545,7 @@ class REACG_Gallery {
     }
 
     $data['categories'] = $this->get_item_categories($id, $data['type']);
+    $data['category'] = !empty($data['categories']) ? implode(', ', array_column($data['categories'], 'name')) : '';
 
     return $data;
   }
