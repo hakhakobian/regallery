@@ -884,7 +884,13 @@ to avoid a bug connected with preview.
 
     .reacg-modal-buttons-wrapper {
       display: flex;
-      justify-content: end;
+      align-items: center;
+      justify-content: flex-end;
+
+      .spinner {
+        float: none;
+        margin: 0 10px 0 0;
+      }
 
       .reacg-modal-button-generate {
         margin-right: 10px;
@@ -1504,10 +1510,13 @@ to avoid a bug connected with preview.
   }
 
   .reacg-bulk-progress-text {
+    margin: 0 10px 0 auto;
     font-size: 13px;
     color: #50575e;
-    margin-right: 12px;
-    vertical-align: middle;
+    line-height: 1.4;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
   }
 
   .reacg-bulk-field-header {
@@ -1918,11 +1927,13 @@ main label[for="gallery-custom-css-hide"] svg {
   }
 
   .reacg-ai-generate-modal__progress {
-    margin: 0 12px 0 auto;
+    margin: 0 10px 0 auto;
     font-size: 13px;
     color: #50575e;
+    line-height: 1.4;
     white-space: nowrap;
-    align-content: center;
+    display: inline-flex;
+    align-items: center;
   }
 
   .reacg-ai-generate-modal__notice--success {

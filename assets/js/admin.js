@@ -2724,6 +2724,28 @@ function reacg_update_bulk_toolbar(container) {
   }
 }
 
+function reacg_clear_bulk_selection(containerOrItems) {
+  const root =
+    containerOrItems && containerOrItems.length
+      ? containerOrItems.closest(
+          "#gallery-images, #reacg-gallery-images, .inside, body",
+        )
+      : jQuery("#gallery-images, #reacg-gallery-images, .inside, body").first();
+
+  const items = root.find(
+    ".reacg_items .reacg_item:not(.reacg_item_new):not(.reacg-template)",
+  );
+
+  items.each(function () {
+    const item = jQuery(this);
+    item.find(".reacg-item-checkbox").prop("checked", false);
+    item.removeClass("reacg-item--selected");
+  });
+
+  reacg_update_bulk_toolbar(root);
+}
+window.reacg_clear_bulk_selection = reacg_clear_bulk_selection;
+
 function reacg_run_bulk_generate_in_chunks(
   imagesData,
   state,
@@ -3136,9 +3158,7 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
       '<div class="reacg-modal__header">' +
       "<h1>" +
       reacg_escape_html(reacg.bulk_edit || "Bulk Edit") +
-      " (" +
-      count +
-      ")</h1>" +
+      "</h1>" +
       '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
       "</div>" +
       '<div class="reacg-modal__body">' +
@@ -3686,6 +3706,7 @@ function reacg_save_bulk_attachment_changes(
       spinner.removeClass("is-active");
       saveBtn.removeAttr("disabled");
       progressText.addClass("hidden");
+      reacg_clear_bulk_selection(selectedItems);
       modal.remove();
       return;
     }
@@ -3710,6 +3731,7 @@ function reacg_save_bulk_attachment_changes(
                 .attr("title", updatedTitle);
             });
           }
+          reacg_clear_bulk_selection(selectedItems);
           reacg_reload_preview();
           modal.remove();
         });

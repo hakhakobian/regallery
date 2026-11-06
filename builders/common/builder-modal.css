@@ -997,11 +997,13 @@ li.MuiMenuItem-root:focus-visible {
   }
 
   .reacg-ai-generate-modal__progress {
-    margin: 0 12px 0 auto;
+    margin: 0 10px 0 auto;
     font-size: 13px;
     color: #50575e;
+    line-height: 1.4;
     white-space: nowrap;
-    align-content: center;
+    display: inline-flex;
+    align-items: center;
   }
 
   .reacg-ai-generate-modal__notice--success {
