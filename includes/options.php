@@ -616,6 +616,7 @@ class REACG_Options {
       'filterBorderRadius' => 4, #number
       'filterFontSize' => 14, #number
       'showFrontendSorting' => FALSE, #boolean
+      'noDataText' => '', #string
     ],
     'lightbox' => [
       'isFullscreen' => TRUE, #boolean
