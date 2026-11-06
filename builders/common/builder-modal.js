@@ -568,6 +568,11 @@
           if (typeof window.reacg_update_bulk_toolbar === "function") {
             window.reacg_update_bulk_toolbar($container);
           }
+          const imagesCount = $container.find(".reacg_item:not(.reacg_item_new):not(.reacg-template)").length;
+          const api = window.reacg_global && window.reacg_global.settings_api && window.reacg_global.settings_api[String(galleryId)];
+          if (api && typeof api.setImagesCount === "function") {
+            api.setImagesCount(imagesCount);
+          }
           self._lastLoadedImagesGalleryId = galleryId;
         })
         .catch(function (err) {
