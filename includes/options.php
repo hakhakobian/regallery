@@ -631,6 +631,7 @@ class REACG_Options {
       'autoplay' => FALSE, #boolean
       'slideDuration' => 5000, #number
       'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
+      'openingAnimation' => 'zoom-in', #string none | fade-in | zoom-in | zoom-out | slide-up | slide-down | slide-left | slide-right | flip
       'isSlideshowAllowed' => TRUE, #boolean
       'canFullscreen' => TRUE, #boolean
       'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
@@ -877,6 +878,10 @@ class REACG_Options {
       'imageAnimation' => [
         'allowed' => [ 'fade', 'blur', 'slideH', 'slideV', 'zoom', 'flip', 'rotate' ],
         'default' => 'slideH',
+      ],
+      'openingAnimation' => [
+        'allowed' => [ 'none', 'fade-in', 'zoom-in', 'zoom-out', 'slide-up', 'slide-down', 'slide-left', 'slide-right', 'flip' ],
+        'default' => 'fade-in',
       ],
       'hoverEffect' => [
         'allowed' => ['zoom-out', 'zoom-in', 'slide', 'rotate', 'blur', 'scale', 'sepia', 'overlay', 'soft-light', 'overlay-icon-zoom', 'overlay-icon-cart', 'overlay-icon-plus', 'overlay-icon-fullscreen', 'flash', 'shine', 'circle', 'push', 'none'],

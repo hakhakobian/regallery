@@ -115,6 +115,7 @@ class REACG_Demo {
           'autoplay' => FALSE, #boolean
           'slideDuration' => 5000, #number
           'imageAnimation' => 'slideH', #string fade | blur | slideH | slideV | zoom | flip | rotate
+          'openingAnimation' => 'zoom-in', #string none | fade-in | zoom-in | zoom-out | slide-up | slide-down | slide-left | slide-right | flip
           'isSlideshowAllowed' => TRUE, #boolean
           'canFullscreen' => TRUE, #boolean
           'thumbnailsPosition' => 'none', #string top | bottom | start | end | none
