@@ -1178,6 +1178,38 @@ function reacg_save_images(galleryItemsContainer) {
 }
 
 /**
+ * Init select2 with the ReGallery dropdown class.
+ *
+ * The `dropdownCssClass` option needs the full select2 build
+ * (select2/compat/dropdownCss). Page builders such as Beaver Builder load a
+ * standard build that throws on it, so the class is added to the dropdown
+ * element directly. Errors never propagate, so the caller can still bind its
+ * modal handlers.
+ *
+ * @param {jQuery} $ jQuery instance that owns select2.
+ * @param {jQuery|Element} select
+ * @param {Object} options
+ */
+function reacg_init_select2($, select, options) {
+  try {
+    const $select = $(select);
+    $select.select2(options);
+    $select.on("select2:open", function () {
+      const instance = $select.data("select2");
+      const $dropdown =
+        instance && instance.dropdown && instance.dropdown.$dropdown
+          ? instance.dropdown.$dropdown
+          : $select.closest(".reacg-modal").find(".select2-dropdown");
+      if ($dropdown && $dropdown.length) {
+        $dropdown.addClass("reacg-select2-dropdown");
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+/**
  * Documents that may contain the gallery preview (admin page and Gutenberg canvas iframe).
  *
  * @returns {Document[]}
@@ -2479,13 +2511,12 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
   });
 
   if ($.fn.select2) {
-    $(categoriesSelect).select2({
+    reacg_init_select2($, categoriesSelect, {
       tags: true,
       placeholder:
         reacg.attachment_categories_placeholder ||
         "Search or add categories...",
       dropdownParent: modal,
-      dropdownCssClass: "reacg-select2-dropdown",
     });
   }
 
@@ -3992,11 +4023,10 @@ function reacg_open_bulk_attachment_edit_modal(
     }
 
     if ($.fn.select2) {
-      $(categoriesSelect).select2({
+      reacg_init_select2($, categoriesSelect, {
         tags: mode !== "remove",
         placeholder: placeholder,
         dropdownParent: modal,
-        dropdownCssClass: "reacg-select2-dropdown",
       });
     }
     isRenderingCatSelect = false;
