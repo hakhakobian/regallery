@@ -138,14 +138,22 @@ jQuery(document).ready(function () {
     } else {
       item.removeClass("reacg-item--selected");
     }
-    reacg_update_bulk_toolbar(item.closest(".reacg_items, #gallery-images, #reacg-gallery-images, .inside"));
+    reacg_update_bulk_toolbar(
+      item.closest(
+        ".reacg_items, #gallery-images, #reacg-gallery-images, .inside",
+      ),
+    );
   });
 
   /* Select all checkbox event */
   jQuery(document).on("change", ".reacg-select-all-checkbox", function () {
     const isChecked = this.checked;
-    const container = jQuery(this).closest("#gallery-images, #reacg-gallery-images, .inside, body");
-    const items = container.find(".reacg_items .reacg_item:not(.reacg_item_new):not(.reacg-template)");
+    const container = jQuery(this).closest(
+      "#gallery-images, #reacg-gallery-images, .inside, body",
+    );
+    const items = container.find(
+      ".reacg_items .reacg_item:not(.reacg_item_new):not(.reacg-template)",
+    );
     items.each(function () {
       const item = jQuery(this);
       if (reacg_is_bulk_selectable_item(item)) {
@@ -166,9 +174,13 @@ jQuery(document).ready(function () {
     const btn = jQuery(this);
     if (btn.attr("disabled")) return;
 
-    const root = btn.closest("#gallery-images, #reacg-gallery-images, .inside, body");
+    const root = btn.closest(
+      "#gallery-images, #reacg-gallery-images, .inside, body",
+    );
     const selectedItems = root
-      .find(".reacg_items .reacg_item.reacg-item--selected:not(.reacg_item_new):not(.reacg-template)")
+      .find(
+        ".reacg_items .reacg_item.reacg-item--selected:not(.reacg_item_new):not(.reacg-template)",
+      )
       .filter(function () {
         return reacg_is_bulk_selectable_item(this);
       });
@@ -200,7 +212,12 @@ jQuery(document).ready(function () {
 
     jQuery.when.apply(jQuery, fetchPromises).always(function () {
       btn.removeAttr("disabled");
-      reacg_open_bulk_attachment_edit_modal(btn, attachments, selectedItems, root.find(".reacg_items"));
+      reacg_open_bulk_attachment_edit_modal(
+        btn,
+        attachments,
+        selectedItems,
+        root.find(".reacg_items"),
+      );
     });
   });
 
@@ -1430,6 +1447,12 @@ function reacg_refresh_gallery_images(galleryId, imagesIds) {
 
           if (html) {
             const inside = metaboxItems.closest(".inside");
+            const hasNewToolbar =
+              jQuery("<div>" + html + "</div>").find(".reacg-media-toolbar")
+                .length > 0;
+            if (hasNewToolbar) {
+              metaboxItems.siblings(".reacg-media-toolbar").remove();
+            }
             metaboxItems.replaceWith(html);
             const scope = inside.length ? inside[0] : document;
             reacg_make_items_sortable(scope);
@@ -1438,6 +1461,7 @@ function reacg_refresh_gallery_images(galleryId, imagesIds) {
               .each(function () {
                 reacg_update_item_image_fit(this);
               });
+            reacg_update_bulk_toolbar(scope);
           }
         })
         .catch(function (error) {
@@ -1643,10 +1667,214 @@ function reacg_is_image_attachment(attachment) {
   return attachmentType === "image" || mimeType.indexOf("image/") === 0;
 }
 
-function reacg_get_attachment_format(attachment) {
+function reacg_is_video_attachment(attachment) {
+  if (!attachment || typeof attachment.get !== "function") {
+    return false;
+  }
+  const attachmentType = String(
+    reacg_get_attachment_field_value(attachment, "type") || "",
+  ).toLowerCase();
+  const mimeType = String(
+    reacg_get_attachment_field_value(attachment, "mime") || "",
+  ).toLowerCase();
+  if (attachmentType === "video" || mimeType.indexOf("video/") === 0) {
+    return true;
+  }
+  const url = String(reacg_get_attachment_field_value(attachment, "url") || "");
+  return /\.(mp4|m4v|webm|ogv|mov|mkv)(\?.*)?$/i.test(url);
+}
+
+function reacg_resolve_attachment_ai_image_url(att, selectedItems) {
+  const isVideo = reacg_is_video_attachment(att);
+  const sizes = att && typeof att.get === "function" ? att.get("sizes") : null;
+  const attachmentUrl = reacg_get_attachment_field_value(att, "url") || "";
+
+  if (!isVideo) {
+    const previewSize =
+      sizes && sizes.thumbnail
+        ? sizes.thumbnail
+        : sizes && sizes.full
+          ? sizes.full
+          : null;
+    const previewUrl =
+      previewSize && previewSize.url ? previewSize.url : attachmentUrl;
+    return Promise.resolve(previewUrl);
+  }
+
+  const attId =
+    att && typeof att.get === "function" ? String(att.get("id")) : "";
+
+  // 1. Try video_cover_url if exposed on attachment model.
+  const coverUrl =
+    att && typeof att.get === "function" ? att.get("video_cover_url") : null;
+  if (
+    coverUrl &&
+    typeof coverUrl === "string" &&
+    coverUrl.length &&
+    coverUrl !== reacg.no_image
+  ) {
+    return Promise.resolve(coverUrl);
+  }
+
+  // 2. Try gallery item element from selectedItems or the DOM.
+  let item =
+    selectedItems && selectedItems.length
+      ? selectedItems.filter('[data-id="' + attId + '"]')
+      : jQuery();
+  if (!item.length && attId) {
+    item = jQuery('.reacg_items .reacg_item[data-id="' + attId + '"]');
+  }
+  if (item.length) {
+    const domImgSrc = item.find(".reacg_item_image img").attr("src");
+    if (
+      domImgSrc &&
+      domImgSrc.length &&
+      domImgSrc !== reacg.no_image &&
+      domImgSrc.indexOf("video.png") === -1 &&
+      domImgSrc.indexOf("video.svg") === -1
+    ) {
+      return Promise.resolve(domImgSrc);
+    }
+  }
+
+  // 3. Try sizes or thumb/image object on wp.media attachment.
+  if (sizes && sizes.thumbnail && sizes.thumbnail.url) {
+    return Promise.resolve(sizes.thumbnail.url);
+  }
+  if (sizes && sizes.full && sizes.full.url) {
+    return Promise.resolve(sizes.full.url);
+  }
+  const thumbObj =
+    att && typeof att.get === "function"
+      ? att.get("thumb") || att.get("image")
+      : null;
+  if (
+    thumbObj &&
+    thumbObj.src &&
+    thumbObj.src !== reacg.no_image &&
+    thumbObj.src.indexOf("video.png") === -1 &&
+    thumbObj.src.indexOf("video.svg") === -1
+  ) {
+    return Promise.resolve(thumbObj.src);
+  }
+
+  // 4. If video has no cover yet, capture frame and upload cover.
+  if (
+    attachmentUrl &&
+    typeof reacg_capture_video_frame === "function" &&
+    typeof reacg_upload_video_cover === "function"
+  ) {
+    return reacg_capture_video_frame(attachmentUrl)
+      .then(function (blob) {
+        return reacg_upload_video_cover(
+          att.get("id"),
+          blob,
+          att.get("filename") || att.get("title") || "video-" + att.get("id"),
+        );
+      })
+      .then(function (uploadRes) {
+        if (
+          uploadRes &&
+          uploadRes.success &&
+          uploadRes.data &&
+          uploadRes.data.thumbnail_url
+        ) {
+          const generatedThumbUrl = uploadRes.data.thumbnail_url;
+          if (item.length) {
+            item
+              .find(".reacg_item_image img")
+              .attr("src", generatedThumbUrl)
+              .each(function () {
+                reacg_update_item_image_fit(this);
+              });
+          }
+          if (typeof att.set === "function") {
+            att.set("video_cover_url", generatedThumbUrl);
+          }
+          return generatedThumbUrl;
+        }
+        return attachmentUrl;
+      })
+      .catch(function () {
+        return attachmentUrl;
+      });
+  }
+
+  return Promise.resolve(attachmentUrl);
+}
+
+function reacg_is_convertible_attachment(attachment) {
+  if (!attachment || typeof attachment.get !== "function") {
+    return false;
+  }
+  return (
+    reacg_is_image_attachment(attachment) ||
+    reacg_is_video_attachment(attachment)
+  );
+}
+
+function reacg_get_attachment_format(attachment, item) {
   if (!attachment || typeof attachment.get !== "function") {
     return "";
   }
+  if (reacg_is_video_attachment(attachment)) {
+    const coverFormat = attachment.get("video_cover_format");
+    if (coverFormat && typeof coverFormat === "string") {
+      return coverFormat.toLowerCase() === "jpeg"
+        ? "jpg"
+        : coverFormat.toLowerCase();
+    }
+    const coverMime = attachment.get("video_cover_mime");
+    if (
+      coverMime &&
+      typeof coverMime === "string" &&
+      coverMime.indexOf("image/") === 0
+    ) {
+      const sub = coverMime.slice(6).toLowerCase();
+      return sub === "jpeg" ? "jpg" : sub;
+    }
+    const coverUrl = attachment.get("video_cover_url");
+    if (coverUrl && typeof coverUrl === "string") {
+      const match = coverUrl.split("?")[0].match(/\.([a-z0-9]+)$/i);
+      if (match && match[1]) {
+        const ext = match[1].toLowerCase();
+        return ext === "jpeg" ? "jpg" : ext;
+      }
+    }
+    const attId = String(attachment.get("id"));
+    const domImg =
+      (item && item.length
+        ? item.find(".reacg_item_image img").attr("src")
+        : "") ||
+      jQuery(
+        '.reacg_items .reacg_item[data-id="' +
+          attId +
+          '"] .reacg_item_image img',
+      ).attr("src");
+    if (domImg && typeof domImg === "string" && domImg !== reacg.no_image) {
+      const match = domImg.split("?")[0].match(/\.([a-z0-9]+)$/i);
+      if (match && match[1]) {
+        const ext = match[1].toLowerCase();
+        return ext === "jpeg" ? "jpg" : ext;
+      }
+    }
+    const thumbObj = attachment.get("thumb") || attachment.get("image");
+    if (
+      thumbObj &&
+      thumbObj.src &&
+      thumbObj.src.indexOf("video.png") === -1 &&
+      thumbObj.src.indexOf("video.svg") === -1 &&
+      thumbObj.src !== reacg.no_image
+    ) {
+      const match = thumbObj.src.split("?")[0].match(/\.([a-z0-9]+)$/i);
+      if (match && match[1]) {
+        const ext = match[1].toLowerCase();
+        return ext === "jpeg" ? "jpg" : ext;
+      }
+    }
+    return "";
+  }
+
   const mimeType = String(
     reacg_get_attachment_field_value(attachment, "mime") || "",
   ).toLowerCase();
@@ -1677,8 +1905,7 @@ function reacg_get_convertible_formats() {
 
   return {
     webp: {
-      label:
-        (configured && configured.webp && configured.webp.label) || "WebP",
+      label: (configured && configured.webp && configured.webp.label) || "WebP",
       mime:
         (configured && configured.webp && configured.webp.mime) || "image/webp",
       supported:
@@ -1695,8 +1922,7 @@ function reacg_get_convertible_formats() {
         'Enable the PHP "imagick" extension or compile the "gd" extension with WebP support in your php.ini / hosting control panel.',
     },
     avif: {
-      label:
-        (configured && configured.avif && configured.avif.label) || "AVIF",
+      label: (configured && configured.avif && configured.avif.label) || "AVIF",
       mime:
         (configured && configured.avif && configured.avif.mime) || "image/avif",
       supported:
@@ -1719,7 +1945,7 @@ function reacg_image_converter_picker() {
   const label = reacg.convert_format_label || "Convert format";
   const description =
     reacg.convert_format_description ||
-    "Convert image and its generated sizes to a modern, lighter format.";
+    "Convert image, video cover and their generated sizes to a modern, lighter format.";
   const buttonText = reacg.convert_button || "Convert";
   const deleteOriginalText =
     reacg.delete_original_files || "Delete old format files";
@@ -1817,9 +2043,7 @@ function reacg_update_converter_disabled_notice(converterWrap, currentFormat) {
       const howToParagraph = jQuery(
         '<p class="reacg-convert-disabled-reason__howto"></p>',
       );
-      howToParagraph.append(
-        jQuery("<strong></strong>").text(howToLabel + " "),
-      );
+      howToParagraph.append(jQuery("<strong></strong>").text(howToLabel + " "));
       howToParagraph.append(document.createTextNode(info.how_to_enable));
       reasonEl.append(howToParagraph);
     }
@@ -1828,8 +2052,12 @@ function reacg_update_converter_disabled_notice(converterWrap, currentFormat) {
       .addClass("reacg-convert-disabled-reason--warning")
       .removeClass("hidden");
   } else if (info && isCurrent) {
+    const isVideo = Boolean(converterWrap.data("isVideo"));
     const alreadyMsg = (
-      reacg.already_in_format || "Already in %s format."
+      isVideo
+        ? reacg.video_cover_already_in_format ||
+          "Video cover is already in %s format."
+        : reacg.already_in_format || "Already in %s format."
     ).replace("%s", info.label || selectedKey.toUpperCase());
     reasonEl
       .append(
@@ -1844,11 +2072,14 @@ function reacg_update_converter_disabled_notice(converterWrap, currentFormat) {
   }
 }
 
-function reacg_sync_converter_select(converterWrap, currentFormat) {
+function reacg_sync_converter_select(converterWrap, currentFormat, isVideo) {
   if (!converterWrap || !converterWrap.length) {
     return;
   }
   converterWrap.data("currentFormat", currentFormat || "");
+  if (typeof isVideo !== "undefined") {
+    converterWrap.data("isVideo", Boolean(isVideo));
+  }
 
   const select = converterWrap.find(".reacg-convert-format-select");
   const formats = reacg_get_convertible_formats();
@@ -1905,7 +2136,12 @@ function reacg_format_bytes(bytes) {
   return (num / (1024 * 1024)).toFixed(2) + " MB";
 }
 
-function reacg_build_conversion_size_note(oldBytes, newBytes, oldHuman, newHuman) {
+function reacg_build_conversion_size_note(
+  oldBytes,
+  newBytes,
+  oldHuman,
+  newHuman,
+) {
   const oldSize = Number(oldBytes) || 0;
   const newSize = Number(newBytes) || 0;
   if (oldSize <= 0 || newSize <= 0) {
@@ -1915,7 +2151,11 @@ function reacg_build_conversion_size_note(oldBytes, newBytes, oldHuman, newHuman
   const toLabel = newHuman || reacg_format_bytes(newSize);
   const diffPct = Math.round(((newSize - oldSize) / oldSize) * 100);
   const pctStr =
-    diffPct < 0 ? ", " + diffPct + "%" : diffPct > 0 ? ", +" + diffPct + "%" : "";
+    diffPct < 0
+      ? ", " + diffPct + "%"
+      : diffPct > 0
+        ? ", +" + diffPct + "%"
+        : "";
   return " (" + fromLabel + " → " + toLabel + pctStr + ")";
 }
 
@@ -1935,7 +2175,8 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
 
   reacg_sync_converter_select(
     converterWrap,
-    reacg_get_attachment_format(attachment),
+    reacg_get_attachment_format(attachment, item),
+    reacg_is_video_attachment(attachment),
   );
 
   select.on("change", function () {
@@ -1973,9 +2214,7 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
 
     statusEl
       .addClass("hidden")
-      .removeClass(
-        "reacg-convert-status--success reacg-convert-status--error",
-      )
+      .removeClass("reacg-convert-status--success reacg-convert-status--error")
       .empty();
     convertBtn.prop("disabled", true);
     select.prop("disabled", true);
@@ -2006,27 +2245,35 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
             .text(errMsg);
           reacg_sync_converter_select(
             converterWrap,
-            reacg_get_attachment_format(attachment),
+            reacg_get_attachment_format(attachment, item),
+            isVideo,
           );
           return;
         }
 
+        const isVideo = reacg_is_video_attachment(attachment);
         const data = res.data;
-        if (data.filename) {
+        if (data.filename && !isVideo) {
           modal
             .find(".reacg-attachment-modal__filename-val")
             .text(data.filename);
         }
-        if (data.filesizeHumanReadable) {
+        if (data.filesizeHumanReadable && !isVideo) {
           modal
             .find(".reacg-attachment-modal__filesize-val")
             .text(data.filesizeHumanReadable);
         }
         const previewSrc = data.thumbnail_url || data.url;
         if (previewSrc) {
-          modal
-            .find(".reacg-attachment-modal__preview img")
-            .attr("src", previewSrc);
+          if (!isVideo) {
+            modal
+              .find(".reacg-attachment-modal__preview img")
+              .attr("src", previewSrc);
+          } else {
+            modal
+              .find(".reacg-attachment-modal__preview video")
+              .attr("poster", previewSrc);
+          }
           if (item && item.length) {
             item
               .find(".reacg_item_image img")
@@ -2036,16 +2283,19 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
               });
           }
         }
-        if (data.url) {
+        if (previewSrc) {
+          modal.find("#reacg-attachment-url").val(previewSrc);
+        } else if (data.url && !isVideo) {
           modal.find("#reacg-attachment-url").val(data.url);
         }
 
         const baseMsg =
           data.message ||
-          (reacg.converted_successfully || "Converted to %s.").replace(
-            "%s",
-            String(data.format || targetFormat).toUpperCase(),
-          );
+          (isVideo
+            ? reacg.video_cover_converted_successfully ||
+              "Video cover converted to %s."
+            : reacg.converted_successfully || "Converted to %s."
+          ).replace("%s", String(data.format || targetFormat).toUpperCase());
         const sizeNote = data.skipped
           ? ""
           : reacg_build_conversion_size_note(
@@ -2061,7 +2311,15 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
           .text(baseMsg + sizeNote);
 
         attachment.fetch().always(function () {
-          reacg_sync_converter_select(converterWrap, targetFormat);
+          if (isVideo && previewSrc) {
+            attachment.set("video_cover_url", previewSrc);
+            attachment.set("video_cover_format", targetFormat);
+            attachment.set(
+              "video_cover_mime",
+              targetFormat === "webp" ? "image/webp" : "image/avif",
+            );
+          }
+          reacg_sync_converter_select(converterWrap, targetFormat, isVideo);
           reacg_reload_preview();
         });
       })
@@ -2079,7 +2337,8 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
           .text(errMsg);
         reacg_sync_converter_select(
           converterWrap,
-          reacg_get_attachment_format(attachment),
+          reacg_get_attachment_format(attachment, item),
+          reacg_is_video_attachment(attachment),
         );
       })
       .always(function () {
@@ -2089,14 +2348,21 @@ function reacg_bind_single_image_converter(modal, attachment, item) {
 }
 
 function reacg_get_bulk_shared_image_format(attachments) {
-  const imageAtts = (attachments || []).filter(reacg_is_image_attachment);
-  if (!imageAtts.length) {
+  const convertibleAtts = (attachments || []).filter(
+    reacg_is_convertible_attachment,
+  );
+  if (!convertibleAtts.length) {
     return "";
   }
-  const formats = imageAtts.map(reacg_get_attachment_format);
+  const formats = convertibleAtts
+    .map(function (att) {
+      return reacg_get_attachment_format(att);
+    })
+    .filter(Boolean);
   const first = formats[0];
   if (
     first &&
+    formats.length === convertibleAtts.length &&
     formats.every(function (fmt) {
       return fmt === first;
     })
@@ -2157,23 +2423,38 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
       return;
     }
 
-    const imageAttachments = (attachments || []).filter(
-      reacg_is_image_attachment,
+    const activeSingleId = modal.data("activeSingleId");
+    const targetAttachments = activeSingleId
+      ? attachments.filter(function (att) {
+          return String(att.get("id")) === String(activeSingleId);
+        })
+      : attachments;
+
+    const convertibleAttachments = (targetAttachments || []).filter(
+      reacg_is_convertible_attachment,
     );
-    const toConvert = imageAttachments.filter(function (att) {
+    const toConvert = convertibleAttachments.filter(function (att) {
       return reacg_get_attachment_format(att) !== targetFormat;
     });
 
     if (!toConvert.length) {
+      const isSingleVideo = Boolean(
+        activeSingleId &&
+        targetAttachments.length &&
+        reacg_is_video_attachment(targetAttachments[0]),
+      );
       const alreadyMsg = (
-        reacg.bulk_all_already_in_format ||
-        "All selected images are already in %s format."
+        isSingleVideo
+          ? reacg.video_cover_already_in_format ||
+            "Video cover is already in %s format."
+          : reacg.bulk_all_already_in_format ||
+            "All selected images are already in %s format."
       ).replace("%s", targetFormat.toUpperCase());
       statusEl
         .removeClass("hidden reacg-convert-status--error")
         .addClass("reacg-convert-status--success")
         .text(alreadyMsg);
-      reacg_sync_converter_select(converterWrap, targetFormat);
+      reacg_sync_converter_select(converterWrap, targetFormat, isSingleVideo);
       return;
     }
 
@@ -2195,9 +2476,7 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
       .removeClass(
         "hidden reacg-convert-status--success reacg-convert-status--error",
       )
-      .text(
-        (reacg.converting || "Converting...") + " 1/" + total,
-      );
+      .text((reacg.converting || "Converting...") + " 1/" + total);
 
     const processNext = function () {
       if (index >= total) {
@@ -2209,20 +2488,41 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
           spinner.removeClass("is-active");
           saveBtn.removeAttr("disabled");
 
+          const isSingleVideo = Boolean(
+            activeSingleId &&
+            targetAttachments.length &&
+            reacg_is_video_attachment(targetAttachments[0]),
+          );
+
           reacg_sync_converter_select(
             converterWrap,
-            reacg_get_bulk_shared_image_format(attachments),
+            activeSingleId && targetAttachments.length
+              ? reacg_get_attachment_format(targetAttachments[0])
+              : reacg_get_bulk_shared_image_format(attachments),
+            isSingleVideo,
           );
 
           if (convertedCount > 0) {
             reacg_reload_preview();
-            const summaryTemplate =
-              reacg.bulk_converted_summary ||
-              "Converted %1$s of %2$s images to %3$s.";
-            const summaryText = summaryTemplate
-              .replace("%1$s", String(convertedCount))
-              .replace("%2$s", String(total))
-              .replace("%3$s", targetFormat.toUpperCase());
+            let summaryText = "";
+            if (isSingleVideo) {
+              summaryText = (
+                reacg.video_cover_converted_successfully ||
+                "Video cover converted to %s."
+              ).replace("%s", targetFormat.toUpperCase());
+            } else if (activeSingleId && targetAttachments.length) {
+              summaryText = (
+                reacg.converted_successfully || "Converted to %s."
+              ).replace("%s", targetFormat.toUpperCase());
+            } else {
+              const summaryTemplate =
+                reacg.bulk_converted_summary ||
+                "Converted %1$s of %2$s images to %3$s.";
+              summaryText = summaryTemplate
+                .replace("%1$s", String(convertedCount))
+                .replace("%2$s", String(total))
+                .replace("%3$s", targetFormat.toUpperCase());
+            }
             const sizeNote = reacg_build_conversion_size_note(
               totalOldBytes,
               totalNewBytes,
@@ -2250,11 +2550,7 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
       const currentAtt = toConvert[index];
       const attId = currentAtt.get("id");
       statusEl.text(
-        (reacg.converting || "Converting...") +
-          " " +
-          (index + 1) +
-          "/" +
-          total,
+        (reacg.converting || "Converting...") + " " + (index + 1) + "/" + total,
       );
       index++;
 
@@ -2279,9 +2575,11 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
 
             const previewSrc = data.thumbnail_url || data.url;
             if (previewSrc) {
-              modal
-                .find('.reacg-bulk-thumb-item[data-id="' + attId + '"] img')
-                .attr("src", previewSrc);
+              const thumbItem = modal.find(
+                '.reacg-bulk-thumb-item[data-id="' + attId + '"]',
+              );
+              thumbItem.find("img").attr("src", previewSrc);
+              thumbItem.find("video").attr("poster", previewSrc);
               if (selectedItems && selectedItems.length) {
                 selectedItems
                   .filter('[data-id="' + attId + '"]')
@@ -2290,6 +2588,16 @@ function reacg_bind_bulk_image_converter(modal, attachments, selectedItems) {
                   .each(function () {
                     reacg_update_item_image_fit(this);
                   });
+              }
+              if (currentAtt && typeof currentAtt.set === "function") {
+                if (reacg_is_video_attachment(currentAtt)) {
+                  currentAtt.set("video_cover_url", previewSrc);
+                  currentAtt.set("video_cover_format", targetFormat);
+                  currentAtt.set(
+                    "video_cover_mime",
+                    targetFormat === "webp" ? "image/webp" : "image/avif",
+                  );
+                }
               }
             }
           } else if (!firstError && res && res.data && res.data.message) {
@@ -2396,7 +2704,7 @@ function reacg_attachment_edit_modal(attachment, item) {
       "</a></p>" +
       "</div>" +
       reacg_crop_position_picker() +
-      (!isVideo ? reacg_image_converter_picker() : "") +
+      reacg_image_converter_picker() +
       "</div>" +
       '<div class="reacg-modal__layout-content">' +
       '<div class="reacg-attachment-modal__field" data-setting="title"><label for="reacg-attachment-title">' +
@@ -2443,8 +2751,19 @@ function reacg_attachment_edit_modal(attachment, item) {
       reacg_escape_html(reacg.attachment_url) +
       '</label><input type="hidden" id="reacg-attachment-url" class="reacg-attachment-modal__input" value="' +
       reacg_escape_html(
-        isVideo && item && item.length
-          ? item.find(".reacg_item_image img").attr("src")
+        isVideo
+          ? item &&
+            item.length &&
+            item.find(".reacg_item_image img").attr("src") &&
+            item.find(".reacg_item_image img").attr("src") !== reacg.no_image
+            ? item.find(".reacg_item_image img").attr("src")
+            : (attachment && typeof attachment.get === "function"
+                ? attachment.get("video_cover_url")
+                : null) ||
+              (item && item.length
+                ? item.find(".reacg_item_image img").attr("src")
+                : "") ||
+              reacg_get_attachment_field_value(attachment, "url")
           : reacg_get_attachment_field_value(attachment, "url"),
       ) +
       '" /></div>' +
@@ -2556,127 +2875,119 @@ function reacg_open_attachment_edit_modal(button, attachment, item) {
     e.stopPropagation();
   });
 
-  modal
-    .find(".reacg-modal-button-save")
-    .on("click", function () {
-      const saveButton = jQuery(this);
-      const spinner = saveButton
-        .closest(".reacg-modal-buttons-wrapper")
-        .find("> .spinner")
-        .first();
-      const errorNoteCont = modal.find(".reacg-modal-error-note");
-      const attachmentId = attachment.get("id");
-      const coreChanges = {
-        title: modal.find("#reacg-attachment-title").val(),
-        caption: modal.find("#reacg-attachment-caption").val(),
-        alt: modal.find("#reacg-attachment-alt").val(),
-        description: modal.find("#reacg-attachment-description").val(),
-      };
-      const currentCategoryVals = categoriesSelect.val() || [];
-      const normInitialCats = assignedIds.slice().sort().join(",");
-      const normCurrentCats = currentCategoryVals.slice().sort().join(",");
-      const hasCategoryChanges = normInitialCats !== normCurrentCats;
+  modal.find(".reacg-modal-button-save").on("click", function () {
+    const saveButton = jQuery(this);
+    const spinner = saveButton
+      .closest(".reacg-modal-buttons-wrapper")
+      .find("> .spinner")
+      .first();
+    const errorNoteCont = modal.find(".reacg-modal-error-note");
+    const attachmentId = attachment.get("id");
+    const coreChanges = {
+      title: modal.find("#reacg-attachment-title").val(),
+      caption: modal.find("#reacg-attachment-caption").val(),
+      alt: modal.find("#reacg-attachment-alt").val(),
+      description: modal.find("#reacg-attachment-description").val(),
+    };
+    const currentCategoryVals = categoriesSelect.val() || [];
+    const normInitialCats = assignedIds.slice().sort().join(",");
+    const normCurrentCats = currentCategoryVals.slice().sort().join(",");
+    const hasCategoryChanges = normInitialCats !== normCurrentCats;
 
-      const compatChanges = {
-        attachments: {},
-      };
-      compatChanges.attachments[attachmentId] = {
-        action_url: modal.find("#reacg-attachment-action-url").val(),
-        exif: modal.find("#reacg-attachment-exif").val(),
-        crop_position: modal
-          .find('input[name="reacg-attachment-crop-position"]:checked')
-          .val(),
-        regallery_categories: currentCategoryVals.length
-          ? currentCategoryVals
-          : "",
-      };
+    const compatChanges = {
+      attachments: {},
+    };
+    compatChanges.attachments[attachmentId] = {
+      action_url: modal.find("#reacg-attachment-action-url").val(),
+      exif: modal.find("#reacg-attachment-exif").val(),
+      crop_position: modal
+        .find('input[name="reacg-attachment-crop-position"]:checked')
+        .val(),
+      regallery_categories: currentCategoryVals.length
+        ? currentCategoryVals
+        : "",
+    };
 
-      const normalizeValue = function (value) {
-        return value == null ? "" : String(value);
-      };
-      const hasCoreChanges =
-        normalizeValue(coreChanges.title) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "title"),
-          ) ||
-        normalizeValue(coreChanges.caption) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "caption"),
-          ) ||
-        normalizeValue(coreChanges.alt) !==
-          normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
-        normalizeValue(coreChanges.description) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "description"),
-          );
-      const hasCompatChanges =
-        hasCategoryChanges ||
-        normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "action_url"),
-          ) ||
-        normalizeValue(compatChanges.attachments[attachmentId].exif) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "exif"),
-          ) ||
+    const normalizeValue = function (value) {
+      return value == null ? "" : String(value);
+    };
+    const hasCoreChanges =
+      normalizeValue(coreChanges.title) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "title")) ||
+      normalizeValue(coreChanges.caption) !==
         normalizeValue(
-          compatChanges.attachments[attachmentId].crop_position,
-        ) !==
-          normalizeValue(
-            reacg_get_attachment_field_value(attachment, "crop_position") ||
-              "center center",
-          );
+          reacg_get_attachment_field_value(attachment, "caption"),
+        ) ||
+      normalizeValue(coreChanges.alt) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
+      normalizeValue(coreChanges.description) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "description"),
+        );
+    const hasCompatChanges =
+      hasCategoryChanges ||
+      normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "action_url"),
+        ) ||
+      normalizeValue(compatChanges.attachments[attachmentId].exif) !==
+        normalizeValue(reacg_get_attachment_field_value(attachment, "exif")) ||
+      normalizeValue(compatChanges.attachments[attachmentId].crop_position) !==
+        normalizeValue(
+          reacg_get_attachment_field_value(attachment, "crop_position") ||
+            "center center",
+        );
 
-      if (!hasCoreChanges && !hasCompatChanges) {
-        closeModal();
-        button.removeAttr("disabled");
-        return;
-      }
+    if (!hasCoreChanges && !hasCompatChanges) {
+      closeModal();
+      button.removeAttr("disabled");
+      return;
+    }
 
-      errorNoteCont.addClass("hidden").empty();
-      saveButton.attr("disabled", true);
-      spinner.addClass("is-active");
+    errorNoteCont.addClass("hidden").empty();
+    saveButton.attr("disabled", true);
+    spinner.addClass("is-active");
 
-      const saveRequests = [];
-      if (hasCoreChanges) {
-        saveRequests.push(attachment.save(coreChanges));
-      }
-      if (hasCompatChanges) {
-        saveRequests.push(attachment.saveCompat(compatChanges));
-      }
+    const saveRequests = [];
+    if (hasCoreChanges) {
+      saveRequests.push(attachment.save(coreChanges));
+    }
+    if (hasCompatChanges) {
+      saveRequests.push(attachment.saveCompat(compatChanges));
+    }
 
-      const saveRequest =
-        saveRequests.length === 1
-          ? saveRequests[0]
-          : jQuery.when.apply(jQuery, saveRequests);
+    const saveRequest =
+      saveRequests.length === 1
+        ? saveRequests[0]
+        : jQuery.when.apply(jQuery, saveRequests);
 
-      saveRequest
-        .done(function () {
-          if (item && item.length) {
-            const newTitle = modal.find("#reacg-attachment-title").val();
-            item.find(".reacg_item_image").attr("title", newTitle);
-          }
-          attachment.fetch().always(function () {
-            reacg_reload_preview();
-            closeModal();
-          });
-        })
-        .fail(function (response) {
-          const message =
-            response &&
-            response.responseJSON &&
-            response.responseJSON.data &&
-            response.responseJSON.data.message
-              ? response.responseJSON.data.message
-              : reacg.save_failed;
-          errorNoteCont.removeClass("hidden").html(message);
-        })
-        .always(function () {
-          spinner.removeClass("is-active");
-          saveButton.removeAttr("disabled");
-          button.removeAttr("disabled");
+    saveRequest
+      .done(function () {
+        if (item && item.length) {
+          const newTitle = modal.find("#reacg-attachment-title").val();
+          item.find(".reacg_item_image").attr("title", newTitle);
+        }
+        attachment.fetch().always(function () {
+          reacg_reload_preview();
+          closeModal();
         });
-    });
+      })
+      .fail(function (response) {
+        const message =
+          response &&
+          response.responseJSON &&
+          response.responseJSON.data &&
+          response.responseJSON.data.message
+            ? response.responseJSON.data.message
+            : reacg.save_failed;
+        errorNoteCont.removeClass("hidden").html(message);
+      })
+      .always(function () {
+        spinner.removeClass("is-active");
+        saveButton.removeAttr("disabled");
+        button.removeAttr("disabled");
+      });
+  });
 
   return modal;
 }
@@ -3035,6 +3346,39 @@ function reacg_run_bulk_generate_in_chunks(
 
     notifyProgress(index + 1, imageEntries.length);
 
+    let finalImageUrl = singleImageData.url || "";
+    if (
+      !finalImageUrl ||
+      /\.(mp4|m4v|webm|ogv|mov|mkv)(\?.*)?$/i.test(finalImageUrl)
+    ) {
+      const domImg = jQuery(
+        '.reacg_items .reacg_item[data-id="' +
+          imageId +
+          '"] .reacg_item_image img',
+      ).attr("src");
+      if (
+        domImg &&
+        domImg !== reacg.no_image &&
+        domImg.indexOf("video.png") === -1 &&
+        domImg.indexOf("video.svg") === -1
+      ) {
+        finalImageUrl = domImg;
+      } else if (
+        typeof wp !== "undefined" &&
+        wp.media &&
+        typeof wp.media.attachment === "function"
+      ) {
+        const attModel = wp.media.attachment(imageId);
+        if (
+          attModel &&
+          typeof attModel.get === "function" &&
+          attModel.get("video_cover_url")
+        ) {
+          finalImageUrl = attModel.get("video_cover_url");
+        }
+      }
+    }
+
     jQuery
       .ajax({
         type: "GET",
@@ -3042,7 +3386,7 @@ function reacg_run_bulk_generate_in_chunks(
         contentType: "application/json",
         data: {
           image_id: imageId,
-          image_url: singleImageData.url || "",
+          image_url: finalImageUrl,
           title: singleImageData.title || "",
           alt: singleImageData.alt || "",
           caption: singleImageData.caption || "",
@@ -3141,9 +3485,54 @@ function reacg_run_bulk_generate_in_chunks(
   return deferred.promise();
 }
 
+function reacg_bulk_single_details_html(att) {
+  const filename = reacg_get_attachment_field_value(att, "filename");
+  const dimensions =
+    reacg_get_attachment_field_value(att, "width") &&
+    reacg_get_attachment_field_value(att, "height")
+      ? reacg_get_attachment_field_value(att, "width") +
+        " x " +
+        reacg_get_attachment_field_value(att, "height")
+      : "";
+  const fileSize =
+    reacg_get_attachment_field_value(att, "filesizeHumanReadable") || "";
+  const editLink = reacg_get_attachment_edit_link(att.get("id"));
+
+  return (
+    (filename
+      ? '<p class="reacg-attachment-modal__filename"><strong>' +
+        reacg_escape_html(reacg.attachment_filename || "File name") +
+        ':</strong> <span class="reacg-attachment-modal__filename-val">' +
+        reacg_escape_html(filename) +
+        "</span></p>"
+      : "") +
+    (dimensions
+      ? "<p><strong>" +
+        reacg_escape_html(reacg.attachment_dimensions || "Dimensions") +
+        ":</strong> " +
+        reacg_escape_html(dimensions) +
+        "px</p>"
+      : "") +
+    (fileSize
+      ? '<p class="reacg-attachment-modal__filesize"><strong>' +
+        reacg_escape_html(reacg.attachment_file_size || "File size") +
+        ':</strong> <span class="reacg-attachment-modal__filesize-val">' +
+        reacg_escape_html(fileSize) +
+        "</span></p>"
+      : "") +
+    '<p class="reacg-attachment-modal__edit-link"><a href="' +
+    reacg_escape_html(editLink) +
+    '" target="_blank" rel="noopener noreferrer">' +
+    reacg_escape_html(reacg.edit || "Edit") +
+    "</a></p>"
+  );
+}
+
 function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
   const count = attachments.length;
-  const hasConvertibleImages = attachments.some(reacg_is_image_attachment);
+  const hasConvertibleImages = attachments.some(
+    reacg_is_convertible_attachment,
+  );
   let thumbnailsHtml = "";
   attachments.forEach(function (att) {
     const sizes = att.get("sizes");
@@ -3177,9 +3566,9 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
     thumbnailsHtml += "</div>";
   });
 
-  const selectedCountText = reacg.selected_items
-    ? reacg.selected_items.replace("%s", count)
-    : count + " items selected";
+  const allSelectedLabel = reacg.bulk_all_selected
+    ? reacg.bulk_all_selected.replace("%s", count)
+    : "Selected (" + count + ")";
 
   return jQuery(
     "" +
@@ -3187,7 +3576,7 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
       '<div class="reacg-modal-wrapper">' +
       '<div class="reacg-modal-content">' +
       '<div class="reacg-modal__header">' +
-      "<h1>" +
+      '<h1 class="reacg-modal-title">' +
       reacg_escape_html(reacg.bulk_edit || "Bulk Edit") +
       "</h1>" +
       '<span class="reacg-modal-close"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></span>' +
@@ -3196,16 +3585,24 @@ function reacg_bulk_attachment_edit_modal(attachments, selectedItems) {
       '<div class="reacg-modal__layout">' +
       // LEFT COLUMN
       '<div class="reacg-modal__layout-content">' +
+      '<div class="reacg-bulk-items-selector">' +
+      '<div class="reacg-bulk-selection-bar">' +
+      '<button type="button" class="button button-secondary reacg-bulk-select-all-btn is-active">' +
+      '<span class="dashicons dashicons-images-alt2"></span>' +
+      '<span class="reacg-bulk-select-all-btn__label">' +
+      reacg_escape_html(allSelectedLabel) +
+      "</span>" +
+      "</button>" +
+      "</div>" +
       '<div class="reacg-bulk-edit-thumbnails">' +
       thumbnailsHtml +
       "</div>" +
-      '<div class="reacg-attachment-modal__details">' +
-      "<p><strong>" +
-      reacg_escape_html(selectedCountText) +
-      "</strong></p>" +
+      "</div>" +
+      '<div class="reacg-attachment-modal__details hidden">' +
+      '<div class="reacg-bulk-single-details"></div>' +
       "</div>" +
       reacg_crop_position_picker() +
-      (hasConvertibleImages ? reacg_image_converter_picker() : "") +
+      reacg_image_converter_picker() +
       "</div>" +
       // RIGHT COLUMN
       '<div class="reacg-modal__layout-content">' +
@@ -3443,34 +3840,36 @@ function reacg_sync_bulk_text_fields(modal, attachments) {
       onlyEmptyLabel.toggleClass("hidden", !showOnlyEmpty);
     });
 
-    clearBtn.off("click.reacgBulkField").on("click.reacgBulkField", function (e) {
-      e.preventDefault();
-      const isCurrentlyCleared = fieldWrap.attr("data-bulk-clear") === "1";
-      const currentState = fieldWrap.data("bulkFieldState") || {};
-      const defPh = fieldWrap.data("defaultPlaceholder") || "";
+    clearBtn
+      .off("click.reacgBulkField")
+      .on("click.reacgBulkField", function (e) {
+        e.preventDefault();
+        const isCurrentlyCleared = fieldWrap.attr("data-bulk-clear") === "1";
+        const currentState = fieldWrap.data("bulkFieldState") || {};
+        const defPh = fieldWrap.data("defaultPlaceholder") || "";
 
-      if (!isCurrentlyCleared) {
-        fieldWrap.attr("data-bulk-clear", "1");
-        input
-          .val("")
-          .prop("disabled", true)
-          .addClass("reacg-bulk-input--cleared")
-          .attr(
-            "placeholder",
-            reacg.bulk_will_be_cleared || "— Will be cleared —",
-          );
-        clearBtn.addClass("is-undo").text(reacg.undo || "Undo");
-        onlyEmptyLabel.addClass("hidden");
-      } else {
-        fieldWrap.attr("data-bulk-clear", "0");
-        input
-          .prop("disabled", false)
-          .removeClass("reacg-bulk-input--cleared")
-          .attr("placeholder", defPh)
-          .val(currentState.allSame ? currentState.sharedValue : "");
-        clearBtn.removeClass("is-undo").text(reacg.clear_field || "Clear");
-      }
-    });
+        if (!isCurrentlyCleared) {
+          fieldWrap.attr("data-bulk-clear", "1");
+          input
+            .val("")
+            .prop("disabled", true)
+            .addClass("reacg-bulk-input--cleared")
+            .attr(
+              "placeholder",
+              reacg.bulk_will_be_cleared || "— Will be cleared —",
+            );
+          clearBtn.addClass("is-undo").text(reacg.undo || "Undo");
+          onlyEmptyLabel.addClass("hidden");
+        } else {
+          fieldWrap.attr("data-bulk-clear", "0");
+          input
+            .prop("disabled", false)
+            .removeClass("reacg-bulk-input--cleared")
+            .attr("placeholder", defPh)
+            .val(currentState.allSame ? currentState.sharedValue : "");
+          clearBtn.removeClass("is-undo").text(reacg.clear_field || "Clear");
+        }
+      });
   });
 }
 
@@ -3531,6 +3930,150 @@ function reacg_resolve_bulk_categories(rawSelected) {
   };
 
   processNext();
+  return deferred.promise();
+}
+
+function reacg_save_single_attachment_in_bulk(
+  modal,
+  attachment,
+  item,
+  categoriesSelect,
+  assignedCategoryIds,
+) {
+  const deferred = jQuery.Deferred();
+  if (!attachment || typeof attachment.get !== "function") {
+    deferred.resolve({ changed: false });
+    return deferred.promise();
+  }
+
+  const attachmentId = attachment.get("id");
+  const coreChanges = {
+    title: modal.find("#reacg-attachment-title").val(),
+    caption: modal.find("#reacg-attachment-caption").val(),
+    alt: modal.find("#reacg-attachment-alt").val(),
+    description: modal.find("#reacg-attachment-description").val(),
+  };
+
+  const currentCategoryVals =
+    categoriesSelect && categoriesSelect.length
+      ? categoriesSelect.val() || []
+      : [];
+  const normInitialCats = (assignedCategoryIds || []).slice().sort().join(",");
+  const normCurrentCats = currentCategoryVals.slice().sort().join(",");
+  const hasCategoryChanges = normInitialCats !== normCurrentCats;
+
+  const cropPos = modal
+    .find('input[name="reacg-attachment-crop-position"]:checked')
+    .val();
+
+  const compatChanges = {
+    attachments: {},
+  };
+  compatChanges.attachments[attachmentId] = {
+    action_url: modal.find("#reacg-attachment-action-url").val(),
+    exif: modal.find("#reacg-attachment-exif").val(),
+    crop_position: cropPos || "center center",
+    regallery_categories: currentCategoryVals.length ? currentCategoryVals : "",
+  };
+
+  const normalizeValue = function (value) {
+    return value == null ? "" : String(value);
+  };
+  const hasCoreChanges =
+    normalizeValue(coreChanges.title) !==
+      normalizeValue(reacg_get_attachment_field_value(attachment, "title")) ||
+    normalizeValue(coreChanges.caption) !==
+      normalizeValue(reacg_get_attachment_field_value(attachment, "caption")) ||
+    normalizeValue(coreChanges.alt) !==
+      normalizeValue(reacg_get_attachment_field_value(attachment, "alt")) ||
+    normalizeValue(coreChanges.description) !==
+      normalizeValue(
+        reacg_get_attachment_field_value(attachment, "description"),
+      );
+
+  const hasCompatChanges =
+    hasCategoryChanges ||
+    normalizeValue(compatChanges.attachments[attachmentId].action_url) !==
+      normalizeValue(
+        reacg_get_attachment_field_value(attachment, "action_url"),
+      ) ||
+    normalizeValue(compatChanges.attachments[attachmentId].exif) !==
+      normalizeValue(reacg_get_attachment_field_value(attachment, "exif")) ||
+    normalizeValue(compatChanges.attachments[attachmentId].crop_position) !==
+      normalizeValue(
+        reacg_get_attachment_field_value(attachment, "crop_position") ||
+          "center center",
+      );
+
+  if (!hasCoreChanges && !hasCompatChanges) {
+    deferred.resolve({ changed: false });
+    return deferred.promise();
+  }
+
+  const spinner = modal.find(".reacg-modal__footer .spinner");
+  const progressText = modal.find(".reacg-bulk-progress-text");
+  const saveBtn = modal.find(".reacg-modal-button-save");
+  const errorNote = modal.find(".reacg-modal-error-note");
+
+  errorNote.addClass("hidden").empty();
+  saveBtn.attr("disabled", true);
+  spinner.addClass("is-active");
+  progressText.removeClass("hidden").text(reacg.saving || "Saving...");
+
+  const saveRequests = [];
+  if (hasCoreChanges) {
+    saveRequests.push(attachment.save(coreChanges));
+  }
+  if (hasCompatChanges) {
+    saveRequests.push(attachment.saveCompat(compatChanges));
+  }
+
+  const saveRequest =
+    saveRequests.length === 1
+      ? saveRequests[0]
+      : jQuery.when.apply(jQuery, saveRequests);
+
+  saveRequest
+    .done(function () {
+      if (item && item.length) {
+        const newTitle = modal.find("#reacg-attachment-title").val();
+        item.find(".reacg_item_image").attr("title", newTitle);
+      }
+      const thumb = modal.find(
+        '.reacg-bulk-thumb-item[data-id="' + attachmentId + '"]',
+      );
+      if (thumb.length) {
+        const newTitle = modal.find("#reacg-attachment-title").val();
+        if (newTitle) {
+          thumb.attr("title", newTitle);
+        }
+        thumb.addClass("is-saved");
+      }
+      attachment.fetch().always(function () {
+        progressText.text(reacg.image_updated || "Image updated successfully.");
+        setTimeout(function () {
+          progressText.addClass("hidden").empty();
+        }, 2200);
+        deferred.resolve({ changed: true });
+      });
+    })
+    .fail(function (response) {
+      const message =
+        response &&
+        response.responseJSON &&
+        response.responseJSON.data &&
+        response.responseJSON.data.message
+          ? response.responseJSON.data.message
+          : reacg.save_failed || "Unable to save image data.";
+      errorNote.removeClass("hidden").html(message);
+      progressText.addClass("hidden").empty();
+      deferred.reject(message);
+    })
+    .always(function () {
+      spinner.removeClass("is-active");
+      saveBtn.removeAttr("disabled");
+    });
+
   return deferred.promise();
 }
 
@@ -3818,65 +4361,98 @@ function reacg_add_bulk_ai_buttons_to(
         contentType: "application/json",
         data: { action: "check" },
         complete: function (res) {
-          spinnerCont.removeClass("is-active");
-          button.removeAttr("disabled");
           if (res.status === 200) {
-            const imagesData = {};
-            attachments.forEach(function (att) {
-              const id = String(att.get("id"));
-              const sizes = att.get("sizes");
-              const attachmentUrl = reacg_get_attachment_field_value(
-                att,
-                "url",
-              );
-              const previewSize =
-                sizes && sizes.thumbnail
-                  ? sizes.thumbnail
-                  : sizes && sizes.full
-                    ? sizes.full
-                    : null;
-              const previewUrl =
-                previewSize && previewSize.url
-                  ? previewSize.url
-                  : attachmentUrl || "";
+            const activeSingleId = modal.data("activeSingleId");
+            const targetAttachments = activeSingleId
+              ? attachments.filter(function (att) {
+                  return String(att.get("id")) === String(activeSingleId);
+                })
+              : attachments;
 
-              imagesData[id] = {
-                url: previewUrl,
-                title: reacg_get_attachment_field_value(att, "title") || "",
-                caption:
-                  reacg_get_attachment_field_value(att, "caption") || "",
-                alt: reacg_get_attachment_field_value(att, "alt") || "",
-                description:
-                  reacg_get_attachment_field_value(att, "description") || "",
-              };
+            const urlPromises = targetAttachments.map(function (att) {
+              return reacg_resolve_attachment_ai_image_url(att, selectedItems);
             });
 
-            reacg_open_ai_generate_content_modal(imagesData, {
-              targetField: field.name,
-              onSuccess: function () {
-                const refetches = attachments.map(function (att) {
-                  return att.fetch();
+            Promise.all(urlPromises)
+              .then(function (resolvedUrls) {
+                spinnerCont.removeClass("is-active");
+                button.removeAttr("disabled");
+
+                const imagesData = {};
+                targetAttachments.forEach(function (att, idx) {
+                  const id = String(att.get("id"));
+                  imagesData[id] = {
+                    url: resolvedUrls[idx] || "",
+                    title: activeSingleId
+                      ? modal.find("#reacg-attachment-title").val() || ""
+                      : reacg_get_attachment_field_value(att, "title") || "",
+                    caption: activeSingleId
+                      ? modal.find("#reacg-attachment-caption").val() || ""
+                      : reacg_get_attachment_field_value(att, "caption") || "",
+                    alt: activeSingleId
+                      ? modal.find("#reacg-attachment-alt").val() || ""
+                      : reacg_get_attachment_field_value(att, "alt") || "",
+                    description: activeSingleId
+                      ? modal.find("#reacg-attachment-description").val() || ""
+                      : reacg_get_attachment_field_value(att, "description") ||
+                        "",
+                  };
                 });
-                jQuery.when.apply(jQuery, refetches).always(function () {
-                  if (field.name === "title") {
-                    attachments.forEach(function (att) {
-                      const attId = att.get("id");
-                      const newTitle = reacg_get_attachment_field_value(
-                        att,
-                        "title",
-                      );
-                      selectedItems
-                        .filter('[data-id="' + attId + '"]')
-                        .find(".reacg_item_image")
-                        .attr("title", newTitle);
+
+                reacg_open_ai_generate_content_modal(imagesData, {
+                  targetField: field.name,
+                  onSuccess: function () {
+                    const refetches = targetAttachments.map(function (att) {
+                      return att.fetch();
                     });
-                  }
-                  reacg_sync_bulk_text_fields(modal, attachments);
-                  reacg_reload_preview();
+                    jQuery.when.apply(jQuery, refetches).always(function () {
+                      targetAttachments.forEach(function (att) {
+                        const attId = att.get("id");
+                        const newTitle = reacg_get_attachment_field_value(
+                          att,
+                          "title",
+                        );
+                        if (newTitle) {
+                          selectedItems
+                            .filter('[data-id="' + attId + '"]')
+                            .find(".reacg_item_image")
+                            .attr("title", newTitle);
+                          modal
+                            .find(
+                              '.reacg-bulk-thumb-item[data-id="' + attId + '"]',
+                            )
+                            .attr("title", newTitle);
+                        }
+                      });
+                      if (activeSingleId && targetAttachments.length) {
+                        ["title", "alt", "caption", "description"].forEach(
+                          function (fname) {
+                            modal
+                              .find("#reacg-attachment-" + fname)
+                              .val(
+                                reacg_get_attachment_field_value(
+                                  targetAttachments[0],
+                                  fname,
+                                ),
+                              );
+                          },
+                        );
+                        modal.data("bulkSnapshotDirty", true);
+                      } else {
+                        reacg_sync_bulk_text_fields(modal, attachments);
+                      }
+                      reacg_reload_preview();
+                    });
+                  },
                 });
-              },
-            });
+              })
+              .catch(function () {
+                spinnerCont.removeClass("is-active");
+                button.removeAttr("disabled");
+              });
           } else {
+            spinnerCont.removeClass("is-active");
+            button.removeAttr("disabled");
             const errMsg =
               res && res.responseJSON && res.responseJSON.errors
                 ? res.responseJSON.errors.message
@@ -3915,6 +4491,343 @@ function reacg_open_bulk_attachment_edit_modal(
   $(targetDoc.body).append(modal);
   modal.css("display", "flex").show();
 
+  const textFields = [
+    { name: "title", selector: "#reacg-attachment-title" },
+    { name: "caption", selector: "#reacg-attachment-caption" },
+    { name: "alt", selector: "#reacg-attachment-alt" },
+    { name: "description", selector: "#reacg-attachment-description" },
+    { name: "action_url", selector: "#reacg-attachment-action-url" },
+    { name: "exif", selector: "#reacg-attachment-exif" },
+  ];
+
+  let activeAttachment = null;
+  let activeItem = null;
+  let activeAssignedCategoryIds = [];
+  let bulkSnapshot = null;
+  let cropPositionChanged = false;
+  let isRenderingCatSelect = false;
+
+  const categoriesSelect = modal.find("#reacg-attachment-categories");
+  const catAnalysis = reacg_analyze_bulk_categories(attachments);
+  const allCategoriesMap = jQuery.extend({}, catAnalysis.namesById);
+  const catState = {
+    mode: "add",
+    replaceTouched: false,
+    selections: {
+      add: [],
+      replace: catAnalysis.sharedIds.slice(),
+      remove: [],
+    },
+  };
+  modal.data("bulkCatState", catState);
+
+  const captureBulkSnapshot = function () {
+    const snapshot = {
+      fields: {},
+      cropPositionChanged: cropPositionChanged,
+      cropValue: modal
+        .find('input[name="reacg-attachment-crop-position"]:checked')
+        .val(),
+    };
+    textFields.forEach(function (f) {
+      const fieldWrap = modal.find('[data-setting="' + f.name + '"]');
+      const input = fieldWrap.find(f.selector);
+      snapshot.fields[f.name] = {
+        val: input.val(),
+        isCleared: fieldWrap.attr("data-bulk-clear") === "1",
+        onlyEmpty: fieldWrap
+          .find(".reacg-bulk-only-empty-checkbox")
+          .is(":checked"),
+        onlyEmptyVisible: !fieldWrap
+          .find(".reacg-bulk-only-empty-label")
+          .hasClass("hidden"),
+      };
+    });
+    return snapshot;
+  };
+
+  const restoreBulkSnapshot = function (snapshot) {
+    if (!snapshot) {
+      reacg_sync_bulk_text_fields(modal, attachments);
+      return;
+    }
+    textFields.forEach(function (f) {
+      const fieldWrap = modal.find('[data-setting="' + f.name + '"]');
+      const input = fieldWrap.find(f.selector);
+      const clearBtn = fieldWrap.find(".reacg-bulk-field-clear");
+      const onlyEmptyLabel = fieldWrap.find(".reacg-bulk-only-empty-label");
+      const onlyEmptyCheckbox = fieldWrap.find(
+        ".reacg-bulk-only-empty-checkbox",
+      );
+      const state = reacg_analyze_bulk_field(attachments, f.name);
+      const saved = snapshot.fields[f.name];
+
+      fieldWrap.data("bulkFieldState", state);
+      const defaultPlaceholder = state.hasMixed
+        ? reacg.bulk_multiple_values || "— Multiple Values —"
+        : f.name === "action_url"
+          ? "https://example.com"
+          : reacg.bulk_empty || "— Empty —";
+      fieldWrap.data("defaultPlaceholder", defaultPlaceholder);
+
+      if (saved && saved.isCleared) {
+        fieldWrap.attr("data-bulk-clear", "1");
+        input
+          .val("")
+          .prop("disabled", true)
+          .addClass("reacg-bulk-input--cleared")
+          .attr(
+            "placeholder",
+            reacg.bulk_will_be_cleared || "— Will be cleared —",
+          );
+        clearBtn.addClass("is-undo").text(reacg.undo || "Undo");
+        onlyEmptyLabel.addClass("hidden");
+      } else {
+        fieldWrap.attr("data-bulk-clear", "0");
+        input
+          .prop("disabled", false)
+          .removeClass("reacg-bulk-input--cleared")
+          .attr("placeholder", defaultPlaceholder)
+          .val(saved ? saved.val : state.allSame ? state.sharedValue : "");
+        clearBtn.removeClass("is-undo").text(reacg.clear_field || "Clear");
+        clearBtn.toggleClass("hidden", state.nonEmptyCount === 0);
+        onlyEmptyCheckbox.prop("checked", Boolean(saved && saved.onlyEmpty));
+        onlyEmptyLabel.toggleClass(
+          "hidden",
+          !(saved && saved.onlyEmptyVisible),
+        );
+      }
+    });
+
+    if (snapshot.cropValue) {
+      modal
+        .find(
+          'input[name="reacg-attachment-crop-position"][value="' +
+            snapshot.cropValue +
+            '"]',
+        )
+        .prop("checked", true);
+    } else {
+      modal
+        .find('input[name="reacg-attachment-crop-position"]')
+        .prop("checked", false);
+    }
+    cropPositionChanged = Boolean(snapshot.cropPositionChanged);
+  };
+
+  const switchToAllSelected = function () {
+    const savePromise = activeAttachment
+      ? reacg_save_single_attachment_in_bulk(
+          modal,
+          activeAttachment,
+          activeItem,
+          categoriesSelect,
+          activeAssignedCategoryIds,
+        )
+      : jQuery.Deferred().resolve().promise();
+
+    savePromise.always(function () {
+      activeAttachment = null;
+      activeItem = null;
+      activeAssignedCategoryIds = [];
+      modal.data("activeSingleId", null);
+
+      modal.find(".reacg-bulk-thumb-item").removeClass("is-active");
+      modal.find(".reacg-bulk-select-all-btn").addClass("is-active");
+      modal.removeClass("reacg-modal--single-active");
+
+      modal
+        .find(".reacg-modal__header h1, .reacg-modal-title")
+        .text(reacg.bulk_edit || "Bulk Edit");
+
+      modal.find(".reacg-attachment-modal__details").addClass("hidden");
+      modal.find(".reacg-bulk-single-details").empty();
+
+      modal.find(".reacg-bulk-field-header__right").removeClass("hidden");
+      modal.find(".reacg-bulk-cat-modes").removeClass("hidden");
+
+      if (modal.data("bulkSnapshotDirty")) {
+        modal.data("bulkSnapshotDirty", false);
+        bulkSnapshot = null;
+        reacg_sync_bulk_text_fields(modal, attachments);
+      } else {
+        restoreBulkSnapshot(bulkSnapshot);
+      }
+      renderCategoriesSelectForMode(catState.mode);
+
+      modal.find(".reacg-image-converter").each(function () {
+        reacg_sync_converter_select(
+          jQuery(this),
+          reacg_get_bulk_shared_image_format(attachments),
+          false,
+        );
+      });
+
+      modal.find(".reacg-modal-button-save").text(reacg.update || "Update");
+    });
+  };
+
+  const switchToSingleAttachment = function (att, item) {
+    try {
+      const attId =
+        att && typeof att.get === "function"
+          ? att.get("id")
+          : att
+            ? att.id
+            : null;
+      if (!attId) return;
+
+      if (
+        activeAttachment &&
+        String(
+          activeAttachment.get
+            ? activeAttachment.get("id")
+            : activeAttachment.id,
+        ) === String(attId)
+      ) {
+        switchToAllSelected();
+        return;
+      }
+
+      if (!activeAttachment) {
+        bulkSnapshot = captureBulkSnapshot();
+      }
+
+      const savePrevPromise = activeAttachment
+        ? reacg_save_single_attachment_in_bulk(
+            modal,
+            activeAttachment,
+            activeItem,
+            categoriesSelect,
+            activeAssignedCategoryIds,
+          )
+        : jQuery.Deferred().resolve().promise();
+
+      savePrevPromise.always(function () {
+        activeAttachment = att;
+        activeItem = item;
+        modal.data("activeSingleId", attId);
+
+        modal.find(".reacg-bulk-select-all-btn").removeClass("is-active");
+        modal.find(".reacg-bulk-thumb-item").removeClass("is-active");
+        modal
+          .find('.reacg-bulk-thumb-item[data-id="' + attId + '"]')
+          .addClass("is-active");
+        modal.addClass("reacg-modal--single-active");
+
+        modal
+          .find(".reacg-modal__header h1, .reacg-modal-title")
+          .text(reacg.edit || "Edit");
+
+        modal.find(".reacg-attachment-modal__details").removeClass("hidden");
+        modal
+          .find(".reacg-bulk-single-details")
+          .html(reacg_bulk_single_details_html(att));
+
+        const attCrop =
+          reacg_get_attachment_field_value(att, "crop_position") ||
+          "center center";
+        modal
+          .find(
+            'input[name="reacg-attachment-crop-position"][value="' +
+              attCrop +
+              '"]',
+          )
+          .prop("checked", true);
+
+        modal.find(".reacg-bulk-field-header__right").addClass("hidden");
+        modal.find(".reacg-bulk-cat-modes").addClass("hidden");
+
+        textFields.forEach(function (f) {
+          const fieldWrap = modal.find('[data-setting="' + f.name + '"]');
+          const input = fieldWrap.find(f.selector);
+          input
+            .prop("disabled", false)
+            .removeClass("reacg-bulk-input--cleared")
+            .attr(
+              "placeholder",
+              f.name === "action_url" ? "https://example.com" : "",
+            )
+            .val(reacg_get_attachment_field_value(att, f.name));
+        });
+
+        isRenderingCatSelect = true;
+        try {
+          if (
+            $.fn.select2 &&
+            $(categoriesSelect).hasClass("select2-hidden-accessible")
+          ) {
+            $(categoriesSelect).select2("destroy");
+          }
+        } catch (err) {}
+        categoriesSelect.empty();
+
+        const rawAssigned =
+          att && typeof att.get === "function"
+            ? att.get("categories") || []
+            : [];
+        activeAssignedCategoryIds = [];
+        const assignedSet = {};
+
+        rawAssigned.forEach(function (cat) {
+          if (!cat) return;
+          const catId =
+            typeof cat === "object" ? String(cat.id || cat.name) : String(cat);
+          const catName = typeof cat === "object" ? cat.name : String(cat);
+          activeAssignedCategoryIds.push(catId);
+          assignedSet[catId] = true;
+        });
+
+        Object.keys(allCategoriesMap).forEach(function (id) {
+          const strId = String(id);
+          const name = allCategoriesMap[strId] || strId;
+          const isSelected = Boolean(assignedSet[strId]);
+          categoriesSelect.append(
+            new Option(name, strId, isSelected, isSelected),
+          );
+        });
+
+        rawAssigned.forEach(function (cat) {
+          if (!cat) return;
+          const catId =
+            typeof cat === "object" ? String(cat.id || cat.name) : String(cat);
+          const catName = typeof cat === "object" ? cat.name : String(cat);
+          if (!categoriesSelect.find('option[value="' + catId + '"]').length) {
+            categoriesSelect.append(new Option(catName, catId, true, true));
+          }
+        });
+
+        if ($.fn.select2) {
+          try {
+            reacg_init_select2($, categoriesSelect, {
+              tags: true,
+              placeholder:
+                reacg.attachment_categories_placeholder ||
+                "Search or add categories...",
+              dropdownParent: modal,
+            });
+          } catch (e) {}
+        }
+        isRenderingCatSelect = false;
+
+        modal
+          .find(".reacg-modal-button-save")
+          .text(reacg.update_item || "Update Item");
+
+        const isSingleVideo = reacg_is_video_attachment(att);
+        modal.find(".reacg-image-converter").each(function () {
+          reacg_sync_converter_select(
+            jQuery(this),
+            reacg_get_attachment_format(att, item),
+            isSingleVideo,
+          );
+        });
+      });
+    } catch (err) {
+      console.error("reacg: error switching to single attachment", err);
+    }
+  };
+
   reacg_sync_bulk_text_fields(modal, attachments);
 
   const cropPositions = attachments.map(function (att) {
@@ -3937,7 +4850,6 @@ function reacg_open_bulk_attachment_edit_modal(
       .prop("checked", true);
   }
 
-  let cropPositionChanged = false;
   modal
     .find('input[name="reacg-attachment-crop-position"]')
     .on("change", function () {
@@ -3953,27 +4865,12 @@ function reacg_open_bulk_attachment_edit_modal(
     modal,
   );
 
-  const categoriesSelect = modal.find("#reacg-attachment-categories");
-  const catAnalysis = reacg_analyze_bulk_categories(attachments);
-  const allCategoriesMap = jQuery.extend({}, catAnalysis.namesById);
-  const catState = {
-    mode: "add",
-    replaceTouched: false,
-    selections: {
-      add: [],
-      replace: catAnalysis.sharedIds.slice(),
-      remove: [],
-    },
-  };
-  modal.data("bulkCatState", catState);
-
   if (catAnalysis.anyIds.length === 0) {
     modal
       .find('.reacg-bulk-cat-mode[data-mode="remove"]')
       .prop("disabled", true);
   }
 
-  let isRenderingCatSelect = false;
   const renderCategoriesSelectForMode = function (mode) {
     isRenderingCatSelect = true;
     const selectedVals = (catState.selections[mode] || []).map(String);
@@ -3982,7 +4879,10 @@ function reacg_open_bulk_attachment_edit_modal(
       selectedSet[v] = true;
     });
 
-    if ($.fn.select2 && $(categoriesSelect).hasClass("select2-hidden-accessible")) {
+    if (
+      $.fn.select2 &&
+      $(categoriesSelect).hasClass("select2-hidden-accessible")
+    ) {
       $(categoriesSelect).select2("destroy");
     }
 
@@ -4036,6 +4936,7 @@ function reacg_open_bulk_attachment_edit_modal(
 
   $(categoriesSelect).on("change.reacgBulkCats", function () {
     if (isRenderingCatSelect) return;
+    if (activeAttachment) return;
     const vals = $(categoriesSelect).val() || [];
     catState.selections[catState.mode] = vals;
     vals.forEach(function (v) {
@@ -4083,14 +4984,81 @@ function reacg_open_bulk_attachment_edit_modal(
           const catId = String(cat.id);
           allCategoriesMap[catId] = cat.name;
         });
-        catState.selections[catState.mode] = $(categoriesSelect).val() || [];
-        renderCategoriesSelectForMode(catState.mode);
+        if (!activeAttachment) {
+          catState.selections[catState.mode] = $(categoriesSelect).val() || [];
+          renderCategoriesSelectForMode(catState.mode);
+        }
       }
     },
   });
 
+  const handleThumbClick = function (e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const $item = jQuery(this).closest(".reacg-bulk-thumb-item");
+    const id = String($item.attr("data-id") || $item.data("id") || "");
+    if (!id) return;
+
+    const att = attachments.find(function (a) {
+      const aId =
+        a && typeof a.get === "function" ? a.get("id") : a ? a.id : null;
+      return String(aId) === id;
+    });
+    const itm = selectedItems.filter(function () {
+      const itmId = jQuery(this).attr("data-id") || jQuery(this).data("id");
+      return String(itmId) === id;
+    });
+    if (att) {
+      switchToSingleAttachment(att, itm);
+    }
+  };
+
+  modal.find(".reacg-bulk-select-all-btn").on("click", function (e) {
+    e.preventDefault();
+    switchToAllSelected();
+  });
+
+  modal
+    .find(".reacg-bulk-edit-thumbnails")
+    .on("click", ".reacg-bulk-thumb-item", handleThumbClick);
+  modal.find(".reacg-bulk-thumb-item").on("click", handleThumbClick);
+
+  try {
+    const rawThumbContainer = modal.find(".reacg-bulk-edit-thumbnails")[0];
+    if (rawThumbContainer) {
+      rawThumbContainer.addEventListener("click", function (ev) {
+        const thumbEl = ev.target.closest(".reacg-bulk-thumb-item");
+        if (thumbEl) {
+          handleThumbClick.call(thumbEl, ev);
+        }
+      });
+    }
+    const rawAllBtn = modal.find(".reacg-bulk-select-all-btn")[0];
+    if (rawAllBtn) {
+      rawAllBtn.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        switchToAllSelected();
+      });
+    }
+  } catch (err) {}
+
   const closeModal = function () {
-    modal.remove();
+    if (activeAttachment) {
+      reacg_save_single_attachment_in_bulk(
+        modal,
+        activeAttachment,
+        activeItem,
+        categoriesSelect,
+        activeAssignedCategoryIds,
+      ).always(function () {
+        modal.remove();
+        reacg_reload_preview();
+      });
+    } else {
+      modal.remove();
+    }
   };
 
   modal.find(".reacg-modal-close").on("click", closeModal);
@@ -4099,17 +5067,24 @@ function reacg_open_bulk_attachment_edit_modal(
       closeModal();
     }
   });
-  modal.find(".reacg-modal-wrapper").on("click", function (e) {
-    e.stopPropagation();
-  });
 
   modal.find(".reacg-modal-button-save").on("click", function () {
-    reacg_save_bulk_attachment_changes(
-      modal,
-      attachments,
-      selectedItems,
-      cropPositionChanged,
-    );
+    if (activeAttachment) {
+      reacg_save_single_attachment_in_bulk(
+        modal,
+        activeAttachment,
+        activeItem,
+        categoriesSelect,
+        activeAssignedCategoryIds,
+      );
+    } else {
+      reacg_save_bulk_attachment_changes(
+        modal,
+        attachments,
+        selectedItems,
+        cropPositionChanged,
+      );
+    }
   });
 
   return modal;

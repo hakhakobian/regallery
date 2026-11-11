@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Photo Gallery by Re Gallery: Responsive Image Gallery with AI SEO
  * Description: Photo gallery plugin that writes your image SEO with a built-in AI. Create responsive image galleries in minutes.
- * Version: 1.20.22
+ * Version: 1.20.29
  * Requires at least: 5.0
  * Requires PHP: 7.0
  * Author: Re Gallery Team
@@ -24,7 +24,7 @@ final class REACG {
   public $plugin_dir = '';
   public $plugin_url = '';
   public $main_file = '';
-  public $version = '1.20.22';
+  public $version = '1.20.29';
   public $prefix = 'reacg';
   public $shortcode = 'REACG';
   public $nicename = 'Re Gallery';
@@ -520,6 +520,11 @@ final class REACG {
       'crop_position_right_bottom' => __('Right bottom', 'regallery'),
       'choose_images' => __('Choose images', 'regallery'),
       'bulk_edit' => __('Bulk Edit', 'regallery'),
+      'bulk_all_selected' => __('Selected (%s)', 'regallery'),
+      'update_image' => __('Update Image', 'regallery'),
+      'update_item' => __('Update Item', 'regallery'),
+      'image_updated' => __('Image updated successfully.', 'regallery'),
+      'saving' => __('Saving...', 'regallery'),
       'select_all' => __('Select all', 'regallery'),
       'deselect_all' => __('Deselect all', 'regallery'),
       'selected_items' => __('%s items selected', 'regallery'),
@@ -551,12 +556,14 @@ final class REACG {
       'content_generated_based_on_image' => __('The content will be generated based on the image and will be automatically saved.', 'regallery'),
       'save_failed' => __('Unable to save image data.', 'regallery'),
       'convert_format_label' => __('Convert format', 'regallery'),
-      'convert_format_description' => __('Convert image and its generated sizes to a modern, lighter format.', 'regallery'),
+      'convert_format_description' => __('Convert image, video cover and their generated sizes to a modern, lighter format.', 'regallery'),
       'convert_button' => __('Convert', 'regallery'),
       'converting' => __('Converting...', 'regallery'),
       'delete_original_files' => __('Delete old format files', 'regallery'),
       'converted_successfully' => __('Converted to %s.', 'regallery'),
       'already_in_format' => __('Already in %s format.', 'regallery'),
+      'video_cover_converted_successfully' => __('Video cover converted to %s.', 'regallery'),
+      'video_cover_already_in_format' => __('Video cover is already in %s format.', 'regallery'),
       'bulk_converted_summary' => __('Converted %1$s of %2$s images to %3$s.', 'regallery'),
       'bulk_all_already_in_format' => __('All selected images are already in %s format.', 'regallery'),
       'convert_failed' => __('Failed to convert image.', 'regallery'),

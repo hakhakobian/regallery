@@ -1480,14 +1480,88 @@ to avoid a bug connected with preview.
 
 /* Bulk Edit Modal extensions */
 .reacg-modal.reacg-attachment-modal.reacg-bulk-attachment-modal {
+  .reacg-bulk-items-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .reacg-bulk-selection-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .reacg-bulk-select-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    height: 30px;
+    min-height: 30px;
+    line-height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--reacg-primary-color, #2271b1);
+    background: #f6f7f7;
+    color: var(--reacg-primary-color, #2271b1);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    box-sizing: border-box;
+    text-decoration: none;
+  }
+
+  .reacg-bulk-select-all-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    color: inherit;
+  }
+
+  .reacg-bulk-select-all-btn:hover {
+    background: #f0f0f1;
+    border-color: var(--reacg-primary-color-darker, #0a4b78);
+    color: var(--reacg-primary-color-darker, #0a4b78);
+  }
+
+  .reacg-bulk-select-all-btn:focus,
+  .reacg-bulk-select-all-btn:focus-visible {
+    background: #f0f0f1;
+    border-color: var(--reacg-primary-color-darker, #0a4b78);
+    color: var(--reacg-primary-color-darker, #0a4b78);
+    box-shadow: 0 0 0 1px var(--reacg-primary-color-darker, #0a4b78);
+    outline: 2px solid transparent;
+  }
+
+  .reacg-bulk-select-all-btn.is-active {
+    background: var(--reacg-primary-color, #155c92) !important;
+    color: #ffffff !important;
+    border-color: var(--reacg-primary-color, #155c92) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .reacg-bulk-select-all-btn.is-active:hover,
+  .reacg-bulk-select-all-btn.is-active:focus {
+    background: var(--reacg-primary-color-darker, #0a4b78) !important;
+    border-color: var(--reacg-primary-color-darker, #0a4b78) !important;
+    color: #ffffff !important;
+  }
+
   .reacg-bulk-edit-thumbnails {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
     gap: 8px;
-    padding: 0;
+    padding: 2px;
     background: transparent;
     border: none;
-    margin-bottom: 12px;
+    margin: 0;
+    max-height: 220px;
+    overflow-y: auto;
   }
 
   .reacg-bulk-thumb-item {
@@ -1499,6 +1573,55 @@ to avoid a bug connected with preview.
     border: 1px solid rgba(0, 0, 0, 0.12);
     background: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .reacg-bulk-thumb-item:hover {
+    border-color: var(--reacg-primary-color, #155c92);
+  }
+
+  .reacg-bulk-thumb-item.is-active {
+    border-color: var(--reacg-primary-color, #155c92) !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Minimal selection ring matching gallery edit page */
+  .reacg-bulk-thumb-item.is-active::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--reacg-primary-color, #155c92);
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 5;
+    box-sizing: border-box;
+  }
+
+  .reacg-bulk-thumb-item.is-saved::before {
+    content: "✓";
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #008a20;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    z-index: 6;
+  }
+
+  .reacg-attachment-modal__details.hidden,
+  .reacg-bulk-details-summary.hidden,
+  .reacg-bulk-single-details.hidden {
+    display: none !important;
   }
 
   .reacg-bulk-thumb-item img,
@@ -1507,6 +1630,15 @@ to avoid a bug connected with preview.
     height: 100%;
     object-fit: cover;
     display: block;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &.reacg-modal--single-active {
+    .reacg-bulk-field-header__right,
+    .reacg-bulk-cat-modes {
+      display: none !important;
+    }
   }
 
   .reacg-bulk-progress-text {

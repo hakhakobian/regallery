@@ -373,7 +373,43 @@ class REACG_Gallery {
 
     $response['exif'] = html_entity_decode($exif);
     $response['crop_position'] = $this->get_crop_position($attachment->ID);
-    $response['categories'] = $this->get_item_categories($attachment->ID, 'image');
+
+    $type = !empty($response['type']) ? $response['type'] : '';
+    $mime = !empty($response['mime']) ? $response['mime'] : '';
+    $is_video = ( 'video' === $type || 0 === strpos($mime, 'video/') );
+
+    if ( $is_video ) {
+      $thumbnail_id = !empty($meta['thumbnail_id']) ? (int) $meta['thumbnail_id'] : 0;
+      if ( empty($thumbnail_id) ) {
+        $att_meta = wp_get_attachment_metadata($attachment->ID);
+        if ( !empty($att_meta['thumbnail_id']) ) {
+          $thumbnail_id = (int) $att_meta['thumbnail_id'];
+        }
+      }
+      if ( empty($thumbnail_id) ) {
+        $thumbnail_id = (int) get_post_thumbnail_id($attachment->ID);
+      }
+      if ( $thumbnail_id ) {
+        $cover_url = wp_get_attachment_image_url($thumbnail_id, 'full');
+        if ( empty($cover_url) ) {
+          $cover_url = wp_get_attachment_url($thumbnail_id);
+        }
+        if ( !empty($cover_url) ) {
+          $response['video_cover_url'] = $cover_url;
+          $response['thumbnail_id'] = $thumbnail_id;
+          $cover_file = get_attached_file($thumbnail_id, TRUE);
+          $ext = !empty($cover_file) ? strtolower((string) pathinfo($cover_file, PATHINFO_EXTENSION)) : '';
+          if ( $ext === 'jpeg' ) {
+            $ext = 'jpg';
+          }
+          $response['video_cover_format'] = $ext;
+          $response['video_cover_mime'] = get_post_mime_type($thumbnail_id);
+        }
+      }
+    }
+
+    $item_type = $is_video ? 'video' : 'image';
+    $response['categories'] = $this->get_item_categories($attachment->ID, $item_type);
 
     return $response;
   }
@@ -1434,11 +1470,28 @@ class REACG_Gallery {
     }
 
     $attachment_id = isset($_POST['attachment_id']) ? (int) $_POST['attachment_id'] : 0;
-    if ( $attachment_id <= 0 || get_post_type($attachment_id) !== 'attachment' || !wp_attachment_is_image($attachment_id) ) {
+    if ( $attachment_id <= 0 || get_post_type($attachment_id) !== 'attachment' ) {
+      wp_send_json_error([ 'message' => __('Invalid attachment.', 'regallery') ], 400);
+    }
+
+    $is_video = wp_attachment_is('video', $attachment_id);
+    $target_image_id = $attachment_id;
+
+    if ( $is_video ) {
+      $metadata = wp_get_attachment_metadata($attachment_id);
+      $cover_id = !empty($metadata['thumbnail_id']) ? (int) $metadata['thumbnail_id'] : 0;
+      if ( empty($cover_id) ) {
+        $cover_id = (int) get_post_thumbnail_id($attachment_id);
+      }
+      if ( empty($cover_id) || !wp_attachment_is_image($cover_id) ) {
+        wp_send_json_error([ 'message' => __('Video does not have a valid cover image to convert.', 'regallery') ], 400);
+      }
+      $target_image_id = $cover_id;
+    } elseif ( !wp_attachment_is_image($attachment_id) ) {
       wp_send_json_error([ 'message' => __('Invalid image attachment.', 'regallery') ], 400);
     }
 
-    if ( !current_user_can('edit_post', $attachment_id) || !current_user_can('upload_files') ) {
+    if ( !current_user_can('edit_post', $attachment_id) || !current_user_can('edit_post', $target_image_id) || !current_user_can('upload_files') ) {
       wp_send_json_error([ 'message' => __('You are not allowed to edit this image.', 'regallery') ], 403);
     }
 
@@ -1459,45 +1512,50 @@ class REACG_Gallery {
 
     $delete_original = !empty($_POST['delete_original']) && $_POST['delete_original'] !== 'false' && $_POST['delete_original'] !== '0';
 
-    $current_file = get_attached_file($attachment_id, TRUE);
+    $current_file = get_attached_file($target_image_id, TRUE);
     if ( empty($current_file) || !file_exists($current_file) ) {
       wp_send_json_error([ 'message' => __('Image file does not exist on the server.', 'regallery') ], 404);
     }
 
-    $old_metadata = wp_get_attachment_metadata($attachment_id);
-    $current_mime = strtolower((string) get_post_mime_type($attachment_id));
+    $old_metadata = wp_get_attachment_metadata($target_image_id);
+    $current_mime = strtolower((string) get_post_mime_type($target_image_id));
     $current_ext  = strtolower((string) pathinfo($current_file, PATHINFO_EXTENSION));
     $old_filesize = !empty($old_metadata['filesize']) ? (int) $old_metadata['filesize'] : (int) filesize($current_file);
 
     if ( $current_mime === $target_mime || $current_ext === $target_format ) {
-      $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+      $thumbnail_url = wp_get_attachment_image_url($target_image_id, 'thumbnail');
       if ( empty($thumbnail_url) ) {
-        $thumbnail_url = wp_get_attachment_url($attachment_id);
+        $thumbnail_url = wp_get_attachment_url($target_image_id);
       }
 
       wp_send_json_success([
-        'skipped'               => TRUE,
-        'attachment_id'         => $attachment_id,
-        'filename'              => wp_basename($current_file),
-        'url'                   => wp_get_attachment_url($attachment_id),
-        'thumbnail_url'         => $thumbnail_url,
-        'mime'                  => $target_mime,
-        'format'                => strtoupper($target_format),
-        'filesize'              => $old_filesize,
-        'filesizeHumanReadable' => size_format($old_filesize),
-        'old_filesize'          => $old_filesize,
+        'skipped'                   => TRUE,
+        'attachment_id'             => $attachment_id,
+        'cover_id'                  => $is_video ? $target_image_id : 0,
+        'is_video'                  => $is_video,
+        'filename'                  => wp_basename($current_file),
+        'url'                       => wp_get_attachment_url($target_image_id),
+        'thumbnail_url'             => $thumbnail_url,
+        'mime'                      => $target_mime,
+        'format'                    => strtoupper($target_format),
+        'filesize'                  => $old_filesize,
+        'filesizeHumanReadable'     => size_format($old_filesize),
+        'old_filesize'              => $old_filesize,
         'old_filesizeHumanReadable' => size_format($old_filesize),
         /* translators: %s: image format name (e.g. WEBP, AVIF) */
-        'message'               => sprintf(__('Already in %s format.', 'regallery'), strtoupper($target_format)),
+        'message'                   => sprintf(
+          $is_video ? __('Video cover is already in %s format.', 'regallery') : __('Already in %s format.', 'regallery'),
+          strtoupper($target_format)
+        ),
       ]);
     }
 
     // Preserve readable EXIF text before converting in case the new format strips raw EXIF headers.
-    $existing_exif = get_post_meta($attachment_id, 'exif', TRUE);
+    $existing_exif = get_post_meta($target_image_id, 'exif', TRUE);
     if ( empty($existing_exif) && is_array($old_metadata) && !empty($old_metadata['image_meta']) ) {
       $generated_exif = $this->get_exif($old_metadata['image_meta']);
       if ( !empty($generated_exif) ) {
-        update_post_meta($attachment_id, 'exif', sanitize_textarea_field($generated_exif));
+        update_post_meta($target_image_id, 'exif', sanitize_textarea_field($generated_exif));
         $existing_exif = $generated_exif;
       }
     }
@@ -1554,12 +1612,12 @@ class REACG_Gallery {
     };
 
     add_filter('image_editor_output_format', $output_format_filter, 999);
-    update_attached_file($attachment_id, $new_file);
+    update_attached_file($target_image_id, $new_file);
     wp_update_post([
-      'ID'             => $attachment_id,
+      'ID'             => $target_image_id,
       'post_mime_type' => $target_mime,
     ]);
-    $new_metadata = wp_generate_attachment_metadata($attachment_id, $new_file);
+    $new_metadata = wp_generate_attachment_metadata($target_image_id, $new_file);
     remove_filter('image_editor_output_format', $output_format_filter, 999);
 
     if ( !is_array($new_metadata) ) {
@@ -1569,7 +1627,7 @@ class REACG_Gallery {
       $new_metadata['image_meta'] = $old_metadata['image_meta'];
     }
 
-    $final_attached_file = get_attached_file($attachment_id, TRUE);
+    $final_attached_file = get_attached_file($target_image_id, TRUE);
     if ( empty($final_attached_file) || !file_exists($final_attached_file) ) {
       $final_attached_file = $new_file;
     }
@@ -1579,10 +1637,10 @@ class REACG_Gallery {
       $new_metadata['filesize'] = $new_filesize;
     }
 
-    wp_update_attachment_metadata($attachment_id, $new_metadata);
+    wp_update_attachment_metadata($target_image_id, $new_metadata);
 
     if ( !empty($existing_exif) ) {
-      update_post_meta($attachment_id, 'exif', sanitize_textarea_field($existing_exif));
+      update_post_meta($target_image_id, 'exif', sanitize_textarea_field($existing_exif));
     }
 
     if ( $delete_original ) {
@@ -1610,18 +1668,29 @@ class REACG_Gallery {
       }
     }
 
-    clean_post_cache($attachment_id);
+    clean_post_cache($target_image_id);
+    if ( $is_video ) {
+      clean_post_cache($attachment_id);
+      $video_meta = wp_get_attachment_metadata($attachment_id);
+      if ( !is_array($video_meta) ) {
+        $video_meta = [];
+      }
+      $video_meta['thumbnail_id'] = $target_image_id;
+      wp_update_attachment_metadata($attachment_id, $video_meta);
+    }
 
-    $thumbnail_url = wp_get_attachment_image_url($attachment_id, 'thumbnail');
+    $thumbnail_url = wp_get_attachment_image_url($target_image_id, 'thumbnail');
     if ( empty($thumbnail_url) ) {
-      $thumbnail_url = wp_get_attachment_url($attachment_id);
+      $thumbnail_url = wp_get_attachment_url($target_image_id);
     }
 
     wp_send_json_success([
       'skipped'                   => FALSE,
       'attachment_id'             => $attachment_id,
+      'cover_id'                  => $is_video ? $target_image_id : 0,
+      'is_video'                  => $is_video,
       'filename'                  => wp_basename($final_attached_file),
-      'url'                       => wp_get_attachment_url($attachment_id),
+      'url'                       => wp_get_attachment_url($target_image_id),
       'thumbnail_url'             => $thumbnail_url,
       'mime'                      => $target_mime,
       'format'                    => strtoupper($target_format),
@@ -1630,7 +1699,10 @@ class REACG_Gallery {
       'old_filesize'              => $old_filesize,
       'old_filesizeHumanReadable' => $old_filesize > 0 ? size_format($old_filesize) : '',
       /* translators: %s: image format name (e.g. WEBP, AVIF) */
-      'message'                   => sprintf(__('Converted to %s.', 'regallery'), strtoupper($target_format)),
+      'message'                   => sprintf(
+        $is_video ? __('Video cover converted to %s.', 'regallery') : __('Converted to %s.', 'regallery'),
+        strtoupper($target_format)
+      ),
     ]);
   }
 
@@ -2524,8 +2596,12 @@ class REACG_Gallery {
 
       $data['type'] = "video";
       $data['title'] = html_entity_decode(get_the_title($id));
-      // Get the video cover image alt as video alt.
-      $data['alt'] = html_entity_decode($this->get_the_alt($thumbnail_id));
+      // Get the video cover image alt as video alt if video has no alt of its own.
+      $video_alt = $this->get_the_alt($id);
+      if ( '' === $video_alt && !empty($thumbnail_id) ) {
+        $video_alt = $this->get_the_alt($thumbnail_id);
+      }
+      $data['alt'] = html_entity_decode($video_alt);
       // The crop position belongs to the video, while its thumbnail remains
       // independently editable as a media image.
       $data['crop_position'] = $this->get_crop_position($id);
