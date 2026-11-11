@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.22
+Stable tag: 1.20.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,12 +214,25 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.22: Fixed item titles and captions display issue. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.23: Bulk edit images with item switcher. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
 For a detailed changelog and release history, visit [Re Gallery Changelog](https://regallery.team/changelog).
+
+= 1.20.23 =
+= Updated: 12.11.2026 =
+* **Added:** Bulk edit modal for media items with the ability to update titles, alt text, captions, descriptions, and categories.
+* **Added:** Item switcher in Bulk Edit modal to preview and edit selected images individually without leaving the modal.
+* **Added:** Image and video cover format converter to modern WebP and AVIF formats with option to remove old files.
+* **Added:** Gallery Category taxonomy as an item source to display gallery items dynamically by category.
+* **Added:** Option to define an action when a gallery has no items.
+* **Added:** Smooth transition animation when opening the lightbox.
+* **Fixed:** Close lightbox by clicking on the empty background area.
+* **Fixed:** Image edit modal getting stuck in Beaver Builder.
+* **Fixed:** Layout changes not taking effect in Divi 4 builder.
+* **Fixed:** Carousel images count in page builders.
 
 = 1.20.22 =
 = Updated: 05.11.2026 =
