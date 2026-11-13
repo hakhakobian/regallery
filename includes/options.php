@@ -210,6 +210,9 @@ class REACG_Options {
       'buttonBorderRadius' => 4, #number
     ],
     'slideshow' => [
+      'layoutMode' => 'boxed', #string boxed | fullwidth | fullscreen
+      'heightMode' => 'fixed', #string fixed | auto | aspectRatio
+      'aspectRatio' => '1.77', #string
       'width' => 1080, #number
       'height' => 608, #number
       'isFullCoverImage' => TRUE, #boolean
@@ -234,6 +237,7 @@ class REACG_Options {
       'thumbnailGap' => 5, #number
       'backgroundColor' => '#000000', #string
       'textPosition' => 'bottom', #string top | bottom | above | below
+      'isTextFullWidth' => TRUE, #boolean
       'textFontFamily' => 'Inherit', #string
       'textColor' => '#DDDDDD', #string
       'textBackground' => '', #string
@@ -796,6 +800,14 @@ class REACG_Options {
       'custom_css',
     ];
     $specific = [
+      'layoutMode' => [
+        'allowed' => [ 'boxed', 'fullwidth', 'fullscreen' ],
+        'default' => 'boxed',
+      ],
+      'heightMode' => [
+        'allowed' => [ 'fixed', 'auto', 'aspectRatio' ],
+        'default' => 'fixed',
+      ],
       'type' => [
         'allowed' => [ 'thumbnails', 'mosaic', 'justified', 'masonry', 'slideshow', 'cube', 'carousel', 'coverflow', 'cards', 'blog', 'scroller' ],
         'default' => 'thumbnails',
