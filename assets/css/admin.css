@@ -595,7 +595,8 @@ to avoid a bug connected with preview.
   outline: none;
 }
 
-#gallery-custom-css textarea {
+#gallery-custom-css textarea,
+#gallery-css textarea {
   width: 100%;
 }
 
