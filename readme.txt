@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.23
+Stable tag: 1.20.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,12 +213,19 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.23: Bulk edit images with item switcher. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.24: Added Image fit option to Grid layout. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
 For a detailed changelog and release history, visit [Re Gallery Changelog](https://regallery.team/changelog).
+
+= 1.20.24 =
+= Updated: 19.11.2026 =
+* **Added:** Image fit option in Grid layout with Cover, Auto height, and Contain modes, replacing the Auto height toggle with automatic migration of existing galleries.
+* **Added:** Full width and full height options in Slider layout.
+* **Fixed:** Columns option missing when Fill container is enabled in Grid layout.
+* **Fixed:** Coverflow layout background when there are more than 6 images.
 
 = 1.20.23 =
 = Updated: 12.11.2026 =
