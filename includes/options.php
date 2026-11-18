@@ -11,7 +11,7 @@ class REACG_Options {
     'type' => 'mosaic', #string thumbnails | mosaic | justified | masonry | slideshow | cube | carousel | coverflow | cards | blog | scroller
     'thumbnails' => [
       'fillContainer' => FALSE, #boolean
-      'autoHeight' => FALSE, #boolean
+      'imageFit' => 'cover', #string cover | auto-height | contain
       'alignment' => 'top', #string top | center | bottom
       'aspectRatio' => '1.77', #string
       'width' => 430, #number
@@ -769,7 +769,6 @@ class REACG_Options {
       'isFullCoverImage',
       'showCaption',
       'fillContainer',
-      'autoHeight',
       'invertTextColor',
       'enableWatermark',
       'enableSearch',
@@ -863,6 +862,10 @@ class REACG_Options {
       'alignment' => [
         'allowed' => [ 'top', 'center', 'bottom' ],
         'default' => 'top',
+      ],
+      'imageFit' => [
+        'allowed' => [ 'cover', 'auto-height', 'contain' ],
+        'default' => 'cover',
       ],
       'titleAlignment' => [
         'allowed' => [ 'left', 'center', 'right' ],
@@ -1255,6 +1258,12 @@ class REACG_Options {
           'hoverEffect' =>  ['old' => 'overlay-icon', 'new' => 'overlay-icon-zoom'],
         ],
       ];
+      if ( isset($options['thumbnails']['autoHeight']) ) {
+        if ( !isset($options['thumbnails']['imageFit']) ) {
+          $options['thumbnails']['imageFit'] = $options['thumbnails']['autoHeight'] ? 'auto-height' : 'cover';
+        }
+        unset($options['thumbnails']['autoHeight']);
+      }
       foreach ( $renamed_values as $key => $group ) {
         if ( isset($options[$key]) ) {
           foreach ( $group as $option => $value ) {
