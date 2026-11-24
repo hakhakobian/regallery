@@ -5,7 +5,7 @@ Tags: gallery, photo gallery, image gallery, wordpress gallery plugin, responsiv
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.20.24
+Stable tag: 1.20.25
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,12 +213,17 @@ Customize your website easily! Just upload images with the standard WordPress me
 
 
 == Upgrade Notice ==
-* 1.20.24: Added Image fit option to Grid layout. Enjoy free functionality and add your suggestions via WP forum.
+* 1.20.25: Added Height mode options for Full screen Slider layout. Enjoy free functionality and add your suggestions via WP forum.
 
 
 == Changelog ==
 
 For a detailed changelog and release history, visit [Re Gallery Changelog](https://regallery.team/changelog).
+
+= 1.20.25 =
+= Updated: 25.11.2026 =
+* **Added:** Height mode options (Fixed, Auto height, Aspect ratio, Full screen) in Slider layout when Layout mode is set to Full screen.
+* **Improved:** Responsive slider height resizing with live dynamic adaptation for desktop and mobile displays.
 
 = 1.20.24 =
 = Updated: 19.11.2026 =
