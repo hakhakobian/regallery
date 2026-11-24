@@ -211,7 +211,7 @@ class REACG_Options {
     ],
     'slideshow' => [
       'layoutMode' => 'boxed', #string boxed | fullwidth | fullscreen
-      'heightMode' => 'fixed', #string fixed | auto | aspectRatio
+      'heightMode' => 'fixed', #string fixed | auto | aspectRatio | fullscreen
       'aspectRatio' => '1.77', #string
       'width' => 1080, #number
       'height' => 608, #number
@@ -804,7 +804,7 @@ class REACG_Options {
         'default' => 'boxed',
       ],
       'heightMode' => [
-        'allowed' => [ 'fixed', 'auto', 'aspectRatio' ],
+        'allowed' => [ 'fixed', 'auto', 'aspectRatio', 'fullscreen' ],
         'default' => 'fixed',
       ],
       'type' => [
