@@ -6,10 +6,10 @@ defined('ABSPATH') || die('Access Denied');
  */
 if ( defined('ET_CORE_VERSION') ) {
   // Parse Divi version
-  $divi_version = (int) explode('.', ET_CORE_VERSION)[0];
+  $reacg_divi_version = (int) explode('.', ET_CORE_VERSION)[0];
   
   // Load Divi 5+ module
-  if ( $divi_version >= 5 ) {
+  if ( $reacg_divi_version >= 5 ) {
     require_once (REACG_PLUGIN_DIR . '/builders/divi/includes/REACGDivi5Module.php');
   } else {
     // Load Divi 4 module
